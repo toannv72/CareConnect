@@ -39,7 +39,7 @@ const ComInput = (
                 style={[
                   styles.input,
                   {
-                    borderColor: errorMessage ? 'red' : 'gray'
+                    borderColor: errorMessage ? 'red' : '#33B39C'
                   }
                 ]}
                 onBlur={onBlur}
@@ -63,7 +63,9 @@ const ComInput = (
             <View>
               <TextInput
             
-                onBlur={onBlur}
+                onBlur={() => {
+                  onBlur();
+                }}
                 onChangeText={value => onChange(value)}
                 placeholder={placeholder}
                 value={value}
@@ -72,7 +74,7 @@ const ComInput = (
                 style={[
                   styles.input,
                   {
-                    borderColor: errorMessage ? 'red' : 'gray'
+                    borderColor: errorMessage ? 'red' : '#33B39C'
                   }
                 ]}
                 {...props}
@@ -100,9 +102,9 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   label: {
-    color: '#000',
     fontWeight: 'bold',
     marginRight: 4,
+    color: "#33B39C",
   },
   required: {
     color: 'red',
@@ -112,17 +114,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     // height: 40,
     padding: 10,
-    borderRadius: 4,
+    borderRadius: 10,
     borderWidth: 1,
-    borderColor: 'gray'
+    borderColor: 'gray',
+    fontWeight: "bold",
   },
   error: {
     color: 'red',
     marginTop: 4,
   },
-  button: {
-    marginTop: 20,
-    backgroundColor: '#ec5990',
-    borderRadius: 4,
-  },
+
 });
