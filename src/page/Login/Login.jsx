@@ -1,5 +1,12 @@
 import React, { useContext } from "react";
-import { StyleSheet, View, Text, Button, Keyboard, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Button,
+  Keyboard,
+  TouchableOpacity,
+} from "react-native";
 import * as yup from "yup";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -39,8 +46,8 @@ export default function LoginScreen() {
   const methods = useForm({
     resolver: yupResolver(loginSchema),
     defaultValues: {
+      email: "toan@gmail.com",
       password: "",
-      email: "",
     },
   });
 
@@ -56,6 +63,7 @@ export default function LoginScreen() {
     setData(data);
     Keyboard.dismiss();
     console.log(data);
+    navigation.navigate("Homes", { screen: "home" });
   };
   const data = [
     {
@@ -92,8 +100,8 @@ export default function LoginScreen() {
     },
   ];
   const goTo = () => {
-      console.log(123);
-        navigation.navigate("Register");
+    console.log(123);
+    navigation.navigate("Register");
   };
   return (
     <View style={styles.container}>
@@ -130,7 +138,7 @@ export default function LoginScreen() {
 
             {/* <Button title={button.login} style={{ margin: 100 }} /> */}
             <View style={styles?.link}>
-              <ComTitleLink to={"Register"}>
+              <ComTitleLink to={"Homes"} id={{ screen: "Profile" }}>
                 {Login?.link?.forgetPassword}
               </ComTitleLink>
               <ComTitle> {Login?.link?.labelRegister}</ComTitle>
@@ -138,7 +146,6 @@ export default function LoginScreen() {
               <ComTitleLink to={"Register"} style={{ color: "#33B39C" }}>
                 {Login?.link?.register}
               </ComTitleLink>
-         
             </View>
             <ComButton onPress={handleSubmit(handleLogin)}>
               {Login?.button?.login}

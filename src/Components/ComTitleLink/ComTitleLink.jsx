@@ -3,10 +3,15 @@ import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { Text } from "react-native-elements";
 
-export default function ComTitleLink({ children, style, to }) {
+export default function ComTitleLink({ children, style, to, id }) {
   const navigation = useNavigation();
   const goTo = () => {
-    navigation.navigate(to);
+   if (id) {
+       navigation.navigate(to, id);
+
+   } else {
+     navigation.navigate(to);
+   }
   };
   return (
     <TouchableOpacity onPress={() => goTo()} style={styles.view}>
