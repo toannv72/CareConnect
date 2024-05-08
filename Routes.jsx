@@ -3,10 +3,10 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
-import HomeScreen from "./src/page/Home";
 import HomeScreen2 from "./src/page/Home2";
 import Login from "./src/page/Login/Login";
 import Register from "./src/page/Register/Register";
+import Home from "./src/page/Home/Home";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -46,11 +46,11 @@ function MyBottomNavigationBar() {
         tabBarShowLabel: false,
         tabBarStyle: {
           position: "absolute",
-          bottom: 25,
-          left: 20,
-          right: 20,
+          bottom: 10,
+          left: 10,
+          right: 10,
           elevation: 0,
-          backgroundColor: "#fff",
+          backgroundColor: "#14A499",
           borderRadius: 15,
           height: 90,
           elevation: 30, // Bóng đổ cho Android
@@ -67,7 +67,7 @@ function MyBottomNavigationBar() {
           } else if (route.name === "Profile") {
             iconName = focused ? "person-add" : "person-add-outline";
           }
-          return <Ionicons name={iconName} size={size} color="black" />;
+          return <Ionicons name={iconName} size={size} color="white" />;
         },
       })}
       keyboardShouldPersistTaps="handled"
@@ -75,8 +75,9 @@ function MyBottomNavigationBar() {
       <Tab.Screen
         name="Home"
         options={{ headerShown: false }}
-        component={HomeScreen}
+        component={Home}
       />
+
       <Tab.Screen
         name="Profile"
         options={{ headerShown: false }}
