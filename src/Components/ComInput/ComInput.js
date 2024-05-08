@@ -14,7 +14,8 @@ const ComInput = (
       keyboardType,
       required,
       errors,
-      password
+      password,
+      placeholder
     },
     ...props
   ) => {
@@ -44,6 +45,7 @@ const ComInput = (
                 onBlur={onBlur}
                 onChangeText={value => onChange(value)}
                 value={value}
+                placeholder={placeholder}
                 keyboardType={keyboardType} // Set keyboardType here
                 ref={ref}
                 secureTextEntry
@@ -63,6 +65,7 @@ const ComInput = (
             
                 onBlur={onBlur}
                 onChangeText={value => onChange(value)}
+                placeholder={placeholder}
                 value={value}
                 keyboardType={keyboardType} // Set keyboardType here
                 ref={ref}

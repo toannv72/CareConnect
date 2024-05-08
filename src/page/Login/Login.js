@@ -1,12 +1,26 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, View, Text, Button } from 'react-native';
 import * as yup from 'yup';
 import { useForm, FormProvider } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import ComInput from '../../Components/ComInput/ComInput';
 import ComSelect from '../../Components/ComInput/ComSelect';
+import { useStorage } from '../../hooks/useLocalStorage';
+import { LanguageContext } from '../../contexts/LanguageContext';
 
 export default function LoginScreen() {
+    const [datas, setData] = useStorage('toan', {})
+    console.log(1111, datas);
+    
+    const {
+        text: {
+            Login,
+            common: { button },
+        },
+        setLanguage
+    } = useContext(LanguageContext);
+
+
     const loginSchema = yup.object().shape({
         email: yup.string().trim().email('Invalid email format').required("vui long nhap "),
         password: yup.string().required("vui long nhap mk"),
@@ -26,6 +40,7 @@ export default function LoginScreen() {
 
     const handleLogin = (data) => {
         // Xử lý đăng nhập với dữ liệu từ data
+        setData(data)
         console.log(data);
     };
     const data = [
@@ -75,6 +90,7 @@ export default function LoginScreen() {
                             label="Last name"
                             name="password"
                             control={control}
+                            placeholder='password'
                             // keyboardType="visible-password" // Set keyboardType for Last Name input
                             errors={errors} // Pass errors object
                             password
@@ -89,12 +105,24 @@ export default function LoginScreen() {
                         />
 
                         <Button
-                            title="Login"
-                            style={{margin: 100,}}
+                            title={button.login}
+                            style={{ margin: 100, }}
                             onPress={handleSubmit(handleLogin)}
                         />
                     </View>
                 </FormProvider>
+
+                <Text>{button.login}</Text>
+                <Button
+                    title="vn"
+                    style={{ margin: 100, }}
+                    onPress={()=>setLanguage('vn')}
+                />
+                <Button
+                    title="en"
+                    style={{ margin: 100, }}
+                    onPress={() => setLanguage('en')}
+                />
             </View>
         </View>
     );
