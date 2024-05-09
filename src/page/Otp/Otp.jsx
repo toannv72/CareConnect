@@ -8,6 +8,7 @@ import ComButton from "../../Components/ComButton/ComButton";
 import { useNavigation } from "@react-navigation/native";
 import ComTitleLink from "../../Components/ComTitleLink/ComTitleLink";
 import { TouchableOpacity } from "react-native";
+import ComInputCode from "../../Components/ComInputCode/ComInputCode";
 export default function Otp() {
   const navigation = useNavigation();
   const {
@@ -16,6 +17,9 @@ export default function Otp() {
   } = useContext(LanguageContext);
   const toLogin = () => {
     navigation.navigate("RegisterSuccess");
+  };
+  const code = (e) => {
+    console.log("code nè:", e);
   };
   return (
     <View style={styles?.body}>
@@ -34,7 +38,8 @@ export default function Otp() {
             0123456789
           </ComTitle>
         </View>
-        <View style={{flexDirection:"row"}}>
+        <ComInputCode getCode={code} />
+        <View style={{ flexDirection: "row" }}>
           <ComTitle
             style={{
               fontSize: 13,
@@ -61,6 +66,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     gap: 10,
+    backgroundColor: "#fff",
   },
   container: {
     display: "flex",

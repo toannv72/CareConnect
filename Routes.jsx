@@ -15,7 +15,7 @@ const Tab = createBottomTabNavigator();
 const Routes = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="RegisterSuccess">
+      <Stack.Navigator initialRouteName="Otp">
         <Stack.Screen
           name="Homes"
           options={{ headerLeft: null, headerShown: false }}
