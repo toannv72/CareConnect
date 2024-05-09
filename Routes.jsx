@@ -7,13 +7,15 @@ import HomeScreen2 from "./src/page/Home2";
 import Login from "./src/page/Login/Login";
 import Register from "./src/page/Register/Register";
 import Home from "./src/page/Home/Home";
+import RegisterSuccess from "./src/page/Register/RegisterSuccess";
+import Otp from "./src/page/Otp/Otp";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const Routes = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator initialRouteName="RegisterSuccess">
         <Stack.Screen
           name="Homes"
           options={{ headerLeft: null, headerShown: false }}
@@ -28,6 +30,16 @@ const Routes = () => {
           options={{ headerLeft: null, headerShown: false }}
           name="Register"
           component={Register}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="RegisterSuccess"
+          component={RegisterSuccess}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="Otp"
+          component={Otp}
         />
         {/* <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}

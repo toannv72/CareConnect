@@ -82,4 +82,16 @@ export const en = {
       register: "Register",
     },
   },
+  RegisterSuccess: {
+    button: "Log in",
+    pageTitle: "Sign Up Success",
+    content:
+      "Congratulations on your successful registration. Let's explore CareConnect!",
+  },
+  Otp: {
+    button: "Log in",
+    pageTitle: "Sign Up Success",
+    content:
+      "Congratulations on your successful registration. Let's explore CareConnect!",
+  },
 };

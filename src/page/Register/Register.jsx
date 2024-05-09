@@ -12,9 +12,11 @@ import { Form } from "react-native-autofocus";
 import ComButton from "../../Components/ComButton/ComButton";
 import ComTitle from "../../Components/ComTitle/ComTitle";
 import ComTitleLink from "../../Components/ComTitleLink/ComTitleLink";
+import { useNavigation } from '@react-navigation/native';
 
 export default function Register() {
   const [datas, setData] = useStorage("toan", {});
+  const navigation = useNavigation();
 
   const {
     text: {
@@ -25,15 +27,14 @@ export default function Register() {
   } = useContext(LanguageContext);
 
   const loginSchema = yup.object().shape({
-    email: yup
-      .string()
-      .trim()
-      .email(Register?.message?.emailInvalid)
-      .required(Register?.message?.emailRequired),
-    password: yup.string().required(Register?.message?.password),
-    confirmPassword: yup.string().required(Register?.message?.confirmPassword),
-    phone: yup.string().required(Register?.message?.phoneRequired),
-    // chon: yup.string().required("vui long nhap mk"),
+    // email: yup
+    //   .string()
+    //   .trim()
+    //   .email(Register?.message?.emailInvalid)
+    //   .required(Register?.message?.emailRequired),
+    // password: yup.string().required(Register?.message?.password),
+    // confirmPassword: yup.string().required(Register?.message?.confirmPassword),
+    // phone: yup.string().required(Register?.message?.phoneRequired),
   });
 
   const methods = useForm({
@@ -56,6 +57,8 @@ export default function Register() {
     setData(data);
     Keyboard.dismiss();
     console.log(data);
+    navigation.navigate("Otp");
+
   };
   const data = [
     {
@@ -153,5 +156,6 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    gap: 10,
   },
 });

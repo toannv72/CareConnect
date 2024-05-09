@@ -99,10 +99,7 @@ export default function LoginScreen() {
       label: "toàn2",
     },
   ];
-  const goTo = () => {
-    console.log(123);
-    navigation.navigate("Register");
-  };
+
   return (
     <View style={styles.container}>
       <View style={styles.body}>
@@ -183,5 +180,6 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    gap:10,
   },
 });

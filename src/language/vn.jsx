@@ -81,4 +81,18 @@ export const vn = {
       register: "Đăng ký",
     },
   },
+  RegisterSuccess: {
+    button: "Đăng Nhập",
+    pageTitle: "Đăng ký thành công",
+    content: "Chúc mừng bạn đăng ký thành công Cùng khám phá CareConnect nào!",
+  },
+  Otp: {
+    button: "Xác nhận",
+    pageTitle: "Mã xác nhận",
+    content: "Mã xác nhận gồm 4 chữ số được gửi đến số điện thoại",
+    link: {
+      content: "Không nhận được mã? ",
+      resendCode:"Gửi lại mã"
+    },
+  },
 };

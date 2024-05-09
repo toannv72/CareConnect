@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   view: {
-    padding: 8,
+    padding: 0,
     backgroundColor: "#fff",
   },
 });
