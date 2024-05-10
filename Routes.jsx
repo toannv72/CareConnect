@@ -2,7 +2,9 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Ionicons } from "@expo/vector-icons";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import AntDesign from "@expo/vector-icons";
 import HomeScreen2 from "./src/page/Home2";
 import Login from "./src/page/Login/Login";
 import Register from "./src/page/Register/Register";
@@ -12,7 +14,6 @@ import Otp from "./src/page/Otp/Otp";
 import NotificationPage from "./src/page/Notification/Notification";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
-
 const Routes = () => {
   return (
     <NavigationContainer>
@@ -51,7 +52,19 @@ const Routes = () => {
     </NavigationContainer>
   );
 };
-
+const HomeStack = createNativeStackNavigator();
+function HomeStackScreen() {
+  return (
+    <HomeStack.Navigator>
+      <HomeStack.Screen
+        options={{ headerShown: false }}
+        name="Home"
+        component={NotificationPage}
+      />
+      <HomeStack.Screen name="Details" component={Login} />
+    </HomeStack.Navigator>
+  );
+}
 function MyBottomNavigationBar() {
   return (
     <Tab.Navigator
@@ -71,16 +84,28 @@ function MyBottomNavigationBar() {
           shadowOffset: { width: 0, height: 2 },
           shadowOpacity: 0.4,
         },
+        // tabBarIcon: ({ focused, color, size }) => {
+        //   let iconName;
+        //   if (route.name === "Home") {
+        //     iconName = focused ? "home" : "home";
+        //   } else if (route.name === "Like") {
+        //     iconName = focused ? "home" : "home";
+        //   } else if (route.name === "Profile") {
+        //     iconName = focused ? "home" : "home";
+        //   }
+        //   return <Ionicons name={"home-outline"} size={24} color="white" />;
+        // },
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
+
           if (route.name === "Home") {
-            iconName = focused ? "home" : "home-outline";
-          } else if (route.name === "Like") {
-            iconName = focused ? "heart" : "heart-outline";
-          } else if (route.name === "Profile") {
-            iconName = focused ? "person-add" : "person-add-outline";
+            iconName = focused ? "home" : "home";
+          } else if (route.name === "Settings") {
+            iconName = focused ? "ios-list" : "ios-list-outline";
           }
-          return <Ionicons name={iconName} size={size} color="white" />;
+
+          // You can return any component that you like here!
+          return <Ionicons name={iconName} size={size} color={"back"} />;
         },
       })}
       keyboardShouldPersistTaps="handled"
@@ -88,7 +113,7 @@ function MyBottomNavigationBar() {
       <Tab.Screen
         name="Home"
         options={{ headerShown: false }}
-        component={NotificationPage}
+        component={HomeStackScreen}
       />
 
       <Tab.Screen

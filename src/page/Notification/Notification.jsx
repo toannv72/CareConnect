@@ -12,15 +12,14 @@ Notifications.setNotificationHandler({
   }),
 });
 
-export default function NotificationPage() {
+export default function NotificationPage({ navigation }) {
   const [expoPushToken, setExpoPushToken] = useState("");
   const [channels, setChannels] = useState([]);
-  const [notification, setNotification] =useState (null)
+  const [notification, setNotification] = useState(null);
   const notificationListener = useRef();
   const responseListener = useRef();
 
   useEffect(() => {
-
     registerForPushNotificationsAsync().then(
       (token) => token && setExpoPushToken(token)
     );
@@ -64,11 +63,12 @@ export default function NotificationPage() {
         null,
         2
       )}`}</Text>
-     
+
       <Button
         title="Press to schedule a notification"
-        onPress={async () => {
-          await schedulePushNotification();
+        onPress={ () => {
+           schedulePushNotification();
+          //  navigation.navigate('Details')
         }}
       />
     </View>
