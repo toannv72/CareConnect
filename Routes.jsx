@@ -9,13 +9,14 @@ import Register from "./src/page/Register/Register";
 import Home from "./src/page/Home/Home";
 import RegisterSuccess from "./src/page/Register/RegisterSuccess";
 import Otp from "./src/page/Otp/Otp";
+import NotificationPage from "./src/page/Notification/Notification";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const Routes = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Otp">
+      <Stack.Navigator initialRouteName="Homes">
         <Stack.Screen
           name="Homes"
           options={{ headerLeft: null, headerShown: false }}
@@ -87,7 +88,7 @@ function MyBottomNavigationBar() {
       <Tab.Screen
         name="Home"
         options={{ headerShown: false }}
-        component={Home}
+        component={NotificationPage}
       />
 
       <Tab.Screen
