@@ -12,6 +12,7 @@ import Home from "./src/page/Home/Home";
 import RegisterSuccess from "./src/page/Register/RegisterSuccess";
 import Otp from "./src/page/Otp/Otp";
 import NotificationPage from "./src/page/Notification/Notification";
+import ComIcon from "./src/Components/ComIcon/ComIcon";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Routes = () => {
@@ -58,7 +59,7 @@ function HomeStackScreen() {
     <HomeStack.Navigator>
       <HomeStack.Screen
         options={{ headerShown: false }}
-        name="Home"
+        name="NotificationPage"
         component={NotificationPage}
       />
       <HomeStack.Screen name="Details" component={Login} />
@@ -99,13 +100,20 @@ function MyBottomNavigationBar() {
           let iconName;
 
           if (route.name === "Home") {
-            iconName = focused ? "home" : "home";
-          } else if (route.name === "Settings") {
-            iconName = focused ? "ios-list" : "ios-list-outline";
+            iconName = focused ? "Nav1" : "Nav1";
+          } else if (route.name === "Visitation") {
+            iconName = focused ? "Nav2" : "Nav2";
+          } else if (route.name === "HealthCondition") {
+            iconName = focused ? "Nav3" : "Nav3";
+          } else if (route.name === "OlderPeople") {
+            iconName = focused ? "Nav4" : "Nav4";
+          } else if (route.name === "Account") {
+            iconName = focused ? "Nav5" : "Nav5";
           }
 
           // You can return any component that you like here!
-          return <Ionicons name={iconName} size={size} color={"back"} />;
+          // return <Ionicons name={iconName} size={size} color={"back"} />;
+          return <ComIcon icon={iconName} />;
         },
       })}
       keyboardShouldPersistTaps="handled"
@@ -117,9 +125,24 @@ function MyBottomNavigationBar() {
       />
 
       <Tab.Screen
-        name="Profile"
+        name="Visitation"
         options={{ headerShown: false }}
-        component={HomeScreen2}
+        component={Login}
+      />
+      <Tab.Screen
+        name="HealthCondition"
+        options={{ headerShown: false }}
+        component={Login}
+      />
+      <Tab.Screen
+        name="OlderPeople"
+        options={{ headerShown: false }}
+        component={Login}
+      />
+      <Tab.Screen
+        name="Account"
+        options={{ headerShown: false }}
+        component={Login}
       />
     </Tab.Navigator>
   );
