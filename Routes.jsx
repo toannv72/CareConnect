@@ -13,6 +13,7 @@ import RegisterSuccess from "./src/page/Register/RegisterSuccess";
 import Otp from "./src/page/Otp/Otp";
 import NotificationPage from "./src/page/Notification/Notification";
 import ComIcon from "./src/Components/ComIcon/ComIcon";
+import ServicePackages from "./src/page/ServicePackages/ServicePackages";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Routes = () => {
@@ -127,7 +128,7 @@ function MyBottomNavigationBar() {
       <Tab.Screen
         name="Visitation"
         options={{ headerShown: false }}
-        component={Login}
+        component={ServicePackages}
       />
       <Tab.Screen
         name="HealthCondition"

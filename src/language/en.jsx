@@ -98,4 +98,11 @@ export const en = {
     catalogue: "Danh mục",
     news: "Featured activities",
   },
+  servicePackages: {
+    package: {
+      living: "Living together",
+      people: "people",
+      month: "month",
+    },
+  },
 };

@@ -1,4 +1,3 @@
-
 export const vn = {
   common: {
     button: {
@@ -98,5 +97,12 @@ export const vn = {
   Home: {
     catalogue: "Danh mục",
     news: "Các hoạt động nổi bật",
+  },
+  servicePackages: {
+    package: {
+      living: "Sinh hoạt cùng",
+      people: "người",
+      month: "tháng",
+    },
   },
 };

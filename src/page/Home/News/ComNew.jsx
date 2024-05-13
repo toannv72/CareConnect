@@ -4,7 +4,7 @@ import { View } from "react-native";
 import { LanguageContext } from "../../../contexts/LanguageContext";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-export default function ComNew({ link, url, children, context }) {
+export default function ComNew({ id, url, children, context }) {
   const {
     text: { Home },
   } = useContext(LanguageContext);
@@ -23,10 +23,12 @@ export default function ComNew({ link, url, children, context }) {
         }}
       />
       <View style={styles.container}>
-        <Text style={styles.context}>{context}</Text>
-        <Text numberOfLines={5} style={styles.children}>
-          {children}
-        </Text>
+       <View>
+         <Text style={styles.context}>{context}</Text>
+         <Text numberOfLines={5} style={styles.children}>
+           {children}
+         </Text>
+       </View>
       </View>
     </TouchableOpacity>
   );
