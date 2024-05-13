@@ -94,4 +94,8 @@ export const en = {
     content:
       "Congratulations on your successful registration. Let's explore CareConnect!",
   },
+  Home: {
+    catalogue: "Danh mục",
+    news: "Featured activities",
+  },
 };

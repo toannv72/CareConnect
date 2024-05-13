@@ -60,7 +60,7 @@ function HomeStackScreen() {
       <HomeStack.Screen
         options={{ headerShown: false }}
         name="NotificationPage"
-        component={NotificationPage}
+        component={Home}
       />
       <HomeStack.Screen name="Details" component={Login} />
     </HomeStack.Navigator>

@@ -92,7 +92,11 @@ export const vn = {
     content: "Mã xác nhận gồm 4 chữ số được gửi đến số điện thoại",
     link: {
       content: "Không nhận được mã? ",
-      resendCode:"Gửi lại mã"
+      resendCode: "Gửi lại mã",
     },
+  },
+  Home: {
+    catalogue: "Danh mục",
+    news: "Các hoạt động nổi bật",
   },
 };

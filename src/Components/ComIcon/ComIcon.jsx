@@ -9,7 +9,7 @@ import { useEffect } from "react";
 
 export default function ComIcon({ icon }) {
     const [navBar, setNavBar] = useState(null);
-    console.log(navBar);
+    
   useEffect(() => {
     let bar;
     switch (icon) {
