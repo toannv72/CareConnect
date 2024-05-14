@@ -105,4 +105,11 @@ export const vn = {
       month: "tháng",
     },
   },
+  healthMonitor: {
+    name: "Cụ",
+    age: "Tuổi",
+    sex: "Giới tính",
+    room: "Phòng",
+    bed: "Giường",
+  },
 };

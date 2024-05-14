@@ -14,6 +14,7 @@ import Otp from "./src/page/Otp/Otp";
 import NotificationPage from "./src/page/Notification/Notification";
 import ComIcon from "./src/Components/ComIcon/ComIcon";
 import ServicePackages from "./src/page/ServicePackages/ServicePackages";
+import HealthMonitor from "./src/page/HealthMonitor/HealthMonitor";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Routes = () => {
@@ -85,6 +86,8 @@ function MyBottomNavigationBar() {
           shadowColor: "#000", // Màu của bóng đổ cho iOS
           shadowOffset: { width: 0, height: 2 },
           shadowOpacity: 0.4,
+          shadowRadius: 3.84,
+          elevation: 5,
         },
         // tabBarIcon: ({ focused, color, size }) => {
         //   let iconName;
@@ -133,7 +136,7 @@ function MyBottomNavigationBar() {
       <Tab.Screen
         name="HealthCondition"
         options={{ headerShown: false }}
-        component={Login}
+        component={HealthMonitor}
       />
       <Tab.Screen
         name="OlderPeople"
