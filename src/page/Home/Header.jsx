@@ -17,10 +17,11 @@ export default function Header() {
 const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
     gap: 6,
     justifyContent: "space-between",
     alignItems: "center",
+    marginBottom:10
   },
   text: {
     flex: 1,

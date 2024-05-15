@@ -41,11 +41,9 @@ export default function ComPackage({ data }) {
             {servicePackages?.package?.people}
           </Text>
         </Text>
-        <View style={styles?.text}>
-          <Text numberOfLines={2}>{data?.context}</Text>
-        </View>
+        <Text numberOfLines={2}>{data?.context}</Text>
         <Text>
-          <Text style={{ fontWeight: "bold", fontSize: 16}}>
+          <Text style={{ fontWeight: "bold", fontSize: 16 }}>
             {formatCurrency(data?.money)}
           </Text>
           /{servicePackages?.package?.month}
@@ -68,8 +66,5 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "center",
     flexWrap: "wrap",
-  },
-  text: {
-    flex: 1,
   },
 });

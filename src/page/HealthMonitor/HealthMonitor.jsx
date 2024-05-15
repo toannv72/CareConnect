@@ -87,6 +87,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 50,
     backgroundColor: "#fff",
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
   },
 });

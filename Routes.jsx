@@ -15,6 +15,7 @@ import NotificationPage from "./src/page/Notification/Notification";
 import ComIcon from "./src/Components/ComIcon/ComIcon";
 import ServicePackages from "./src/page/ServicePackages/ServicePackages";
 import HealthMonitor from "./src/page/HealthMonitor/HealthMonitor";
+import Notification from "./src/page/Notification/Notification";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Routes = () => {
@@ -114,7 +115,7 @@ function MyBottomNavigationBar() {
             iconName = focused ? "Nav2" : "Nav2_1";
           } else if (route.name === "HealthCondition") {
             iconName = focused ? "Nav3" : "Nav3_1";
-          } else if (route.name === "OlderPeople") {
+          } else if (route.name === "Notification") {
             iconName = focused ? "Nav4" : "Nav4_1";
           } else if (route.name === "Account") {
             iconName = focused ? "Nav5" : "Nav5_1";
@@ -144,9 +145,9 @@ function MyBottomNavigationBar() {
         component={HealthMonitor}
       />
       <Tab.Screen
-        name="OlderPeople"
+        name="Notification"
         options={{ headerShown: false }}
-        component={Login}
+        component={Notification}
       />
       <Tab.Screen
         name="Account"

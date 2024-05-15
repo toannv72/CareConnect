@@ -28,7 +28,7 @@ export default function ComHealth({ data }) {
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
               {healthMonitor?.name}
             </Text>
-            <Text>: {data?.name}</Text>
+            <Text>: {data?.name}000000000000000000</Text>
           </Text>
         </View>
         <View style={styles?.container}>
@@ -80,9 +80,10 @@ const styles = StyleSheet.create({
 
   },
   container: {
-    // flex: 1,
+    flex: 1,
     alignItems: "flex-start",
     justifyContent: "center",
+    
     flexWrap: "wrap",
   },
   text: {

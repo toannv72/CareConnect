@@ -6,9 +6,9 @@ import { Styles } from "./src/styles/Styles.jsx";
 const App = () => {
   return (
     <LanguageProvider>
-      <Styles>
+      {/* <Styles> */}
         <Routes />
-      </Styles>
+      {/* </Styles> */}
     </LanguageProvider>
 
   );

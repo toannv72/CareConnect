@@ -1,136 +1,105 @@
 import { useState, useEffect, useRef } from "react";
-import { Text, View, Button, Platform, Image } from "react-native";
-import * as Device from "expo-device";
-import * as Notifications from "expo-notifications";
-import Constants from "expo-constants";
-import { useNavigation } from "@react-navigation/native";
-import {  SvgUri } from "react-native-svg";
-import ComIcon from "../../Components/ComIcon/ComIcon";
-import SelectedDates from "../../Components/ComDate/SelectedDates";
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
-});
+import { Text, View, StyleSheet } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
+import ComNotification from "./ComNotification/ComNotifications";
+import ComSelectButton from "../../Components/ComButton/ComSelectButton";
 
-export default function NotificationPage({ }) {
-  const [expoPushToken, setExpoPushToken] = useState("");
-  const [channels, setChannels] = useState([]);
-  const [notification, setNotification] = useState(null);
-  const notificationListener = useRef();
-  const responseListener = useRef();
-  const navigation = useNavigation();
-  useEffect(() => {
-    registerForPushNotificationsAsync().then(
-      (token) => token && setExpoPushToken(token)
-    );
-
-    if (Platform.OS === "android") {
-      Notifications.getNotificationChannelsAsync().then((value) =>
-        setChannels(value ?? [])
-      );
-    }
-    notificationListener.current =
-      Notifications.addNotificationReceivedListener((notification) => {
-        setNotification(notification);
-      });
-
-    responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {
-        // nơi trả về màn hình 
-         navigation.navigate("Details");
-        console.log(1111111,response);
-      });
-
-    return () => {
-      notificationListener.current &&
-        Notifications.removeNotificationSubscription(
-          notificationListener.current
-        );
-      responseListener.current &&
-        Notifications.removeNotificationSubscription(responseListener.current);
-    };
-  }, []);
-
+export default function Notification({}) {
+  const [select, setSelect] = useState(false);
+  const [select1, setSelect1] = useState(true);
+  const [select2, setSelect2] = useState(true);
+  const data = [
+    {
+      img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
+      name: "Phát hiện cụ ABC có chỉ số sức khỏe bất thường ",
+      day: "10:00 - 14/05/2024 ",
+    },
+    {
+      img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
+      name: "Phát hiện cụ ABC có chỉ số sức khỏe bất thường ",
+      day: "10:00 - 14/05/2024 ",
+    },
+    {
+      img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
+      name: "Phát hiện cụ ABC có chỉ số sức khỏe bất thường ",
+      day: "10:00 - 14/05/2024 ",
+    },
+    {
+      img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
+      name: "Phát hiện cụ ABC có chỉ số sức khỏe bất thường ",
+      day: "10:00 - 14/05/2024 ",
+    },
+  ];
+  const check = () => {
+    setSelect(false);
+    setSelect1(true);
+    setSelect2(true);
+  };
+  const check1 = () => {
+    setSelect(true);
+    setSelect1(false);
+    setSelect2(true);
+  };
+  const check2 = () => {
+    setSelect(true);
+    setSelect1(true);
+    setSelect2(false);
+  };
   return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "space-around",
-      }}
-    >
-    <SelectedDates/>
-      <Button
-        title="Press to schedule a notification"
-        onPress={() => {
-          schedulePushNotification();
-          //  navigation.navigate('Details')
-        }}
-      />
+    <View style={styles.body}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        horizontal={true}
+        style={styles?.scrollView}
+      >
+        <View style={styles?.buttonContainer}>
+          <ComSelectButton onPress={check} check={select}>
+            Tất cả
+          </ComSelectButton>
+          <ComSelectButton onPress={check1} check={select1}>
+            Khẩn cấp
+          </ComSelectButton>
+          <ComSelectButton onPress={check2} check={select2}>
+            Thanh toán
+          </ComSelectButton>
+          <ComSelectButton onPress={check2} check={select2}>
+            Thanh toán
+          </ComSelectButton>
+          <View style={{ width: 20 }}></View>
+        </View>
+      </ScrollView>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={styles?.scrollView}
+        showsHorizontalScrollIndicator={false}
+      >
+        <ComNotification tile={"Hôm nay"} data={data} />
+
+        <ComNotification tile={"Trước đó"} data={data} />
+        <ComNotification tile={"Trước đó"} data={data} />
+        <ComNotification tile={"Trước đó"} data={data} />
+
+        <View style={{ height: 190 }}></View>
+      </ScrollView>
     </View>
   );
 }
-
-async function schedulePushNotification() {
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      title: "You've got mail! 📬toàn nè!",
-      body: "Here is the notification body",
-      data: { data: "login", test: { test1: "more data" } },
-    },
-    trigger: { seconds: 1 },// thời gian 
-  });
-}
-
-async function registerForPushNotificationsAsync() {
-  let token;
-
-  if (Platform.OS === "android") {
-    await Notifications.setNotificationChannelAsync("default", {
-      name: "default",
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: "#FF231F7C",
-    });
-  }
-
-  if (Device.isDevice) {
-    const { status: existingStatus } =
-      await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-    if (existingStatus !== "granted") {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-    if (finalStatus !== "granted") {
-      alert("Failed to get push token for push notification!");
-      return;
-    }
-    // Learn more about projectId:
-    // https://docs.expo.dev/push-notifications/push-notifications-setup/#configure-projectid
-    // EAS projectId is used here.
-    try {
-      const projectId =
-        Constants?.expoConfig?.extra?.eas?.projectId ??
-        Constants?.easConfig?.projectId;
-      if (!projectId) {
-        throw new Error("Project ID not found");
-      }
-      token = (
-        await Notifications.getExpoPushTokenAsync({
-          projectId,
-        })
-      ).data;
-      console.log(22222222,token);
-    } catch (e) {
-      token = `${e}`;
-    }
-  } else {
-    alert("Must use physical device for Push Notifications");
-  }
-
-  return token;
-}
+const styles = StyleSheet.create({
+  body: {
+    flex: 1,
+    paddingTop: 40,
+    backgroundColor: "#fff",
+    paddingHorizontal:15
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    gap: 15,
+    flexWrap: "wrap",
+    marginBottom: 10,
+  },
+  scrollView: {
+    flexGrow: 0,
+    flexShrink: 0,
+  },
+});

@@ -1,9 +1,8 @@
 import React, { useContext } from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { View } from "react-native";
-import TopicContent from "../TopicContent";
-import { LanguageContext } from "../../../contexts/LanguageContext";
-import ComButton from "./../../../Components/ComButton/ComButton";
+import TopicContent from "../../page/Home/TopicContent";
+import { LanguageContext } from "../../contexts/LanguageContext";
 
 export default function ComSelectButton({ children, onPress, check }) {
   const {
@@ -29,16 +28,16 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     backgroundColor: "#fff",
-    paddingVertical: 10,
-    // paddingHorizontal: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
     borderRadius: 10,
-    width: 100,
+    // width: 100,
     borderWidth: 1,
     borderColor: "#33B39C",
   },
   buttonText: {
     color: "#33B39C",
-    fontWeight: "bold",
+    fontWeight: "500",
     fontSize: 16,
     textAlign: "center",
   },
@@ -46,15 +45,16 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     backgroundColor: "#33B39C",
-    paddingVertical: 10,
+    paddingVertical: 8,
     borderWidth: 1,
     borderColor: "#33B39C",
     borderRadius: 10,
-    width: 100,
+    // width: 100,
+    paddingHorizontal: 20,
   },
   buttonText1: {
     color: "#fff",
-    fontWeight: "bold",
+    fontWeight: "500",
     fontSize: 16,
     textAlign: "center",
   },

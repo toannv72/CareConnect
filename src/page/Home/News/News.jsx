@@ -1,10 +1,10 @@
 import React, { useContext, useState } from "react";
-import { StyleSheet, Text } from "react-native";
+import { ScrollView, StyleSheet, Text } from "react-native";
 import { View } from "react-native";
 import TopicContent from "../TopicContent";
 import { LanguageContext } from "../../../contexts/LanguageContext";
 import ComButton from "./../../../Components/ComButton/ComButton";
-import ComSelectButton from "./ComSelectButton";
+import ComSelectButton from "../../../Components/ComButton/ComSelectButton";
 import ComNew from "./ComNew";
 
 export default function News() {
@@ -25,14 +25,22 @@ export default function News() {
   return (
     <View style={styles?.body}>
       <TopicContent>{Home?.news}</TopicContent>
-      <View style={styles?.buttonContainer}>
-        <ComSelectButton onPress={check} check={select}>
-          Vui chơi
-        </ComSelectButton>
-        <ComSelectButton onPress={check1} check={select1}>
-          Sức khỏe
-        </ComSelectButton>
-      </View>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        horizontal={true}
+      >
+        <View style={styles?.buttonContainer}>
+          <ComSelectButton onPress={check} check={select}>
+            Vui chơi
+          </ComSelectButton>
+          <ComSelectButton onPress={check1} check={select1}>
+            Sức khỏe
+          </ComSelectButton>
+      
+        </View>
+      </ScrollView>
+
       {data.map((value, index) => (
         <ComNew
           id={1}
@@ -56,7 +64,7 @@ export default function News() {
 }
 const styles = StyleSheet.create({
   body: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
   },
   comCatalogue: {
     flexDirection: "row",

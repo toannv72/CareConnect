@@ -33,7 +33,7 @@ export default function Catalogue() {
 }
 const styles = StyleSheet.create({
   body: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
   },
   comCatalogue: {
     flexDirection: "row",

@@ -7,6 +7,6 @@ export const Styles = ({ children }) => {
 };
 const styles = StyleSheet.create({
   app: {
-    flex: 1,
+    // flex: 1,
   },
 });
