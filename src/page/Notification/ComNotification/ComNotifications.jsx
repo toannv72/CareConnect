@@ -8,8 +8,11 @@ export default function ComNotification({ tile, data }) {
       <ComTitle style={{ fontSize: 24, marginBottom: 10 }}>{tile}</ComTitle>
       <View style={styles.contex}>
         {data?.map((value, index) => (
-          <View style={[index !== data.length - 1 && styles.bodySeparator]}>
-            <TouchableOpacity key={index} style={[styles.body]}>
+          <View
+            key={index}
+            style={[index !== data.length - 1 && styles.bodySeparator]}
+          >
+            <TouchableOpacity style={[styles.body]}>
               <Image
                 source={{ uri: value?.img }}
                 style={{

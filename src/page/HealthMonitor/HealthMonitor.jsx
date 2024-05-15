@@ -16,6 +16,7 @@ export default function HealthMonitor() {
       sex: "Nam",
       room: "17",
       bed: "3",
+      id: 1,
     },
     {
       img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
@@ -24,36 +25,37 @@ export default function HealthMonitor() {
       sex: "Nam",
       room: "17",
       bed: "3",
+      id: 2,
     },
   ]);
-    const searchSchema = yup.object().shape({
-      search: yup.string(),
-    });
-const {
-  text: {
-    Login,
-    common: { button },
-  },
-  setLanguage,
-} = useContext(LanguageContext);
-const methods = useForm({
-  resolver: yupResolver(searchSchema),
-  defaultValues: {
-    search: "",
-  },
-});
+  const searchSchema = yup.object().shape({
+    search: yup.string(),
+  });
+  const {
+    text: {
+      Login,
+      common: { button },
+    },
+    setLanguage,
+  } = useContext(LanguageContext);
+  const methods = useForm({
+    resolver: yupResolver(searchSchema),
+    defaultValues: {
+      search: "",
+    },
+  });
 
-const {
-  control,
-  handleSubmit,
-  formState: { errors },
-} = methods;
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = methods;
 
-const onSubmit = (data) => {
-  console.log("====================================");
-  console.log(data);
-  console.log("====================================");
-};
+  const onSubmit = (data) => {
+    console.log("====================================");
+    console.log(data);
+    console.log("====================================");
+  };
   return (
     <View style={styles.body}>
       {/* <FormProvider {...methods}>

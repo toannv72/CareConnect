@@ -112,4 +112,10 @@ export const vn = {
     room: "Phòng",
     bed: "Giường",
   },
+  HealthMonitorDetail: {
+    name: "Cụ",
+    yearOld: "Tuổi",
+    YearOfBirth: "Năm sinh",
+    weight: "Cân nặng",
+  },
 };

@@ -4,9 +4,9 @@ import { Image, View } from "react-native";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { useNavigation } from "@react-navigation/native";
 
-export default function ComHealth({ data }) {
+export default function ComPatient({ data }) {
   const {
-    text: { healthMonitor },
+    text: { HealthMonitorDetail },
     setLanguage,
   } = useContext(LanguageContext);
   const navigation = useNavigation();
@@ -15,14 +15,14 @@ export default function ComHealth({ data }) {
     <TouchableOpacity
       style={styles.body}
       onPress={() => {
-        navigation.navigate("HealthMonitorDetail", { id: data.id });
+        navigation.navigate("HealthMonitorDetailDetail", { id: data.id });
       }}
     >
       <Image
         source={{ uri: data?.img }}
         style={{
-          width: 60,
-          height: 60,
+          width: 65,
+          height: 80,
           borderRadius: 50,
           objectFit: "fill",
           borderWidth: 0.5,
@@ -33,19 +33,15 @@ export default function ComHealth({ data }) {
         <View style={styles?.container}>
           <Text style={{ flexDirection: "row" }}>
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-              {healthMonitor?.name}
+              {HealthMonitorDetail?.name}
             </Text>
-            <Text>
-              : {data?.name}sssssssssssssssssssss
-              ssssssssssssssssssssssssssssssssssssss
-            </Text>
-            {/* <Text>: {data?.name}</Text> */}
+            <Text>: {data?.name}</Text>
           </Text>
         </View>
         <View style={styles?.container}>
           <Text style={{ flexDirection: "row" }}>
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-              {healthMonitor?.age}
+              {HealthMonitorDetail?.yearOld}
             </Text>
             <Text>: {data?.age}</Text>
           </Text>
@@ -53,15 +49,7 @@ export default function ComHealth({ data }) {
         <View style={styles?.container}>
           <Text style={{ flexDirection: "row" }}>
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-              {healthMonitor?.sex}
-            </Text>
-            <Text>: {data?.sex}</Text>
-          </Text>
-        </View>
-        <View style={styles?.container}>
-          <Text style={{ flexDirection: "row" }}>
-            <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-              {healthMonitor?.room}
+              {HealthMonitorDetail?.YearOfBirth}
             </Text>
             <Text>: {data?.room}</Text>
           </Text>
@@ -69,9 +57,9 @@ export default function ComHealth({ data }) {
         <View style={styles?.container}>
           <Text style={{ flexDirection: "row" }}>
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-              {healthMonitor?.bed}
+              {HealthMonitorDetail?.weight}
             </Text>
-            <Text>: {data?.bed}</Text>
+            <Text>: {data?.room}kg</Text>
           </Text>
         </View>
       </View>
@@ -85,9 +73,8 @@ const styles = StyleSheet.create({
     gap: 10,
     marginBottom: 10,
     padding: 10,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#33B39C",
+    justifyContent: "center",
+    alignItems: "center",
   },
   container: {
     // flex: 1,

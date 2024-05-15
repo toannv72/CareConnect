@@ -16,6 +16,7 @@ import ComIcon from "./src/Components/ComIcon/ComIcon";
 import ServicePackages from "./src/page/ServicePackages/ServicePackages";
 import HealthMonitor from "./src/page/HealthMonitor/HealthMonitor";
 import Notification from "./src/page/Notification/Notification";
+import HealthMonitorDetail from "./src/page/HealthMonitorDetail/HealthMonitorDetail";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Routes = () => {
@@ -52,11 +53,11 @@ const Routes = () => {
           name="Service"
           component={ServicePackages}
         />
-        {/* <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
-          name="Search"
-          component={Search}
-        /> */}
+          name="HealthMonitorDetail"
+          component={HealthMonitorDetail}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -152,7 +153,7 @@ function MyBottomNavigationBar() {
       <Tab.Screen
         name="Account"
         options={{ headerShown: false }}
-        component={Login}
+        component={HealthMonitorDetail}
       />
     </Tab.Navigator>
   );
