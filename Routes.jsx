@@ -46,6 +46,11 @@ const Routes = () => {
           name="Otp"
           component={Otp}
         />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="Service"
+          component={ServicePackages}
+        />
         {/* <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="Search"
@@ -104,15 +109,15 @@ function MyBottomNavigationBar() {
           let iconName;
 
           if (route.name === "Home") {
-            iconName = focused ? "Nav1" : "Nav1";
+            iconName = focused ? "Nav1" : "Nav1_1";
           } else if (route.name === "Visitation") {
-            iconName = focused ? "Nav2" : "Nav2";
+            iconName = focused ? "Nav2" : "Nav2_1";
           } else if (route.name === "HealthCondition") {
-            iconName = focused ? "Nav3" : "Nav3";
+            iconName = focused ? "Nav3" : "Nav3_1";
           } else if (route.name === "OlderPeople") {
-            iconName = focused ? "Nav4" : "Nav4";
+            iconName = focused ? "Nav4" : "Nav4_1";
           } else if (route.name === "Account") {
-            iconName = focused ? "Nav5" : "Nav5";
+            iconName = focused ? "Nav5" : "Nav5_1";
           }
 
           // You can return any component that you like here!

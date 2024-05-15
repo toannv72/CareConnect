@@ -1,6 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import ComPackage from "./ComPackage";
+import { LanguageContext } from "./../../contexts/LanguageContext";
+import { Controller, Form, FormProvider, useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import ComInputSearch from "../../Components/ComInput/ComInputSearch";
+import { ScrollView } from "react-native";
+import { ActivityIndicator } from "react-native";
+import ComLoading from "../../Components/ComLoading/ComLoading";
 
 export default function ServicePackages() {
   const [data, setData] = useState([
@@ -21,14 +29,62 @@ export default function ServicePackages() {
       money: 100000000,
     },
   ]);
+  const [loading, setLoading] = useState(false);
+  const searchSchema = yup.object().shape({
+    search: yup.string(),
+  });
 
+  const {
+    text: {
+      Login,
+      common: { button },
+    },
+    setLanguage,
+  } = useContext(LanguageContext);
+  const methods = useForm({
+    resolver: yupResolver(searchSchema),
+    defaultValues: {
+      search: "",
+    },
+  });
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = methods;
+
+  const onSubmit = (data) => {
+    console.log("====================================");
+    console.log(data);
+    console.log("====================================");
+    setLoading(!loading);
+  };
   return (
     <View style={styles.body}>
-      <View>
-        {data?.map((value, index) => (
-          <ComPackage key={index} data={value} />
-        ))}
-      </View>
+      <FormProvider {...methods}>
+        <ComInputSearch
+          placeholder="Tìm kiếm"
+          keyboardType="default"
+          name="search"
+          control={control}
+          onSubmitEditing={handleSubmit(onSubmit)}
+          errors={errors}
+        />
+      </FormProvider>
+      <ComLoading show={loading}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+        >
+          <View>
+            {data?.map((value, index) => (
+              <ComPackage key={index} data={value} />
+            ))}
+          </View>
+          <View style={{ height: 120 }}></View>
+        </ScrollView>
+      </ComLoading>
     </View>
   );
 }
@@ -39,5 +95,6 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     backgroundColor: "#fff",
     paddingHorizontal: 10,
+    gap: 10,
   },
 });

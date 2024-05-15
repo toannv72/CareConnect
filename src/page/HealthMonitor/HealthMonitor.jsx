@@ -1,6 +1,11 @@
-import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import React, { useContext, useState } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
 import ComHealth from "./ComHealth";
+import { FormProvider, useForm } from "react-hook-form";
+import ComInputSearch from "../../Components/ComInput/ComInputSearch";
+import { LanguageContext } from "../../contexts/LanguageContext";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 export default function HealthMonitor() {
   const [data, setData] = useState([
@@ -21,14 +26,58 @@ export default function HealthMonitor() {
       bed: "3",
     },
   ]);
+    const searchSchema = yup.object().shape({
+      search: yup.string(),
+    });
+const {
+  text: {
+    Login,
+    common: { button },
+  },
+  setLanguage,
+} = useContext(LanguageContext);
+const methods = useForm({
+  resolver: yupResolver(searchSchema),
+  defaultValues: {
+    search: "",
+  },
+});
 
+const {
+  control,
+  handleSubmit,
+  formState: { errors },
+} = methods;
+
+const onSubmit = (data) => {
+  console.log("====================================");
+  console.log(data);
+  console.log("====================================");
+};
   return (
     <View style={styles.body}>
-      <View>
-        {data?.map((value, index) => (
-          <ComHealth key={index} data={value} />
-        ))}
-      </View>
+      {/* <FormProvider {...methods}>
+        <ComInputSearch
+          placeholder="Tìm kiếm"
+          keyboardType="default"
+          name="search"
+          control={control}
+          onSubmitEditing={handleSubmit(onSubmit)}
+          errors={errors}
+        />
+      </FormProvider> */}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        style={styles?.scrollView}
+      >
+        <View>
+          {data?.map((value, index) => (
+            <ComHealth key={index} data={value} />
+          ))}
+        </View>
+        <View style={{ height: 120 }}></View>
+      </ScrollView>
     </View>
   );
 }

@@ -8,13 +8,7 @@ export default function ComHealth({ data }) {
     text: { healthMonitor },
     setLanguage,
   } = useContext(LanguageContext);
-  const formatCurrency = (number) => {
-    // Sử dụng hàm toLocaleString() để định dạng số
-    return number.toLocaleString("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    });
-  };
+
   return (
     <TouchableOpacity style={styles.body}>
       <Image
