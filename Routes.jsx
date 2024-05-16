@@ -17,12 +17,13 @@ import ServicePackages from "./src/page/ServicePackages/ServicePackages";
 import HealthMonitor from "./src/page/HealthMonitor/HealthMonitor";
 import Notification from "./src/page/Notification/Notification";
 import HealthMonitorDetail from "./src/page/HealthMonitorDetail/HealthMonitorDetail";
+import VisitationSchedule from "./src/page/VisitationSchedule/VisitationSchedule";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Routes = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Homes">
+      <Stack.Navigator initialRouteName="VisitationSchedule">
         <Stack.Screen
           name="Homes"
           options={{ headerLeft: null, headerShown: false }}
@@ -57,6 +58,11 @@ const Routes = () => {
           options={{ headerLeft: null, headerShown: false }}
           name="HealthMonitorDetail"
           component={HealthMonitorDetail}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="VisitationSchedule"
+          component={VisitationSchedule}
         />
       </Stack.Navigator>
     </NavigationContainer>
