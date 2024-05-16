@@ -92,36 +92,40 @@ const ComInput = (
 
 export default ComInput;
 const styles = StyleSheet.create({
-
   inputContainer: {
     marginBottom: 20,
   },
   labelContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 4,
   },
   label: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginRight: 4,
     color: "#33B39C",
   },
   required: {
-    color: 'red',
+    color: "red",
     fontSize: 14,
   },
   input: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     // height: 40,
     padding: 10,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor: "gray",
     fontWeight: "bold",
+
+    elevation: 5, // Bóng đổ cho Android
+    shadowColor: "#000", // Màu của bóng đổ cho iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
   },
   error: {
-    color: 'red',
+    color: "red",
     marginTop: 4,
   },
-
 });

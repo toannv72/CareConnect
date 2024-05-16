@@ -36,8 +36,8 @@ export default function ComHealth({ data }) {
               {healthMonitor?.name}
             </Text>
             <Text>
-              : {data?.name}sssssssssssssssssssss
-              ssssssssssssssssssssssssssssssssssssss
+              : {data?.name}
+              
             </Text>
             {/* <Text>: {data?.name}</Text> */}
           </Text>

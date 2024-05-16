@@ -153,7 +153,7 @@ function MyBottomNavigationBar() {
       <Tab.Screen
         name="Account"
         options={{ headerShown: false }}
-        component={HealthMonitorDetail}
+        component={Login}
       />
     </Tab.Navigator>
   );

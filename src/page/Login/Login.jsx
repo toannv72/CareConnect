@@ -63,7 +63,7 @@ export default function LoginScreen() {
     setData(data);
     Keyboard.dismiss();
     console.log(data);
-    navigation.navigate("Homes", { screen: "home" });
+    navigation.navigate("Homes", { screen: "Home" });
   };
   const data = [
     {

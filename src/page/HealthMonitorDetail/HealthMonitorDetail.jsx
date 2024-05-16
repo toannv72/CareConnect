@@ -8,6 +8,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import ComPatient from "./ComPatient";
 import { useRoute } from "@react-navigation/native";
 import ComButtonDay from "../../Components/ComButton/ComButtonDay";
+import ComHealthIndex from "../../Components/ComHealthIndex/ComHealthIndex";
+import ComTextArea from "../../Components/ComInput/ComTextArea";
 
 export default function HealthMonitorDetail() {
   const [data, setData] = useState({
@@ -28,6 +30,22 @@ export default function HealthMonitorDetail() {
     console.log(data);
     console.log("====================================");
   };
+  const loginSchema = yup.object().shape({});
+
+  const methods = useForm({
+    resolver: yupResolver(loginSchema),
+    values: {
+      email:
+        "CácCác chỉ số bình thường nhưng cụ có dấu hiệu nhức mỏi,......Các chỉ số bình thường nhưng cụ có dấu hiệu nhức mỏi,......Các chỉ số bình thường nhưng cụ có dấu hiệu nhức mỏi,......Các chỉ số bình thường nhưng cụ có dấu hiệu nhức mỏi,...... chỉ số bình thường nhưng cụ có dấu hiệu nhức mỏi,......Các chỉ số bình thường nhưng cụ có dấu hiệu nhức mỏi,......Các chỉ số bình thường nhưng cụ có dấu hiệu nhức mỏi,......Các chỉ số bình thường nhưng cụ có dấu hiệu nhức mỏi,......Các chỉ số bình thường nhưng cụ có dấu hiệu nhức mỏi,......",
+    },
+  });
+
+  const {
+    control,
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = methods;
   return (
     <View style={styles.body}>
       <View style={styles.patient}>
@@ -43,9 +61,22 @@ export default function HealthMonitorDetail() {
         showsHorizontalScrollIndicator={false}
         style={styles?.scrollView}
       >
-
-        
-        <View style={{ height: 120 }}></View>
+        <ComHealthIndex></ComHealthIndex>
+        <ComHealthIndex></ComHealthIndex>
+        <ComHealthIndex></ComHealthIndex>
+        <ComHealthIndex></ComHealthIndex>
+        <ComHealthIndex></ComHealthIndex>
+        <ComHealthIndex></ComHealthIndex>
+        <ComTextArea
+          label={"Ghi chú"}
+          placeholder={"Ghi chú"}
+          name="email"
+          edit={false}
+          control={control}
+          keyboardType="default" // Set keyboardType for First Name input
+          errors={errors}
+        />
+        <View style={{ height: 30 }}></View>
       </ScrollView>
     </View>
   );
