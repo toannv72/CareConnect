@@ -3,15 +3,11 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import AntDesign from "@expo/vector-icons";
-import HomeScreen2 from "./src/page/Home2";
 import Login from "./src/page/Login/Login";
 import Register from "./src/page/Register/Register";
 import Home from "./src/page/Home/Home";
 import RegisterSuccess from "./src/page/Register/RegisterSuccess";
 import Otp from "./src/page/Otp/Otp";
-import NotificationPage from "./src/page/Notification/Notification";
 import ComIcon from "./src/Components/ComIcon/ComIcon";
 import ServicePackages from "./src/page/ServicePackages/ServicePackages";
 import HealthMonitor from "./src/page/HealthMonitor/HealthMonitor";
@@ -23,7 +19,7 @@ const Tab = createBottomTabNavigator();
 const Routes = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="VisitationSchedule">
+      <Stack.Navigator initialRouteName="Homes">
         <Stack.Screen
           name="Homes"
           options={{ headerLeft: null, headerShown: false }}
@@ -102,17 +98,6 @@ function MyBottomNavigationBar() {
           shadowRadius: 3.84,
           elevation: 5,
         },
-        // tabBarIcon: ({ focused, color, size }) => {
-        //   let iconName;
-        //   if (route.name === "Home") {
-        //     iconName = focused ? "home" : "home";
-        //   } else if (route.name === "Like") {
-        //     iconName = focused ? "home" : "home";
-        //   } else if (route.name === "Profile") {
-        //     iconName = focused ? "home" : "home";
-        //   }
-        //   return <Ionicons name={"home-outline"} size={24} color="white" />;
-        // },
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
@@ -159,7 +144,7 @@ function MyBottomNavigationBar() {
       <Tab.Screen
         name="Account"
         options={{ headerShown: false }}
-        component={Login}
+        component={VisitationSchedule}
       />
     </Tab.Navigator>
   );

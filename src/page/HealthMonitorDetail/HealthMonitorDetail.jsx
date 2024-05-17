@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { FormProvider, useForm } from "react-hook-form";
-import ComInputSearch from "../../Components/ComInput/ComInputSearch";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";

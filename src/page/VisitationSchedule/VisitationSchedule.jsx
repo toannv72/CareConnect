@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
-import ComPackage from "./ComVisitationSchedule";
+import ComVisitationSchedule from "./ComVisitationSchedule";
 import { LanguageContext } from "./../../contexts/LanguageContext";
 import { Controller, Form, FormProvider, useForm } from "react-hook-form";
 import * as yup from "yup";
@@ -13,6 +13,54 @@ import Visitation from "../../../assets/VisitationSchedule/VisitationSchedule.pn
 
 export default function VisitationSchedule() {
   const [data, setData] = useState([
+    {
+      img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
+      color: "#F7E863",
+      text: "Gói cơ bản",
+      context: "Cung cấp tất cả các dịch vụ cần thiết cho người thân của bạn",
+      people: 2,
+      money: 1000000000,
+    },
+    {
+      img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
+      color: "#8DF7AB",
+      text: "Gói cơ bản",
+      context: "Cung cấp tất cả các dịch vụ cần thiết cho người thân của bạn",
+      people: 2,
+      money: 100000000,
+    },
+    {
+      img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
+      color: "#F7E863",
+      text: "Gói cơ bản",
+      context: "Cung cấp tất cả các dịch vụ cần thiết cho người thân của bạn",
+      people: 2,
+      money: 1000000000,
+    },
+    {
+      img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
+      color: "#8DF7AB",
+      text: "Gói cơ bản",
+      context: "Cung cấp tất cả các dịch vụ cần thiết cho người thân của bạn",
+      people: 2,
+      money: 100000000,
+    },
+    {
+      img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
+      color: "#F7E863",
+      text: "Gói cơ bản",
+      context: "Cung cấp tất cả các dịch vụ cần thiết cho người thân của bạn",
+      people: 2,
+      money: 1000000000,
+    },
+    {
+      img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
+      color: "#8DF7AB",
+      text: "Gói cơ bản",
+      context: "Cung cấp tất cả các dịch vụ cần thiết cho người thân của bạn",
+      people: 2,
+      money: 100000000,
+    },
     {
       img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
       color: "#F7E863",
@@ -84,10 +132,10 @@ export default function VisitationSchedule() {
         >
           <View>
             {data?.map((value, index) => (
-              <ComPackage key={index} data={value} />
+              <ComVisitationSchedule key={index} data={value} />
             ))}
           </View>
-          <View style={{ height: 120 }}></View>
+          <View style={{ height:320 }}></View>
         </ScrollView>
       </ComLoading>
     </View>

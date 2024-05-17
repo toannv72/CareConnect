@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { Controller } from "react-hook-form";
-import { StyleSheet, View, Text, TextInput, Image } from "react-native";
+import { StyleSheet, View, Text, TextInput, Image, TouchableOpacity } from "react-native";
 import iconSource from "../../../assets/Search.png";
 
 iconSource;
@@ -20,6 +20,7 @@ const ComInputSearch = (
   ...props
 ) => {
   const errorMessage = errors[name]?.message;
+  const [showClearButton, setShowClearButton] = useState(false);
   return (
     <View>
       <Controller
@@ -31,7 +32,10 @@ const ComInputSearch = (
               onBlur={() => {
                 onBlur();
               }}
-              onChangeText={(value) => onChange(value)}
+              onChangeText={(value) => {
+                onChange(value);
+                setShowClearButton(value.length > 0);
+              }}
               placeholder={placeholder}
               value={value}
               onSubmitEditing={onSubmitEditing}
@@ -40,6 +44,16 @@ const ComInputSearch = (
               style={styles.input}
               {...props}
             />
+            {showClearButton && (
+              <TouchableOpacity
+                onPress={() => {
+                  onChange(""); // Xóa nội dung input
+                  setShowClearButton(false);
+                }}
+              >
+                <Image source={iconSource} style={styles.clearIcon} />
+              </TouchableOpacity>
+            )}
           </View>
         )}
         name={name}
@@ -85,5 +99,10 @@ const styles = StyleSheet.create({
     marginRight: 10,
     paddingHorizontal: 10,
     objectFit: "fill",
+  },
+  clearIcon: {
+    width: 20,
+    height: 20,
+    marginLeft: 10,
   },
 });

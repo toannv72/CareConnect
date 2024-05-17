@@ -3,7 +3,7 @@ import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { Image, View } from "react-native";
 import { LanguageContext } from "../../contexts/LanguageContext";
 
-export default function ComPackage({ data }) {
+export default function ComVisitationSchedule({ data }) {
   const {
     text: { servicePackages },
     setLanguage,
@@ -16,37 +16,35 @@ export default function ComPackage({ data }) {
     });
   };
   return (
-    <TouchableOpacity
-      style={[styles.body, { backgroundColor: data?.color || "#F7E863" }]}
-    >
-      <Image
-        source={{ uri: data?.img }}
-        style={{
-          width: 100,
-          height: 100,
-          borderRadius: 10,
-          objectFit: "fill",
-          borderWidth: 0.5,
-          borderColor: "#000",
-        }}
-      />
+    <TouchableOpacity style={[styles.body]}>
+      <View style={styles.day}>
+        <Text style={styles.textYear}>2024</Text>
+        <View
+          style={{ backgroundColor: "#33B39C", paddingHorizontal:10 ,paddingVertical:4, borderRadius: 10 }}
+        >
+          <Text style={styles.textDay}>08</Text>
+          <Text style={styles.textDay}>- -</Text>
+          <Text style={styles.textDay}>05</Text>
+        </View>
+      </View>
+
       <View style={styles?.container}>
-        <Text style={{ fontWeight: "bold", fontSize: 16 }}>{data?.text}</Text>
+        {/* <Text style={{ fontWeight: "bold", fontSize: 16 }}>{data?.text}</Text> */}
         <Text style={{ flexDirection: "row" }}>
-          <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-            {servicePackages?.package?.living}
-          </Text>
-          <Text>
-            : {data?.people}
-            {servicePackages?.package?.people}
-          </Text>
-        </Text>
-        <Text numberOfLines={2}>{data?.context}</Text>
-        <Text>
           <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-            {formatCurrency(data?.money)}
+            Người Đăng Ký
           </Text>
-          /{servicePackages?.package?.month}
+          <Text>: Thảo My</Text>
+        </Text>
+        <Text style={{ flexDirection: "row" }}>
+          <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+            Số điện thoại
+          </Text>
+          <Text>: 01234567890</Text>
+        </Text>
+        <Text style={{ flexDirection: "row" }}>
+          <Text style={{ fontWeight: "bold", fontSize: 16 }}>Giờ</Text>
+          <Text>: 10:00</Text>
         </Text>
       </View>
     </TouchableOpacity>
@@ -56,15 +54,38 @@ export default function ComPackage({ data }) {
 const styles = StyleSheet.create({
   body: {
     flexDirection: "row",
-    gap: 10,
+    gap: 18,
     marginBottom: 10,
     padding: 10,
     borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#33B39C",
+    backgroundColor: "#caece6",
+
+    elevation: 4, // Bóng đổ cho Android
+    shadowColor: "#000", // Màu của bóng đổ cho iOS
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+  },
+  day: {
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 1,
   },
   container: {
     flex: 1,
     alignItems: "flex-start",
     justifyContent: "center",
     flexWrap: "wrap",
+  },
+  textDay: {
+    color: "#fff",
+    textAlign: "center",
+    fontSize: 16,
+  },
+  textYear: {
+    fontSize: 16,
+    color: "#33B39C",
   },
 });
