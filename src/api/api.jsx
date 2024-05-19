@@ -1,16 +1,26 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-
-// eslint-disable-next-line react-hooks/rules-of-hooks
-
-
 const api = axios.create({
-  baseURL: 'http://192.168.56.1:3000/',
-
+  baseURL: process.env.REACT_APP_BASE_URLS,
 });
-// Thêm các headers mặc định nếu cần
-// api.defaults.headers.common["Authorization"] = "Bearer YOUR_ACCESS_TOKEN";
-// Đặt cookies vào tiêu đề yêu cầu (nếu có)
 
+api.interceptors.request.use(
+  async (config) => {
+    try {
+      const accessToken = await AsyncStorage.getItem("accessToken"); // Lấy token từ AsyncStorage
+      if (accessToken) {
+        const token = accessToken.replace(/"/g, "");
+        config.headers["Authorization"] = `Bearer ${token}`;
+      }
+      return config;
+    } catch (error) {
+      // Xử lý lỗi nếu có khi lấy token từ AsyncStorage
+      console.error("Error getting access token:", error);
+      return config; // Trả về config để yêu cầu vẫn được gửi đi, có thể xử lý ở interceptor khác
+    }
+  },
+  (error) => Promise.reject(error)
+);
 export const getData = async (endpoint, params = {}, headers = {}) => {
   try {
     const response = await api.get(endpoint, { params, headers });
@@ -22,7 +32,6 @@ export const getData = async (endpoint, params = {}, headers = {}) => {
 
 export const postData = async (endpoint, data, headers = {}) => {
   try {
-
     const response = await api.post(endpoint, data, { headers });
     return response.data;
   } catch (error) {
