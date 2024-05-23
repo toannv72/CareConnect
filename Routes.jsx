@@ -19,6 +19,7 @@ import AddingServiceDetail from "./src/page/AddingServiceDetail/AddingServiceDet
 import AddingServiceElderRegister from "./src/page/AddingServiceRegister/AddingServiceElderRegister";
 import AddingServiceCalendarRegister from "./src/page/AddingServiceRegister/AddingServiceCalendarRegister";
 import ServicePayment from "./src/page/ServicePayment/ServicePayment";
+import UserProfile from "./src/page/UserProfile/UserProfile";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -156,7 +157,6 @@ function MyBottomNavigationBar() {
         options={{ headerShown: false }}
         component={HomeStackScreen}
       />
-
       <Tab.Screen
         name="Visitation"
         options={{ headerShown: false }}
@@ -172,10 +172,15 @@ function MyBottomNavigationBar() {
         options={{ headerShown: false }}
         component={AddingServicePackages}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Account"
         options={{ headerShown: false }}
         component={VisitationSchedule}
+      /> */}
+      <Tab.Screen
+        name="Account"
+        options={{ headerShown: false }}
+        component={UserProfile}
       />
     </Tab.Navigator>
   );
