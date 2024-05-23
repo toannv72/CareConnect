@@ -1,23 +1,32 @@
-import React from 'react';
-import { TouchableOpacity, View, Text, StyleSheet, Image } from 'react-native';
+import React from "react";
+import { TouchableOpacity, View, Text, StyleSheet, Image } from "react-native";
 import backArrowBlack from "../../../assets/icon/backArrowBlack.png";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
 
-const ComHeader = ({ showBackIcon = false, showTitle = false, title = "", backgroundColor = "white" }) => {
+const ComHeader = ({
+  showBackIcon = false,
+  showTitle = false,
+  title = "",
+  backgroundColor = "white",
+}) => {
   const navigation = useNavigation();
 
   const handleBackPress = () => {
-    navigation.goBack();
+    try {
+      navigation.goBack();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <View style={[styles.container, { backgroundColor }]}>
       {showBackIcon && (
-        <TouchableOpacity onPress={handleBackPress} style={styles.backIconContainer}>
-          <Image
-            source={backArrowBlack}
-            style={styles.backIcon}
-          />
+        <TouchableOpacity
+          onPress={handleBackPress}
+          style={styles.backIconContainer}
+        >
+          <Image source={backArrowBlack} style={styles.backIcon} />
         </TouchableOpacity>
       )}
       {showTitle && (
@@ -31,16 +40,16 @@ const ComHeader = ({ showBackIcon = false, showTitle = false, title = "", backgr
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingTop: 35,
     padding: 15,
-    justifyContent: 'center',
-    position: 'relative',
+    justifyContent: "center",
+    position: "relative",
   },
   backIconContainer: {
     marginRight: 10,
-    position: 'absolute',
+    position: "absolute",
     left: 15,
     paddingTop: 20,
   },
@@ -50,14 +59,14 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
     marginLeft: 40,
     marginRight: 40,
   },
   titleText: {
     fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });
 
