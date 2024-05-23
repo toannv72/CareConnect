@@ -105,6 +105,28 @@ export const vn = {
       month: "tháng",
     },
   },
+  addingPackages: {
+    title: "Gói dịch vụ",
+    package: {
+      description: "Mô tả",
+      category: "Phân loại",
+      month: "tháng",
+    },
+    register:{
+      registerElder: "Bạn muốn đăng ký dịch vụ cho",
+      registerTime: "Thời gian thực hiện",
+      registerTitle: "Đăng ký dịch vụ"
+    },
+    payment:{
+      title: "Thanh toán",
+      billId: "Mã hóa đơn",
+      serviceName: "Tên dịch vụ",
+      registerName: "Người đăng ký",
+      elderName: "Người thụ hưởng",
+      time: "Thời gian",
+      totalMoney: "Tổng chi phí"
+    }
+  },
   healthMonitor: {
     name: "Cụ",
     age: "Tuổi",

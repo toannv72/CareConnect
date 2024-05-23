@@ -14,6 +14,12 @@ import HealthMonitor from "./src/page/HealthMonitor/HealthMonitor";
 import Notification from "./src/page/Notification/Notification";
 import HealthMonitorDetail from "./src/page/HealthMonitorDetail/HealthMonitorDetail";
 import VisitationSchedule from "./src/page/VisitationSchedule/VisitationSchedule";
+import AddingServicePackages from "./src/page/AddingServicePackage/AddingServicePackage";
+import AddingServiceDetail from "./src/page/AddingServiceDetail/AddingServiceDetail";
+import AddingServiceElderRegister from "./src/page/AddingServiceRegister/AddingServiceElderRegister";
+import AddingServiceCalendarRegister from "./src/page/AddingServiceRegister/AddingServiceCalendarRegister";
+import ServicePayment from "./src/page/ServicePayment/ServicePayment";
+
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Routes = () => {
@@ -49,6 +55,31 @@ const Routes = () => {
           options={{ headerLeft: null, headerShown: false }}
           name="Service"
           component={ServicePackages}
+        />
+         <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="AddingService"
+          component={AddingServicePackages}
+        />
+         <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="AddingServiceDetail"
+          component={AddingServiceDetail}
+        />
+         <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="AddingServiceRegister"
+          component={AddingServiceElderRegister}
+        />
+         <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="AddingServiceCalendarRegister"
+          component={AddingServiceCalendarRegister}
+        />
+         <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ServicePayment"
+          component={ServicePayment}
         />
         <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
@@ -139,7 +170,7 @@ function MyBottomNavigationBar() {
       <Tab.Screen
         name="Notification"
         options={{ headerShown: false }}
-        component={Notification}
+        component={AddingServicePackages}
       />
       <Tab.Screen
         name="Account"
