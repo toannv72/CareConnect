@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigation } from "@react-navigation/native";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import * as yup from "yup";
@@ -9,8 +9,11 @@ import ComInput from "../../../Components/ComInput/ComInput";
 import ComButton from "../../../Components/ComButton/ComButton";
 import ComSelect from "../../../Components/ComInput/ComSelect";
 import Avatar from "./Avatar";
+import ComDatePicker from "../../../Components/ComInput/ComDatePicker";
+
 
 export default function EditProfile() {
+   const [date, setDate] = useState(new Date());
   const navigation = useNavigation();
   const {
     text: {
@@ -47,7 +50,7 @@ export default function EditProfile() {
     resolver: yupResolver(loginSchema),
     defaultValues: {
       email: "toan@gmail.com",
-      password: "",
+      dateOfBirth: "",
     },
   });
   const {
@@ -57,6 +60,7 @@ export default function EditProfile() {
     formState: { errors },
   } = methods;
   const handleEdit = (data) => {
+
     console.log("====================================");
     console.log(data);
     console.log("====================================");
@@ -76,7 +80,7 @@ export default function EditProfile() {
   return (
     <View style={styles.body}>
       <View style={styles.container}>
-        <Avatar/>
+        <Avatar />
         <FormProvider {...methods}>
           <View style={{ width: "100%", gap: 10 }}>
             <ComInput
@@ -107,17 +111,25 @@ export default function EditProfile() {
                 />
               </View>
               <View style={{ flex: 1 }}>
-                <ComInput
+                <ComDatePicker
                   label={EditProfile?.label?.dateOfBirth}
                   placeholder={EditProfile?.placeholder?.dateOfBirth}
                   name="dateOfBirth"
                   control={control}
-                  keyboardType="default" // Set keyboardType for First Name input
                   errors={errors} // Pass errors object
                   required
                 />
               </View>
             </View>
+            <ComInput
+              label={EditProfile?.label?.phoneNumber}
+              placeholder={EditProfile?.placeholder?.phoneNumber}
+              name="phoneNumber"
+              control={control}
+              keyboardType="default" // Set keyboardType for First Name input
+              errors={errors} // Pass errors object
+              required
+            />
             <ComInput
               label={EditProfile?.label?.email}
               placeholder={EditProfile?.placeholder?.email}

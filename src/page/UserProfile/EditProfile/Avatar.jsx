@@ -1,14 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Image } from "react-native";
 
 export default function Avatar() {
+  const [avatarSource, setAvatarSource] = useState(
+    "https://firebasestorage.googleapis.com/v0/b/swd-longchim.appspot.com/o/376577375_998270051209102_4679797004619533760_n.jpg?alt=media&token=90d94961-bc1b-46e4-b60a-ad731606b13b"
+  );
+
   const handleChoosePhoto = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [4, 4],
       quality: 1,
     });
     if (!result.canceled) {
@@ -20,7 +24,9 @@ export default function Avatar() {
       <View style={styles.avatarContainer}>
         <Image
           source={{
-            uri: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
+            uri: avatarSource?.assets
+              ? avatarSource?.assets[0]?.uri
+              : "https://firebasestorage.googleapis.com/v0/b/swd-longchim.appspot.com/o/376577375_998270051209102_4679797004619533760_n.jpg?alt=media&token=90d94961-bc1b-46e4-b60a-ad731606b13b",
           }}
           style={styles.avatar}
         />
@@ -31,7 +37,7 @@ export default function Avatar() {
           <Image
             source={{
               uri: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
-            }} 
+            }}
             style={styles.icon}
           />
         </TouchableOpacity>
@@ -48,6 +54,8 @@ const styles = StyleSheet.create({
     width: 170,
     height: 170,
     borderRadius: 1000,
+    borderWidth: 1,
+    borderColor: "gray",
   },
   icon: {
     width: 50,
@@ -64,5 +72,4 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
   },
-
 });
