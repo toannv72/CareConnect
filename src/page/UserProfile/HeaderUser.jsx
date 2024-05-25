@@ -1,29 +1,35 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function HeaderUser() {
-    return (
-      <View style={styles.body}>
-        <TouchableOpacity style={styles.container}>
+  const navigation = useNavigation();
+
+  const edit = () => {
+    navigation.navigate("EditProfile");
+  };
+  return (
+    <View style={styles.body}>
+      <TouchableOpacity style={styles.container}>
+        <Image
+          source={{
+            uri: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
+          }}
+          style={styles.avatar}
+        />
+        <View style={styles.info}>
+          <Text style={styles.name}>Cao Văn B</Text>
+          <Text style={styles.phone}>0909799799</Text>
+        </View>
+        <TouchableOpacity style={styles.editButton} onPress={edit}>
           <Image
-            source={{
-              uri: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
-            }} // Thay thế bằng đường dẫn đến ảnh đại diện
-            style={styles.avatar}
+            source={require("../../../assets/icon/backArrowWhite.png")} // Thay thế bằng đường dẫn đến icon chỉnh sửa
+            style={styles.editIcon}
           />
-          <View style={styles.info}>
-            <Text style={styles.name}>Cao Văn B</Text>
-            <Text style={styles.phone}>0909799799</Text>
-          </View>
-          <TouchableOpacity style={styles.editButton}>
-            <Image
-              source={require("../../../assets/icon/backArrowWhite.png")} // Thay thế bằng đường dẫn đến icon chỉnh sửa
-              style={styles.editIcon}
-            />
-          </TouchableOpacity>
         </TouchableOpacity>
-      </View>
-    );
+      </TouchableOpacity>
+    </View>
+  );
 }
 const styles = StyleSheet.create({
   container: {

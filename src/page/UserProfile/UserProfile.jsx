@@ -43,11 +43,20 @@ export default function UserProfile() {
       icon: "",
     },
   ];
+
+  const data3 = [
+    {
+      name: "Đăng xuất",
+      link: "Login",
+      icon: "",
+    },
+  ];
   return (
     <View style={styles.body}>
       <HeaderUser />
       <MenuList data={data} />
       <MenuList data={data2} />
+      <MenuList data={data3} />
     </View>
   );
 }

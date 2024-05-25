@@ -20,13 +20,14 @@ import AddingServiceElderRegister from "./src/page/AddingServiceRegister/AddingS
 import AddingServiceCalendarRegister from "./src/page/AddingServiceRegister/AddingServiceCalendarRegister";
 import ServicePayment from "./src/page/ServicePayment/ServicePayment";
 import UserProfile from "./src/page/UserProfile/UserProfile";
+import EditProfile from "./src/page/UserProfile/EditProfile/EditProfile";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Routes = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Homes">
+      <Stack.Navigator initialRouteName="EditProfile">
         <Stack.Screen
           name="Homes"
           options={{ headerLeft: null, headerShown: false }}
@@ -57,27 +58,27 @@ const Routes = () => {
           name="Service"
           component={ServicePackages}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="AddingService"
           component={AddingServicePackages}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="AddingServiceDetail"
           component={AddingServiceDetail}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="AddingServiceRegister"
           component={AddingServiceElderRegister}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="AddingServiceCalendarRegister"
           component={AddingServiceCalendarRegister}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="ServicePayment"
           component={ServicePayment}
@@ -91,6 +92,11 @@ const Routes = () => {
           options={{ headerLeft: null, headerShown: false }}
           name="VisitationSchedule"
           component={VisitationSchedule}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="EditProfile"
+          component={EditProfile}
         />
       </Stack.Navigator>
     </NavigationContainer>
