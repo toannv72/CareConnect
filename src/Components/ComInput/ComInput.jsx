@@ -92,9 +92,6 @@ const ComInput = (
 
 export default ComInput;
 const styles = StyleSheet.create({
-  inputContainer: {
-    marginBottom: 20,
-  },
   labelContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -115,13 +112,13 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "gray",
+    borderColor: "#33B39C",
     fontWeight: "bold",
 
     elevation: 5, // Bóng đổ cho Android
     shadowColor: "#000", // Màu của bóng đổ cho iOS
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 200 },
+    shadowOpacity: 0.1,
     shadowRadius: 4,
   },
   error: {

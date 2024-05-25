@@ -88,7 +88,7 @@ const ComDatePicker = ({
 export default ComDatePicker;
 const styles = StyleSheet.create({
   inputContainer: {
-    marginBottom: 20,
+    // marginBottom: 20,
   },
   labelContainer: {
     flexDirection: "row",

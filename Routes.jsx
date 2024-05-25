@@ -27,7 +27,7 @@ const Tab = createBottomTabNavigator();
 const Routes = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="EditProfile">
+      <Stack.Navigator initialRouteName="Homes">
         <Stack.Screen
           name="Homes"
           options={{ headerLeft: null, headerShown: false }}
@@ -119,6 +119,7 @@ function MyBottomNavigationBar() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
+        tabBarHideOnKeyboard: true,
         tabBarShowLabel: false,
         tabBarStyle: {
           position: "absolute",
@@ -156,7 +157,7 @@ function MyBottomNavigationBar() {
           return <ComIcon icon={iconName} />;
         },
       })}
-      keyboardShouldPersistTaps="handled"
+      // keyboardShouldPersistTaps="handled"
     >
       <Tab.Screen
         name="Home"
