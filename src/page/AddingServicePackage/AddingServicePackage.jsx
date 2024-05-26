@@ -164,7 +164,7 @@ export default function AddingServicePackages() {
                     </ScrollView>
                 </ComLoading>
             </View>
-            <View style={{ height: 100, backgroundColor: "#fff" }}></View>
+            {/* <View style={{ height: 100, backgroundColor: "#fff" }}></View> */}
         </>
     );
 }

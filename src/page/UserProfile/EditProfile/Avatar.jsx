@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Image } from "react-native";
+import plusIcon from "../../../../assets/profile_icons/plus.png";
 
 export default function Avatar() {
   const [avatarSource, setAvatarSource] = useState(
@@ -34,12 +35,7 @@ export default function Avatar() {
           onPress={handleChoosePhoto}
           style={styles.iconContainer}
         >
-          <Image
-            source={{
-              uri: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
-            }}
-            style={styles.icon}
-          />
+          <Image source={plusIcon} style={styles.icon} />
         </TouchableOpacity>
       </View>
     </View>

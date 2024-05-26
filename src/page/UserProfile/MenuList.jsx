@@ -1,9 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import Icon from "react-native-vector-icons/Ionicons"; // Hoặc thư viện icon khác
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import bill from "../../../assets/profile_icons/bill.png";
 
-const MenuItem = ({ iconName, text, link }) => {
+const MenuItem = ({ iconName, text, link, colorRed }) => {
   const navigation = useNavigation();
 
   const press = () => {
@@ -11,18 +11,25 @@ const MenuItem = ({ iconName, text, link }) => {
   };
   return (
     <TouchableOpacity style={styles.menuItem} onPress={() => press()}>
-      <Icon name={iconName} size={24} color="#128C7E" style={styles.icon} />
-      <Text style={styles.text}>{text}</Text>
+      <Image source={iconName} style={styles.image} />
+      {colorRed ? (
+        <Text style={{ fontSize: 20, color: "red", fontWeight: "bold" }}>
+          {text}
+        </Text>
+      ) : (
+        <Text style={{ fontSize: 20, fontWeight: "bold" }}>{text}</Text>
+      )}
     </TouchableOpacity>
   );
 };
 
-const MenuList = ({ data }) => {
+const MenuList = ({ data, colorRed }) => {
   return (
     <View style={styles.container}>
       {data.map((value, index) => (
         <MenuItem
           key={index}
+          colorRed={colorRed}
           iconName={value.icon}
           text={value.name}
           link={value.link}
@@ -43,11 +50,13 @@ const styles = StyleSheet.create({
   menuItem: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 10,
-    paddingHorizontal: 15,
+    paddingVertical: 8,
+    paddingHorizontal: 4,
+    gap: 10,
   },
-  icon: {
-    marginRight: 15,
+  image: {
+    width: 30,
+    height: 30,
   },
   text: {
     fontSize: 16,

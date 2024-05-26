@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import editIcon from "../../../assets/profile_icons/edit.png";
 
 export default function HeaderUser() {
   const navigation = useNavigation();
@@ -27,7 +28,7 @@ export default function HeaderUser() {
         </View>
         <TouchableOpacity style={styles.editButton} onPress={edit}>
           <Image
-            source={require("../../../assets/icon/backArrowWhite.png")} // Thay thế bằng đường dẫn đến icon chỉnh sửa
+            source={editIcon} // Thay thế bằng đường dẫn đến icon chỉnh sửa
             style={styles.editIcon}
           />
         </TouchableOpacity>
@@ -43,16 +44,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
   },
   avatar: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 70,
+    height: 70,
+    borderRadius: 35,
     marginRight: 15,
   },
   info: {
     flex: 1,
   },
   name: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: "bold",
   },
   phone: {
@@ -63,8 +64,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   editIcon: {
-    width: 20,
-    height: 20,
-    backgroundColor: "#000",
+    width: 30,
+    height:30,
   },
 });

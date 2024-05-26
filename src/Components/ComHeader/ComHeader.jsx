@@ -41,17 +41,16 @@ const ComHeader = ({
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    alignItems: "center",
-    paddingTop: 50,
-    paddingBottom: 25,
-    justifyContent: "center",
-    position: "relative",
-
+    // alignItems: "center",
+    paddingTop: 55,
+    paddingBottom: 5,
+    // justifyContent: "center",
+    // position: "relative",
   },
   backIconContainer: {
     position: "absolute",
     left: 5,
-    bottom: 0,
+    bottom: -15,
     paddingVertical: 20,
     paddingRight: 20,
     paddingLeft: 10,
