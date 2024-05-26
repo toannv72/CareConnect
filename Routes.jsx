@@ -21,6 +21,7 @@ import AddingServiceCalendarRegister from "./src/page/AddingServiceRegister/Addi
 import ServicePayment from "./src/page/ServicePayment/ServicePayment";
 import UserProfile from "./src/page/UserProfile/UserProfile";
 import EditProfile from "./src/page/UserProfile/EditProfile/EditProfile";
+import DetailProfile from "./src/page/UserProfile/DetailProfile";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -97,6 +98,11 @@ const Routes = () => {
           options={{ headerLeft: null, headerShown: false }}
           name="EditProfile"
           component={EditProfile}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="DetailProfile"
+          component={DetailProfile}
         />
       </Stack.Navigator>
     </NavigationContainer>

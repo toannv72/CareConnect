@@ -8,9 +8,13 @@ export default function HeaderUser() {
   const edit = () => {
     navigation.navigate("EditProfile");
   };
+  const DetailProfile = () => {
+    navigation.navigate("DetailProfile");
+    
+  }
   return (
     <View style={styles.body}>
-      <TouchableOpacity style={styles.container}>
+      <TouchableOpacity style={styles.container} onPress={DetailProfile}>
         <Image
           source={{
             uri: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
