@@ -103,7 +103,6 @@ const styles = StyleSheet.create({
   label: {
     fontWeight: "bold",
     marginRight: 4,
-    color: "#33B39C",
   },
   required: {
     color: "red",

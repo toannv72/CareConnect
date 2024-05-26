@@ -55,46 +55,51 @@ export default function AddingServiceDetail() {
                     }}
                 />
             </View>
+
             <View style={styles.body}>
-                <Text style={{ fontWeight: "bold", fontSize: 20, marginBottom: 10 }} numberOfLines={2}>
-                    {data?.text}
-                </Text>
-                {/* price */}
-                <Text style={{ fontSize: 16, marginBottom: 10 }}>
-                    <Text style={{ fontWeight: "bold" }}>
-                        {formatCurrency(data?.money)}
-                    </Text>
-                    /{addingPackages?.package?.month}
-                </Text>
-                {/* category */}
-                <Text style={{ flexDirection: "row", marginBottom: 10 }}>
-                    <Text style={styles.contentBold}>
-                        {addingPackages?.package?.category}
-                    </Text>
-                    <Text style={{ fontSize: 16 }}>
-                        : {data?.category}
-                    </Text>
-                </Text>
-                {/* mô tả */}
-                <Text style={styles.contentBold}>
-                    {addingPackages?.package?.description}
-                </Text>
                 <ScrollView  >
+                    <Text style={{ fontWeight: "bold", fontSize: 20, marginBottom: 10 }} numberOfLines={2}>
+                        {data?.text}
+                    </Text>
+                    {/* price */}
+                    <Text style={{ fontSize: 16, marginBottom: 10 }}>
+                        <Text style={{ fontWeight: "bold" }}>
+                            {formatCurrency(data?.money)}
+                        </Text>
+                        /{addingPackages?.package?.month}
+                    </Text>
+                    {/* category */}
+                    <Text style={{ flexDirection: "row", marginBottom: 10 }}>
+                        <Text style={styles.contentBold}>
+                            {addingPackages?.package?.category}
+                        </Text>
+                        <Text style={{ fontSize: 16 }}>
+                            : {data?.category}
+                        </Text>
+                    </Text>
+                    {/* mô tả */}
+                    <Text style={styles.contentBold}>
+                        {addingPackages?.package?.description}
+                    </Text>
+
                     <Text style={{ fontSize: 16 }}>{data?.context}</Text>
                     <Text style={{ fontSize: 16 }}>{data?.context}</Text>
                     <Text style={{ fontSize: 16 }}>{data?.context}</Text>
                     <Text style={{ fontSize: 16 }}>{data?.context}</Text>
                     <Text style={{ fontSize: 16 }}>{data?.context}</Text>
+
                 </ScrollView>
                 <View style={{ marginVertical: 20 }}>
                     <ComSelectButton
                         onPress={() => {
                             navigation.navigate("AddingServiceRegister", { id: data.id });
                         }}>
-                       {addingPackages?.register?.registerTitle}
+                        {addingPackages?.register?.registerTitle}
                     </ComSelectButton>
                 </View>
             </View>
+
+
         </>
     );
 }
@@ -106,19 +111,25 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         paddingHorizontal: 15,
     },
+    header: {
+        paddingTop: 50
+    },
     contentBold: {
         fontSize: 16,
         marginBottom: 10,
         fontWeight: "bold"
     },
     backIconContainer: {
-        marginRight: 10,
         position: 'absolute',
         zIndex: 100,
-        padding: 10,
+        marginTop: 60,
+        marginLeft: 10,
+        padding: 3,
+        borderRadius: 100,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     backIcon: {
         width: 50,
-        height: 50
+        height: 50,
     },
 });

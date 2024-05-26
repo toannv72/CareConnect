@@ -125,6 +125,41 @@ export const vn = {
       elderName: "Người thụ hưởng",
       time: "Thời gian",
       totalMoney: "Tổng chi phí"
+    },
+    history:{
+      title: "Lịch sử dịch vụ",
+      dates: "Ngày đăng ký",
+      serviceDates: "Ngày thực hiện",
+      status: "Trạng thái",
+      repeat: "Lặp lại",
+      bill: "Các hóa đơn liên quan",
+      serviceHistory: "Lịch sử thực hiện dịch vụ",
+      billId: "Mã hóa đơn",
+      totalMoney: "Tổng thanh toán", 
+      nurse: "Người thực hiện",
+      time: "Thời gian",
+      feedback: "Đánh giá dịch vụ",
+      cancelRenewal: "Hủy gia hạn dịch vụ"
+    },
+    renew:{
+      successTitle: "Hủy gia hạn dịch vụ thành công",
+      successContent: "Bạn đã hủy gia hạn gói Dịch vụ xoa bóp bấm huyệt theo tuần thành công",
+      backToHome: "Về trang lịch sử dịch vụ"
+    }
+  },
+  feedback: {
+    title: "Đánh giá",
+    label:{
+      title: "Tiêu đề đánh giá",
+      content: "Nội dung đánh giá",
+      pleasure: "Mức độ hài lòng",
+      file: "Tệp đính kèm",
+      send: "Gửi đánh giá"
+    },
+    placeholder:{
+      title: "Mô tả ngắn gọn đánh giá của bạn",
+      content: "Mô tả chi tiết nội dung đánh giá của bạn, vấn đề bạn gặp phải,..."
+      
     }
   },
   healthMonitor: {

@@ -95,7 +95,7 @@ export default function AddingServiceElderRegister() {
 
     return (
         <>
-            <View >
+            <View  style={styles.header}>
                 <TouchableOpacity onPress={handleBackPress} style={styles.backIconContainer}>
                     <Image
                         source={backArrowWhite}
@@ -111,6 +111,10 @@ export default function AddingServiceElderRegister() {
                 />
             </View>
             <View style={styles.body}>
+            <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
+                >
                 <Text style={{ fontWeight: "bold", fontSize: 20, marginBottom: 10 }} numberOfLines={2}>
                     {data?.text}
                 </Text>
@@ -136,10 +140,7 @@ export default function AddingServiceElderRegister() {
                     {addingPackages?.register?.registerElder}
                 </Text>
 
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false}
-                >
+               
                     <View>
                         {elderData?.map((value, index) => (
                             <ComElder key={index} data={value} 
@@ -170,19 +171,25 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         paddingHorizontal: 15,
     },
+    header:{
+        paddingTop: 50
+    },
     contentBold: {
         fontSize: 16,
         marginBottom: 10,
         fontWeight: "bold"
     },
     backIconContainer: {
-        marginRight: 10,
         position: 'absolute',
         zIndex: 100,
-        padding: 10,
+        marginTop: 60,
+        marginLeft: 10,
+        padding: 3,
+        borderRadius: 100,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     backIcon: {
         width: 50,
-        height: 50
+        height: 50,
     },
 });

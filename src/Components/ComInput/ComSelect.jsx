@@ -35,7 +35,7 @@ const ComSelect = (
                         <View style={[
                             styles.input,
                             {
-                                borderColor: errorMessage ? 'red' : 'gray'
+                                borderColor: errorMessage ? 'red' : '#33B39C'
                             }
                         ]}>
                             <Picker
@@ -43,7 +43,8 @@ const ComSelect = (
                                 onValueChange={(itemValue, itemIndex) =>
                                     onChange(itemValue)
                                 }
-                               
+                                style={{backgroundColor: '#33B39C', color: 'white'}}
+                                dropdownIconColor="white"
                                 pickerStyleType={{ borderColor: "#000" }}
 
                             >

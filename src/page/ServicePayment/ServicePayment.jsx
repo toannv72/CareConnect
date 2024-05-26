@@ -131,19 +131,25 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         paddingHorizontal: 15,
     },
+    header:{
+        paddingTop: 50
+    },
     contentBold: {
         fontSize: 16,
         marginBottom: 10,
         fontWeight: "bold"
     },
     backIconContainer: {
-        marginRight: 10,
         position: 'absolute',
         zIndex: 100,
-        padding: 10,
+        marginTop: 60,
+        marginLeft: 10,
+        padding: 3,
+        borderRadius: 100,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     backIcon: {
         width: 50,
-        height: 50
+        height: 50,
     },
 });
