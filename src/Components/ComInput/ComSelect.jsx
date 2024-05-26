@@ -27,40 +27,42 @@ const ComSelect = (
               </View>
             )}
 
-            <Controller
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <View
-                  style={[
-                    styles.input,
-                    {
-                      borderColor: errorMessage ? "red" : "#33B39C",
-                    },
-                  ]}
-                >
-                  <Picker
-                    selectedValue={value}
-                    onValueChange={(itemValue, itemIndex) =>
-                      onChange(itemValue)
-                    }
-                    pickerStyleType={{ borderColor: "#000" }}
-                  >
-                    {options.map((option, index) => (
-                      <Picker.Item
-                        key={index}
-                        label={option.label}
-                        value={option.value}
-                      />
-                    ))}
-                  </Picker>
-                </View>
-              )}
-              name={name}
-              rules={rules}
-            />
-            {errorMessage && <Text style={styles.error}>{errorMessage}</Text>}
-          </View>
-        );
+                <Controller
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                        <View style={[
+                            styles.input,
+                            {
+                                borderColor: errorMessage ? 'red' : '#33B39C'
+                            }
+                        ]}>
+                            <Picker
+                                selectedValue={value}
+                                onValueChange={(itemValue, itemIndex) =>
+                                    onChange(itemValue)
+                                }
+                                style={{backgroundColor: '#33B39C', color: 'white'}}
+                                dropdownIconColor="white"
+                                pickerStyleType={{ borderColor: "#000" }}
+
+                            >
+                                {options.map((option, index) => (
+                                    <Picker.Item
+                                        key={index}
+                                        label={option.label}
+                                        value={option.value}
+                                    />
+                                ))}
+                            </Picker>
+                        </View>
+                    )}
+
+                    name={name}
+                    rules={rules}
+                />
+                {errorMessage && <Text style={styles.error}>{errorMessage}</Text>}
+            </View>
+        )
     }
 );
 

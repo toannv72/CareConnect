@@ -19,6 +19,10 @@ import AddingServiceDetail from "./src/page/AddingServiceDetail/AddingServiceDet
 import AddingServiceElderRegister from "./src/page/AddingServiceRegister/AddingServiceElderRegister";
 import AddingServiceCalendarRegister from "./src/page/AddingServiceRegister/AddingServiceCalendarRegister";
 import ServicePayment from "./src/page/ServicePayment/ServicePayment";
+import ServiceHistory from "./src/page/ServiceHistory/ServiceHistory/ServiceHistory";
+import ServiceHistoryDetail from "./src/page/ServiceHistory/ServiceHistoryDetail/ServiceHistoryDetail";
+import CancelRenewSuccess from "./src/page/ServiceHistory/ServiceHistoryDetail/CancelRenewSuccess";
+import CreateFeedback from "./src/page/Feedback/CreateFeedback";
 import UserProfile from "./src/page/UserProfile/UserProfile";
 import EditProfile from "./src/page/UserProfile/EditProfile/EditProfile";
 import DetailProfile from "./src/page/UserProfile/DetailProfile";
@@ -83,6 +87,26 @@ const Routes = () => {
           options={{ headerLeft: null, headerShown: false }}
           name="ServicePayment"
           component={ServicePayment}
+        />
+         <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ServiceHistory"
+          component={ServiceHistory}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ServiceHistoryDetail"
+          component={ServiceHistoryDetail}
+        />
+         <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="CancelRenewSuccess"
+          component={CancelRenewSuccess}
+        />
+          <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="CreateFeedback"
+          component={CreateFeedback}
         />
         <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
@@ -183,7 +207,8 @@ function MyBottomNavigationBar() {
       <Tab.Screen
         name="Notification"
         options={{ headerShown: false }}
-        component={AddingServicePackages}
+        component={Notification}
+
       />
       {/* <Tab.Screen
         name="Account"

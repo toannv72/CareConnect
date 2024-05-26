@@ -42,16 +42,19 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    paddingTop: 35,
-    padding: 15,
+    paddingTop: 50,
+    paddingBottom: 25,
     justifyContent: "center",
     position: "relative",
+
   },
   backIconContainer: {
-    marginRight: 10,
     position: "absolute",
-    left: 15,
-    paddingTop: 20,
+    left: 5,
+    bottom: 0,
+    paddingVertical: 20,
+    paddingRight: 20,
+    paddingLeft: 10,
   },
   backIcon: {
     width: 30,
