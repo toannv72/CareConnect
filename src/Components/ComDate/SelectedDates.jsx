@@ -6,9 +6,6 @@ export default function SelectedDates() {
   const [selectedDates, setSelectedDates] = useState({});
   const today = moment().format("YYYY-MM-DD");
 
-  console.log("====================================");
-  console.log(selectedDates);
-  console.log("====================================");
   // chọn được ngày quá khứ
   // const handleDayPress = (day) => {
   //   const updatedDates = { ...selectedDates };

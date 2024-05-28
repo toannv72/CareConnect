@@ -112,12 +112,12 @@ export const vn = {
       category: "Phân loại",
       month: "tháng",
     },
-    register:{
+    register: {
       registerElder: "Bạn muốn đăng ký dịch vụ cho",
       registerTime: "Thời gian thực hiện",
-      registerTitle: "Đăng ký dịch vụ"
+      registerTitle: "Đăng ký dịch vụ",
     },
-    payment:{
+    payment: {
       title: "Thanh toán",
       billId: "Mã hóa đơn",
       serviceName: "Tên dịch vụ",
@@ -174,5 +174,38 @@ export const vn = {
     yearOld: "Tuổi",
     YearOfBirth: "Năm sinh",
     weight: "Cân nặng",
+  },
+  EditProfile: {
+    label: {
+      fullName: "Họ và Tên",
+      gender: "Giới tính",
+      dateOfBirth: "Năm sinh",
+      phoneNumber: "Số điện thoại",
+      email: "Địa chỉ gmail",
+      idNumber: "Số CCCD hoặc CMND",
+      address: "Địa chỉ thường trú",
+    },
+    placeholder: {
+      fullName: "Nhập họ và tên",
+      gender: "Chọn giới tính",
+      dateOfBirth: "Chọn ngày sinh",
+      phoneNumber: "Nhập số điện thoại",
+      email: "Nhập địa chỉ email",
+      idNumber: "Nhập số CCCD hoặc CMND",
+      address: "Nhập địa chỉ",
+    },
+    message: {
+      fullName: "Vui lòng Nhập họ và tên",
+      emailInvalid:"Địa chỉ mail không hợp lệ",
+      gender: "Vui lòng Chọn giới tính",
+      dateOfBirth: "Vui lòng Chọn ngày sinh",
+      phoneNumber: "Vui lòng Nhập số điện thoại",
+      email: "Vui lòng Nhập địa chỉ email",
+      idNumber: "Vui lòng Nhập số CCCD hoặc CMND",
+      address: "Vui lòng Nhập địa chỉ",
+    },
+    button: {
+      EditProfile: "Lưu thông tin",
+    },
   },
 };

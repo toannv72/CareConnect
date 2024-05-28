@@ -44,8 +44,6 @@ console.log(dob);
       aspect: [4, 3],
       quality: 1,
     });
-
-
     if (!result.canceled) {
       setAvatarSource(result);
     }

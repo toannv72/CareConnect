@@ -24,6 +24,8 @@ import ServiceHistoryDetail from "./src/page/ServiceHistory/ServiceHistoryDetail
 import CancelRenewSuccess from "./src/page/ServiceHistory/ServiceHistoryDetail/CancelRenewSuccess";
 import CreateFeedback from "./src/page/Feedback/CreateFeedback";
 import UserProfile from "./src/page/UserProfile/UserProfile";
+import EditProfile from "./src/page/UserProfile/EditProfile/EditProfile";
+import DetailProfile from "./src/page/UserProfile/DetailProfile";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -61,27 +63,27 @@ const Routes = () => {
           name="Service"
           component={ServicePackages}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="AddingService"
           component={AddingServicePackages}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="AddingServiceDetail"
           component={AddingServiceDetail}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="AddingServiceRegister"
           component={AddingServiceElderRegister}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="AddingServiceCalendarRegister"
           component={AddingServiceCalendarRegister}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="ServicePayment"
           component={ServicePayment}
@@ -116,6 +118,16 @@ const Routes = () => {
           name="VisitationSchedule"
           component={VisitationSchedule}
         />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="EditProfile"
+          component={EditProfile}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="DetailProfile"
+          component={DetailProfile}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -137,6 +149,7 @@ function MyBottomNavigationBar() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
+        tabBarHideOnKeyboard: true,
         tabBarShowLabel: false,
         tabBarStyle: {
           position: "absolute",
@@ -174,7 +187,7 @@ function MyBottomNavigationBar() {
           return <ComIcon icon={iconName} />;
         },
       })}
-      keyboardShouldPersistTaps="handled"
+      // keyboardShouldPersistTaps="handled"
     >
       <Tab.Screen
         name="Home"

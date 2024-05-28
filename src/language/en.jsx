@@ -105,4 +105,24 @@ export const en = {
       month: "month",
     },
   },
+  EditProfile: {
+    label: {
+      fullName: "Full Name",
+      gender: "Gender",
+      dateOfBirth: "Date of Birth",
+      phoneNumber: "Phone Number",
+      email: "Email Address",
+      idNumber: "ID Number (CCCD or CMND)",
+      address: "Address",
+    },
+    placeholder: {
+      fullName: "Enter your full name",
+      gender: "Select your gender",
+      dateOfBirth: "Select your date of birth",
+      phoneNumber: "Enter your phone number",
+      email: "Enter your email address",
+      idNumber: "Enter your ID number",
+      address: "Enter your address",
+    },
+  },
 };

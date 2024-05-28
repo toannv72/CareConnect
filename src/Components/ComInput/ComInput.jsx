@@ -1,37 +1,35 @@
-
-import React from 'react';
-import { Controller } from 'react-hook-form';
-import { StyleSheet, View, Text, TextInput } from 'react-native';
+import React from "react";
+import { Controller } from "react-hook-form";
+import { StyleSheet, View, Text, TextInput } from "react-native";
 
 const ComInput = (
-  (
-    {
-      label,
-      name,
-      control,
-      rules,
-      ref,
-      keyboardType,
-      required,
-      errors,
-      password,
-      placeholder
-    },
-    ...props
-  ) => {
-    const errorMessage = errors[name]?.message;
-    return (
-      <View>
-        {label && (
-          <View style={styles.labelContainer}>
-            <Text style={styles.label}>{label}</Text>
-            {required && (
-              <Text style={styles.required}>*</Text>
-            )}
-          </View>
-        )}
+  {
+    label,
+    name,
+    control,
+    rules,
+    ref,
+    keyboardType,
+    required,
+    errors,
+    password,
+    edit,
+    placeholder,
+  },
+  ...props
+) => {
+  const errorMessage = errors[name]?.message;
+  return (
+    <View>
+      {label && (
+        <View style={styles.labelContainer}>
+          <Text style={styles.label}>{label}</Text>
+          {required && <Text style={styles.required}>*</Text>}
+        </View>
+      )}
 
-        {password ? <Controller
+      {password ? (
+        <Controller
           control={control}
           render={({ field: { onChange, onBlur, value } }) => (
             <View>
@@ -39,17 +37,17 @@ const ComInput = (
                 style={[
                   styles.input,
                   {
-                    borderColor: errorMessage ? 'red' : '#33B39C'
-                  }
+                    borderColor: errorMessage ? "red" : "#33B39C",
+                  },
                 ]}
                 onBlur={onBlur}
-                onChangeText={value => onChange(value)}
+                onChangeText={(value) => onChange(value)}
                 value={value}
                 placeholder={placeholder}
                 keyboardType={keyboardType} // Set keyboardType here
                 ref={ref}
+                editable={edit}
                 secureTextEntry
-              
                 {...props}
               />
               {errorMessage && <Text style={styles.error}>{errorMessage}</Text>}
@@ -57,25 +55,27 @@ const ComInput = (
           )}
           name={name}
           rules={rules}
-        /> : <Controller
+        />
+      ) : (
+        <Controller
           control={control}
           render={({ field: { onChange, onBlur, value } }) => (
             <View>
               <TextInput
-            
                 onBlur={() => {
                   onBlur();
                 }}
-                onChangeText={value => onChange(value)}
+                onChangeText={(value) => onChange(value)}
                 placeholder={placeholder}
                 value={value}
                 keyboardType={keyboardType} // Set keyboardType here
                 ref={ref}
+                editable={edit}
                 style={[
                   styles.input,
                   {
-                    borderColor: errorMessage ? 'red' : '#33B39C'
-                  }
+                    borderColor: errorMessage ? "red" : "#33B39C",
+                  },
                 ]}
                 {...props}
               />
@@ -84,17 +84,14 @@ const ComInput = (
           )}
           name={name}
           rules={rules}
-        />}
-      </View>
-    )
-  }
-);
+        />
+      )}
+    </View>
+  );
+};
 
 export default ComInput;
 const styles = StyleSheet.create({
-  inputContainer: {
-    marginBottom: 20,
-  },
   labelContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -110,17 +107,17 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: "#fff",
-    // height: 40,
+    height: 50,
     padding: 10,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "gray",
+    borderColor: "#33B39C",
     fontWeight: "bold",
-
+    color: "#000",
     elevation: 5, // Bóng đổ cho Android
     shadowColor: "#000", // Màu của bóng đổ cho iOS
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 200 },
+    shadowOpacity: 0.1,
     shadowRadius: 4,
   },
   error: {
