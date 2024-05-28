@@ -11,9 +11,12 @@ import ComSelect from "../../../Components/ComInput/ComSelect";
 import Avatar from "./Avatar";
 import ComDatePicker from "../../../Components/ComInput/ComDatePicker";
 import { ScrollView } from "react-native";
+import { firebaseImg } from "../../../api/firebaseImg";
 
 export default function EditProfile() {
   const [date, setDate] = useState(new Date());
+  const [image, setImage] = useState(null);
+  const [imageUrl, setImageUrl] = useState("null");
   const navigation = useNavigation();
   const {
     text: {
@@ -55,22 +58,24 @@ export default function EditProfile() {
     formState: { errors },
   } = methods;
   const handleEdit = (data) => {
-    console.log("====================================");
-    console.log(data);
-    console.log("====================================");
+    firebaseImg(image).then((imageUrl) => {
+      console.log("Image uploaded successfully:", imageUrl);
+    });
   };
-
   const data = [
     {
-      value: "2",
+      value: "1",
       label: "Nam",
     },
     {
-      value: "3",
+      value: "2",
       label: "Nữ",
     },
   ];
 
+  const setImg = (data) => {
+    setImage(data);
+  };
   return (
     <View style={styles.body}>
       <View style={styles.container}>
@@ -80,7 +85,7 @@ export default function EditProfile() {
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
             >
-              <Avatar />
+              <Avatar image={image} setImg={setImg} />
               <View style={{ gap: 10 }}>
                 <ComInput
                   label={EditProfile?.label?.fullName}

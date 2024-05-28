@@ -43,7 +43,7 @@ export default function ImagePickerExample() {
       // gọi thằng firebaseImg để đẩy ảnh lên xong rồi lấy đường dẫn của ảnh đó 
 
       const response = await firebaseImg(result);
-      setImage(response);
+      setImage(response); 
     }
   };
   postData(`/pets/CreatePet/${storedData[0]?.id}`, {
