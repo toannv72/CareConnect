@@ -36,11 +36,7 @@ export default function LoginScreen() {
   } = useContext(LanguageContext);
 
   const loginSchema = yup.object().shape({
-    email: yup
-      .string()
-      .trim()
-      .email(Login?.message?.emailInvalid)
-      .required(Login?.message?.emailRequired),
+    username: yup.string().trim().required(Login?.message?.emailRequired),
     password: yup.string().required(Login?.message?.password),
     // chon: yup.string().required("vui long nhap mk"),
   });
@@ -48,8 +44,8 @@ export default function LoginScreen() {
   const methods = useForm({
     resolver: yupResolver(loginSchema),
     defaultValues: {
-      email: "toan@gmail.com",
-      password: "",
+      username: "user",
+      password: "user",
     },
   });
 
@@ -66,32 +62,27 @@ export default function LoginScreen() {
     Keyboard.dismiss();
     console.log(data);
     // navigation.navigate("Homes", { screen: "Home" });
-     postData("/auth/login", data, {})
-       .then((data) => {
-         console.log('====================================');
-         console.log(data);
-         console.log('====================================');
-         setToken(data?.accessToken);
-         // Chờ setToken hoàn thành trước khi navigate
-         return new Promise((resolve) => {
-           setTimeout(() => {
-             
-             resolve(); // Báo hiệu Promise đã hoàn thành
-           }, 0); // Thời gian chờ 0ms để đảm bảo setToken đã được thực hiện
-         });
-       })
-       .catch((error) => {
-         console.error("Error fetching items:", error);
-         setDisabled(false);
-         if (error?.response?.status === 401) {
-         
-           setErrorMessage(Login.message.invalidCredential);
-         } else {
-           setLoginError(true);
-           setErrorMessage(Login.message.loginError);
-         }
-       });
-
+    postData("/auth/login", data, {})
+      .then((data) => {
+        setToken(data?.accessToken);
+        // Chờ setToken hoàn thành trước khi navigate
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            navigation.navigate("Homes", { screen: "Home" });
+            resolve(); // Báo hiệu Promise đã hoàn thành
+          }, 0); // Thời gian chờ 0ms để đảm bảo setToken đã được thực hiện
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching items:", error);
+        setDisabled(false);
+        if (error?.response?.status === 401) {
+          setErrorMessage(Login.message.invalidCredential);
+        } else {
+          setLoginError(true);
+          setErrorMessage(Login.message.loginError);
+        }
+      });
   };
   const data = [
     {
@@ -137,7 +128,7 @@ export default function LoginScreen() {
             <ComInput
               label={Login?.label?.email}
               placeholder={Login?.placeholder?.email}
-              name="email"
+              name="username"
               control={control}
               keyboardType="default" // Set keyboardType for First Name input
               errors={errors} // Pass errors object
@@ -152,7 +143,7 @@ export default function LoginScreen() {
               password
               required
             />
-            <ComSelect
+            {/* <ComSelect
               label="Last name"
               name="chon"
               control={control}
@@ -160,7 +151,7 @@ export default function LoginScreen() {
               errors={errors} // Pass errors object
               options={data}
               required
-            />
+            /> */}
 
             {/* <Button title={button.login} style={{ margin: 100 }} /> */}
             <View style={styles?.link}>
@@ -209,6 +200,6 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    gap:10,
+    gap: 10,
   },
 });
