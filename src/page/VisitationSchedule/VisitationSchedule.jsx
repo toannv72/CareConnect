@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import ComVisitationSchedule from "./ComVisitationSchedule";
 import { LanguageContext } from "./../../contexts/LanguageContext";
 import { Controller, Form, FormProvider, useForm } from "react-hook-form";
@@ -10,6 +10,8 @@ import { ScrollView } from "react-native";
 import { ActivityIndicator } from "react-native";
 import ComLoading from "../../Components/ComLoading/ComLoading";
 import Visitation from "../../../assets/VisitationSchedule/VisitationSchedule.png";
+import ComButton from "../../Components/ComButton/ComButton";
+import { useNavigation } from "@react-navigation/native";
 
 export default function VisitationSchedule() {
   const [data, setData] = useState([
@@ -82,10 +84,10 @@ export default function VisitationSchedule() {
   const searchSchema = yup.object().shape({
     search: yup.string(),
   });
-
+    const navigation = useNavigation();
   const {
     text: {
-      Login,
+      visitationText,
       common: { button },
     },
     setLanguage,
@@ -103,11 +105,9 @@ export default function VisitationSchedule() {
     formState: { errors },
   } = methods;
 
-  const onSubmit = (data) => {
-    console.log("====================================");
-    console.log(data);
-    console.log("====================================");
-    setLoading(!loading);
+  const register = () => {
+    navigation.navigate("RegisterVisitation");
+
   };
   return (
     <View style={styles.body}>
@@ -122,8 +122,38 @@ export default function VisitationSchedule() {
             paddingHorizontal: 20,
           }}
         >
-          Hãy dùng chút thời gian đổi lấy nụ cười của những người thân yêu
+          {visitationText?.visitationContent}
         </Text>
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Text
+          style={{
+            color: "#000",
+            paddingHorizontal: 5,
+            fontSize: 24,
+          }}
+        >
+          {visitationText?.textHistory}
+        </Text>
+        <TouchableOpacity style={styles.register} onPress={register}>
+          <View>
+            <Text
+              style={{
+                color: "#000",
+                paddingHorizontal: 5,
+                fontSize: 20,
+              }}
+            >
+              {visitationText?.register}
+            </Text>
+          </View>
+        </TouchableOpacity>
       </View>
       <ComLoading show={loading}>
         <ScrollView
@@ -135,7 +165,7 @@ export default function VisitationSchedule() {
               <ComVisitationSchedule key={index} data={value} />
             ))}
           </View>
-          <View style={{ height:320 }}></View>
+          <View style={{ height: 320 }}></View>
         </ScrollView>
       </ComLoading>
     </View>
@@ -149,6 +179,21 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     paddingHorizontal: 15,
     gap: 10,
+  },
+  register: {
+    flexDirection: "row",
+    marginBottom: 10,
+    padding: 4,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#33B39C",
+    backgroundColor: "#caece6",
+
+    elevation: 4, // Bóng đổ cho Android
+    shadowColor: "#000", // Màu của bóng đổ cho iOS
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
   },
   imageBody: {
     padding: 1,

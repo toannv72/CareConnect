@@ -255,7 +255,7 @@ export const vn = {
     button: {
       ChangePassword: "Xác nhận",
       reissue: "Đăng Ký",
-      back:"Quay lại"
+      back: "Quay lại",
     },
     label: {
       phone: "Số điện thoại",
@@ -284,5 +284,22 @@ export const vn = {
       login: "Đăng nhập ngay",
       labelRegister: "Bạn chưa có tài khoản?",
     },
+  },
+  visitationText: {
+    button: {
+      toHomes: "Về trang chủ",
+    },
+    titleHeader: "Đăng ký thăm nuôi",
+    visitationContent:
+      " Hãy dùng chút thời gian đổi lấy nụ cười của những người thân yêu",
+    textHistory: "Lịch sử gần đây",
+    register: "Đăng ký",
+    Confirm: "Xác nhận",
+    registerElder: "Người thân",
+    titleRegisterSuccess: "Đăng ký thăm nuôi thành công",
+    phone: "Số điện thoại",
+    day: "Ngày",
+    hour: "Giờ",
+    subscribers:"Người đăng ký"
   },
 };

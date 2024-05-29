@@ -32,13 +32,15 @@ import ResetPassword from "./src/page/ForgetPassword/ResetPassword";
 import ResetPasswordSuccess from "./src/page/ForgetPassword/ResetPasswordSuccess";
 import ChangePassword from "./src/page/ChangePassword/ChangePassword";
 import ChangePasswordSuccess from "./src/page/ChangePassword/ChangePasswordSuccess";
+import RegisterVisitation from "./src/page/RegisterVisitation/RegisterVisitation";
+import RegisterVisitationSuccess from './src/page/RegisterVisitation/RegisterVisitationSuccess';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Routes = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="ChangePassword">
+      <Stack.Navigator initialRouteName="Homes">
         <Stack.Screen
           name="Homes"
           options={{ headerLeft: null, headerShown: false }}
@@ -119,11 +121,23 @@ const Routes = () => {
           name="HealthMonitorDetail"
           component={HealthMonitorDetail}
         />
+        {/* đăng ký thăm nuôi */}
         <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="VisitationSchedule"
           component={VisitationSchedule}
         />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="RegisterVisitation"
+          component={RegisterVisitation}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="RegisterVisitationSuccess"
+          component={RegisterVisitationSuccess}
+        />
+
         <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="EditProfile"
@@ -233,7 +247,8 @@ function MyBottomNavigationBar() {
       <Tab.Screen
         name="Visitation"
         options={{ headerShown: false }}
-        component={ServicePackages}
+        component={VisitationSchedule}
+        // component={ServicePackages}
       />
       <Tab.Screen
         name="HealthCondition"
@@ -244,7 +259,6 @@ function MyBottomNavigationBar() {
         name="Notification"
         options={{ headerShown: false }}
         component={Notification}
-
       />
       {/* <Tab.Screen
         name="Account"
