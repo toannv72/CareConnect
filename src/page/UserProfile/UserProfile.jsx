@@ -32,7 +32,7 @@ export default function UserProfile() {
   const data2 = [
     {
       name: "Đổi mật khẩu",
-      link: "",
+      link: "ChangePassword",
       icon: changePassword,
     },
     {

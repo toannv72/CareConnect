@@ -14,6 +14,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: "#33B39C",
     fontWeight: "bold",
+    textAlign:'center'
   },
   view: {
     padding: 8,

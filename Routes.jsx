@@ -26,13 +26,19 @@ import CreateFeedback from "./src/page/Feedback/CreateFeedback";
 import UserProfile from "./src/page/UserProfile/UserProfile";
 import EditProfile from "./src/page/UserProfile/EditProfile/EditProfile";
 import DetailProfile from "./src/page/UserProfile/DetailProfile";
+import ForgetPassword from "./src/page/ForgetPassword/ForgetPassword";
+import OtpForgetPassword from "./src/page/ForgetPassword/OtpForgetPassword";
+import ResetPassword from "./src/page/ForgetPassword/ResetPassword";
+import ResetPasswordSuccess from "./src/page/ForgetPassword/ResetPasswordSuccess";
+import ChangePassword from "./src/page/ChangePassword/ChangePassword";
+import ChangePasswordSuccess from "./src/page/ChangePassword/ChangePasswordSuccess";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Routes = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Homes">
+      <Stack.Navigator initialRouteName="ChangePassword">
         <Stack.Screen
           name="Homes"
           options={{ headerLeft: null, headerShown: false }}
@@ -88,7 +94,7 @@ const Routes = () => {
           name="ServicePayment"
           component={ServicePayment}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="ServiceHistory"
           component={ServiceHistory}
@@ -98,12 +104,12 @@ const Routes = () => {
           name="ServiceHistoryDetail"
           component={ServiceHistoryDetail}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="CancelRenewSuccess"
           component={CancelRenewSuccess}
         />
-          <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="CreateFeedback"
           component={CreateFeedback}
@@ -127,6 +133,36 @@ const Routes = () => {
           options={{ headerLeft: null, headerShown: false }}
           name="DetailProfile"
           component={DetailProfile}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ChangePassword"
+          component={ChangePassword}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ChangePasswordSuccess"
+          component={ChangePasswordSuccess}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ForgetPassword"
+          component={ForgetPassword}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="OtpForgetPassword"
+          component={OtpForgetPassword}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ResetPassword"
+          component={ResetPassword}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ResetPasswordSuccess"
+          component={ResetPasswordSuccess}
         />
       </Stack.Navigator>
     </NavigationContainer>

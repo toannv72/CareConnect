@@ -36,6 +36,44 @@ export const vn = {
       labelRegister: "Bạn chưa có tài khoản?",
     },
   },
+  ForgetPassword: {
+    pageTitle: "Quên mật khẩu",
+    pageSubTitle: "Nhập số điện thoại đã đăng ký tài khoản để nhận mã xác nhận",
+    titleRegisterSuccess: "Đặt lại mật khẩu thành công",
+    messageRegisterSuccess: "Chúc mừng bạn đã đặt lại mật khẩu thành công",
+    button: {
+      ForgetPassword: "Xác nhận",
+      reissue: "Đăng Ký",
+      login: "Đăng nhập",
+    },
+    label: {
+      phone: "Số điện thoại",
+      password: "Mật khẩu mới",
+      confirmPassword: "Xác nhận mật khẩu mới",
+    },
+    placeholder: {
+      phone: "Nhập số điện thoại",
+      password: "Vui lòng nhập khẩu mới",
+      confirmPassword: "Vui lòng xác nhận mật khẩu mới",
+    },
+    message: {
+      username: "Tên người dùng không được để trống",
+      phoneRequired: "Số điện thoại không được để trống",
+      emailInvalid: "Định dạng số điện thoại không hợp lệ",
+      password: "Mật khẩu không được để trống",
+      minPassword: "Mật khẩu phải lớn hơn 5 kí tự",
+      confirmPassword: "Xác nhận mật khẩu không được để trống",
+      minConfirmPassword: "Xác nhận mật khẩu phải lớn hơn 5 kí tự",
+      invalidCredential:
+        "Thông tin số điẹn thoại không hợp lệ. Vui lòng thử lại.",
+      loginError: "Đã có lỗi xảy ra. Vui lòng thử lại sau.",
+    },
+    link: {
+      textLogin: "Bạn đã có tài khoản?",
+      login: "Đăng nhập ngay",
+      labelRegister: "Bạn chưa có tài khoản?",
+    },
+  },
   Register: {
     pageTitle: "Đăng ký",
     pageSubTitle: "Chào mừng đến với Viện Dưỡng Lão...!",
@@ -124,9 +162,9 @@ export const vn = {
       registerName: "Người đăng ký",
       elderName: "Người thụ hưởng",
       time: "Thời gian",
-      totalMoney: "Tổng chi phí"
+      totalMoney: "Tổng chi phí",
     },
-    history:{
+    history: {
       title: "Lịch sử dịch vụ",
       dates: "Ngày đăng ký",
       serviceDates: "Ngày thực hiện",
@@ -135,32 +173,33 @@ export const vn = {
       bill: "Các hóa đơn liên quan",
       serviceHistory: "Lịch sử thực hiện dịch vụ",
       billId: "Mã hóa đơn",
-      totalMoney: "Tổng thanh toán", 
+      totalMoney: "Tổng thanh toán",
       nurse: "Người thực hiện",
       time: "Thời gian",
       feedback: "Đánh giá dịch vụ",
-      cancelRenewal: "Hủy gia hạn dịch vụ"
+      cancelRenewal: "Hủy gia hạn dịch vụ",
     },
-    renew:{
+    renew: {
       successTitle: "Hủy gia hạn dịch vụ thành công",
-      successContent: "Bạn đã hủy gia hạn gói Dịch vụ xoa bóp bấm huyệt theo tuần thành công",
-      backToHome: "Về trang lịch sử dịch vụ"
-    }
+      successContent:
+        "Bạn đã hủy gia hạn gói Dịch vụ xoa bóp bấm huyệt theo tuần thành công",
+      backToHome: "Về trang lịch sử dịch vụ",
+    },
   },
   feedback: {
     title: "Đánh giá",
-    label:{
+    label: {
       title: "Tiêu đề đánh giá",
       content: "Nội dung đánh giá",
       pleasure: "Mức độ hài lòng",
       file: "Tệp đính kèm",
-      send: "Gửi đánh giá"
+      send: "Gửi đánh giá",
     },
-    placeholder:{
+    placeholder: {
       title: "Mô tả ngắn gọn đánh giá của bạn",
-      content: "Mô tả chi tiết nội dung đánh giá của bạn, vấn đề bạn gặp phải,..."
-      
-    }
+      content:
+        "Mô tả chi tiết nội dung đánh giá của bạn, vấn đề bạn gặp phải,...",
+    },
   },
   healthMonitor: {
     name: "Cụ",
@@ -196,7 +235,7 @@ export const vn = {
     },
     message: {
       fullName: "Vui lòng Nhập họ và tên",
-      emailInvalid:"Địa chỉ mail không hợp lệ",
+      emailInvalid: "Địa chỉ mail không hợp lệ",
       gender: "Vui lòng Chọn giới tính",
       dateOfBirth: "Vui lòng Chọn ngày sinh",
       phoneNumber: "Vui lòng Nhập số điện thoại",
@@ -206,6 +245,44 @@ export const vn = {
     },
     button: {
       EditProfile: "Lưu thông tin",
+    },
+  },
+  ChangePassword: {
+    pageTitle: "Đổi mật khẩu",
+    pageSubTitle: "Nhập số điện thoại đã đăng ký tài khoản để nhận mã xác nhận",
+    titleRegisterSuccess: "Đổi lại mật khẩu thành công",
+    messageRegisterSuccess: "Chúc mừng bạn đã đặt lại mật khẩu thành công",
+    button: {
+      ChangePassword: "Xác nhận",
+      reissue: "Đăng Ký",
+      back:"Quay lại"
+    },
+    label: {
+      phone: "Số điện thoại",
+      password: "Mật khẩu mới",
+      confirmPassword: "Xác nhận mật khẩu mới",
+    },
+    placeholder: {
+      phone: "Nhập số điện thoại",
+      password: "Vui lòng nhập khẩu mới",
+      confirmPassword: "Vui lòng xác nhận mật khẩu mới",
+    },
+    message: {
+      username: "Tên người dùng không được để trống",
+      phoneRequired: "Số điện thoại không được để trống",
+      emailInvalid: "Định dạng số điện thoại không hợp lệ",
+      password: "Mật khẩu không được để trống",
+      minPassword: "Mật khẩu phải lớn hơn 5 kí tự",
+      confirmPassword: "Xác nhận mật khẩu không được để trống",
+      minConfirmPassword: "Xác nhận mật khẩu phải lớn hơn 5 kí tự",
+      invalidCredential:
+        "Thông tin số điẹn thoại không hợp lệ. Vui lòng thử lại.",
+      loginError: "Đã có lỗi xảy ra. Vui lòng thử lại sau.",
+    },
+    link: {
+      textLogin: "Bạn đã có tài khoản?",
+      login: "Đăng nhập ngay",
+      labelRegister: "Bạn chưa có tài khoản?",
     },
   },
 };
