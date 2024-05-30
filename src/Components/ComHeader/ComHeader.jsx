@@ -12,10 +12,10 @@ const ComHeader = ({
   const navigation = useNavigation();
 
   const handleBackPress = () => {
-    try {
+    if (navigation.canGoBack()) {
       navigation.goBack();
-    } catch (error) {
-      console.log(error);
+    } else {
+      navigation.navigate("Homes");
     }
   };
 

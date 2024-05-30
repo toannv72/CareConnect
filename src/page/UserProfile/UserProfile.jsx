@@ -15,7 +15,7 @@ export default function UserProfile() {
   const data = [
     {
       name: "Hợp đồng",
-      link: "",
+      link: "Contracts",
       icon: contract,
     },
     {

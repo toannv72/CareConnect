@@ -34,13 +34,15 @@ import ChangePassword from "./src/page/ChangePassword/ChangePassword";
 import ChangePasswordSuccess from "./src/page/ChangePassword/ChangePasswordSuccess";
 import RegisterVisitation from "./src/page/RegisterVisitation/RegisterVisitation";
 import RegisterVisitationSuccess from './src/page/RegisterVisitation/RegisterVisitationSuccess';
+import Contracts from "./src/page/Contract/Contracts";
+import ContractDetail from "./src/page/ContractDetail/ContractDetail";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Routes = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Homes">
+      <Stack.Navigator initialRouteName="ContractDetail">
         <Stack.Screen
           name="Homes"
           options={{ headerLeft: null, headerShown: false }}
@@ -177,6 +179,16 @@ const Routes = () => {
           options={{ headerLeft: null, headerShown: false }}
           name="ResetPasswordSuccess"
           component={ResetPasswordSuccess}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="Contracts"
+          component={Contracts}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ContractDetail"
+          component={ContractDetail}
         />
       </Stack.Navigator>
     </NavigationContainer>

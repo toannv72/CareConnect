@@ -300,6 +300,14 @@ export const vn = {
     phone: "Số điện thoại",
     day: "Ngày",
     hour: "Giờ",
-    subscribers:"Người đăng ký"
+    subscribers: "Người đăng ký",
+  },
+  contractsPage: {
+    title: "Hợp đồng",
+    titleContract: "Hợp đồng dưỡng lão",
+    id: "Mã",
+    representative: "Người đại diện",
+    duration: "Thời hạn ",
+    status: "Trạng thái",
   },
 };
