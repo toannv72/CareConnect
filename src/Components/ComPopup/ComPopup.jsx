@@ -1,8 +1,15 @@
-import React, { useState } from 'react';
-import { Modal, View, Text, Image, StyleSheet} from 'react-native';
+import React, { useState } from "react";
+import { Modal, View, Text, Image, StyleSheet } from "react-native";
 import ComSelectButton from "../ComButton/ComSelectButton";
 
-export default ComPopup = ({ visible, title,image, buttons, onClose, children }) => {
+export default ComPopup = ({
+  visible,
+  title,
+  image,
+  buttons,
+  onClose,
+  children,
+}) => {
   return (
     <Modal
       animationType="slide"
@@ -10,7 +17,7 @@ export default ComPopup = ({ visible, title,image, buttons, onClose, children })
       visible={visible}
       onRequestClose={onClose}
     >
-       <View style={styles.centeredView}>
+      <View style={styles.centeredView}>
         <View style={styles.modalView}>
           {title && <Text style={styles.title}>{title}</Text>}
           {image && <Image source={image} style={styles.image} />}
@@ -19,13 +26,19 @@ export default ComPopup = ({ visible, title,image, buttons, onClose, children })
               <View style={styles.childContainer}>{child}</View>
             ))}
           </View>
-          <View style={styles.buttonContainer}>
-            {buttons.map((button, index) => (
-              <ComSelectButton key={index} onPress={button.onPress} check={button.check}>
-                <Text>{button.text}</Text>
-              </ComSelectButton>
-            ))}
-          </View>
+          {buttons && (
+            <View style={styles.buttonContainer}>
+              {buttons.map((button, index) => (
+                <ComSelectButton
+                  key={index}
+                  onPress={button.onPress}
+                  check={button.check}
+                >
+                  <Text>{button.text}</Text>
+                </ComSelectButton>
+              ))}
+            </View>
+          )}
         </View>
       </View>
     </Modal>
@@ -35,17 +48,19 @@ export default ComPopup = ({ visible, title,image, buttons, onClose, children })
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalView: {
     margin: 20,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 20,
     padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
+    alignItems: "center",
+    justifyContent: "center",
+    alignContent: "center",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -56,8 +71,8 @@ const styles = StyleSheet.create({
   },
   title: {
     marginBottom: 15,
-    textAlign: 'center',
-    fontWeight: 'bold',
+    textAlign: "center",
+    fontWeight: "bold",
     fontSize: 18,
   },
   image: {
@@ -66,25 +81,24 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   contentContainer: {
-    width: '100%',
+    width: "100%",
     marginBottom: 15,
   },
   childContainer: {
     marginBottom: 10,
   },
   buttonContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 20,
   },
   button: {
     padding: 10,
     margin: 5,
     borderRadius: 10,
-    backgroundColor: 'lightblue',
+    backgroundColor: "lightblue",
   },
   buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
+    color: "white",
+    fontWeight: "bold",
   },
 });
-

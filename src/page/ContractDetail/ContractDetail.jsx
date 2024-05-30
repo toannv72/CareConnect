@@ -1,11 +1,90 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import ComButton from "../../Components/ComButton/ComButton";
+import ComPopup from "../../Components/ComPopup/ComPopup";
+import * as yup from "yup";
+import { FormProvider, useForm } from "react-hook-form";
+import ComInput from "../../Components/ComInput/ComInput";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 export default ContractDetail = () => {
+  const [popup, setPopup] = useState(false);
+  const handleClosePopup = () => {
+    setPopup(false);
+  };
+  const handleOpenPopup = () => {
+    setPopup(true);
+  };
+  const loginSchema = yup.object().shape({
+    text: yup.string().trim().required("Vui lòng nhập lý do"),
+  });
+
+  const methods = useForm({
+    resolver: yupResolver(loginSchema),
+    defaultValues: {
+      text: "",
+    },
+  });
+
+  const {
+    control,
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = methods;
+
+  const handleConfirm = (data) => {
+    console.log("====================================");
+    console.log(data);
+    console.log("====================================");
+  };
   return (
     <>
+      <ComPopup
+        visible={popup}
+        title="Bạn muốn yêu cầu hủy hợp đồng ?"
+        // buttons={[
+        //   { text: "Hủy", onPress: handleClosePopup, check: true },
+        //   {
+        //     text: "Xác nhận",
+        //     onPress: () => {
+        //       handleSubmit(handleConfirm);
+        //     },
+        //   },
+        // ]}
+        onClose={handleClosePopup}
+      >
+        <Text>Gói dịch vụ sẽ không tự động gia hạn lại</Text>
+        <FormProvider {...methods}>
+          <View style={{ width: "100%", gap: 10 }}>
+            <ComInput
+              label={"Xin cho chúng tôi biết lý do "}
+              placeholder={"Lý do"}
+              name="text"
+              control={control}
+              keyboardType="default" // Set keyboardType for First Name input
+              errors={errors} // Pass errors object
+              required
+            />
+            <View
+              style={{
+                backgroundColor: "#fff",
+                flexDirection: "row",
+                justifyContent: "space-around",
+              }}
+            >
+              <ComButton check onPress={handleClosePopup}>
+                Hủy
+              </ComButton>
+              <ComButton onPress={handleSubmit(handleConfirm)}>
+                Xác nhận
+              </ComButton>
+            </View>
+          </View>
+        </FormProvider>
+      </ComPopup>
+
       <View style={styles.main}>
         <ComHeader
           showBackIcon={true}
@@ -43,10 +122,10 @@ export default ContractDetail = () => {
           backgroundColor: "#fff",
           flexDirection: "row",
           justifyContent: "space-around",
-          paddingBottom:20
+          paddingBottom: 20,
         }}
       >
-        <ComButton>Yêu cầu gia hạn</ComButton>
+        <ComButton onPress={handleOpenPopup}>Yêu cầu gia hạn</ComButton>
         <ComButton>Yêu cầu hủy</ComButton>
       </View>
     </>

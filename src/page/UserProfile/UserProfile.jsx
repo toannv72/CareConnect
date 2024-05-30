@@ -25,7 +25,7 @@ export default function UserProfile() {
     },
     {
       name: "Lịch sử dịch vụ",
-      link: "",
+      link: "ServiceHistory",
       icon: serviceHistory,
     },
   ];
