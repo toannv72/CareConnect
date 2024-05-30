@@ -7,9 +7,11 @@ import * as yup from "yup";
 import { FormProvider, useForm } from "react-hook-form";
 import ComInput from "../../Components/ComInput/ComInput";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useNavigation } from "@react-navigation/native";
 
 export default ContractDetail = () => {
   const [popup, setPopup] = useState(false);
+  const navigation = useNavigation();
   const handleClosePopup = () => {
     setPopup(false);
   };
@@ -38,6 +40,8 @@ export default ContractDetail = () => {
     console.log("====================================");
     console.log(data);
     console.log("====================================");
+    handleClosePopup()
+    navigation.navigate("ContractCandSuccess");
   };
   return (
     <>

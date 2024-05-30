@@ -36,6 +36,7 @@ import RegisterVisitation from "./src/page/RegisterVisitation/RegisterVisitation
 import RegisterVisitationSuccess from './src/page/RegisterVisitation/RegisterVisitationSuccess';
 import Contracts from "./src/page/Contract/Contracts";
 import ContractDetail from "./src/page/ContractDetail/ContractDetail";
+import ContractCandSuccess from "./src/page/ContractDetail/ContractCandSuccess";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -189,6 +190,11 @@ const Routes = () => {
           options={{ headerLeft: null, headerShown: false }}
           name="ContractDetail"
           component={ContractDetail}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ContractCandSuccess"
+          component={ContractCandSuccess}
         />
       </Stack.Navigator>
     </NavigationContainer>
