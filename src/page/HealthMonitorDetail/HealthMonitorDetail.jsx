@@ -9,6 +9,7 @@ import { useRoute } from "@react-navigation/native";
 import ComButtonDay from "../../Components/ComButton/ComButtonDay";
 import ComHealthIndex from "../../Components/ComHealthIndex/ComHealthIndex";
 import ComTextArea from "../../Components/ComInput/ComTextArea";
+import ComHeader from "../../Components/ComHeader/ComHeader";
 
 export default function HealthMonitorDetail() {
   const [data, setData] = useState({
@@ -23,6 +24,13 @@ export default function HealthMonitorDetail() {
 
   const route = useRoute();
   const { id } = route.params;
+  const {
+    text: {
+      HealthMonitorDetail,
+      common: { button },
+    },
+    setLanguage,
+  } = useContext(LanguageContext);
 
   const onSubmit = (data) => {
     console.log("====================================");
@@ -46,45 +54,52 @@ export default function HealthMonitorDetail() {
     formState: { errors },
   } = methods;
   return (
-    <View style={styles.body}>
-      <View style={styles.patient}>
-        <View style={styles.patient60}>
-          <ComPatient data={data} />
+    <>
+      <ComHeader
+        title={HealthMonitorDetail?.title}
+        showTitle
+        showBackIcon
+      />
+      <View style={styles.body}>
+        <View style={styles.patient}>
+          <View style={styles.patient60}>
+            <ComPatient data={data} />
+          </View>
+          <View style={styles.patient40}>
+            <ComButtonDay>8/8/2023</ComButtonDay>
+          </View>
         </View>
-        <View style={styles.patient40}>
-          <ComButtonDay>8/8/2023</ComButtonDay>
-        </View>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          style={styles?.scrollView}
+        >
+          <ComHealthIndex></ComHealthIndex>
+          <ComHealthIndex></ComHealthIndex>
+          <ComHealthIndex></ComHealthIndex>
+          <ComHealthIndex></ComHealthIndex>
+          <ComHealthIndex></ComHealthIndex>
+          <ComHealthIndex></ComHealthIndex>
+          <ComTextArea
+            label={"Ghi chú"}
+            placeholder={"Ghi chú"}
+            name="email"
+            edit={false}
+            control={control}
+            keyboardType="default" // Set keyboardType for First Name input
+            errors={errors}
+          />
+          <View style={{ height: 30 }}></View>
+        </ScrollView>
       </View>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        style={styles?.scrollView}
-      >
-        <ComHealthIndex></ComHealthIndex>
-        <ComHealthIndex></ComHealthIndex>
-        <ComHealthIndex></ComHealthIndex>
-        <ComHealthIndex></ComHealthIndex>
-        <ComHealthIndex></ComHealthIndex>
-        <ComHealthIndex></ComHealthIndex>
-        <ComTextArea
-          label={"Ghi chú"}
-          placeholder={"Ghi chú"}
-          name="email"
-          edit={false}
-          control={control}
-          keyboardType="default" // Set keyboardType for First Name input
-          errors={errors}
-        />
-        <View style={{ height: 30 }}></View>
-      </ScrollView>
-    </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    paddingTop: 50,
+    paddingTop: 10,
     backgroundColor: "#fff",
     paddingHorizontal: 15,
   },

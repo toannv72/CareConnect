@@ -4,12 +4,12 @@ import { StyleSheet, View, Text } from "react-native";
 // import Picker from 'react-native-picker-select';
 import { Picker } from "@react-native-picker/picker";
 const ComSelect = (
-  { label, name, control, rules, ref, required, errors, options },
+  { label, name, control, rules, ref, required, errors, options, style },
   ...props
 ) => {
   const errorMessage = errors[name]?.message;
   return (
-    <View>
+    <View style={style}>
       {label && (
         <View style={styles.labelContainer}>
           <Text style={styles.label}>{label}</Text>
@@ -38,6 +38,7 @@ const ComSelect = (
                   key={index}
                   label={option.label}
                   value={option.value}
+                  
                 />
               ))}
             </Picker>

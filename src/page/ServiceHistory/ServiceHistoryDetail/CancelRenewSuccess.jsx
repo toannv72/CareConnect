@@ -25,7 +25,7 @@ export default CancelRenewSuccess = ({ visible, title, content, image, buttons, 
             <Text style={styles.content}>{addingPackages?.renew?.successContent}</Text>
             <ComSelectButton
                 onPress={() => {
-                    navigation.navigate("Homes");
+                    navigation.navigate("ServiceHistory");
                 }}>
                 {addingPackages?.renew?.backToHome}
             </ComSelectButton>

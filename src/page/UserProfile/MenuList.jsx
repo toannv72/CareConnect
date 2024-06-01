@@ -13,11 +13,11 @@ const MenuItem = ({ iconName, text, link, colorRed }) => {
     <TouchableOpacity style={styles.menuItem} onPress={() => press()}>
       <Image source={iconName} style={styles.image} />
       {colorRed ? (
-        <Text style={{ fontSize: 20, color: "red", fontWeight: "bold" }}>
+        <Text style={{ fontSize: 18, color: "red", fontWeight: "500" }}>
           {text}
         </Text>
       ) : (
-        <Text style={{ fontSize: 20, fontWeight: "bold" }}>{text}</Text>
+        <Text style={{ fontSize: 18, fontWeight: "500" }}>{text}</Text>
       )}
     </TouchableOpacity>
   );

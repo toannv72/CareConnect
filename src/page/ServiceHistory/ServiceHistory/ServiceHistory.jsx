@@ -129,7 +129,6 @@ export default function ServiceHistory() {
                     </ScrollView>
                 </ComLoading>
             </View>
-            <View style={{ height: 100, backgroundColor: "#fff" }}></View>
         </>
     );
 }
