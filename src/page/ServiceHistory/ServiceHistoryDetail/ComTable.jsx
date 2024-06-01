@@ -15,6 +15,7 @@ export default function ComTable({ columns, dataSource, columnLabels, linkColumn
   return (
 
     <View style={styles.tableContainer}>
+      {/* Header Row */}
       <View style={styles.row}>
         {columns.map((column, index) => (
           <View key={index} style={styles.headerCell}>
@@ -24,7 +25,7 @@ export default function ComTable({ columns, dataSource, columnLabels, linkColumn
           </View>
         ))}
       </View>
-
+      {/* Data Rows */}
       {dataSource.map((rowData, rowIndex) => (
         <View key={rowIndex} style={styles.row}>
           {columns.map((column, colIndex) => (
@@ -48,11 +49,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: "#33B39C"
   },
-  row: {
-    flex: 1,
-    flexDirection: 'row',
-  }
-  , tableContainer: {
+  tableContainer: {
     borderWidth: 1,
     borderRadius: 10,
     borderColor: "#33B39C",

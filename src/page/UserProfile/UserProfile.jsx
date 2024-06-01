@@ -20,12 +20,12 @@ export default function UserProfile() {
     },
     {
       name: "Hóa đơn",
-      link: "",
+      link: "BillHistory",
       icon: bill,
     },
     {
       name: "Lịch sử dịch vụ",
-      link: "",
+      link: "ServiceHistory",
       icon: serviceHistory,
     },
   ];
@@ -37,17 +37,17 @@ export default function UserProfile() {
     },
     {
       name: "Đổi ngôn ngữ",
-      link: "",
+      link: "FeedbackHistory",
       icon: changeLanguage,
     },
-    {
-      name: "Thông báo",
-      link: "",
-      icon: notification,
-    },
+    // {
+    //   name: "Thông báo",
+    //   link: "notification",
+    //   icon: notification,
+    // },
     {
       name: "Đánh giá",
-      link: "",
+      link: "FeedbackHistory",
       icon: feedback,
     },
   ];

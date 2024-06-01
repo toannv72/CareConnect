@@ -5,6 +5,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import ComHeader from "../../Components/ComHeader/ComHeader";
 
 export default function HealthMonitor() {
   const [data, setData] = useState([
@@ -32,7 +33,7 @@ export default function HealthMonitor() {
   });
   const {
     text: {
-      Login,
+      healthMonitor,
       common: { button },
     },
     setLanguage,
@@ -56,8 +57,13 @@ export default function HealthMonitor() {
     console.log("====================================");
   };
   return (
-    <View style={styles.body}>
-      {/* <FormProvider {...methods}>
+    <>
+      <ComHeader
+        title={healthMonitor?.title}
+        showTitle
+      />
+      <View style={styles.body}>
+        {/* <FormProvider {...methods}>
         <ComInputSearch
           placeholder="Tìm kiếm"
           keyboardType="default"
@@ -67,26 +73,27 @@ export default function HealthMonitor() {
           errors={errors}
         />
       </FormProvider> */}
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        style={styles?.scrollView}
-      >
-        <View>
-          {data?.map((value, index) => (
-            <ComHealth key={index} data={value} />
-          ))}
-        </View>
-        <View style={{ height: 120 }}></View>
-      </ScrollView>
-    </View>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          style={styles?.scrollView}
+        >
+          <View>
+            {data?.map((value, index) => (
+              <ComHealth key={index} data={value} />
+            ))}
+          </View>
+          <View style={{ height: 120 }}></View>
+        </ScrollView>
+      </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    paddingTop: 50,
+    paddingTop: 20,
     backgroundColor: "#fff",
     paddingHorizontal: 15,
   },

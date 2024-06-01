@@ -9,6 +9,7 @@ import ComInputSearch from "../../Components/ComInput/ComInputSearch";
 import { ScrollView } from "react-native";
 import { ActivityIndicator } from "react-native";
 import ComLoading from "../../Components/ComLoading/ComLoading";
+import ComHeader from "../../Components/ComHeader/ComHeader";
 
 export default function ServicePackages() {
   const [data, setData] = useState([
@@ -36,7 +37,7 @@ export default function ServicePackages() {
 
   const {
     text: {
-      Login,
+      servicePackages,
       common: { button },
     },
     setLanguage,
@@ -61,38 +62,46 @@ export default function ServicePackages() {
     setLoading(!loading);
   };
   return (
-    <View style={styles.body}>
-      <FormProvider {...methods}>
-        <ComInputSearch
-          placeholder="Tìm kiếm"
-          keyboardType="default"
-          name="search"
-          control={control}
-          onSubmitEditing={handleSubmit(onSubmit)}
-          errors={errors}
-        />
-      </FormProvider>
-      <ComLoading show={loading}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-        >
-          <View>
-            {data?.map((value, index) => (
-              <ComPackage key={index} data={value} />
-            ))}
-          </View>
-          <View style={{ height: 120 }}></View>
-        </ScrollView>
-      </ComLoading>
-    </View>
+
+    <>
+      <ComHeader
+        title={servicePackages?.title}
+        showTitle
+        showBackIcon
+      />
+      <View style={styles.body}>
+        <FormProvider {...methods}>
+          <ComInputSearch
+            placeholder="Tìm kiếm"
+            keyboardType="default"
+            name="search"
+            control={control}
+            onSubmitEditing={handleSubmit(onSubmit)}
+            errors={errors}
+          />
+        </FormProvider>
+        <ComLoading show={loading}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+          >
+            <View>
+              {data?.map((value, index) => (
+                <ComPackage key={index} data={value} />
+              ))}
+            </View>
+            <View style={{ height: 120 }}></View>
+          </ScrollView>
+        </ComLoading>
+      </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    paddingTop: 50,
+    paddingTop: 20,
     backgroundColor: "#fff",
     paddingHorizontal: 15,
     gap: 10,

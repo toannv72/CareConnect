@@ -99,6 +99,7 @@ export const vn = {
     news: "Các hoạt động nổi bật",
   },
   servicePackages: {
+    title: "Gói dưỡng lão",
     package: {
       living: "Sinh hoạt cùng",
       people: "người",
@@ -159,10 +160,35 @@ export const vn = {
     placeholder:{
       title: "Mô tả ngắn gọn đánh giá của bạn",
       content: "Mô tả chi tiết nội dung đánh giá của bạn, vấn đề bạn gặp phải,..."
-      
+    },
+    history:{
+      title: "Tiêu đề",
+      date: "Ngày gửi",
+      content: "Nội dung",
+      service: "Dịch vụ",
+      feedbackDetail: "Chi tiết đánh giá"
+    }
+  },
+  bill: {
+    title: "Hóa đơn",
+    billId: "Mã hóa đơn",
+    elder: "Người thụ hưởng",
+    dueDate: "Hạn thanh toán",
+    status: "Trạng thái",
+    detail:{
+      title: "Chi tiết hóa đơn",
+      customerInfo: "Thông tin khách hàng",
+      paymentInfo: "Thông tin thanh toán",
+      contractId: "Mã hợp đồng",
+      customer: "Người thanh toán",
+      totalMoney: "Tổng tiền",
+      pay: "Thanh toán",
+      paymentDate: "Thời gian thanh toán",
+      paymentMethod: "Hình thức thanh toán"
     }
   },
   healthMonitor: {
+    title: "Theo dõi sức khỏe",
     name: "Cụ",
     age: "Tuổi",
     sex: "Giới tính",
@@ -170,12 +196,14 @@ export const vn = {
     bed: "Giường",
   },
   HealthMonitorDetail: {
+    title: "Chi tiết sức khỏe",
     name: "Cụ",
     yearOld: "Tuổi",
     YearOfBirth: "Năm sinh",
     weight: "Cân nặng",
   },
   EditProfile: {
+    title: "Chỉnh sửa thông tin",
     label: {
       fullName: "Họ và Tên",
       gender: "Giới tính",
