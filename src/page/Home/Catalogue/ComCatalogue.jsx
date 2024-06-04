@@ -11,13 +11,12 @@ export default function ComCatalogue({ img, url, children }) {
   return (
     <View style={styles?.body}>
       <Image
-        source={{ uri: url }}
+        source={url}
         style={{
           width: 59,
           height: 59,
           borderRadius: 10,
           objectFit: "fill",
-          borderWidth: 0.5,
           borderColor: "#000",
         }}
       />

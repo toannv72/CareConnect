@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Controller } from "react-hook-form";
 import { StyleSheet, View, Text, TextInput, Image, TouchableOpacity } from "react-native";
 import iconSource from "../../../assets/Search.png";
+import iconClear from "../../../assets/icon/btnX.png";
 
 iconSource;
 const ComInputSearch = (
@@ -51,7 +52,7 @@ const ComInputSearch = (
                   setShowClearButton(false);
                 }}
               >
-                <Image source={iconSource} style={styles.clearIcon} />
+                <Image source={iconClear} style={styles.clearIcon} />
               </TouchableOpacity>
             )}
           </View>
@@ -101,8 +102,8 @@ const styles = StyleSheet.create({
     objectFit: "fill",
   },
   clearIcon: {
-    width: 20,
-    height: 20,
+    width: 25,
+    height: 25,
     marginLeft: 10,
   },
 });

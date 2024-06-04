@@ -10,6 +10,7 @@ import { ScrollView } from "react-native";
 import { ActivityIndicator } from "react-native";
 import ComLoading from "../../Components/ComLoading/ComLoading";
 import Visitation from "../../../assets/VisitationSchedule/VisitationSchedule.png";
+import ComHeader from "../../Components/ComHeader/ComHeader";
 
 export default function VisitationSchedule() {
   const [data, setData] = useState([
@@ -85,7 +86,7 @@ export default function VisitationSchedule() {
 
   const {
     text: {
-      Login,
+      VisitationSchedule,
       common: { button },
     },
     setLanguage,
@@ -110,42 +111,50 @@ export default function VisitationSchedule() {
     setLoading(!loading);
   };
   return (
-    <View style={styles.body}>
-      <View style={{ gap: 10 }}>
-        <View style={styles.imageBody}>
-          <Image source={Visitation} style={styles.image} />
-        </View>
-        <Text
-          style={{
-            color: "#716767",
-            textAlign: "center",
-            paddingHorizontal: 20,
-          }}
-        >
-          Hãy dùng chút thời gian đổi lấy nụ cười của những người thân yêu
-        </Text>
-      </View>
-      <ComLoading show={loading}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-        >
-          <View>
-            {data?.map((value, index) => (
-              <ComVisitationSchedule key={index} data={value} />
-            ))}
+    <>
+      <ComHeader
+        title={VisitationSchedule?.title}
+        showTitle
+        showBackIcon
+      />
+      <View style={styles.body}>
+        <View style={{ gap: 10 }}>
+          <View style={styles.imageBody}>
+            <Image source={Visitation} style={styles.image} />
           </View>
-          <View style={{ height:320 }}></View>
-        </ScrollView>
-      </ComLoading>
-    </View>
+          <Text
+            style={{
+              color: "#716767",
+              textAlign: "center",
+              paddingHorizontal: 20,
+            }}
+          >
+            Hãy dùng chút thời gian đổi lấy nụ cười của những người thân yêu
+          </Text>
+        </View>
+        <ComLoading show={loading}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+          >
+            <View>
+              {data?.map((value, index) => (
+                <ComVisitationSchedule key={index} data={value} />
+              ))}
+            </View>
+            <View style={{ height: 320 }}></View>
+          </ScrollView>
+        </ComLoading>
+      </View>
+    </>
+
   );
 }
 
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    paddingTop: 50,
+    paddingTop: 20,
     backgroundColor: "#fff",
     paddingHorizontal: 15,
     gap: 10,

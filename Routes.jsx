@@ -28,6 +28,7 @@ import FeedbackDetail from "./src/page/Feedback/FeedbackDetail";
 import BillHistory from "./src/page/Bills/BillHistory";
 import BillDetail from "./src/page/Bills/BillDetail";
 import UserProfile from "./src/page/UserProfile/UserProfile";
+import ElderProfile from "./src/page/ElderProfile/ElderProfile";
 import EditProfile from "./src/page/UserProfile/EditProfile/EditProfile";
 import DetailProfile from "./src/page/UserProfile/DetailProfile";
 
@@ -152,6 +153,11 @@ const Routes = () => {
           name="DetailProfile"
           component={DetailProfile}
         />
+          <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ElderProfile"
+          component={ElderProfile}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -221,7 +227,7 @@ function MyBottomNavigationBar() {
       <Tab.Screen
         name="Visitation"
         options={{ headerShown: false }}
-        component={ServicePackages}
+        component={ElderProfile}
       />
       <Tab.Screen
         name="HealthCondition"

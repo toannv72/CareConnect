@@ -1,24 +1,27 @@
 import React from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { View } from "react-native";
+import LottieView from "lottie-react-native";
 
 export default function ComLoading({ children, show }) {
   return (
-    <View>
+    <>
       {show ? (
-        <ActivityIndicator size="large" color="#33B39C" />
+        <View style={{
+          flex: 1,
+          justifyContent: 'center'
+        }}>
+          <LottieView
+            source={require('./loading.json')}
+            style={{height: 200 }}
+            autoPlay
+            loop
+          />
+          <View style={{height: 100}}></View>
+
+        </View>
       ) : (
         <View>{children}</View>
       )}
-    </View>
+    </>
   );
 }
-const styles = StyleSheet.create({
-  text: {
-    fontSize: 15,
-    color: "#000",
-    fontWeight: "bold",
-  },
-  view: {
-    // padding: 8,
-  },
-});

@@ -5,6 +5,10 @@ import TopicContent from "../TopicContent";
 import { LanguageContext } from "../../../contexts/LanguageContext";
 import ComCatalogue from "./ComCatalogue";
 import { useNavigation } from "@react-navigation/native";
+import AddingService from "../../../../assets/icon/AddingService.png";
+import servicePackage from "../../../../assets/icon/servicePackage.png";
+import visitSchedule from "../../../../assets/icon/visitSchedule.png";
+import contract from "../../../../assets/icon/contract.png";
 
 export default function Catalogue() {
   const navigation = useNavigation();
@@ -22,19 +26,37 @@ export default function Catalogue() {
         <TouchableOpacity onPress={() => goto("AddingService")}>
           <ComCatalogue
             url={
-              "https://media.istockphoto.com/id/533572966/vi/anh/%C4%91%E1%BA%A5m-b%C3%B3p-massage-ng%C6%B0%E1%BB%9Di-ph%E1%BB%A5-n%E1%BB%AF-tr%E1%BB%9F-l%E1%BA%A1i-ti%E1%BB%87m-spa.jpg?s=612x612&w=0&k=20&c=k0kxL6b5fob5Cb5PCcvwdO7ryACULd_S_SabPtLyV7M="
+              AddingService
             }
           >
-            Đấm bóp nè
+           Dịch vụ thêm
+          </ComCatalogue>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => goto("Service")}>
+          <ComCatalogue
+            url={
+              servicePackage
+            }
+          >
+           Gói dưỡng lão
+          </ComCatalogue>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => goto("VisitationSchedule")}>
+          <ComCatalogue
+            url={
+              visitSchedule
+            }
+          >
+          Lịch thăm nuôi
           </ComCatalogue>
         </TouchableOpacity>
         <TouchableOpacity>
           <ComCatalogue
             url={
-              "https://media.istockphoto.com/id/533572966/vi/anh/%C4%91%E1%BA%A5m-b%C3%B3p-massage-ng%C6%B0%E1%BB%9Di-ph%E1%BB%A5-n%E1%BB%AF-tr%E1%BB%9F-l%E1%BA%A1i-ti%E1%BB%87m-spa.jpg?s=612x612&w=0&k=20&c=k0kxL6b5fob5Cb5PCcvwdO7ryACULd_S_SabPtLyV7M="
+              contract
             }
           >
-            đấm bóp
+          Hợp đồng
           </ComCatalogue>
         </TouchableOpacity>
       </View>

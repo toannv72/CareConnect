@@ -1,7 +1,8 @@
 import React from 'react'
-
 import ComAvatar from "../../Components/ComAvatar/ComAvatar";
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Image } from 'react-native';
+import search from "../../../assets/icon/search.png";
+
 export default function Header() {
   return (
     <View style={styles.header}>
@@ -10,7 +11,16 @@ export default function Header() {
         <Text>Xin chào!</Text>
         <Text style={styles.textName}>Thảo My</Text>
       </View>
-      <ComAvatar />
+      <Image
+        source={search}
+        style={{
+          width: 50,
+          height: 50,
+          borderRadius: 10,
+          objectFit: "fill",
+          borderColor: "#000",
+        }}
+      />
     </View>
   );
 }
@@ -25,6 +35,7 @@ const styles = StyleSheet.create({
   },
   text: {
     flex: 1,
+    marginLeft: 10
   },
   textName: {
     fontWeight: "bold",

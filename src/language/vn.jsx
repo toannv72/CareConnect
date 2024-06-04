@@ -236,4 +236,10 @@ export const vn = {
       EditProfile: "Lưu thông tin",
     },
   },
+  VisitationSchedule: {
+    title: "Lịch thăm nuôi",
+  },
+  ElderProfile:{
+    title: "Hồ sơ người thân",
+  }
 };
