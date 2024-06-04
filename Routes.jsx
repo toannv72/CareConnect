@@ -31,6 +31,17 @@ import UserProfile from "./src/page/UserProfile/UserProfile";
 import ElderProfile from "./src/page/ElderProfile/ElderProfile";
 import EditProfile from "./src/page/UserProfile/EditProfile/EditProfile";
 import DetailProfile from "./src/page/UserProfile/DetailProfile";
+import ForgetPassword from "./src/page/ForgetPassword/ForgetPassword";
+import OtpForgetPassword from "./src/page/ForgetPassword/OtpForgetPassword";
+import ResetPassword from "./src/page/ForgetPassword/ResetPassword";
+import ResetPasswordSuccess from "./src/page/ForgetPassword/ResetPasswordSuccess";
+import ChangePassword from "./src/page/ChangePassword/ChangePassword";
+import ChangePasswordSuccess from "./src/page/ChangePassword/ChangePasswordSuccess";
+import RegisterVisitation from "./src/page/RegisterVisitation/RegisterVisitation";
+import RegisterVisitationSuccess from './src/page/RegisterVisitation/RegisterVisitationSuccess';
+import Contracts from "./src/page/Contract/Contracts";
+import ContractDetail from "./src/page/ContractDetail/ContractDetail";
+import ContractCandSuccess from "./src/page/ContractDetail/ContractCandSuccess";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -93,7 +104,7 @@ const Routes = () => {
           name="ServicePayment"
           component={ServicePayment}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="ServiceHistory"
           component={ServiceHistory}
@@ -103,12 +114,12 @@ const Routes = () => {
           name="ServiceHistoryDetail"
           component={ServiceHistoryDetail}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="CancelRenewSuccess"
           component={CancelRenewSuccess}
         />
-          <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="CreateFeedback"
           component={CreateFeedback}
@@ -138,11 +149,23 @@ const Routes = () => {
           name="HealthMonitorDetail"
           component={HealthMonitorDetail}
         />
+        {/* đăng ký thăm nuôi */}
         <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="VisitationSchedule"
           component={VisitationSchedule}
         />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="RegisterVisitation"
+          component={RegisterVisitation}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="RegisterVisitationSuccess"
+          component={RegisterVisitationSuccess}
+        />
+
         <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="EditProfile"
@@ -157,6 +180,51 @@ const Routes = () => {
           options={{ headerLeft: null, headerShown: false }}
           name="ElderProfile"
           component={ElderProfile}
+          />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ChangePassword"
+          component={ChangePassword}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ChangePasswordSuccess"
+          component={ChangePasswordSuccess}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ForgetPassword"
+          component={ForgetPassword}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="OtpForgetPassword"
+          component={OtpForgetPassword}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ResetPassword"
+          component={ResetPassword}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ResetPasswordSuccess"
+          component={ResetPasswordSuccess}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="Contracts"
+          component={Contracts}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ContractDetail"
+          component={ContractDetail}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ContractCandSuccess"
+          component={ContractCandSuccess}
         />
       </Stack.Navigator>
     </NavigationContainer>
@@ -238,7 +306,6 @@ function MyBottomNavigationBar() {
         name="Notification"
         options={{ headerShown: false }}
         component={Notification}
-
       />
       {/* <Tab.Screen
         name="Account"

@@ -15,7 +15,7 @@ export default function UserProfile() {
   const data = [
     {
       name: "Hợp đồng",
-      link: "",
+      link: "Contracts",
       icon: contract,
     },
     {
@@ -32,7 +32,7 @@ export default function UserProfile() {
   const data2 = [
     {
       name: "Đổi mật khẩu",
-      link: "",
+      link: "ChangePassword",
       icon: changePassword,
     },
     {

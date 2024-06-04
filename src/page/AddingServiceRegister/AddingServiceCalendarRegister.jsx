@@ -5,7 +5,7 @@ import { LanguageContext } from "../../contexts/LanguageContext";
 import { useRoute } from "@react-navigation/native";
 import backArrowWhite from "../../../assets/icon/backArrowWhite.png";
 import { useNavigation } from '@react-navigation/native';
-import SelectedDates from "../../Components/ComDate/SelectedDates";
+import SelectedDates from "../../Components/ComDate/ComSelectedDates";
 import ComSelectWeekDays from "./ComSelectWeekDays";
 import ComRadioGroup from "../../Components/ComRadioGroup/ComRadioGroup";
 import ComPeriodCalendar from "./ComPeriodCalendar";

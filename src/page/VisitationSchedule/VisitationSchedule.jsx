@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import ComVisitationSchedule from "./ComVisitationSchedule";
 import { LanguageContext } from "./../../contexts/LanguageContext";
 import { Controller, Form, FormProvider, useForm } from "react-hook-form";
@@ -11,6 +11,8 @@ import { ActivityIndicator } from "react-native";
 import ComLoading from "../../Components/ComLoading/ComLoading";
 import Visitation from "../../../assets/VisitationSchedule/VisitationSchedule.png";
 import ComHeader from "../../Components/ComHeader/ComHeader";
+import ComButton from "../../Components/ComButton/ComButton";
+import { useNavigation } from "@react-navigation/native";
 
 export default function VisitationSchedule() {
   const [data, setData] = useState([
@@ -83,10 +85,10 @@ export default function VisitationSchedule() {
   const searchSchema = yup.object().shape({
     search: yup.string(),
   });
-
+    const navigation = useNavigation();
   const {
     text: {
-      VisitationSchedule,
+      Login,
       common: { button },
     },
     setLanguage,
@@ -104,50 +106,40 @@ export default function VisitationSchedule() {
     formState: { errors },
   } = methods;
 
-  const onSubmit = (data) => {
-    console.log("====================================");
-    console.log(data);
-    console.log("====================================");
-    setLoading(!loading);
+  const register = () => {
+    navigation.navigate("RegisterVisitation");
+
   };
   return (
-    <>
-      <ComHeader
-        title={VisitationSchedule?.title}
-        showTitle
-        showBackIcon
-      />
-      <View style={styles.body}>
-        <View style={{ gap: 10 }}>
-          <View style={styles.imageBody}>
-            <Image source={Visitation} style={styles.image} />
-          </View>
-          <Text
-            style={{
-              color: "#716767",
-              textAlign: "center",
-              paddingHorizontal: 20,
-            }}
-          >
-            Hãy dùng chút thời gian đổi lấy nụ cười của những người thân yêu
-          </Text>
+    <View style={styles.body}>
+      <View style={{ gap: 10 }}>
+        <View style={styles.imageBody}>
+          <Image source={Visitation} style={styles.image} />
         </View>
-        <ComLoading show={loading}>
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-          >
-            <View>
-              {data?.map((value, index) => (
-                <ComVisitationSchedule key={index} data={value} />
-              ))}
-            </View>
-            <View style={{ height: 320 }}></View>
-          </ScrollView>
-        </ComLoading>
+        <Text
+          style={{
+            color: "#716767",
+            textAlign: "center",
+            paddingHorizontal: 20,
+          }}
+        >
+          Hãy dùng chút thời gian đổi lấy nụ cười của những người thân yêu
+        </Text>
       </View>
-    </>
-
+      <ComLoading show={loading}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+        >
+          <View>
+            {data?.map((value, index) => (
+              <ComVisitationSchedule key={index} data={value} />
+            ))}
+          </View>
+          <View style={{ height:320 }}></View>
+        </ScrollView>
+      </ComLoading>
+    </View>
   );
 }
 
@@ -158,6 +150,21 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     paddingHorizontal: 15,
     gap: 10,
+  },
+  register: {
+    flexDirection: "row",
+    marginBottom: 10,
+    padding: 4,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#33B39C",
+    backgroundColor: "#caece6",
+
+    elevation: 4, // Bóng đổ cho Android
+    shadowColor: "#000", // Màu của bóng đổ cho iOS
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
   },
   imageBody: {
     padding: 1,

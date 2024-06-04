@@ -12,12 +12,10 @@ export default function ComPeriodCalendar() {
   console.log("====================================");
 
   const handleDayPress = (day) => {
-
     if (!startDate) {
       setStartDate(day.dateString);
       setMarkedDates({ [day.dateString]: { selected: true, startingDay: true, color: '#33B39C'} });
     } else if (!endDate) {
-      
       setEndDate(day.dateString);
       setMarkedDates({ [day.dateString]: { selected: true, startingDay: true, color: '#33B39C' } });
     

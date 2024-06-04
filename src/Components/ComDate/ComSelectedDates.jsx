@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View } from "react-native";
 import { Calendar } from "react-native-calendars";
 import moment from "moment";
-export default function SelectedDates() {
+export default function ComSelectedDates() {
   const [selectedDates, setSelectedDates] = useState({});
   const today = moment().format("YYYY-MM-DD");
 

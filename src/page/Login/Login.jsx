@@ -2,20 +2,16 @@ import React, { useContext } from "react";
 import {
   StyleSheet,
   View,
-  Text,
   Button,
   Keyboard,
-  TouchableOpacity,
 } from "react-native";
 import * as yup from "yup";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ComInput from "../../Components/ComInput/ComInput";
-import ComSelect from "../../Components/ComInput/ComSelect";
 import { useStorage } from "../../hooks/useLocalStorage";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import ComTitlePage from "../../Components/ComTitlePage/ComTitlePage";
-import { Form } from "react-native-autofocus";
 import ComButton from "../../Components/ComButton/ComButton";
 import ComTitleLink from "../../Components/ComTitleLink/ComTitleLink";
 import ComTitle from "../../Components/ComTitle/ComTitle";
@@ -155,7 +151,7 @@ export default function LoginScreen() {
 
             {/* <Button title={button.login} style={{ margin: 100 }} /> */}
             <View style={styles?.link}>
-              <ComTitleLink to={"Homes"} id={{ screen: "Profile" }}>
+              <ComTitleLink to={"ForgetPassword"}>
                 {Login?.link?.forgetPassword}
               </ComTitleLink>
               <ComTitle> {Login?.link?.labelRegister}</ComTitle>
