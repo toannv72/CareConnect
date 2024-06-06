@@ -9,6 +9,7 @@ import Home from "./src/page/Home/Home";
 import RegisterSuccess from "./src/page/Register/RegisterSuccess";
 import Otp from "./src/page/Otp/Otp";
 import ComIcon from "./src/Components/ComIcon/ComIcon";
+import ComNurseIcon from "./src/Components/ComIcon/ComNurseIcon";
 import ServicePackages from "./src/page/ServicePackages/ServicePackages";
 import HealthMonitor from "./src/page/HealthMonitor/HealthMonitor";
 import Notification from "./src/page/Notification/Notification";
@@ -42,17 +43,26 @@ import RegisterVisitationSuccess from './src/page/RegisterVisitation/RegisterVis
 import Contracts from "./src/page/Contract/Contracts";
 import ContractDetail from "./src/page/ContractDetail/ContractDetail";
 import ContractCandSuccess from "./src/page/ContractDetail/ContractCandSuccess";
+// -------Role: Nurse--------
+import NurseHome from "./src/nursePage/Home/NurseHome";
+import NurseProfile from "./src/nursePage/NurseProfile/NurseProfile";
+import CareSchedule from "./src/nursePage/CareSchedule/CareSchedule";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Routes = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Homes">
+      <Stack.Navigator initialRouteName="NurseHomes">
         <Stack.Screen
           name="Homes"
           options={{ headerLeft: null, headerShown: false }}
           component={MyBottomNavigationBar}
+        />
+          <Stack.Screen
+          name="NurseHomes"
+          options={{ headerLeft: null, headerShown: false }}
+          component={NurseBottomNavigationBar}
         />
         <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
@@ -231,6 +241,7 @@ const Routes = () => {
   );
 };
 const HomeStack = createNativeStackNavigator();
+const NurseStack = createNativeStackNavigator();
 function HomeStackScreen() {
   return (
     <HomeStack.Navigator>
@@ -241,6 +252,18 @@ function HomeStackScreen() {
       />
       <HomeStack.Screen name="Details" component={Login} />
     </HomeStack.Navigator>
+  );
+}
+function NurseStackScreen() {
+  return (
+    <NurseStack.Navigator>
+      <NurseStack.Screen
+        options={{ headerShown: false }}
+        name="NotificationPage"
+        component={NurseHome}
+      />
+      <NurseStack.Screen name="Details" component={Login} />
+    </NurseStack.Navigator>
   );
 }
 function MyBottomNavigationBar() {
@@ -316,6 +339,72 @@ function MyBottomNavigationBar() {
         name="Account"
         options={{ headerShown: false }}
         component={UserProfile}
+      />
+    </Tab.Navigator>
+  );
+}
+
+function NurseBottomNavigationBar() {
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarHideOnKeyboard: true,
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          position: "absolute",
+          bottom: 10,
+          left: 10,
+          right: 10,
+          elevation: 0,
+          backgroundColor: "#14A499",
+          borderRadius: 15,
+          height: 90,
+          elevation: 30, // Bóng đổ cho Android
+          shadowColor: "#000", // Màu của bóng đổ cho iOS
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.4,
+          shadowRadius: 3.84,
+          elevation: 5,
+        },
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+
+          if (route.name === "Home") {
+            iconName = focused ? "Nav1" : "Nav1_1";
+          } else if (route.name === "CareSchedule") {
+            iconName = focused ? "Nav2" : "Nav2_1";
+          } else if (route.name === "Notification") {
+            iconName = focused ? "Nav4" : "Nav4_1";
+          } else if (route.name === "Account") {
+            iconName = focused ? "Nav5" : "Nav5_1";
+          }
+
+          // You can return any component that you like here!
+          // return <Ionicons name={iconName} size={size} color={"back"} />;
+          return <ComNurseIcon icon={iconName} />;
+        },
+      })}
+      // keyboardShouldPersistTaps="handled"
+    >
+      <Tab.Screen
+        name="Home"
+        options={{ headerShown: false }}
+        component={NurseStackScreen}
+      />
+      <Tab.Screen
+        name="CareSchedule"
+        options={{ headerShown: false }}
+        component={CareSchedule}
+      />
+      <Tab.Screen
+        name="Notification"
+        options={{ headerShown: false }}
+        component={Notification}
+      />
+      <Tab.Screen
+        name="Account"
+        options={{ headerShown: false }}
+        component={NurseProfile}
       />
     </Tab.Navigator>
   );

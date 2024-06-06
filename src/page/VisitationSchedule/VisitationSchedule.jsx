@@ -88,7 +88,7 @@ export default function VisitationSchedule() {
     const navigation = useNavigation();
   const {
     text: {
-      Login,
+      VisitationSchedule,
       common: { button },
     },
     setLanguage,
@@ -111,7 +111,13 @@ export default function VisitationSchedule() {
 
   };
   return (
-    <View style={styles.body}>
+    <>
+    <ComHeader
+        title={VisitationSchedule?.title}
+        showTitle
+        showBackIcon
+      />
+     <View style={styles.body}>
       <View style={{ gap: 10 }}>
         <View style={styles.imageBody}>
           <Image source={Visitation} style={styles.image} />
@@ -140,6 +146,8 @@ export default function VisitationSchedule() {
         </ScrollView>
       </ComLoading>
     </View>
+    </>
+   
   );
 }
 

@@ -3,15 +3,15 @@ import { Text, TouchableOpacity } from "react-native";
 import { StyleSheet, View } from "react-native";
 import { Button } from "react-native";
 
-export default function ComButton({ children, onPress, check }) {
+export default function ComButton({ children, onPress, check,  style  }) {
   return (
     <>
       {check ? (
-        <TouchableOpacity style={styles.button} onPress={onPress}>
+        <TouchableOpacity style={[styles.button, style]} onPress={onPress}>
           <Text style={styles.buttonText}>{children}</Text>
         </TouchableOpacity>
       ) : (
-        <TouchableOpacity style={styles.buttonCheck} onPress={onPress}>
+        <TouchableOpacity style={[styles.buttonCheck, style]} onPress={onPress}>
           <Text style={styles.buttonTextCheck}>{children}</Text>
         </TouchableOpacity>
       )}

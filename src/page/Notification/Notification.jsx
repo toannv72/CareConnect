@@ -1,13 +1,24 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import ComNotification from "./ComNotification/ComNotifications";
 import ComSelectButton from "../../Components/ComButton/ComSelectButton";
+import ComHeader from "../../Components/ComHeader/ComHeader";
+import { LanguageContext } from "../../contexts/LanguageContext";
 
-export default function Notification({}) {
+export default function Notification({ }) {
   const [select, setSelect] = useState(false);
   const [select1, setSelect1] = useState(true);
   const [select2, setSelect2] = useState(true);
+
+  const {
+    text: {
+      Notification,
+      common: { button },
+    },
+    setLanguage,
+  } = useContext(LanguageContext);
+
   const data = [
     {
       img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
@@ -46,51 +57,57 @@ export default function Notification({}) {
     setSelect2(false);
   };
   return (
-    <View style={styles.body}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        horizontal={true}
-        style={styles?.scrollView}
-      >
-        <View style={styles?.buttonContainer}>
-          <ComSelectButton onPress={check} check={select}>
-            Tất cả
-          </ComSelectButton>
-          <ComSelectButton onPress={check1} check={select1}>
-            Khẩn cấp
-          </ComSelectButton>
-          <ComSelectButton onPress={check2} check={select2}>
-            Thanh toán
-          </ComSelectButton>
-          <ComSelectButton onPress={check2} check={select2}>
-            Thanh toán
-          </ComSelectButton>
-          <View style={{ width: 20 }}></View>
-        </View>
-      </ScrollView>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={styles?.scrollView}
-        showsHorizontalScrollIndicator={false}
-      >
-        <ComNotification tile={"Hôm nay"} data={data} />
+    <>
+      <ComHeader
+        title={Notification?.title}
+        showTitle
+      />
+      <View style={styles.body}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          horizontal={true}
+          style={styles?.scrollView}
+        >
+          <View style={styles?.buttonContainer}>
+            <ComSelectButton onPress={check} check={select}>
+              Tất cả
+            </ComSelectButton>
+            <ComSelectButton onPress={check1} check={select1}>
+              Khẩn cấp
+            </ComSelectButton>
+            <ComSelectButton onPress={check2} check={select2}>
+              Thanh toán
+            </ComSelectButton>
+            <ComSelectButton onPress={check2} check={select2}>
+              Thanh toán
+            </ComSelectButton>
+            <View style={{ width: 20 }}></View>
+          </View>
+        </ScrollView>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={styles?.scrollView}
+          showsHorizontalScrollIndicator={false}
+        >
+          <ComNotification tile={"Hôm nay"} data={data} />
 
-        <ComNotification tile={"Trước đó"} data={data} />
-        <ComNotification tile={"Trước đó"} data={data} />
-        <ComNotification tile={"Trước đó"} data={data} />
+          <ComNotification tile={"Trước đó"} data={data} />
+          <ComNotification tile={"Trước đó"} data={data} />
+          <ComNotification tile={"Trước đó"} data={data} />
 
-        <View style={{ height: 190 }}></View>
-      </ScrollView>
-    </View>
+          <View style={{ height: 190 }}></View>
+        </ScrollView>
+      </View>
+    </>
   );
 }
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    paddingTop: 40,
+    paddingTop: 10,
     backgroundColor: "#fff",
-    paddingHorizontal:15
+    paddingHorizontal: 15
   },
   buttonContainer: {
     flexDirection: "row",

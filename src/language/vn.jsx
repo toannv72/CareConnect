@@ -343,5 +343,18 @@ export const vn = {
   },
   ElderProfile:{
     title: "Hồ sơ người thân",
+  },
+  Notification:{
+    title: "Thông báo",
+  },
+  NurseHome: {
+    catalogue: "Danh mục",
+  },
+  CareSchedule: {
+    title: "Lịch chăm sóc",
+    noTask: "Ngày này không có lịch làm việc",
+    takeRest: "Bạn có thể nghỉ ngơi rồi",
+    room: "Phòng",
+    area: "Khu"
   }
 };
