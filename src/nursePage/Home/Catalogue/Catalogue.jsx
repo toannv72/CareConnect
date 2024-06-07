@@ -38,10 +38,13 @@ export default function Catalogue() {
                     backgroundColor={"#8CCAEE"}
                     title={"Báo cáo sức khỏe Báo cáo sức khỏe Báo cáo sức khỏe"}
                     content={"Xem chi tiết"}
-                > </ComCatalogue>
+                > 
+                </ComCatalogue>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles?.comCatalogue}>
+            <TouchableOpacity 
+            style={styles?.comCatalogue}
+            onPress={() => goto("RoomList")}>
                 <ComCatalogue
                     url={
                         Room

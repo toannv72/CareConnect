@@ -343,6 +343,25 @@ export const vn = {
   },
   ElderProfile:{
     title: "Hồ sơ người thân",
+    detail:{
+      title: "Thông tin người lớn tuổi",
+      name: "Họ và tên cụ",
+      contractID: "Mã hợp đồng",
+      relationship: "Mối quan hệ",
+      nursingHomeAdd: "Nơi sinh hoạt",
+      address: "Địa chỉ thường trú",
+      medicalProfile: "Hồ sơ bệnh án",
+      representative: "Người đại diện",
+      urgentContact: "Liên hệ khẩn cấp"
+    },
+  },
+  MedicalProfile:{
+    name: "Ông/Bà",
+    dateOfBirth: "Ngày sinh",
+    age: "Tuổi",
+    generalIndex: "Chỉ số tổng quát",
+    underlyingMedical: "Bệnh nền",
+    note: "Ghi chú"
   },
   Notification:{
     title: "Thông báo",
@@ -355,6 +374,9 @@ export const vn = {
     noTask: "Ngày này không có lịch làm việc",
     takeRest: "Bạn có thể nghỉ ngơi rồi",
     room: "Phòng",
-    area: "Khu"
-  }
+    area: "Khu",
+    capacity: "Số người",
+    type: "Loại",
+  },
+
 };

@@ -15,7 +15,7 @@ export default function ComHealth({ data }) {
     <TouchableOpacity
       style={styles.body}
       onPress={() => {
-        // navigation.navigate("HealthMonitorDetail", { id: data.id });
+        navigation.navigate("ElderDetailProfile", { id: data?.id });
       }}
     >
       <Image

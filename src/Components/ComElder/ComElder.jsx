@@ -4,7 +4,7 @@ import { Image, View } from "react-native";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { useNavigation } from "@react-navigation/native";
 
-export default function ComElder({ data, onPress, isSelected }) {
+export default function ComElder({ data, onPress, isSelected, style }) {
   const {
     text: { healthMonitor },
     setLanguage,
@@ -13,7 +13,7 @@ export default function ComElder({ data, onPress, isSelected }) {
 
   return (
     <TouchableOpacity
-      style={[styles.body, isSelected && styles.selectedBody]}
+      style={[styles.body, isSelected && styles.selectedBody, style]}
       onPress={onPress}
     >
       <Image
@@ -62,14 +62,7 @@ export default function ComElder({ data, onPress, isSelected }) {
             <Text>: {data?.room}</Text>
           </Text>
         </View>
-        <View style={styles?.container}>
-          <Text style={{ flexDirection: "row" }}>
-            <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-              {healthMonitor?.bed}
-            </Text>
-            <Text>: {data?.bed}</Text>
-          </Text>
-        </View>
+       
       </View>
     </TouchableOpacity>
   );
@@ -91,7 +84,6 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "flex-start",
     justifyContent: "center",
-
     flexWrap: "wrap",
   },
   container1: {

@@ -4,7 +4,7 @@ import { StyleSheet, View, Text } from "react-native";
 // import Picker from 'react-native-picker-select';
 import { Picker } from "@react-native-picker/picker";
 const ComSelect = (
-  { label, name, control, rules, ref, required, errors, options, style },
+  { label, name, control, rules, ref, required, errors, options, style, enabled},
   ...props
 ) => {
   const errorMessage = errors[name]?.message;
@@ -32,6 +32,7 @@ const ComSelect = (
               selectedValue={value}
               onValueChange={(itemValue, itemIndex) => onChange(itemValue)}
               pickerStyleType={{ borderColor: "#000" }}
+              enabled={enabled}
             >
               {options.map((option, index) => (
                 <Picker.Item

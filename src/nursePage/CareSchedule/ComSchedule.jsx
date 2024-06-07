@@ -21,28 +21,20 @@ export default function ComSchedule({ data, onPress, isSelected }) {
             >
                 <Image
                     source={taskIcon}
-                    style={{
-                        width: 60,
-                        height: 60,
-                        objectFit: "fill",
-                        backgroundColor: "#14A499"
-                    }}
+                    style={styles?.taskImage}
                 />
                 <View style={styles?.container}>
-                    <Text style={{ fontWeight: "bold", fontSize: 16, marginBottom: 7 }}>
+                    <Text style={styles?.taskTitle}
+                        numberOfLines={2}
+                        ellipsizeMode='tail'>
                         {CareSchedule?.room} {data?.roomId} -  {CareSchedule?.area} {data?.areaId}
                     </Text>
                     <View style={{ flexDirection: "row", alignItems: "center" }}>
                         <Image
                             source={timeIcon}
-                            style={{
-                                width: 25,
-                                height: 25,
-                                objectFit: "fill",
-                                marginRight: 5
-                            }}
+                            style={styles?.clockImage}
                         />
-                        <Text style={{ fontSize: 14}}>{data?.time}</Text>
+                        <Text style={{ fontSize: 14 }}>{data?.time}</Text>
                     </View>
                 </View>
             </TouchableOpacity>
@@ -57,8 +49,29 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 5,
         borderRadius: 10,
+        justifyContent: "center",
+        alignItems: "center"
     },
-    container:{
-        marginVertical: 5
+    container: {
+        marginVertical: 5,
+        flex: 4
+    },
+    taskImage: {
+        width: 60,
+        height: 60,
+        objectFit: "fill",
+        backgroundColor: "#14A499",
+        flex: 1
+    },
+    clockImage: {
+        width: 25,
+        height: 25,
+        objectFit: "fill",
+        marginRight: 5
+    },
+    taskTitle:{
+        fontWeight: "bold", 
+        fontSize: 16, 
+        marginBottom: 7
     }
 })

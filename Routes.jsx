@@ -30,6 +30,8 @@ import BillHistory from "./src/page/Bills/BillHistory";
 import BillDetail from "./src/page/Bills/BillDetail";
 import UserProfile from "./src/page/UserProfile/UserProfile";
 import ElderProfile from "./src/page/ElderProfile/ElderProfile";
+import ElderDetailProfile from "./src/page/ElderProfile/ElderDetailProfile";
+import MedicalProfile from "./src/page/ElderProfile/MedicalProfile/MedicalProfile";
 import EditProfile from "./src/page/UserProfile/EditProfile/EditProfile";
 import DetailProfile from "./src/page/UserProfile/DetailProfile";
 import ForgetPassword from "./src/page/ForgetPassword/ForgetPassword";
@@ -47,13 +49,17 @@ import ContractCandSuccess from "./src/page/ContractDetail/ContractCandSuccess";
 import NurseHome from "./src/nursePage/Home/NurseHome";
 import NurseProfile from "./src/nursePage/NurseProfile/NurseProfile";
 import CareSchedule from "./src/nursePage/CareSchedule/CareSchedule";
+import RoomList from "./src/nursePage/RoomList/RoomList";
+import RoomDetail from "./src/nursePage/RoomList/RoomDetail";
+import NurseElderDetailProfile from "./src/nursePage/ElderProfile/NurseElderDetailProfile";
+import CustomerProfile from "./src/nursePage/CustomerProfile/CustomerProfile";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Routes = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="NurseHomes">
+      <Stack.Navigator initialRouteName="Homes">
         <Stack.Screen
           name="Homes"
           options={{ headerLeft: null, headerShown: false }}
@@ -191,6 +197,16 @@ const Routes = () => {
           name="ElderProfile"
           component={ElderProfile}
           />
+           <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ElderDetailProfile"
+          component={ElderDetailProfile}
+          />
+           <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="MedicalProfile"
+          component={MedicalProfile}
+          />
         <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="ChangePassword"
@@ -235,6 +251,27 @@ const Routes = () => {
           options={{ headerLeft: null, headerShown: false }}
           name="ContractCandSuccess"
           component={ContractCandSuccess}
+        />
+        {/* =======nurse====== */}
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="RoomList"
+          component={RoomList}
+        />
+         <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="RoomDetail"
+          component={RoomDetail}
+        />
+           <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="NurseElderDetailProfile"
+          component={NurseElderDetailProfile}
+        />
+         <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="CustomerProfile"
+          component={CustomerProfile}
         />
       </Stack.Navigator>
     </NavigationContainer>
