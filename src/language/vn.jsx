@@ -233,6 +233,9 @@ export const vn = {
     sex: "Giới tính",
     room: "Phòng",
     bed: "Giường",
+    time: "Thời gian",
+    nurse: "Người thực hiện",
+    status: "Trạng thái"
   },
   HealthMonitorDetail: {
     title: "Chi tiết sức khỏe",
@@ -378,5 +381,11 @@ export const vn = {
     capacity: "Số người",
     type: "Loại",
   },
+  NurseHealthMonitor:{
+    title: "Theo dõi sức khỏe",
+    createHealthMonitor: "Tạo báo cáo sức khỏe",
+    healthIndex: "Chỉ số sức khỏe",
+    generalNote: "Chỉ số tổng quát"
+  }
 
 };

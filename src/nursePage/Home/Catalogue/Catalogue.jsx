@@ -28,7 +28,9 @@ export default function Catalogue() {
                 marginVertical: 10
             }}
         >
-            <TouchableOpacity style={styles?.comCatalogue}>
+            <TouchableOpacity
+                style={styles?.comCatalogue}
+                onPress={() => goto("NurseHealthMonitor")}>
 
                 <ComCatalogue
                     url={
@@ -36,15 +38,15 @@ export default function Catalogue() {
                     }
                     color={"#003C5F"}
                     backgroundColor={"#8CCAEE"}
-                    title={"Báo cáo sức khỏe Báo cáo sức khỏe Báo cáo sức khỏe"}
+                    title={"Theo dõi sức khỏe"}
                     content={"Xem chi tiết"}
-                > 
+                >
                 </ComCatalogue>
             </TouchableOpacity>
 
-            <TouchableOpacity 
-            style={styles?.comCatalogue}
-            onPress={() => goto("RoomList")}>
+            <TouchableOpacity
+                style={styles?.comCatalogue}
+                onPress={() => goto("RoomList")}>
                 <ComCatalogue
                     url={
                         Room
@@ -73,8 +75,8 @@ export default function Catalogue() {
 
 const styles = StyleSheet.create({
     comCatalogue: {
-        height: 150, 
-        width: "47%", 
+        height: 150,
+        width: "47%",
     }
 })
 
