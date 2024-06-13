@@ -6,10 +6,12 @@ import ComSchedule from "./ComSchedule";
 import { Calendar, LocaleConfig } from "react-native-calendars";
 import { date } from "yup";
 import moment from "moment";
-import noTask from "../../../assets/Nurse/CareSchedule/noTask.png"
+import noTask from "../../../assets/images/Nurse/CareSchedule/noTask.png"
+import { useNavigation } from '@react-navigation/native';
 
 export default function CareSchedule({ }) {
     const today = moment().format("YYYY-MM-DD");
+    const navigation = useNavigation();
     const [selectedDate, setSelectedDate] = useState(moment().format("YYYY-MM-DD"));
     const {
         text: {
@@ -60,7 +62,7 @@ export default function CareSchedule({ }) {
             id: 1,
             staffId: 123,
             nurseID: 234,
-            roomId: 101,
+            roomId: 102,
             areaId: "A",
             time: "06/:00 - 14:00",
             date: "2024-06-22"
@@ -69,7 +71,7 @@ export default function CareSchedule({ }) {
             id: 1,
             staffId: 123,
             nurseID: 234,
-            roomId: 101,
+            roomId: 103,
             areaId: "A",
             time: "06/:00 - 14:00",
             date: "2024-06-22"
@@ -78,7 +80,7 @@ export default function CareSchedule({ }) {
             id: 1,
             staffId: 123,
             nurseID: 234,
-            roomId: 101,
+            roomId: 104,
             areaId: "A",
             time: "06/:00 - 14:00",
             date: "2024-06-22"
@@ -114,12 +116,17 @@ export default function CareSchedule({ }) {
 
     const task = { key: 'task', color: 'red', selectedDotColor: 'blue' }; //style for dot
 
-    const markedDates = data.reduce((acc, item) => { // dùng reduce duyệt qua từng thành phần trong mảng data
-        acc[item?.date] = (item?.date === selectedDate) //nếu date của ptu hiện tại = selectedate
-            ? { dots: [task], selected: true } //set selected của ptu = true, gắn dot => {"selectedate":{"dots": [[Object]],selected: true}}
-            : { dots: [task] }; //date của ptu hiện tại != selectedate => chỉ gắn dot  {"selectedate":{"dots": [[Object]]}
-        return acc;
-    }, { [selectedDate]: { selected: true } }); //giá trị khởi tạo cho biến acc {"selectedate":{selected: true}}
+    const [markedDates, setMarkedDates] = useState({
+        [today]: { selected: true }
+    });
+
+    useEffect(() => {
+        // Cập nhật markedDates mỗi khi selectedDate thay đổi
+        setMarkedDates(data.reduce((acc, item) => {
+            acc[item.date] = { dots: [{ key: 'task', color: 'red' }], selected: item.date === selectedDate };
+            return acc;
+        }, { [selectedDate]: { selected: true } }));
+    }, [selectedDate, data]);
 
     const filteredData = data.filter(item => item.date === selectedDate);//get list of object has date = selectedDate
 
@@ -137,19 +144,25 @@ export default function CareSchedule({ }) {
                 <Calendar
                     markingType={'multi-dot'}
                     markedDates={markedDates}
-                    style={{ marginHorizontal: 15, marginVertical: 10 }}
+                    style={{ marginHorizontal: 15, marginBottom: 5 }}
                     onDayPress={onDayPress}
                 />
                 {filteredData.length > 0 ? (//if has data => display list òf task
-                    <ScrollView style={styles.taskContainer}>
-                        <Text style={styles.dateTitle}>
+                    <>
+                        <Text style={[styles.dateTitle, styles.taskContainer]}>
                             {moment(selectedDate).format('DD-MM-YYYY')}
                         </Text>
-                        {filteredData.map((item, index) => (
-                            <ComSchedule key={index} data={item} />
-                        ))}
-                        <View style={{ height: 100 }} />
-                    </ScrollView>
+                        <ScrollView>
+                            {filteredData.map((item, index) => (
+                                <ComSchedule
+                                    key={index}
+                                    data={item}
+                                    onPress={() => navigation.navigate("NurseHealthMonitor", { roomData: item })}
+                                />
+                            ))}
+                            <View style={{ height: 100 }} />
+                        </ScrollView>
+                    </>
                 ) : ( //ìf no data => display no task component
                     <View style={[styles.taskContainer, { alignItems: "center" }]}>
                         <Text style={styles.dateTitle}>
@@ -183,7 +196,6 @@ const styles = StyleSheet.create({
         borderColor: "#33B39C",
         borderWidth: 1,
         borderBottomWidth: 0,
-        height: 240,
         borderTopRightRadius: 20,
         borderTopLeftRadius: 20,
         backgroundColor: 'white',
@@ -193,6 +205,5 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         fontSize: 16,
         textAlign: "center",
-        marginVertical: 5
     }
 })

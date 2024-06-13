@@ -14,15 +14,9 @@ export default function RoomDetail({ data }) {
         setLanguage,
     } = useContext(LanguageContext);
     const navigation = useNavigation();
-
-    const roomData = {
-        roomId: 1,
-        name: "107",
-        capacity: 4,
-        type: "Cơ bản",
-        area: "A",
-        color: "#64CCC5"
-    }
+    const route = useRoute();
+    const selectedRoom = route.params?.roomData || {};
+    console.log("selectedRoom", route.params?.roomData)
 
     const [elderData, setElderData] = useState([
         {
@@ -61,7 +55,7 @@ export default function RoomDetail({ data }) {
             <ComHeader
                 showBackIcon
                 showTitle
-                title={CareSchedule?.room + " " + roomData?.name + " - " + CareSchedule?.area + " " + roomData?.area}
+                title={CareSchedule?.room + " " + selectedRoom?.name + " - " + CareSchedule?.area + " " + selectedRoom?.area}
             />
             <View style={styles.body}>
                 <View>

@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { StyleSheet, View, Button, Keyboard } from "react-native";
+import { StyleSheet, View, Button, Keyboard, Image } from "react-native";
 import * as yup from "yup";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -12,6 +12,8 @@ import ComTitleLink from "../../Components/ComTitleLink/ComTitleLink";
 import ComTitle from "../../Components/ComTitle/ComTitle";
 import { useNavigation } from "@react-navigation/native";
 import { postData } from "../../api/api";
+import ComHeader from "../../Components/ComHeader/ComHeader";
+import Lock from "../../../assets/Lock.png"
 
 export default function ChangePassword() {
   const [datas, setData] = useStorage("toan", {});
@@ -89,55 +91,68 @@ export default function ChangePassword() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.body}>
-        <FormProvider {...methods}>
-          <ComTitlePage>{ChangePassword?.pageTitle}</ComTitlePage>
-          <View style={{ width: "90%", gap: 15 }}>
-            <ComTitle style={{ textAlign: "center", opacity: 0.5 }}>
-              {ChangePassword?.pageSubTitle}
-            </ComTitle>
-            <ComInput
-              label={ChangePassword?.label?.password}
-              placeholder={ChangePassword?.placeholder?.password}
-              name="oldPassword"
-              control={control}
-              errors={errors} // Pass errors object
-              password
-              required
-            />
-            <ComInput
-              label={ChangePassword?.label?.password}
-              placeholder={ChangePassword?.placeholder?.password}
-              name="password"
-              control={control}
-              errors={errors} // Pass errors object
-              password
-              required
-            />
-            <ComInput
-              label={ChangePassword?.label?.confirmPassword}
-              placeholder={ChangePassword?.placeholder?.confirmPassword}
-              name="confirmPassword"
-              control={control}
-              errors={errors} // Pass errors object
-              password
-              required
-            />
-            <ComButton onPress={handleSubmit(handleLogin)}>
-              {ChangePassword?.button?.ChangePassword}
-            </ComButton>
-            {/* <View style={styles?.link}>
+    <>
+      <ComHeader
+        showBackIcon
+        showTitle
+        title={ChangePassword?.pageTitle}
+      />
+      <View style={styles.container}>
+        <View style={styles.body}>
+          <Image
+            source={Lock}
+            style={{
+              height: 100,
+              width: 100,
+              objectFit: "fill",
+              marginBottom: 50
+            }}
+          />
+          <FormProvider {...methods}>
+            <View style={{ width: "90%", gap: 15 }}>
+
+              <ComInput
+                label={ChangePassword?.label?.olePassword}
+                placeholder={ChangePassword?.placeholder?.olePassword}
+                name="oldPassword"
+                control={control}
+                errors={errors} // Pass errors object
+                password
+                required
+              />
+              <ComInput
+                label={ChangePassword?.label?.password}
+                placeholder={ChangePassword?.placeholder?.password}
+                name="password"
+                control={control}
+                errors={errors} // Pass errors object
+                password
+                required
+              />
+              <ComInput
+                label={ChangePassword?.label?.confirmPassword}
+                placeholder={ChangePassword?.placeholder?.confirmPassword}
+                name="confirmPassword"
+                control={control}
+                errors={errors} // Pass errors object
+                password
+                required
+              />
+              <ComButton onPress={handleSubmit(handleLogin)}>
+                {ChangePassword?.button?.ChangePassword}
+              </ComButton>
+              {/* <View style={styles?.link}>
               <ComTitle> {ChangePassword?.link?.textLogin}</ComTitle>
 
               <ComTitleLink to={"Login"} style={{ color: "#33B39C" }}>
                 {ChangePassword?.link?.login}
               </ComTitleLink>
             </View> */}
-          </View>
-        </FormProvider>
+            </View>
+          </FormProvider>
+        </View>
       </View>
-    </View>
+    </>
   );
 }
 

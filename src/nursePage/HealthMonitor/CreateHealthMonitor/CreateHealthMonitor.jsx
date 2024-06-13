@@ -19,6 +19,8 @@ export default function CreateHealthMonitor({ data }) {
         setLanguage,
     } = useContext(LanguageContext);
     const navigation = useNavigation();
+    const route = useRoute();
+    const selectedIndexs = route.params?.selectedIndexs || [];
 
     const loginSchema = yup.object().shape({
         // fullName: yup.string().trim().required(EditProfile?.message?.fullName),
@@ -62,6 +64,7 @@ export default function CreateHealthMonitor({ data }) {
             label: "Bất thường",
         },
     ];
+
     return (
         <>
             <ComHeader
@@ -87,132 +90,56 @@ export default function CreateHealthMonitor({ data }) {
                                 showsVerticalScrollIndicator={false}
                                 showsHorizontalScrollIndicator={false}
                             >
-                                <View style={styles?.index}>
-                                    <View
-                                        style={{
-                                            flexDirection: "row",
-                                            justifyContent: "space-between",
-                                            gap: 10,
-                                        }}
-                                    >
-                                        <View style={{ flex: 1 }}>
-                                            <ComInput
-                                                label={"Huyết áp(mmHg)"}
-                                                placeholder={"Huyết áp(mmHg)"}
-                                                name="fullName"
-                                                control={control}
-                                                keyboardType="default" // Set keyboardType for First Name input
-                                                errors={errors} // Pass errors object
-                                                required
-                                            />
+                                {
+                                    selectedIndexs.map((item, index) => (
+                                        <View style={styles?.index} key={index}>
+                                            <Text style={{fontWeight: "600", fontSize: 16, marginVertical: 10}}>{item?.title + " (" + item?.unit + ")"}</Text>
+
+                                            <View
+                                                style={{
+                                                    flexDirection: "row",
+                                                    justifyContent: "space-between",
+                                                    gap: 10,
+                                                }}
+                                            >
+                                                <View style={{ flex: 1 }}>
+                                                    <ComInput
+                                                        label={"Giá trị"}
+                                                        placeholder={item?.title}
+                                                        name="fullName"
+                                                        control={control}
+                                                        keyboardType="default" // Set keyboardType for First Name input
+                                                        errors={errors} // Pass errors object
+                                                        required
+                                                    />
+                                                </View>
+                                                <View style={{ flex: 1 }}>
+                                                    <ComSelect
+                                                        label={"Trạng thái"}
+                                                        name="gender"
+                                                        control={control}
+                                                        errors={errors} // Pass errors object
+                                                        options={statusData}
+                                                        required
+                                                    />
+                                                </View>
+                                            </View>
+                                            <View style={{ flex: 1, marginVertical: 5 }}>
+                                                <ComInput
+                                                    label={"Ghi chú"}
+                                                    placeholder={"Ghi chú"}
+                                                    name="fullName"
+                                                    control={control}
+                                                    keyboardType="default" // Set keyboardType for First Name input
+                                                    errors={errors} // Pass errors object
+                                                    required
+                                                />
+                                            </View>
                                         </View>
-                                        <View style={{ flex: 1 }}>
-                                            <ComSelect
-                                                label={"Trạng thái"}
-                                                name="gender"
-                                                control={control}
-                                                errors={errors} // Pass errors object
-                                                options={statusData}
-                                                required
-                                            />
-                                        </View>
-                                    </View>
-                                    <View style={{ flex: 1, marginVertical: 5 }}>
-                                        <ComInput
-                                            label={"Ghi chú"}
-                                            placeholder={"Ghi chú"}
-                                            name="fullName"
-                                            control={control}
-                                            keyboardType="default" // Set keyboardType for First Name input
-                                            errors={errors} // Pass errors object
-                                            required
-                                        />
-                                    </View>
-                                </View>
-                                <View style={styles?.index}>
-                                    <View
-                                        style={{
-                                            flexDirection: "row",
-                                            justifyContent: "space-between",
-                                            gap: 10,
-                                        }}
-                                    >
-                                        <View style={{ flex: 1 }}>
-                                            <ComInput
-                                                label={"Huyết áp(mmHg)"}
-                                                placeholder={"Huyết áp(mmHg)"}
-                                                name="fullName"
-                                                control={control}
-                                                keyboardType="default" // Set keyboardType for First Name input
-                                                errors={errors} // Pass errors object
-                                                required
-                                            />
-                                        </View>
-                                        <View style={{ flex: 1 }}>
-                                            <ComSelect
-                                                label={"Trạng thái"}
-                                                name="gender"
-                                                control={control}
-                                                errors={errors} // Pass errors object
-                                                options={statusData}
-                                                required
-                                            />
-                                        </View>
-                                    </View>
-                                    <View style={{ flex: 1, marginVertical: 5 }}>
-                                        <ComInput
-                                            label={"Ghi chú"}
-                                            placeholder={"Ghi chú"}
-                                            name="fullName"
-                                            control={control}
-                                            keyboardType="default" // Set keyboardType for First Name input
-                                            errors={errors} // Pass errors object
-                                            required
-                                        />
-                                    </View>
-                                </View>
-                                <View style={styles?.index}>
-                                    <View
-                                        style={{
-                                            flexDirection: "row",
-                                            justifyContent: "space-between",
-                                            gap: 10,
-                                        }}
-                                    >
-                                        <View style={{ flex: 1 }}>
-                                            <ComInput
-                                                label={"Huyết áp(mmHg)"}
-                                                placeholder={"Huyết áp(mmHg)"}
-                                                name="fullName"
-                                                control={control}
-                                                keyboardType="default" // Set keyboardType for First Name input
-                                                errors={errors} // Pass errors object
-                                                required
-                                            />
-                                        </View>
-                                        <View style={{ flex: 1 }}>
-                                            <ComSelect
-                                                label={"Trạng thái"}
-                                                name="gender"
-                                                control={control}
-                                                errors={errors} // Pass errors object
-                                                options={statusData}
-                                                required
-                                            />
-                                        </View>
-                                    </View>
-                                    <View style={{ flex: 1, marginVertical: 5 }}>
-                                        <ComInput
-                                            label={"Ghi chú"}
-                                            placeholder={"Ghi chú"}
-                                            name="fullName"
-                                            control={control}
-                                            keyboardType="default" // Set keyboardType for First Name input
-                                            errors={errors} // Pass errors object
-                                            required
-                                        />
-                                    </View>
-                                </View>
+                                    )
+                                    )
+                                }
+
                                 <View style={{ flex: 1, marginVertical: 5 }}>
                                     <ComInput
                                         label={"Ghi chú tổng quát"}

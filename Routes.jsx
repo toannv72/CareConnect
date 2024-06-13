@@ -54,9 +54,12 @@ import RoomDetail from "./src/nursePage/RoomList/RoomDetail";
 import NurseElderDetailProfile from "./src/nursePage/ElderProfile/NurseElderDetailProfile";
 import CustomerProfile from "./src/nursePage/CustomerProfile/CustomerProfile";
 import NurseHealthMonitor from "./src/nursePage/HealthMonitor/NurseHealthMonitor";
+import NurseHealthMonitorDetail from "./src/nursePage/HealthMonitor/HealthMonitorDetail/NurseHealthMonitorDetail";
 import ListHealthMonitor from "./src/nursePage/HealthMonitor/ListHealthMonitor";
 import CreateHealthMonitor from "./src/nursePage/HealthMonitor/CreateHealthMonitor/CreateHealthMonitor";
 import ListHealthIndex from "./src/nursePage/HealthMonitor/CreateHealthMonitor/ListHealthIndex";
+import RegisterService from "./src/nursePage/RegisterService/RegisterService";
+import RegisterServiceDetail from "./src/nursePage/RegisterService/RegisterServiceDetail";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -282,6 +285,11 @@ const Routes = () => {
           name="NurseHealthMonitor"
           component={NurseHealthMonitor}
         />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="NurseHealthMonitorDetail"
+          component={NurseHealthMonitorDetail}
+        />
            <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="ListHealthMonitor"
@@ -296,6 +304,16 @@ const Routes = () => {
           options={{ headerLeft: null, headerShown: false }}
           name="ListHealthIndex"
           component={ListHealthIndex}
+        />
+         <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="RegisterService"
+          component={RegisterService}
+        />
+         <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="RegisterServiceDetail"
+          component={RegisterServiceDetail}
         />
       </Stack.Navigator>
     </NavigationContainer>

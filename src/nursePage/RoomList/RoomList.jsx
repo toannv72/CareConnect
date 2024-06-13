@@ -16,14 +16,14 @@ export default function RoomList() {
     const [data, setData] = useState([
         {
             roomId: 1,
-            name: "107 107 107 107 107 107 107 107 ",
+            name: "107",
             capacity: 4,
             type: "Cơ bản",
             area: "A",
             color: "#64CCC5"
         },
         {
-            roomId: 1,
+            roomId: 2,
             name: "207",
             capacity: 2,
             type: "Thường",
@@ -31,7 +31,7 @@ export default function RoomList() {
             color: "#F7E863"
         },
         {
-            roomId: 1,
+            roomId: 3,
             name: "307",
             capacity: 1,
             type: "Cao cấp",
@@ -39,7 +39,7 @@ export default function RoomList() {
             color: "#8DF7AB"
         },
         {
-            roomId: 1,
+            roomId: 4,
             name: "307",
             capacity: 1,
             type: "Cao cấp Cao cấp",
@@ -47,7 +47,7 @@ export default function RoomList() {
             color: "#8DF7AB"
         },
         {
-            roomId: 1,
+            roomId: 5,
             name: "307",
             capacity: 1,
             type: "Cao cấp Cao cấp",
@@ -63,25 +63,27 @@ export default function RoomList() {
                 showTitle
                 title="Danh sách phòng"
             />
-
             <View style={styles.body}>
                 <ScrollView>
-                    <View style={{alignItems:"center", backgroundColor: "#ACDED3", marginHorizontal: 10, borderRadius: 10}}>
-                    <Image
-                        source={RoomListImg}
-                        style={{
-                            height: 150,
-                            objectFit: "fill",
-                          
-                        }}
-                    />
+                    <View style={{ alignItems: "center", backgroundColor: "#ACDED3", marginHorizontal: 10, borderRadius: 10 }}>
+                        <Image
+                            source={RoomListImg}
+                            style={{
+                                height: 150,
+                                objectFit: "fill",
+
+                            }}
+                        />
                     </View>
                     <View style={{ padding: 20 }}>
                         {data.map((room, index) => (
-                            <ComRoom
-                                key={index}
-                                data={room}
-                                color={room.color} />
+                            
+                                <ComRoom
+                                    key={index}
+                                    data={room}
+                                    color={room?.color}
+                                    onPress={() => navigation.navigate("RoomDetail",{roomData: room})} // Pass roomData
+                                />
                         ))}
                     </View>
                 </ScrollView>
@@ -95,6 +97,6 @@ const styles = StyleSheet.create({
     body: {
         backgroundColor: "#fff",
         flex: 1,
-        paddingTop: 15, 
+        paddingTop: 15,
     },
 })

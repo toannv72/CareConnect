@@ -5,8 +5,8 @@ import { View } from "react-native";
 import { LanguageContext } from "../../../contexts/LanguageContext";
 import ComCatalogue from "./ComCatalogue";
 import { useNavigation } from "@react-navigation/native";
-import Room from "../../../../assets/Nurse/NurseHomeIcon/Room.png";
-import AddingService from "../../../../assets/Nurse/NurseHomeIcon/AddingService.png";
+import Room from "../../../../assets/images/Nurse/NurseHomeIcon/Room.png";
+import AddingService from "../../../../assets/images/Nurse/NurseHomeIcon/AddingService.png";
 import nav from "../../../../assets/icon/Nav3.png"
 
 export default function Catalogue() {
@@ -58,7 +58,10 @@ export default function Catalogue() {
                 > </ComCatalogue>
 
             </TouchableOpacity>
-            <TouchableOpacity style={styles?.comCatalogue}>
+            <TouchableOpacity
+             style={styles?.comCatalogue}
+             onPress={() => goto("RegisterService")}
+             >
                 <ComCatalogue
                     url={
                         AddingService

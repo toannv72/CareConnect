@@ -1,37 +1,55 @@
 import React, { useContext, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { Image, View } from "react-native";
-import { LanguageContext } from "../../contexts/LanguageContext";
+import { LanguageContext } from "../../../contexts/LanguageContext";
 import { useNavigation } from "@react-navigation/native";
-import healthRecord from "../../../assets/images/HealthMonitor/healthRecord.png";
 
-export default function ComHealthMonitor({ data, isSelected, style }) {
+export default function ComPatient({ data }) {
   const {
-    text: { healthMonitor },
+    text: { HealthMonitorDetail },
     setLanguage,
   } = useContext(LanguageContext);
   const navigation = useNavigation();
 
   return (
     <TouchableOpacity
-      style={[styles.body, isSelected && styles.selectedBody, style]}
-      onPress={() => navigation.navigate("NurseHealthMonitorDetail", { id: data?.roomId })} // Chuyển đến trang mới
+      style={styles.body}
+      onPress={() => {
+        // navigation.navigate("HealthMonitorDetailDetail", { id: data.id });
+      }}
     >
       <Image
-        source={healthRecord}
+        source={{ uri: data?.img }}
         style={{
-          width: 60,
-          height: 60,
+          width: 65,
+          height: 80,
           borderRadius: 50,
           objectFit: "fill",
+          borderWidth: 0.5,
+          borderColor: "#000",
         }}
       />
       <View style={styles?.container1}>
-       
         <View style={styles?.container}>
           <Text style={{ flexDirection: "row" }}>
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-              {healthMonitor?.room}
+              {HealthMonitorDetail?.name}
+            </Text>
+            <Text>: {data?.name}</Text>
+          </Text>
+        </View>
+        <View style={styles?.container}>
+          <Text style={{ flexDirection: "row" }}>
+            <Text style={{ fontWeight: "bold", fontSize: 14 }}>
+              {HealthMonitorDetail?.yearOld}
+            </Text>
+            <Text>: {data?.age}</Text>
+          </Text>
+        </View>
+        <View style={styles?.container}>
+          <Text style={{ flexDirection: "row" }}>
+            <Text style={{ fontWeight: "bold", fontSize: 14 }}>
+              {HealthMonitorDetail?.YearOfBirth}
             </Text>
             <Text>: {data?.room}</Text>
           </Text>
@@ -39,28 +57,11 @@ export default function ComHealthMonitor({ data, isSelected, style }) {
         <View style={styles?.container}>
           <Text style={{ flexDirection: "row" }}>
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-              {healthMonitor?.time}
+              {HealthMonitorDetail?.weight}
             </Text>
-            <Text>: {data?.date} </Text>
+            <Text>: {data?.room}kg</Text>
           </Text>
         </View>
-        <View style={styles?.container}>
-          <Text style={{ flexDirection: "row" }}>
-            <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-              {healthMonitor?.nurse}
-            </Text>
-            <Text>: {data?.nurse}</Text>
-          </Text>
-        </View>
-        <View style={styles?.container}>
-          <Text style={{ flexDirection: "row" }}>
-            <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-              {healthMonitor?.status}
-            </Text>
-            <Text>: {data?.status}</Text>
-          </Text>
-        </View>
-       
       </View>
     </TouchableOpacity>
   );
@@ -72,17 +73,14 @@ const styles = StyleSheet.create({
     gap: 10,
     marginBottom: 10,
     padding: 10,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#33B39C",
-    alignItems: "center"
-  },
-  selectedBody: {
-    backgroundColor: "rgba(51, 179, 156, 0.26)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   container: {
+    // flex: 1,
     alignItems: "flex-start",
     justifyContent: "center",
+
     flexWrap: "wrap",
   },
   container1: {

@@ -235,7 +235,8 @@ export const vn = {
     bed: "Giường",
     time: "Thời gian",
     nurse: "Người thực hiện",
-    status: "Trạng thái"
+    status: "Trạng thái",
+    area: "Khu"
   },
   HealthMonitorDetail: {
     title: "Chi tiết sức khỏe",
@@ -291,6 +292,7 @@ export const vn = {
     label: {
       phone: "Số điện thoại",
       password: "Mật khẩu mới",
+      olePassword: "Mật khẩu hiện tại",
       confirmPassword: "Xác nhận mật khẩu mới",
     },
     placeholder: {
@@ -385,7 +387,15 @@ export const vn = {
     title: "Theo dõi sức khỏe",
     createHealthMonitor: "Tạo báo cáo sức khỏe",
     healthIndex: "Chỉ số sức khỏe",
-    generalNote: "Chỉ số tổng quát"
+    generalNote: "Chỉ số tổng quát",
+    chooseHealthIndex: "Chọn các chỉ số bạn muốn kiểm tra"
+  },
+  NurseRegisterService:{
+    status: "Trạng thái",
+    description: "Mô tả",
+    time: "Thời gian thực hiện",
+    implementor: "Người thực hiện",
+    markToComplete: "Xác nhận đã thực hiện"
   }
 
 };

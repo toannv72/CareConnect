@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Image, View } from "react-native";
 import Nav1 from "../../../assets/icon/Nav1_1.png";
-import Nav2 from "../../../assets/Nurse/NurseHomeIcon/NavNurse2_1.png";
+import Nav2 from "../../../assets/images/Nurse/NurseHomeIcon/NavNurse2_1.png";
 import Nav4 from "../../../assets/icon/Nav4_1.png";
 import Nav5 from "../../../assets/icon/Nav5_1.png";
 
 import Nav1_1 from "../../../assets/icon/Nav1_2.png";
-import Nav2_1 from "../../../assets/Nurse/NurseHomeIcon/NavNurse2_2.png";
+import Nav2_1 from "../../../assets/images/Nurse/NurseHomeIcon/NavNurse2_1.png";
 import Nav4_1 from "../../../assets/icon/Nav4_2.png";
 import Nav5_1 from "../../../assets/icon/Nav5_2.png";
 import { useEffect } from "react";

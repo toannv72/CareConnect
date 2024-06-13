@@ -31,7 +31,7 @@ const ComHeader = ({
       )}
       {showTitle && (
         <View style={styles.titleContainer}>
-          <Text style={styles.titleText}>{title}</Text>
+          <Text style={styles.titleText} numberOfLines={2}>{title}</Text>
         </View>
       )}
     </View>
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     flex: 1,
     alignItems: "center",
-    marginLeft: 40,
+    marginLeft: 50,
     marginRight: 40,
   },
   titleText: {

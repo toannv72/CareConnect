@@ -9,7 +9,7 @@ import ComInputSearch from "../../Components/ComInput/ComInputSearch";
 import { ScrollView } from "react-native";
 import { ActivityIndicator } from "react-native";
 import ComLoading from "../../Components/ComLoading/ComLoading";
-import Visitation from "../../../assets/VisitationSchedule/VisitationSchedule.png";
+import Visitation from "../../../assets/images/VisitationSchedule/VisitationSchedule.png";
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import ComButton from "../../Components/ComButton/ComButton";
 import { useNavigation } from "@react-navigation/native";
