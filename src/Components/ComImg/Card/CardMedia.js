@@ -1,12 +1,14 @@
 import React from 'react';
-import {Image, View, StyleSheet} from 'react-native';
+import { Image, View, StyleSheet } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
-const CardMedia = ({source, borderBottomRadius = false}) => {
+const CardMedia = ({ source, borderBottomRadius = false }) => {
   return (
     <View
       style={[styles.media].concat(
         borderBottomRadius ? styles.borderBottomRadius : null,
       )}>
+      <View style={styles.halfBackground} />
       <Image style={styles.image} source={source} />
     </View>
   );
@@ -27,6 +29,15 @@ const styles = StyleSheet.create({
   borderBottomRadius: {
     borderBottomLeftRadius: 16,
     borderBottomRightRadius: 16,
+  },
+  halfBackground: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    height: '40%',
+    width: '100%',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Change this color as needed
+    zIndex: 1, 
   },
 });
 

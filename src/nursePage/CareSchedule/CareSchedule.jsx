@@ -3,11 +3,12 @@ import { Text, View, StyleSheet, ScrollView, Image } from "react-native";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import ComSchedule from "./ComSchedule";
-import { Calendar, LocaleConfig } from "react-native-calendars";
+import { Calendar } from "react-native-calendars";
 import { date } from "yup";
 import moment from "moment";
 import noTask from "../../../assets/images/Nurse/CareSchedule/noTask.png"
 import { useNavigation } from '@react-navigation/native';
+import LocaleConfig from "../../configs/LocalizationConfig";
 
 export default function CareSchedule({ }) {
     const today = moment().format("YYYY-MM-DD");
@@ -20,15 +21,6 @@ export default function CareSchedule({ }) {
         },
         setLanguage,
     } = useContext(LanguageContext);
-
-    LocaleConfig.locales['vi'] = {
-        monthNames: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
-        monthNamesShort: ['Thg 1', 'Thg 2', 'Thg 3', 'Thg 4', 'Thg 5', 'Thg 6', 'Thg 7', 'Thg 8', 'Thg 9', 'Thg 10', 'Thg 11', 'Thg 12'],
-        dayNames: ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy'],
-        dayNamesShort: ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'],
-        today: 'Hôm nay'
-    };
-    LocaleConfig.defaultLocale = 'vi';
 
     const [data, setData] = useState([
         {
@@ -146,11 +138,12 @@ export default function CareSchedule({ }) {
                     markedDates={markedDates}
                     style={{ marginHorizontal: 15, marginBottom: 5 }}
                     onDayPress={onDayPress}
+                    {...LocaleConfig}
                 />
                 {filteredData.length > 0 ? (//if has data => display list òf task
                     <>
                         <Text style={[styles.dateTitle, styles.taskContainer]}>
-                            {moment(selectedDate).format('DD-MM-YYYY')}
+                        {moment(selectedDate).format('DD/MM/YYYY')}
                         </Text>
                         <ScrollView>
                             {filteredData.map((item, index) => (

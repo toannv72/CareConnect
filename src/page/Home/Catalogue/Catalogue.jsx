@@ -9,6 +9,7 @@ import AddingService from "../../../../assets/icon/AddingService.png";
 import servicePackage from "../../../../assets/icon/servicePackage.png";
 import visitSchedule from "../../../../assets/icon/visitSchedule.png";
 import contract from "../../../../assets/icon/contract.png";
+import elderProfile from "../../../../assets/icon/ElderProfile.png";
 
 export default function Catalogue() {
   const navigation = useNavigation();
@@ -23,13 +24,13 @@ export default function Catalogue() {
     <View style={styles?.body}>
       <TopicContent>{Home?.catalogue}</TopicContent>
       <View style={styles.comCatalogue}>
-        <TouchableOpacity onPress={() => goto("AddingService")}>
+        <TouchableOpacity onPress={() => goto("ElderProfile")}>
           <ComCatalogue
             url={
-              AddingService
+              elderProfile
             }
           >
-           Dịch vụ thêm
+           Hồ sơ người thân
           </ComCatalogue>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => goto("Service")}>
@@ -50,7 +51,7 @@ export default function Catalogue() {
           Lịch thăm nuôi
           </ComCatalogue>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => goto("Contracts")}>
           <ComCatalogue
             url={
               contract

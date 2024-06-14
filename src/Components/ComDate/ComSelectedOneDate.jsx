@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import { View } from "react-native";
 import { Calendar } from "react-native-calendars";
 import moment from "moment";
+import LocaleConfig from "../../configs/LocalizationConfig";
+
+
 export default function ComSelectedOneDate({ date }) {
-  const [selectedDate, setSelectedDate] = useState({});
   const today = moment().format("YYYY-MM-DD");
+  const [selectedDate, setSelectedDate] = useState(today);
 
   const handleDayPress = (day) => {
     const selectedDateMoment = moment(day.dateString);
@@ -28,10 +31,10 @@ export default function ComSelectedOneDate({ date }) {
     <View>
       <Calendar
         onDayPress={handleDayPress}
-        // markedDates={selectedDates}
-        markedDates={selectedDate ? { [selectedDate]: { selected: true } } : {}}
+        markedDates={selectedDate ? { [selectedDate]: { selected: true, selectedColor: '#33B39C' } } : {}}
         minDate={today} // Chặn ngày quá khứ
         hideExtraDays={true}
+        {...LocaleConfig}
       />
     </View>
   );

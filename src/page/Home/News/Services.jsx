@@ -3,11 +3,11 @@ import { ScrollView, StyleSheet, Text } from "react-native";
 import { View } from "react-native";
 import TopicContent from "../TopicContent";
 import { LanguageContext } from "../../../contexts/LanguageContext";
-import ComButton from "./../../../Components/ComButton/ComButton";
+import ComButton from "../../../Components/ComButton/ComButton";
 import ComSelectButton from "../../../Components/ComButton/ComSelectButton";
 import ComNew from "./ComNew";
 
-export default function News() {
+export default function Services() {
   const [data, setData] = useState([{}, {}, {}, {}, {}]);
   const {
     text: { Home },
@@ -24,7 +24,7 @@ export default function News() {
   };
   return (
     <View style={styles?.body}>
-      <TopicContent>{Home?.news}</TopicContent>
+      <TopicContent>{Home?.services}</TopicContent>
       <ScrollView
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
@@ -46,7 +46,7 @@ export default function News() {
           id={1}
           key={index}
           url={
-            "https://binhminhdigital.com/StoreData/images/PageData/mot-so-van-de-ban-can-luu-y-khi-chup-anh-cho-nguoi-gia-BinhMinhDigital4(1).jpg"
+            "https://i.pinimg.com/736x/65/c9/8e/65c98ee90bc6888757d3ff2f6c7e67e4.jpg"
           }
           context="Thực đơn dinh dưỡng"
         >

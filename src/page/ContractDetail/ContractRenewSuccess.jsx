@@ -3,14 +3,14 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import ComTitlePage from "../../Components/ComTitlePage/ComTitlePage";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import Vector from "../../../assets/Vector.png";
-import ComTitle from "../../Components/ComTitle/ComTitle";
 import ComButton from "../../Components/ComButton/ComButton";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter";
-export default function RegisterVisitationSuccess() {
+export default function ContractRenewSuccess() {
   const navigation = useNavigation();
   const {
     text: {
+      servicePackages,
       visitationText,
       common: { button },
     },
@@ -24,10 +24,10 @@ export default function RegisterVisitationSuccess() {
   return (
     <View style={styles?.body}>
       <View style={styles?.container}>
-        <ComTitlePage>{visitationText?.titleRegisterSuccess}</ComTitlePage>
+        <ComTitlePage>{servicePackages?.popup?.successRenewContractTitle}</ComTitlePage>
         <Image style={{}} source={Vector} />
         <View style={styles?.container1}>
-          <View style={styles?.container2}>
+          <View >
             <Text style={{ flexDirection: "row", fontSize: 16 }}>
               <Text style={{ fontWeight: "bold", fontSize: 18 }}>
                 {visitationText?.subscribers}
@@ -36,15 +36,15 @@ export default function RegisterVisitationSuccess() {
               {/* <Text>: {data?.name}</Text> */}
             </Text>
           </View>
-          <View style={styles?.container2}>
+          <View >
             <Text style={{ flexDirection: "row", fontSize: 16 }}>
               <Text style={{ fontWeight: "bold", fontSize: 18 }}>
                 {visitationText?.phone}
               </Text>
-              <Text>:0123231232</Text>
+              <Text>: 0123231232</Text>
             </Text>
           </View>
-          <View style={styles?.container2}>
+          <View >
             <Text style={{ flexDirection: "row", fontSize: 16 }}>
               <Text style={{ fontWeight: "bold", fontSize: 18 }}>
                 {visitationText?.day}
@@ -56,7 +56,7 @@ export default function RegisterVisitationSuccess() {
           </View>
         </View>
       </View>
-      <View style={{ width: "90%", marginBottom: 20 }}>
+      <View style={{ width: "90%", marginBottom: 90 }}>
         <ComButton onPress={toHomes}>
           {visitationText?.button?.toHomes}
         </ComButton>
@@ -74,22 +74,15 @@ const styles = StyleSheet.create({
     gap: 30,
   },
   container: {
-    flex: 1,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     gap: 30,
     width: "90%",
   },
-  container2: {
-    // flex: 1,
-    // alignItems: "flex-start",
-    // justifyContent: "center",
-    // flexWrap: "wrap",
-  },
   container1: {
     width: "100%",
-    paddingHorizontal: 30,
+    paddingHorizontal: 20,
     alignItems: "flex-start",
     justifyContent: "center",
     flexWrap: "wrap",

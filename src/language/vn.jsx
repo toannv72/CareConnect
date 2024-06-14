@@ -135,9 +135,25 @@ export const vn = {
   Home: {
     catalogue: "Danh mục",
     news: "Các hoạt động nổi bật",
+    services: "Các dịch vụ nổi bật",
   },
   servicePackages: {
     title: "Gói dưỡng lão",
+    detail: 
+    {
+    title: "Chi tiết gói dưỡng lão",
+    description: "Mô tả",
+    service: "Dịch vụ của gói",
+    registerForm: "Điền form đăng ký",
+    signContract: "Đăng ký lịch hẹn hoàn thành thủ tục",
+    },
+    popup:{
+      signContractTitle: "Đăng ký lịch hẹn hoàn thành thủ tục",
+      limitDays: "Bạn chỉ có thể hẹn trước 14 ngày tính từ hôm nay",
+      signContractSubTitle: "Bạn và người thân sẽ trực tiếp đến Viện để được hỗ trợ hoàn thành hồ sơ bệnh án và hợp đồng để trải nghiệm dịch vụ của viện",
+      successTitle: "Đăng ký hoàn thành thủ tục thành công",
+      successRenewContractTitle: "Đăng ký gia hạn hợp đồng thành công",
+    },
     package: {
       living: "Sinh hoạt cùng",
       people: "người",
@@ -325,7 +341,7 @@ export const vn = {
     titleHeader: "Đăng ký thăm nuôi",
     visitationContent:
       " Hãy dùng chút thời gian đổi lấy nụ cười của những người thân yêu",
-    textHistory: "Lịch sử gần đây",
+    textHistory: "Lịch hẹn gần đây",
     register: "Đăng ký",
     Confirm: "Xác nhận",
     registerElder: "Người thân",
@@ -333,7 +349,7 @@ export const vn = {
     phone: "Số điện thoại",
     day: "Ngày",
     hour: "Giờ",
-    subscribers: "Người đăng ký",
+    subscribers:"Người đăng ký"
   },
   contractsPage: {
     title: "Hợp đồng",

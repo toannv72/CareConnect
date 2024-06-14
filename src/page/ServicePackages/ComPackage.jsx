@@ -2,8 +2,10 @@ import React, { useContext, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { Image, View } from "react-native";
 import { LanguageContext } from "../../contexts/LanguageContext";
+import { useNavigation } from '@react-navigation/native';
 
 export default function ComPackage({ data }) {
+
   const {
     text: { servicePackages },
     setLanguage,
@@ -15,9 +17,13 @@ export default function ComPackage({ data }) {
       currency: "VND",
     });
   };
+  const navigation = useNavigation();
   return (
     <TouchableOpacity
       style={[styles.body, { backgroundColor: data?.color || "#F7E863" }]}
+      onPress={() => {
+        navigation.navigate("ServicePackageDetail", { data: data });
+      }}
     >
       <Image
         source={{ uri: data?.img }}
@@ -32,15 +38,17 @@ export default function ComPackage({ data }) {
       />
       <View style={styles?.container}>
         <Text style={{ fontWeight: "bold", fontSize: 16 }}>{data?.text}</Text>
-        <Text style={{ flexDirection: "row" }}>
+        <View style={{ flexDirection: "row" }}>
           <Text style={{ fontWeight: "bold", fontSize: 14 }}>
             {servicePackages?.package?.living}
           </Text>
-          <Text>
-            : {data?.people}
-            {servicePackages?.package?.people}
-          </Text>
-        </Text>
+          <View style={{ flexDirection: "row" }}>
+            <Text>
+              : {data?.people}
+            </Text>
+            <Text> {servicePackages?.package?.people}</Text>
+          </View>
+        </View>
         <Text numberOfLines={2}>{data?.context}</Text>
         <Text>
           <Text style={{ fontWeight: "bold", fontSize: 16 }}>
