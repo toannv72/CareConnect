@@ -4,8 +4,7 @@ import Header from "./Header";
 import ComButton from "../../Components/ComButton/ComButton";
 import Catalogue from "./Catalogue/Catalogue";
 // import News from "./News/News";
-import TopPlacesCarousel from "../../Components/ComImg/TopPlacesCarousel";
-import { TOP_PLACES } from "../../../db";
+
 import nurseHome from "../../../assets/images/nurseHome/nurseHome.png"
 import { LanguageContext } from "../../contexts/LanguageContext";
 
@@ -16,7 +15,6 @@ export default function NurseHome({ navigation }) {
       NurseHome,
         common: { button },
     },
-    setLanguage,
 } = useContext(LanguageContext);
 
   return (
