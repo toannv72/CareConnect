@@ -53,8 +53,14 @@ export default function ComNurseIcon({ icon }) {
   return (
     <View>
       <Image
+        // source={{ uri: "asset:/icon/Nav5_2.png" }}
         source={navBar}
-        style={{ width: 80, height: 60, objectFit: "fill" }}
+        style={{
+          width: 80,
+          height: 60,
+          objectFit: "fill",
+          resizeMode: "contain",
+        }}
       />
     </View>
   );
