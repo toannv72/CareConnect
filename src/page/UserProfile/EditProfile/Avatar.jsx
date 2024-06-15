@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Image } from "react-native";
@@ -10,6 +10,12 @@ export default function Avatar({ image, setImg }) {
       "https://firebasestorage.googleapis.com/v0/b/swd-longchim.appspot.com/o/376577375_998270051209102_4679797004619533760_n.jpg?alt=media&token=90d94961-bc1b-46e4-b60a-ad731606b13b"
   );
 
+  useEffect(() => {
+    if (image) {
+      setAvatarSource(image);
+    }
+  }, [image]);
+  
   const handleChoosePhoto = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -27,10 +33,8 @@ export default function Avatar({ image, setImg }) {
       <View style={styles.avatarContainer}>
         <Image
           source={{
-            uri: avatarSource?.assets
-              ? avatarSource?.assets[0]?.uri
-              : "https://firebasestorage.googleapis.com/v0/b/swd-longchim.appspot.com/o/376577375_998270051209102_4679797004619533760_n.jpg?alt=media&token=90d94961-bc1b-46e4-b60a-ad731606b13b",
-          }}
+            uri: avatarSource
+           }}
           style={styles.avatar}
         />
         <TouchableOpacity

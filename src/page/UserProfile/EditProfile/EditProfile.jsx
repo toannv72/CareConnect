@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigation } from "@react-navigation/native";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import * as yup from "yup";
@@ -13,12 +13,16 @@ import ComDatePicker from "../../../Components/ComInput/ComDatePicker";
 import { ScrollView } from "react-native";
 import { firebaseImg } from "../../../api/firebaseImg";
 import ComHeader from "../../../Components/ComHeader/ComHeader";
+import { useStorage } from "../../../hooks/useLocalStorage";
+import moment from 'moment';
 
 export default function EditProfile() {
+  const [user, setUser] = useStorage("user", {});
   const [date, setDate] = useState(new Date());
-  const [image, setImage] = useState(null);
-  const [imageUrl, setImageUrl] = useState("null");
+  const [image, setImage] = useState(user?.avatarUrl);
+  const [imageUrl, setImageUrl] = useState(user?.avatarUrl ?? "null");
   const navigation = useNavigation();
+
   const {
     text: {
       EditProfile,
@@ -26,6 +30,7 @@ export default function EditProfile() {
     },
     setLanguage,
   } = useContext(LanguageContext);
+
   const loginSchema = yup.object().shape({
     fullName: yup.string().trim().required(EditProfile?.message?.fullName),
     gender: yup.string().trim().required(EditProfile?.message?.gender),
@@ -33,10 +38,7 @@ export default function EditProfile() {
       .string()
       .trim()
       .required(EditProfile?.message?.dateOfBirth),
-    phoneNumber: yup
-      .string()
-      .trim()
-      .required(EditProfile?.message?.phoneNumber),
+    phoneNumber: yup.string().trim().required(EditProfile?.message?.phoneNumber),
     email: yup
       .string()
       .email(EditProfile?.message?.emailInvalid)
@@ -49,27 +51,27 @@ export default function EditProfile() {
   const methods = useForm({
     resolver: yupResolver(loginSchema),
     defaultValues: {
-      email: "toan@gmail.com",
-      dateOfBirth: date,
+      // email: user?.email,
+      // dateOfBirth: user?.dateOfBirth,
+      // fullName: user?.fullName ?? '',
     },
   });
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = methods;
+
+  const { control, handleSubmit, formState: { errors }, setValue } = methods;
+
   const handleEdit = (data) => {
     firebaseImg(image).then((imageUrl) => {
       console.log("Image uploaded successfully:", imageUrl);
     });
   };
-  const data = [
+
+  const genderOptions = [
     {
-      value: "1",
+      value: "Male",
       label: "Nam",
     },
     {
-      value: "2",
+      value: "Female",
       label: "Nữ",
     },
   ];
@@ -77,6 +79,20 @@ export default function EditProfile() {
   const setImg = (data) => {
     setImage(data);
   };
+
+  useEffect(() => {
+    if (user) {
+      setValue("fullName", user?.fullName ?? "");
+      setValue("email", user?.email ?? "");
+      setValue("gender", user?.gender ?? "");
+      setValue("dateOfBirth", moment(user?.dateOfBirth, "DD/MM/YYYY").toDate() ?? "");
+      setValue("phoneNumber", user?.phoneNumber ?? "");
+      setValue("idNumber", user?.cccd ?? "");
+      setValue("address", user?.address ?? "");
+      setImage(user?.avatarUrl);
+    }
+  }, [user, setValue]);
+
   return (
     <>
       <ComHeader
@@ -115,9 +131,8 @@ export default function EditProfile() {
                         label={EditProfile?.label?.gender}
                         name="gender"
                         control={control}
-                        // keyboardType="visible-password" // Set keyboardType for Last Name input
-                        errors={errors} // Pass errors object
-                        options={data}
+                        errors={errors}
+                        options={genderOptions}
                         required
                       />
                     </View>
@@ -181,6 +196,7 @@ export default function EditProfile() {
     </>
   );
 }
+
 const styles = StyleSheet.create({
   body: {
     flex: 1,

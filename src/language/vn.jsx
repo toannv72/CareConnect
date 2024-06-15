@@ -14,11 +14,13 @@ export const vn = {
     },
     label: {
       username: "Tên người dùng",
+      phone: "Số điện thoại",
       email: "Email",
       password: "Mật khẩu",
     },
     placeholder: {
       username: "Tên người dùng",
+      phone: "Vui lòng nhập số điện thoại",
       email: "Vui lòng nhập Email",
       password: "Vui lòng nhập mật khẩu",
     },
@@ -29,6 +31,7 @@ export const vn = {
       password: "Mật khẩu không được để trống",
       invalidCredential: "Thông tin đăng nhập không hợp lệ. Vui lòng thử lại.",
       loginError: "Đã có lỗi xảy ra. Vui lòng thử lại sau.",
+      phoneRequired: "Số điện thoại không được để trống",
     },
     link: {
       forgetPassword: "Quên mật khẩu?",

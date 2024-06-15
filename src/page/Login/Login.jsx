@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -16,13 +16,18 @@ import ComButton from "../../Components/ComButton/ComButton";
 import ComTitleLink from "../../Components/ComTitleLink/ComTitleLink";
 import ComTitle from "../../Components/ComTitle/ComTitle";
 import { useNavigation } from "@react-navigation/native";
-import { postData } from "../../api/api";
+import { postData, getData } from "../../api/api";
+import { useAuth } from "../../../auth/useAuth";
+import { FieldError } from "../../Components/FieldError/FieldError";
 
 export default function LoginScreen() {
-  const [datas, setData] = useStorage("toan", {});
-  const [accessToken, setToken] = useStorage("Token", {});
+  const [token, setToken] = useStorage("accessToken", null);
   const navigation = useNavigation();
-
+  const [LoginState, setLoginState] = useState(false);
+  const [LoginError, setLoginError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const { login } = useAuth();
+  const [user, setUser] = useStorage("user", {});
   const {
     text: {
       Login,
@@ -32,16 +37,15 @@ export default function LoginScreen() {
   } = useContext(LanguageContext);
 
   const loginSchema = yup.object().shape({
-    username: yup.string().trim().required(Login?.message?.emailRequired),
+    username: yup.string().trim().required(Login?.message?.phoneRequired),
     password: yup.string().required(Login?.message?.password),
-    // chon: yup.string().required("vui long nhap mk"),
   });
 
   const methods = useForm({
     resolver: yupResolver(loginSchema),
     defaultValues: {
-      username: "user",
-      password: "user",
+      username: "",
+      password: "",
     },
   });
 
@@ -53,67 +57,48 @@ export default function LoginScreen() {
   } = methods;
 
   const handleLogin = (data) => {
+    setLoginError(false);
+    setLoginState(false);
     // Xử lý đăng nhập với dữ liệu từ data
-    setData(data);
     Keyboard.dismiss();
-    console.log(data);
-    // navigation.navigate("Homes", { screen: "Home" });
     postData("/auth/login", data, {})
       .then((data) => {
         setToken(data?.accessToken);
+
+        getData("/users/profile")
+          .then((userData) => {
+            login(userData?.data)
+          })
+          .catch((error) => {
+            console.error("Error getData fetching items:", error);
+          });
         // Chờ setToken hoàn thành trước khi navigate
         return new Promise((resolve) => {
           setTimeout(() => {
-            navigation.navigate("Homes", { screen: "Home" });
+            if (data?.listRole[0] === "Customer")
+              navigation.navigate("Homes", { screen: "Home" });
+            else if (data?.listRole[0] === "Nurse")
+              navigation.navigate("NurseHomes", { screen: "NurseHome" });
+
             resolve(); // Báo hiệu Promise đã hoàn thành
           }, 0); // Thời gian chờ 0ms để đảm bảo setToken đã được thực hiện
         });
       })
       .catch((error) => {
-        console.error("Error fetching items:", error);
-        setDisabled(false);
         if (error?.response?.status === 401) {
-          setErrorMessage(Login.message.invalidCredential);
-        } else {
+          setLoginState(true);
           setLoginError(true);
-          setErrorMessage(Login.message.loginError);
+          setErrorMessage(Login?.message?.invalidCredential);
+        } else {
+          setLoginState(true);
+          setLoginError(true);
+          setErrorMessage(Login?.message?.loginError);
         }
       });
+
+
+
   };
-  const data = [
-    {
-      value: "",
-      label: "toàn",
-    },
-    {
-      value: "2",
-      label: "toàn1",
-    },
-    {
-      value: "3",
-      label: "toàn2",
-    },
-    {
-      value: "3",
-      label: "toàn2",
-    },
-    {
-      value: "3",
-      label: "toàn2",
-    },
-    {
-      value: "3",
-      label: "toàn2",
-    },
-    {
-      value: "3",
-      label: "toàn2",
-    },
-    {
-      value: "3",
-      label: "toàn2",
-    },
-  ];
 
   return (
     <View style={styles.container}>
@@ -122,8 +107,8 @@ export default function LoginScreen() {
           <ComTitlePage>{Login?.pageTitle}</ComTitlePage>
           <View style={{ width: "90%", gap: 10 }}>
             <ComInput
-              label={Login?.label?.email}
-              placeholder={Login?.placeholder?.email}
+              label={Login?.label?.phone}
+              placeholder={Login?.placeholder?.phone}
               name="username"
               control={control}
               keyboardType="default" // Set keyboardType for First Name input
@@ -139,17 +124,13 @@ export default function LoginScreen() {
               password
               required
             />
-            {/* <ComSelect
-              label="Last name"
-              name="chon"
-              control={control}
-              // keyboardType="visible-password" // Set keyboardType for Last Name input
-              errors={errors} // Pass errors object
-              options={data}
-              required
-            /> */}
+             <FieldError style={{color: "red"}}>
+              {LoginState || LoginError ? errorMessage : ""}
+            </FieldError>
+            <ComButton onPress={handleSubmit(handleLogin)}>
+              {Login?.button?.login}
+            </ComButton>
 
-            {/* <Button title={button.login} style={{ margin: 100 }} /> */}
             <View style={styles?.link}>
               <ComTitleLink to={"ForgetPassword"}>
                 {Login?.link?.forgetPassword}
@@ -160,21 +141,10 @@ export default function LoginScreen() {
                 {Login?.link?.register}
               </ComTitleLink>
             </View>
-            <ComButton onPress={handleSubmit(handleLogin)}>
-              {Login?.button?.login}
-            </ComButton>
+           
           </View>
         </FormProvider>
-        <Button
-          title="vn"
-          style={{ margin: 100 }}
-          onPress={() => setLanguage("vn")}
-        />
-        <Button
-          title="en"
-          style={{ margin: 100 }}
-          onPress={() => setLanguage("en")}
-        />
+      
       </View>
     </View>
   );
