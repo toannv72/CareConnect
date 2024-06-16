@@ -1,10 +1,5 @@
 import React, { useContext, useState } from "react";
-import {
-  StyleSheet,
-  View,
-  Button,
-  Keyboard,
-} from "react-native";
+import { StyleSheet, View, Button, Keyboard } from "react-native";
 import * as yup from "yup";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -37,7 +32,10 @@ export default function LoginScreen() {
   } = useContext(LanguageContext);
 
   const loginSchema = yup.object().shape({
-    username: yup.string().trim().required(Login?.message?.phoneRequired),
+    username: yup
+      .string()
+      .required(Login?.message?.phoneRequired)
+      .matches(/^[0-9]+$/, "Phone number must be a valid number"),
     password: yup.string().required(Login?.message?.password),
   });
 
@@ -61,13 +59,14 @@ export default function LoginScreen() {
     setLoginState(false);
     // Xử lý đăng nhập với dữ liệu từ data
     Keyboard.dismiss();
+    console.log(data);
     postData("/auth/login", data, {})
       .then((data) => {
         setToken(data?.accessToken);
 
         getData("/users/profile")
           .then((userData) => {
-            login(userData?.data)
+            login(userData?.data);
           })
           .catch((error) => {
             console.error("Error getData fetching items:", error);
@@ -95,9 +94,6 @@ export default function LoginScreen() {
           setErrorMessage(Login?.message?.loginError);
         }
       });
-
-
-
   };
 
   return (
@@ -111,7 +107,7 @@ export default function LoginScreen() {
               placeholder={Login?.placeholder?.phone}
               name="username"
               control={control}
-              keyboardType="default" // Set keyboardType for First Name input
+              keyboardType="number-pad" // Set keyboardType for First Name input
               errors={errors} // Pass errors object
               required
             />
@@ -124,7 +120,7 @@ export default function LoginScreen() {
               password
               required
             />
-             <FieldError style={{color: "red"}}>
+            <FieldError style={{ color: "red" }}>
               {LoginState || LoginError ? errorMessage : ""}
             </FieldError>
             <ComButton onPress={handleSubmit(handleLogin)}>
@@ -141,10 +137,8 @@ export default function LoginScreen() {
                 {Login?.link?.register}
               </ComTitleLink>
             </View>
-           
           </View>
         </FormProvider>
-      
       </View>
     </View>
   );
