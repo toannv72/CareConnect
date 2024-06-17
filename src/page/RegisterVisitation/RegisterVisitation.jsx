@@ -86,12 +86,13 @@ export default function RegisterVisitation() {
   };
   return (
     <>
+      <ComHeader
+        showTitle={true}
+        title={visitationText?.titleHeader}
+        showBackIcon
+      />
       <View style={styles.body}>
-        <ComHeader
-          showTitle={true}
-          title={visitationText?.titleHeader}
-          showBackIcon
-        />
+
         <ScrollView
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
@@ -109,7 +110,7 @@ export default function RegisterVisitation() {
               <ComSelectedOneDate date={changeSelectedDate} />
             </View>
           </View>
-          <Text style={{ fontWeight: "bold", fontSize: 24, marginBottom: 10 }}>
+          <Text style={{ fontWeight: "bold", fontSize: 24, marginVertical: 10 }}>
             {visitationText?.registerElder}
           </Text>
 

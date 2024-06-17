@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React, { useState, useContext } from "react";
+import { View, Text, StyleSheet, Image } from "react-native";
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import ComButton from "../../Components/ComButton/ComButton";
 import ComPopup from "../../Components/ComPopup/ComPopup";
@@ -8,9 +8,16 @@ import { FormProvider, useForm } from "react-hook-form";
 import ComInput from "../../Components/ComInput/ComInput";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigation } from "@react-navigation/native";
+import { LanguageContext } from "../../contexts/LanguageContext";
+import ComSelectedOneDate from "../../Components/ComDate/ComSelectedOneDate";
+import moment from "moment";
+import ContractImg from "../../../assets/images/Contract/Contract.png";
 
 export default ContractDetail = () => {
+  const today = moment().format("YYYY-MM-DD");
   const [popup, setPopup] = useState(false);
+  const [popupDate, setPopupDate] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(today);//cho calendar một giá trị mặc định là ngày hiện tại
   const navigation = useNavigation();
   const handleClosePopup = () => {
     setPopup(false);
@@ -18,6 +25,25 @@ export default ContractDetail = () => {
   const handleOpenPopup = () => {
     setPopup(true);
   };
+  const handleClosePopupDate = () => {
+    setPopupDate(false);
+  };
+  const handleOpenPopupDate = () => {
+    setPopupDate(true);
+  };
+
+  const changeSelectedDate = (data) => {
+    setSelectedDate(data);
+  };
+
+  const {
+    text: {
+      servicePackages,
+      common: { button },
+    },
+    setLanguage,
+  } = useContext(LanguageContext);
+
   const loginSchema = yup.object().shape({
     text: yup.string().trim().required("Vui lòng nhập lý do"),
   });
@@ -48,15 +74,6 @@ export default ContractDetail = () => {
       <ComPopup
         visible={popup}
         title="Bạn muốn yêu cầu hủy hợp đồng ?"
-        // buttons={[
-        //   { text: "Hủy", onPress: handleClosePopup, check: true },
-        //   {
-        //     text: "Xác nhận",
-        //     onPress: () => {
-        //       handleSubmit(handleConfirm);
-        //     },
-        //   },
-        // ]}
         onClose={handleClosePopup}
       >
         <Text>Gói dịch vụ sẽ không tự động gia hạn lại</Text>
@@ -89,15 +106,57 @@ export default ContractDetail = () => {
         </FormProvider>
       </ComPopup>
 
+      <ComPopup
+        visible={popupDate}
+        title="Chọn ngày hẹn"
+        onClose={handleClosePopupDate}
+      >
+        <Text style={{ color: "#A3A3A3", textAlign: "center" }}>Bạn chỉ có thể hẹn trước 14 ngày tính từ hôm nay</Text>
+        <FormProvider {...methods}>
+          <View style={{ width: "100%", gap: 10 }}>
+            <ComSelectedOneDate date={changeSelectedDate} />
+            {console.log("selectedDate", selectedDate)}
+            <View
+              style={{
+                backgroundColor: "#fff",
+                flexDirection: "row",
+                justifyContent: "space-around",
+                gap: 25
+              }}
+            >
+              <ComButton
+                check
+                onPress={handleClosePopupDate}
+                style={{ flex: 1 }}>
+                Hủy
+              </ComButton>
+              <ComButton
+                onPress={() => {
+                  navigation.navigate("ContractRenewSuccess", { date: selectedDate });
+                }}
+                style={{ flex: 1 }}>
+                Xác nhận
+              </ComButton>
+            </View>
+          </View>
+        </FormProvider>
+      </ComPopup>
+
       <View style={styles.main}>
         <ComHeader
           showBackIcon={true}
           showTitle={true}
           title={"Chi tiết hợp đồng"}
         />
-        <Text style={{ fontSize: 22, fontWeight: "bold" }}>
-          Thông tin hợp đồng
-        </Text>
+        <View style={{ alignItems: 'center', marginVertical: 30 }}>
+          <Image
+            source={ContractImg}
+            style={{
+              height: 120,
+              width: 120,
+              objectFit: "fill",
+            }} />
+        </View>
         <View style={styles.contex}>
           <View style={styles.bodySeparator}>
             <Text style={styles.text}>Hợp đồng</Text>
@@ -108,7 +167,15 @@ export default ContractDetail = () => {
             <Text style={styles.text2}>Hợp đồng</Text>
           </View>
           <View style={styles.bodySeparator}>
-            <Text style={styles.text}>Mã hợp đồng</Text>
+            <Text style={styles.text}>Tên người đại diện</Text>
+            <Text style={styles.text2}>Hợp đồng</Text>
+          </View>
+          <View style={styles.bodySeparator}>
+            <Text style={styles.text}>Tên người lớn tuổi</Text>
+            <Text style={styles.text2}>Hợp đồng</Text>
+          </View>
+          <View style={styles.bodySeparator}>
+            <Text style={styles.text}>Mối quan hệ</Text>
             <Text style={styles.text2}>Hợp đồng</Text>
           </View>
           <View style={styles.bodySeparator}>
@@ -129,8 +196,8 @@ export default ContractDetail = () => {
           paddingBottom: 20,
         }}
       >
-        <ComButton onPress={handleOpenPopup}>Yêu cầu gia hạn</ComButton>
-        <ComButton>Yêu cầu hủy</ComButton>
+        <ComButton onPress={handleOpenPopupDate}>Yêu cầu gia hạn</ComButton>
+        <ComButton onPress={handleOpenPopup}>Yêu cầu hủy</ComButton>
       </View>
     </>
   );
@@ -162,8 +229,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
   },
   text: {
-    fontSize: 20,
-    fontWeight: "bold",
+    fontSize: 16,
+    fontWeight: "600",
   },
   text2: {
     fontSize: 16,

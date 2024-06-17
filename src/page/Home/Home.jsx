@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, Image, ScrollView } from "react-native";
 import Header from "./Header";
 import Catalogue from "./Catalogue/Catalogue";
 import News from "./News/News";
+import Services from "./News/Services";
 import TopPlacesCarousel from "../../Components/ComImg/TopPlacesCarousel";
 import { TOP_PLACES } from "../../../db";
 
@@ -17,6 +18,7 @@ export default function Home({ navigation }) {
       >
         <TopPlacesCarousel list={TOP_PLACES} />
         <Catalogue />
+        <Services />
         <News />
         <View style={{ height: 120 }}></View>
       </ScrollView>

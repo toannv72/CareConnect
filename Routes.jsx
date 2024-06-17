@@ -11,6 +11,8 @@ import Otp from "./src/page/Otp/Otp";
 import ComIcon from "./src/Components/ComIcon/ComIcon";
 import ComNurseIcon from "./src/Components/ComIcon/ComNurseIcon";
 import ServicePackages from "./src/page/ServicePackages/ServicePackages";
+import ServicePackageDetail from "./src/page/ServicePackages/ServicePackageDetail/ServicePackageDetail";
+import ServicePackageRegisterSuccess from "./src/page/ServicePackages/ServicePackageDetail/ServicePackageRegisterSuccess";
 import HealthMonitor from "./src/page/HealthMonitor/HealthMonitor";
 import Notification from "./src/page/Notification/Notification";
 import HealthMonitorDetail from "./src/page/HealthMonitorDetail/HealthMonitorDetail";
@@ -45,6 +47,7 @@ import RegisterVisitationSuccess from './src/page/RegisterVisitation/RegisterVis
 import Contracts from "./src/page/Contract/Contracts";
 import ContractDetail from "./src/page/ContractDetail/ContractDetail";
 import ContractCandSuccess from "./src/page/ContractDetail/ContractCandSuccess";
+import ContractRenewSuccess from "./src/page/ContractDetail/ContractRenewSuccess";
 // -------Role: Nurse--------
 import NurseHome from "./src/nursePage/Home/NurseHome";
 import NurseProfile from "./src/nursePage/NurseProfile/NurseProfile";
@@ -54,16 +57,19 @@ import RoomDetail from "./src/nursePage/RoomList/RoomDetail";
 import NurseElderDetailProfile from "./src/nursePage/ElderProfile/NurseElderDetailProfile";
 import CustomerProfile from "./src/nursePage/CustomerProfile/CustomerProfile";
 import NurseHealthMonitor from "./src/nursePage/HealthMonitor/NurseHealthMonitor";
+import NurseHealthMonitorDetail from "./src/nursePage/HealthMonitor/HealthMonitorDetail/NurseHealthMonitorDetail";
 import ListHealthMonitor from "./src/nursePage/HealthMonitor/ListHealthMonitor";
 import CreateHealthMonitor from "./src/nursePage/HealthMonitor/CreateHealthMonitor/CreateHealthMonitor";
 import ListHealthIndex from "./src/nursePage/HealthMonitor/CreateHealthMonitor/ListHealthIndex";
+import RegisterService from "./src/nursePage/RegisterService/RegisterService";
+import RegisterServiceDetail from "./src/nursePage/RegisterService/RegisterServiceDetail";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Routes = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="NurseHomes">
+      <Stack.Navigator initialRouteName="Login">
         <Stack.Screen
           name="Homes"
           options={{ headerLeft: null, headerShown: false }}
@@ -98,6 +104,16 @@ const Routes = () => {
           options={{ headerLeft: null, headerShown: false }}
           name="Service"
           component={ServicePackages}
+        />
+         <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ServicePackageDetail"
+          component={ServicePackageDetail}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ServicePackageRegisterSuccess"
+          component={ServicePackageRegisterSuccess}
         />
         <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
@@ -256,6 +272,11 @@ const Routes = () => {
           name="ContractCandSuccess"
           component={ContractCandSuccess}
         />
+         <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ContractRenewSuccess"
+          component={ContractRenewSuccess}
+        />
         {/* =======nurse====== */}
         <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
@@ -282,6 +303,11 @@ const Routes = () => {
           name="NurseHealthMonitor"
           component={NurseHealthMonitor}
         />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="NurseHealthMonitorDetail"
+          component={NurseHealthMonitorDetail}
+        />
            <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="ListHealthMonitor"
@@ -296,6 +322,16 @@ const Routes = () => {
           options={{ headerLeft: null, headerShown: false }}
           name="ListHealthIndex"
           component={ListHealthIndex}
+        />
+         <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="RegisterService"
+          component={RegisterService}
+        />
+         <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="RegisterServiceDetail"
+          component={RegisterServiceDetail}
         />
       </Stack.Navigator>
     </NavigationContainer>
@@ -379,7 +415,7 @@ function MyBottomNavigationBar() {
       <Tab.Screen
         name="Visitation"
         options={{ headerShown: false }}
-        component={ElderProfile}
+        component={AddingServicePackages}
       />
       <Tab.Screen
         name="HealthCondition"

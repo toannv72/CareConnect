@@ -2,11 +2,14 @@ import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import bill from "../../../assets/profile_icons/bill.png";
+import { useAuth } from "../../../auth/useAuth";
 
 const MenuItem = ({ iconName, text, link, colorRed }) => {
   const navigation = useNavigation();
-
+  const { logout } = useAuth();
   const press = () => {
+    if(colorRed)
+      logout()
     navigation.navigate(link);
   };
   return (

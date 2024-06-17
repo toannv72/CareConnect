@@ -20,19 +20,9 @@ export default function UserProfile() {
       icon: changePassword,
     },
     {
-      name: "Đổi ngôn ngữ",
-      link: "FeedbackHistory",
-      icon: changeLanguage,
-    },
-    {
       name: "Chỉnh sửa thông tin",
       link: "EditProfile",
       icon: edit,
-    },
-    {
-      name: "Đánh giá",
-      link: "FeedbackHistory",
-      icon: feedback,
     },
   ];
 

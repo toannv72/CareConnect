@@ -48,16 +48,16 @@ const styles = StyleSheet.create({
   },
   titleBox: {
     position: 'absolute',
-    top: CARD_HEIGHT - 80,
+    top: CARD_HEIGHT - 70,
     left: 16,
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 18,
+    fontWeight: '600',
     color: '#fff',
   },
   location: {
-    fontSize: 18,
+    fontSize: 16,
     color: '#fff',
   },
 });

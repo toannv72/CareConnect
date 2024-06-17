@@ -65,6 +65,7 @@ export default function News() {
 const styles = StyleSheet.create({
   body: {
     paddingHorizontal: 15,
+    marginTop: 10
   },
   comCatalogue: {
     flexDirection: "row",
@@ -75,7 +76,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 15,
     flexWrap: "wrap",
-    marginLeft: 16,
     marginBottom: 10,
   },
 });

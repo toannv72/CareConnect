@@ -3,8 +3,8 @@ import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { Image, View } from "react-native";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { useNavigation } from "@react-navigation/native";
-import taskIcon from "../../../assets/Nurse/CareSchedule/task.png"
-import timeIcon from "../../../assets/Nurse/CareSchedule/time.png"
+import taskIcon from "../../../assets/images/Nurse/CareSchedule/task.png"
+import timeIcon from "../../../assets/images/Nurse/CareSchedule/time.png"
 
 export default function ComSchedule({ data, onPress, isSelected }) {
     const {
@@ -54,11 +54,11 @@ const styles = StyleSheet.create({
     },
     container: {
         marginVertical: 5,
-        flex: 4
+        flex: 5
     },
     taskImage: {
-        width: 60,
-        height: 60,
+        width: 50,
+        height: 50,
         objectFit: "fill",
         backgroundColor: "#14A499",
         flex: 1

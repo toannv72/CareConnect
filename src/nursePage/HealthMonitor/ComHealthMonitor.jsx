@@ -15,7 +15,7 @@ export default function ComHealthMonitor({ data, isSelected, style }) {
   return (
     <TouchableOpacity
       style={[styles.body, isSelected && styles.selectedBody, style]}
-      onPress={() => navigation.navigate("HealthMonitorDetail", { id: data?.roomId })} // Chuyển đến trang mới
+      onPress={() => navigation.navigate("NurseHealthMonitorDetail", { id: data?.roomId })} // Chuyển đến trang mới
     >
       <Image
         source={healthRecord}

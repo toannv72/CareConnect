@@ -166,11 +166,11 @@ export default function DetailProfile() {
               <View style={{ height: 100 }}></View>
             </ScrollView>
           </View>
-          <View>
+          {/* <View>
             <ComButton onPress={Edit}>
               {EditProfile?.button?.EditProfile}
             </ComButton>
-          </View>
+          </View> */}
         </FormProvider>
       </View>
     </View>

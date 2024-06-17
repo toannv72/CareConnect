@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, ScrollView, Image, TouchableOpacity } from "rea
 import { LanguageContext } from "../../contexts/LanguageContext";
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import { useNavigation } from "@react-navigation/native";
-import roomIcon from "../../../assets/Nurse/NurseHomeIcon/Room.png"
+import roomIcon from "../../../assets/images/Nurse/NurseHomeIcon/Room.png"
 
 export default function ComRoom({ data, color, onPress }) {
     const {
@@ -16,9 +16,7 @@ export default function ComRoom({ data, color, onPress }) {
             <TouchableOpacity
                 style={[styles?.body]}
                 source={roomIcon}
-                onPress={() => {
-                    navigation.navigate("RoomDetail", { id: data?.roomId });
-                }}
+                onPress={onPress}
             >
                 <View style={{ flexDirection: "column", alignItems: "center", flex: 1 }}>
                     <Text

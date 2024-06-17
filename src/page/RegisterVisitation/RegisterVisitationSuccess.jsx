@@ -54,14 +54,6 @@ export default function RegisterVisitationSuccess() {
               </Text>
             </Text>
           </View>
-          <View style={styles?.container2}>
-            <Text style={{ flexDirection: "row", fontSize: 16 }}>
-              <Text style={{ fontWeight: "bold", fontSize: 18 }}>
-                {visitationText?.hour}
-              </Text>
-              {/* <Text>: {data?.room}</Text> */}
-            </Text>
-          </View>
         </View>
       </View>
       <View style={{ width: "90%", marginBottom: 20 }}>

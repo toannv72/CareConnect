@@ -1,4 +1,4 @@
-import React,{useContext} from "react";
+import React, { useContext } from "react";
 import { StyleSheet, View, Text, Image, ScrollView } from "react-native";
 import Header from "./Header";
 import ComButton from "../../Components/ComButton/ComButton";
@@ -13,9 +13,10 @@ export default function NurseHome({ navigation }) {
   const {
     text: {
       NurseHome,
-        common: { button },
+      common: { button },
     },
-} = useContext(LanguageContext);
+    setLanguage,
+  } = useContext(LanguageContext);
 
   return (
     <View style={styles.container}>
@@ -27,12 +28,17 @@ export default function NurseHome({ navigation }) {
             style={styles.image}
           ></Image>
         </View>
-        <ComButton style={[styles.button, styles.absoluteButton]}>Kiểm tra ngay</ComButton>
+        <ComButton
+          style={[styles.button, styles.absoluteButton]}
+          onPress={() => navigation.navigate("CareSchedule")}
+        >
+          Kiểm tra ngay
+        </ComButton>
         <View style={styles.body}>
           <Text style={{ fontSize: 16, fontWeight: 600 }}>{NurseHome.catalogue}</Text>
           <Catalogue></Catalogue>
         </View>
-        <View style={{height: 100}}></View>
+        <View style={{ height: 100 }}></View>
       </ScrollView>
     </View>
   );

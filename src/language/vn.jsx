@@ -14,11 +14,13 @@ export const vn = {
     },
     label: {
       username: "Tên người dùng",
+      phone: "Số điện thoại",
       email: "Email",
       password: "Mật khẩu",
     },
     placeholder: {
       username: "Tên người dùng",
+      phone: "Vui lòng nhập số điện thoại",
       email: "Vui lòng nhập Email",
       password: "Vui lòng nhập mật khẩu",
     },
@@ -29,6 +31,7 @@ export const vn = {
       password: "Mật khẩu không được để trống",
       invalidCredential: "Thông tin đăng nhập không hợp lệ. Vui lòng thử lại.",
       loginError: "Đã có lỗi xảy ra. Vui lòng thử lại sau.",
+      phoneRequired: "Số điện thoại không được để trống",
     },
     link: {
       forgetPassword: "Quên mật khẩu?",
@@ -135,9 +138,25 @@ export const vn = {
   Home: {
     catalogue: "Danh mục",
     news: "Các hoạt động nổi bật",
+    services: "Các dịch vụ nổi bật",
   },
   servicePackages: {
     title: "Gói dưỡng lão",
+    detail: 
+    {
+    title: "Chi tiết gói dưỡng lão",
+    description: "Mô tả",
+    service: "Dịch vụ của gói",
+    registerForm: "Điền form đăng ký",
+    signContract: "Đăng ký lịch hẹn hoàn thành thủ tục",
+    },
+    popup:{
+      signContractTitle: "Đăng ký lịch hẹn hoàn thành thủ tục",
+      limitDays: "Bạn chỉ có thể hẹn trước 14 ngày tính từ hôm nay",
+      signContractSubTitle: "Bạn và người thân sẽ trực tiếp đến Viện để được hỗ trợ hoàn thành hồ sơ bệnh án và hợp đồng để trải nghiệm dịch vụ của viện",
+      successTitle: "Đăng ký hoàn thành thủ tục thành công",
+      successRenewContractTitle: "Đăng ký gia hạn hợp đồng thành công",
+    },
     package: {
       living: "Sinh hoạt cùng",
       people: "người",
@@ -235,7 +254,8 @@ export const vn = {
     bed: "Giường",
     time: "Thời gian",
     nurse: "Người thực hiện",
-    status: "Trạng thái"
+    status: "Trạng thái",
+    area: "Khu"
   },
   HealthMonitorDetail: {
     title: "Chi tiết sức khỏe",
@@ -291,6 +311,7 @@ export const vn = {
     label: {
       phone: "Số điện thoại",
       password: "Mật khẩu mới",
+      olePassword: "Mật khẩu hiện tại",
       confirmPassword: "Xác nhận mật khẩu mới",
     },
     placeholder: {
@@ -323,7 +344,7 @@ export const vn = {
     titleHeader: "Đăng ký thăm nuôi",
     visitationContent:
       " Hãy dùng chút thời gian đổi lấy nụ cười của những người thân yêu",
-    textHistory: "Lịch sử gần đây",
+    textHistory: "Lịch hẹn gần đây",
     register: "Đăng ký",
     Confirm: "Xác nhận",
     registerElder: "Người thân",
@@ -331,7 +352,7 @@ export const vn = {
     phone: "Số điện thoại",
     day: "Ngày",
     hour: "Giờ",
-    subscribers: "Người đăng ký",
+    subscribers:"Người đăng ký"
   },
   contractsPage: {
     title: "Hợp đồng",
@@ -385,7 +406,15 @@ export const vn = {
     title: "Theo dõi sức khỏe",
     createHealthMonitor: "Tạo báo cáo sức khỏe",
     healthIndex: "Chỉ số sức khỏe",
-    generalNote: "Chỉ số tổng quát"
+    generalNote: "Chỉ số tổng quát",
+    chooseHealthIndex: "Chọn các chỉ số bạn muốn kiểm tra"
+  },
+  NurseRegisterService:{
+    status: "Trạng thái",
+    description: "Mô tả",
+    time: "Thời gian thực hiện",
+    implementor: "Người thực hiện",
+    markToComplete: "Xác nhận đã thực hiện"
   }
 
 };

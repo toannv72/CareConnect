@@ -61,18 +61,9 @@ export default function ElderProfile() {
       <ComHeader
         title={ElderProfile?.title}
         showTitle
+        showBackIcon
       />
       <View style={styles.body}>
-        {/* <FormProvider {...methods}>
-        <ComInputSearch
-          placeholder="Tìm kiếm"
-          keyboardType="default"
-          name="search"
-          control={control}
-          onSubmitEditing={handleSubmit(onSubmit)}
-          errors={errors}
-        />
-      </FormProvider> */}
         <ScrollView
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}

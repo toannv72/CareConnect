@@ -14,7 +14,7 @@ export default function TopicContent({ children }) {
 const styles = StyleSheet.create({
   text: {
     color: "#000",
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
   },
 });

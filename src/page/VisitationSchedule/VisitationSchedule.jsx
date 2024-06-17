@@ -9,7 +9,8 @@ import ComInputSearch from "../../Components/ComInput/ComInputSearch";
 import { ScrollView } from "react-native";
 import { ActivityIndicator } from "react-native";
 import ComLoading from "../../Components/ComLoading/ComLoading";
-import Visitation from "../../../assets/VisitationSchedule/VisitationSchedule.png";
+import Visitation from "../../../assets/images/VisitationSchedule/VisitationSchedule.png";
+import plusIcon from "../../../assets/profile_icons/plus.png";
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import ComButton from "../../Components/ComButton/ComButton";
 import { useNavigation } from "@react-navigation/native";
@@ -85,10 +86,10 @@ export default function VisitationSchedule() {
   const searchSchema = yup.object().shape({
     search: yup.string(),
   });
-    const navigation = useNavigation();
+  const navigation = useNavigation();
   const {
     text: {
-      VisitationSchedule,
+      visitationText,
       common: { button },
     },
     setLanguage,
@@ -112,42 +113,80 @@ export default function VisitationSchedule() {
   };
   return (
     <>
-    <ComHeader
-        title={VisitationSchedule?.title}
+      <ComHeader
+        title={visitationText?.titleHeader}
         showTitle
         showBackIcon
       />
-     <View style={styles.body}>
-      <View style={{ gap: 10 }}>
-        <View style={styles.imageBody}>
-          <Image source={Visitation} style={styles.image} />
+      <View style={styles.body}>
+        <View style={{ gap: 10 }}>
+          <View style={styles.imageBody}>
+            <Image source={Visitation} style={styles.image} />
+          </View>
+          <Text
+            style={{
+              color: "#716767",
+              textAlign: "center",
+              paddingHorizontal: 20,
+            }}
+          >
+            {visitationText?.visitationContent}
+          </Text>
         </View>
-        <Text
+        <View
           style={{
-            color: "#716767",
-            textAlign: "center",
-            paddingHorizontal: 20,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          Hãy dùng chút thời gian đổi lấy nụ cười của những người thân yêu
-        </Text>
+          <Text
+            style={{
+              color: "#000",
+              paddingHorizontal: 5,
+              fontSize: 20,
+            }}
+          >
+            {visitationText?.textHistory}
+          </Text>
+          <TouchableOpacity style={styles.register} onPress={register}>
+            <View style={{flexDirection: "row", alignItems: "center", gap: 3}}>
+              <Image
+                source={plusIcon}
+                style={{
+                  height: 25,
+                  width: 25,
+                  objectFit: "fill",
+                }}
+              />
+              <Text
+                style={{
+                  color: "#000",
+                  paddingHorizontal: 5,
+                  fontSize: 18,
+                }}
+              >
+                {visitationText?.register}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+        <ComLoading show={loading}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+          >
+            <View>
+              {data?.map((value, index) => (
+                <ComVisitationSchedule key={index} data={value} />
+              ))}
+            </View>
+            <View style={{ height: 320 }}></View>
+          </ScrollView>
+        </ComLoading>
       </View>
-      <ComLoading show={loading}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-        >
-          <View>
-            {data?.map((value, index) => (
-              <ComVisitationSchedule key={index} data={value} />
-            ))}
-          </View>
-          <View style={{ height:320 }}></View>
-        </ScrollView>
-      </ComLoading>
-    </View>
     </>
-   
+
   );
 }
 
@@ -162,7 +201,7 @@ const styles = StyleSheet.create({
   register: {
     flexDirection: "row",
     marginBottom: 10,
-    padding: 4,
+    padding: 5,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "#33B39C",
