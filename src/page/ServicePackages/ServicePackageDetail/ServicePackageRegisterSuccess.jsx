@@ -6,6 +6,8 @@ import Vector from "../../../../assets/Vector.png";
 import ComButton from "../../../Components/ComButton/ComButton";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import ComDateConverter from "../../../Components/ComDateConverter/ComDateConverter";
+import moment from 'moment';
+
 export default function ServicePackageRegisterSuccess() {
   const navigation = useNavigation();
   const {
@@ -17,7 +19,8 @@ export default function ServicePackageRegisterSuccess() {
     setLanguage,
   } = useContext(LanguageContext);
   const route = useRoute();
-  const { date } = route.params;
+  const { data } = route.params;
+  const formattedDate = moment(data?.date).format('DD/MM/YYYY');
   const toHomes = () => {
     navigation.navigate("Homes");
   };
@@ -32,7 +35,7 @@ export default function ServicePackageRegisterSuccess() {
               <Text style={{ fontWeight: "bold", fontSize: 18 }}>
                 {visitationText?.subscribers}
               </Text>
-              <Text>: Thảo my</Text>
+              <Text>: {data?.name}</Text>
               {/* <Text>: {data?.name}</Text> */}
             </Text>
           </View>
@@ -41,7 +44,7 @@ export default function ServicePackageRegisterSuccess() {
               <Text style={{ fontWeight: "bold", fontSize: 18 }}>
                 {visitationText?.phone}
               </Text>
-              <Text>: 0123231232</Text>
+              <Text>: {data?.phoneNumber}</Text>
             </Text>
           </View>
           <View >
@@ -50,7 +53,7 @@ export default function ServicePackageRegisterSuccess() {
                 {visitationText?.day}
               </Text>
               <Text>
-                : <ComDateConverter>{date}</ComDateConverter>
+                : {formattedDate}
               </Text>
             </Text>
           </View>

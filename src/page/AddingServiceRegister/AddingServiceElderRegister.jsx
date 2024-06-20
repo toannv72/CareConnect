@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity } from 'react-native';
 import ComSelectButton from "../../Components/ComButton/ComSelectButton";
 import { LanguageContext } from "../../contexts/LanguageContext";
@@ -6,66 +6,15 @@ import { useRoute } from "@react-navigation/native";
 import backArrowWhite from "../../../assets/icon/backArrowWhite.png";
 import { useNavigation } from '@react-navigation/native';
 import ComElder from "../../Components/ComElder/ComElder";
+import { postData, getData } from "../../api/api";
+import ComLoading from "../../Components/ComLoading/ComLoading";
+import Nodata from "../../../assets/Nodata.png";
+import { useStorage } from "../../hooks/useLocalStorage";
 
 export default function AddingServiceElderRegister() {
-    const [data, setData] = useState({
-        img: "https://cdn.youmed.vn/tin-tuc/wp-content/uploads/2021/06/cham-cuu.png",
-        color: "#8DF7AB",
-        text: "Châm cứu bấm huyệt",
-        context: "giúp người cao tuổi duy trì và cải thiện khả năng vận động, giảm đau, tăng cường sức mạnh cơ bắp và sự linh hoạt. Các bài tập được thiết kế phù hợp với tình trạng sức khỏe và nhu cầu của từng cá nhân, nhằm nâng cao chất lượng cuộc sống và khả năng tự lập của họ.",
-        category: "Y tế",
-        money: 350000,
-    });
-
-    const [elderData, setElderData] = useState([
-        {
-            img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
-            name: "Nguyễn Văn toàn",
-            age: "34",
-            sex: "Nam",
-            room: "17",
-            bed: "3",
-            id: 1,
-        },
-        {
-            img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
-            name: "Nguyễn Văn toàn",
-            age: "34",
-            sex: "Nam",
-            room: "17",
-            bed: "3",
-            id: 2,
-        },
-        {
-            img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
-            name: "Nguyễn Văn toàn",
-            age: "34",
-            sex: "Nam",
-            room: "17",
-            bed: "3",
-            id: 3,
-        },
-        {
-            img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
-            name: "Nguyễn Văn toàn",
-            age: "34",
-            sex: "Nam",
-            room: "17",
-            bed: "3",
-            id: 4,
-        },
-        {
-            img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
-            name: "Nguyễn Văn toàn",
-            age: "34",
-            sex: "Nam",
-            room: "17",
-            bed: "3",
-            id: 5,
-        },
-    ]);
-
+    const [user, setUser] = useStorage("user", {});
     const [selectedElderId, setSelectedElderId] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const {
         text: { addingPackages },
@@ -73,7 +22,8 @@ export default function AddingServiceElderRegister() {
     } = useContext(LanguageContext);
 
     const route = useRoute();
-    const { id } = route.params;
+    const { data } = route.params;
+
 
     const navigation = useNavigation();
 
@@ -82,11 +32,15 @@ export default function AddingServiceElderRegister() {
     };
 
     const formatCurrency = (number) => {
-        // Sử dụng hàm toLocaleString() để định dạng số
-        return number.toLocaleString("vi-VN", {
-            style: "currency",
-            currency: "VND",
-        });
+        if (number) {
+            // Sử dụng hàm toLocaleString() để định dạng số
+            return number.toLocaleString("vi-VN", {
+                style: "currency",
+                currency: "VND",
+            });
+        } else {
+            return null; // or any default value you want to return
+        }
     };
 
     const handleElderPress = (id) => {
@@ -95,7 +49,7 @@ export default function AddingServiceElderRegister() {
 
     return (
         <>
-            <View  style={styles.header}>
+            <View style={styles.header}>
                 <TouchableOpacity onPress={handleBackPress} style={styles.backIconContainer}>
                     <Image
                         source={backArrowWhite}
@@ -103,7 +57,7 @@ export default function AddingServiceElderRegister() {
                     />
                 </TouchableOpacity>
                 <Image
-                    source={{ uri: data?.img }}
+                    source={{ uri: data?.imageUrl }}
                     style={{
                         height: 200,
                         objectFit: "fill",
@@ -111,45 +65,59 @@ export default function AddingServiceElderRegister() {
                 />
             </View>
             <View style={styles.body}>
-            <ScrollView
+                <ScrollView
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                 >
-                <Text style={{ fontWeight: "bold", fontSize: 20, marginBottom: 10 }} numberOfLines={2}>
-                    {data?.text}
-                </Text>
-                {/* price */}
-                <Text style={{ fontSize: 16, marginBottom: 10 }}>
-                    <Text style={{ fontWeight: "bold" }}>
-                        {formatCurrency(data?.money)}
+                    <Text style={{ fontWeight: "bold", fontSize: 20, marginBottom: 10 }} numberOfLines={2}>
+                        {data?.name}
                     </Text>
-                    /{addingPackages?.package?.month}
-                </Text>
-
-                {/* category */}
-                <Text style={{ flexDirection: "row", marginBottom: 10 }}>
-                    <Text style={styles.contentBold}>
-                        {addingPackages?.package?.category}
+                    {/* price */}
+                    <Text style={{ fontSize: 16, marginBottom: 10 }}>
+                        <Text style={{ fontWeight: "bold" }}>
+                            {formatCurrency(data?.price)}
+                        </Text>
+                        /{addingPackages?.package?.month}
                     </Text>
-                    <Text style={{ fontSize: 16 }}>
-                        : {data?.category}
+
+                    {/* category */}
+                    <Text style={{ flexDirection: "row", marginBottom: 10 }}>
+                        <Text style={styles.contentBold}>
+                            {addingPackages?.package?.category}
+                        </Text>
+                        <Text style={{ fontSize: 16 }}>
+                            :  {data?.servicePackageCategory?.name}
+                        </Text>
                     </Text>
-                </Text>
 
-                <Text style={{ fontWeight: "bold", fontSize: 16, marginBottom: 10 }}>
-                    {addingPackages?.register?.registerElder}
-                </Text>
+                    <Text style={{ fontWeight: "bold", fontSize: 16, marginBottom: 10 }}>
+                        {addingPackages?.register?.registerElder}
+                    </Text>
 
-               
-                    <View>
-                        {elderData?.map((value, index) => (
-                            <ComElder key={index} data={value} 
-                            onPress={() => handleElderPress(value.id)}
-                                isSelected={selectedElderId === value.id}
-                            />
-                        ))}
-                    </View>
-                    <View style={{ height: 120 }}></View>
+                    <ComLoading show={loading}>
+                        { user?.elders?.length > 0 ? (
+                            <>
+                                <View>
+                                    {user?.elders?.map((value, index) => (
+                                        <ComElder key={index} data={value}
+                                            onPress={() => handleElderPress(value.id)}
+                                            isSelected={selectedElderId === value.id}
+                                        />
+                                    ))}
+                                </View>
+                                <View style={{ height: 120 }}></View>
+                            </>
+                        ) : (
+                            <View style={styles?.noDataContainer}>
+                                <Image
+                                    source={Nodata}
+                                    style={styles?.noDataImage}
+                                />
+                                <Text style={{ fontSize: 16 }}>Không có dữ liệu</Text>
+                            </View>
+                        )}
+                    </ComLoading>
+
                 </ScrollView>
                 <View style={{ marginVertical: 20 }}>
                     <ComSelectButton
@@ -171,7 +139,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         paddingHorizontal: 15,
     },
-    header:{
+    header: {
         paddingTop: 50
     },
     contentBold: {
@@ -191,5 +159,15 @@ const styles = StyleSheet.create({
     backIcon: {
         width: 50,
         height: 50,
+    },
+    noDataContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 50,
+    },
+    noDataImage: {
+        width: 150,
+        height: 150,
+        marginBottom: 20,
     },
 });

@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { Image, View } from "react-native";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { useNavigation } from "@react-navigation/native";
+import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter"
 
 export default function ComHealth({ data }) {
   const {
@@ -15,11 +16,11 @@ export default function ComHealth({ data }) {
     <TouchableOpacity
       style={styles.body}
       onPress={() => {
-        navigation.navigate("ElderDetailProfile", { id: data?.id });
+        navigation.navigate("ElderDetailProfile", { data: data });
       }}
     >
       <Image
-        source={{ uri: data?.img }}
+        source={{ uri: data?.imageUrl }}
         style={{
           width: 60,
           height: 60,
@@ -37,9 +38,8 @@ export default function ComHealth({ data }) {
             </Text>
             <Text>
               : {data?.name}
-              
+
             </Text>
-            {/* <Text>: {data?.name}</Text> */}
           </Text>
         </View>
         <View style={styles?.container}>
@@ -47,7 +47,7 @@ export default function ComHealth({ data }) {
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
               {healthMonitor?.age}
             </Text>
-            <Text>: {data?.age}</Text>
+            <Text>: <ComDateConverter> {data?.dateOfBirth}</ComDateConverter> </Text>
           </Text>
         </View>
         <View style={styles?.container}>
@@ -55,7 +55,7 @@ export default function ComHealth({ data }) {
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
               {healthMonitor?.sex}
             </Text>
-            <Text>: {data?.sex}</Text>
+            <Text>: {data?.gender}</Text>
           </Text>
         </View>
         <View style={styles?.container}>
@@ -63,15 +63,7 @@ export default function ComHealth({ data }) {
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
               {healthMonitor?.room}
             </Text>
-            <Text>: {data?.room}</Text>
-          </Text>
-        </View>
-        <View style={styles?.container}>
-          <Text style={{ flexDirection: "row" }}>
-            <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-              {healthMonitor?.bed}
-            </Text>
-            <Text>: {data?.bed}</Text>
+            <Text>: {data?.room?.name}</Text>
           </Text>
         </View>
       </View>

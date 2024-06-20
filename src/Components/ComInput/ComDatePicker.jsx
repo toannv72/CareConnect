@@ -10,7 +10,8 @@ const ComDatePicker = ({
   rules,
   required,
   errors,
-  placeholder, // Bỏ qua placeholder vì không cần thiết
+  placeholder,
+  enabled, // Bỏ qua placeholder vì không cần thiết
   ...props
 }) => {
   const errorMessage = errors[name]?.message;
@@ -54,7 +55,7 @@ const ComDatePicker = ({
         rules={rules}
         render={({ field: { onChange, onBlur, value } }) => (
           <View>
-            <TouchableOpacity onPress={handleOpen} activeOpacity={1}>
+            <TouchableOpacity onPress={enabled ? handleOpen : null} activeOpacity={1}>
               <View
                 style={[
                   styles.input,
@@ -98,7 +99,6 @@ const styles = StyleSheet.create({
   label: {
     fontWeight: "bold",
     marginRight: 4,
-    color: "#33B39C",
   },
   required: {
     color: "red",

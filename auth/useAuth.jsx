@@ -7,14 +7,18 @@ const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useStorage("user", null);
+  const [elders, setElders] = useStorage("elders", []);
+  const [accessToken, setAccessToken] = useStorage("accessToken", null);
 
   const login = (userData) => {
     const ability = new Ability(defineRulesFor(userData));
     setUser({ ...userData});
+    setElders(userData?.elders)
   };
 
   const logout = () => {
-    setUser({});
+    setUser(null);
+    setAccessToken(null);
   };
 
   return (

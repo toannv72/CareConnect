@@ -1,33 +1,15 @@
 import React, { useContext, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View, Text } from "react-native";
 import ComHealth from "./ComHealth";
 import { FormProvider, useForm } from "react-hook-form";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ComHeader from "../../Components/ComHeader/ComHeader";
+import { useStorage } from "../../hooks/useLocalStorage";
 
 export default function ElderProfile() {
-  const [data, setData] = useState([
-    {
-      img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
-      name: "Nguyễn Văn toàn",
-      age: "34",
-      sex: "Nam",
-      room: "17",
-      bed: "3",
-      id: 1,
-    },
-    {
-      img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
-      name: "Nguyễn Văn toàn",
-      age: "34",
-      sex: "Nam",
-      room: "17",
-      bed: "3",
-      id: 2,
-    },
-  ]);
+  const [elders, setElders] = useStorage("elders", []);
   const searchSchema = yup.object().shape({
     search: yup.string(),
   });
@@ -70,7 +52,7 @@ export default function ElderProfile() {
           style={styles?.scrollView}
         >
           <View>
-            {data?.map((value, index) => (
+            {elders?.map((value, index) => (
               <ComHealth key={index} data={value} />
             ))}
           </View>

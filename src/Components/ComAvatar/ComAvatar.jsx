@@ -18,5 +18,8 @@ const styles = StyleSheet.create({
     width: 58,
     height: 58,
     objectFit: "fill",
+    borderWidth: 0.5,
+    borderColor: "#000",
+    borderRadius: 50
   },
 });

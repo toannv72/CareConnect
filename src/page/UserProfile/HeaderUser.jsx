@@ -1,10 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import editIcon from "../../../assets/profile_icons/edit.png";
+import { useStorage } from "../../hooks/useLocalStorage";
 
 export default function HeaderUser() {
   const navigation = useNavigation();
+  const [user, setUser] = useStorage("user", {});
 
   const edit = () => {
     navigation.navigate("EditProfile");
@@ -13,18 +15,19 @@ export default function HeaderUser() {
     navigation.navigate("DetailProfile");
     
   }
+
   return (
     <View style={styles.body}>
       <TouchableOpacity style={styles.container} onPress={DetailProfile}>
         <Image
           source={{
-            uri: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
+            uri: user?.avatarUrl
           }}
           style={styles.avatar}
         />
         <View style={styles.info}>
-          <Text style={styles.name}>Cao Văn B</Text>
-          <Text style={styles.phone}>0909799799</Text>
+          <Text style={styles.name}>{user?.fullName}</Text>
+          <Text style={styles.phone}>{user?.phoneNumber}</Text>
         </View>
         <TouchableOpacity style={styles.editButton} onPress={edit}>
           <Image
@@ -44,8 +47,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
   },
   avatar: {
-    width: 70,
-    height: 70,
+    width: 60,
+    height: 60,
     borderRadius: 35,
     marginRight: 15,
   },
@@ -54,7 +57,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 22,
-    fontWeight: "bold",
+    fontWeight: "500",
   },
   phone: {
     fontSize: 16,

@@ -3,6 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const useStorage = (key, initialValue) => {
   const [storedValue, setStoredValue] = useState(initialValue);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadStoredValue = async () => {
@@ -13,6 +14,8 @@ export const useStorage = (key, initialValue) => {
         }
       } catch (error) {
         console.log(error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -29,5 +32,14 @@ export const useStorage = (key, initialValue) => {
     }
   };
 
-  return [storedValue, updateStoredValue];
+  const removeValue = async () => {
+    try {
+      setStoredValue(null);
+      await AsyncStorage.removeItem(key);
+    } catch (error) {
+      console.error("Error removing value from AsyncStorage", error);
+    }
+  };
+
+  return [storedValue, updateStoredValue, removeValue];
 };

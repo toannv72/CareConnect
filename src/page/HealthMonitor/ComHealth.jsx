@@ -19,7 +19,7 @@ export default function ComHealth({ data }) {
       }}
     >
       <Image
-        source={{ uri: data?.img }}
+        source={{ uri: data?.imageUrl }}
         style={{
           width: 60,
           height: 60,
@@ -47,7 +47,7 @@ export default function ComHealth({ data }) {
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
               {healthMonitor?.age}
             </Text>
-            <Text>: {data?.age}</Text>
+            <Text>: {data?.dateOfBirth}</Text>
           </Text>
         </View>
         <View style={styles?.container}>
@@ -55,7 +55,7 @@ export default function ComHealth({ data }) {
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
               {healthMonitor?.sex}
             </Text>
-            <Text>: {data?.sex}</Text>
+            <Text>: {data?.gender}</Text>
           </Text>
         </View>
         <View style={styles?.container}>
@@ -63,15 +63,7 @@ export default function ComHealth({ data }) {
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
               {healthMonitor?.room}
             </Text>
-            <Text>: {data?.room}</Text>
-          </Text>
-        </View>
-        <View style={styles?.container}>
-          <Text style={{ flexDirection: "row" }}>
-            <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-              {healthMonitor?.bed}
-            </Text>
-            <Text>: {data?.bed}</Text>
+            <Text>: {data?.room?.name}</Text>
           </Text>
         </View>
       </View>

@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { View, StyleSheet, ScrollView } from 'react-native';
+import React, { useContext, useState, useEffect } from "react";
+import { View, StyleSheet, ScrollView, Image, Text } from 'react-native';
 import { FormProvider, useForm } from "react-hook-form";
 import ComHeader from '../../Components/ComHeader/ComHeader';
 import ComSelectButton from "../../Components/ComButton/ComSelectButton";
@@ -9,85 +9,25 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import ComLoading from "../../Components/ComLoading/ComLoading";
 import ComAddPackage from "./ComAddPackage";
 import { LanguageContext } from "./../../contexts/LanguageContext";
+import Nodata from "../../../assets/Nodata.png";
+import { postData, getData } from "../../api/api";
 
 export default function AddingServicePackages() {
     const {
         text: { addingPackages },
         setLanguage,
     } = useContext(LanguageContext);
-    const [data, setData] = useState([
-        {
-            img: "https://png.pngtree.com/thumb_back/fw800/background/20230123/pngtree-old-people-physical-therapy-center-released-ball-photo-image_49464146.jpg",
-            color: "#F7E863",
-            text: "Vật lý trị liệu",
-            context: "giúp người cao tuổi duy trì và cải thiện khả năng vận động, giảm đau, tăng cường sức mạnh cơ bắp và sự linh hoạt. Các bài tập được thiết kế phù hợp với tình trạng sức khỏe và nhu cầu của từng cá nhân, nhằm nâng cao chất lượng cuộc sống và khả năng tự lập của họ.",
-            category: "Y tế",
-            money: 100000,
-        },
-        {
-            img: "https://png.pngtree.com/background/20230403/original/pngtree-doctor-massaging-old-mans-shoulders-vector-picture-image_2279279.jpg",
-            color: "#8DF7AB",
-            text: "Đấm bóp massage",
-            context: "giúp người cao tuổi duy trì và cải thiện khả năng vận động, giảm đau, tăng cường sức mạnh cơ bắp và sự linh hoạt. Các bài tập được thiết kế phù hợp với tình trạng sức khỏe và nhu cầu của từng cá nhân, nhằm nâng cao chất lượng cuộc sống và khả năng tự lập của họ.",
-            category: "Sinh hoạt",
-            money: 300000,
-        },
-        {
-            img: "https://cdn.youmed.vn/tin-tuc/wp-content/uploads/2021/06/cham-cuu.png",
-            color: "#8DF7AB",
-            text: "Châm cứu bấm huyệt",
-            context: "giúp người cao tuổi duy trì và cải thiện khả năng vận động, giảm đau, tăng cường sức mạnh cơ bắp và sự linh hoạt. Các bài tập được thiết kế phù hợp với tình trạng sức khỏe và nhu cầu của từng cá nhân, nhằm nâng cao chất lượng cuộc sống và khả năng tự lập của họ.",
-            category: "Y tế",
-            money: 350000,
-        },
-        {
-            img: "https://cdn.youmed.vn/tin-tuc/wp-content/uploads/2021/06/cham-cuu.png",
-            color: "#8DF7AB",
-            text: "Châm cứu bấm huyệt",
-            context: "giúp người cao tuổi duy trì và cải thiện khả năng vận động, giảm đau, tăng cường sức mạnh cơ bắp và sự linh hoạt. Các bài tập được thiết kế phù hợp với tình trạng sức khỏe và nhu cầu của từng cá nhân, nhằm nâng cao chất lượng cuộc sống và khả năng tự lập của họ.",
-            category: "Y tế",
-            money: 350000,
-        },
-        {
-            img: "https://cdn.youmed.vn/tin-tuc/wp-content/uploads/2021/06/cham-cuu.png",
-            color: "#8DF7AB",
-            text: "Châm cứu bấm huyệt",
-            context: "giúp người cao tuổi duy trì và cải thiện khả năng vận động, giảm đau, tăng cường sức mạnh cơ bắp và sự linh hoạt. Các bài tập được thiết kế phù hợp với tình trạng sức khỏe và nhu cầu của từng cá nhân, nhằm nâng cao chất lượng cuộc sống và khả năng tự lập của họ.",
-            category: "Y tế",
-            money: 350000,
-        }
-    ]);
+
+    const [data, setData] = useState([]);
+    const [categoryData, setCategoryData] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState(select);
     const [loading, setLoading] = useState(false);
-
     const [select, setSelect] = useState(false);
-    const [select1, setSelect1] = useState(true);
-    const [select2, setSelect2] = useState(true);
-    const [select3, setSelect3] = useState(true);
-    const check = () => {
-        setSelect(false);
-        setSelect1(true);
-        setSelect2(true);
-        setSelect3(true);
-    };
-    const check1 = () => {
-        setSelect(true);
-        setSelect1(false);
-        setSelect2(true);
-        setSelect3(true);
-    };
-    const check2 = () => {
-        setSelect(true);
-        setSelect1(true);
-        setSelect3(true);
-        setSelect2(false);
-    };
-    const check3 = () => {
-        setSelect(true);
-        setSelect1(true);
-        setSelect2(true);
-        setSelect3(false);
-    };
 
+    const check = () => {
+        setSelectedCategory(null)
+        setSelect(false);
+    };
     const searchSchema = yup.object().shape({
         search: yup.string(),
     });
@@ -110,6 +50,36 @@ export default function AddingServicePackages() {
         console.log("====================================");
         setLoading(!loading);
     };
+
+    useEffect(() => {
+        // Lấy danh sách sản phẩm
+        setLoading(!loading);
+        getData('/service-package', {})
+            .then((packageData) => {
+                setData(packageData?.data?.contends);
+            })
+            .catch((error) => {
+                console.error("Error fetching service-package:", error);
+            });
+
+        getData('/service-package-categories', {})
+            .then((categoryData) => {
+                setCategoryData(categoryData?.data?.contends);
+                setLoading(loading);
+
+            })
+            .catch((error) => {
+                console.error("Error fetching categoryData:", error);
+            });
+    }, [])
+
+    const handleCategorySelect = (id) => {
+        setSelect(true);
+        setSelectedCategory(id);
+    };
+
+    const filteredData = !select ? data : data.filter(item => item?.servicePackageCategory?.id === selectedCategory);
+
     return (
         <>
             <ComHeader
@@ -138,33 +108,39 @@ export default function AddingServicePackages() {
                         <ComSelectButton onPress={check} check={select}>
                             Tất cả
                         </ComSelectButton>
-                        <ComSelectButton onPress={check1} check={select1}>
-                            Y tế
-                        </ComSelectButton>
-                        <ComSelectButton onPress={check2} check={select2}>
-                            Trị liệu
-                        </ComSelectButton>
-                        <ComSelectButton onPress={check3} check={select3}>
-                            Dinh dưỡng
-                        </ComSelectButton>
+                        {categoryData?.map((value, index) => (
+                            <ComSelectButton
+                                key={index}
+                                onPress={() => handleCategorySelect(value.id)}
+                                check={selectedCategory === value?.id ? false : true}>
+                                {value?.name}
+                            </ComSelectButton>
+                        ))}
                     </View>
                 </ScrollView>
 
                 <ComLoading show={loading}>
-                    <ScrollView
-                        showsVerticalScrollIndicator={false}
-                        showsHorizontalScrollIndicator={false}
-                    >
-                        <View>
-                            {data?.map((value, index) => (
-                                <ComAddPackage key={index} data={value} />
-                            ))}
+                    {filteredData.length > 0 ? (
+                        <ScrollView
+                            showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={false}
+                        >
+                                {filteredData?.map((value, index) => (
+                                    <ComAddPackage key={index} data={value} />
+                                ))}
+                            <View style={{height: 230 }}></View>
+                        </ScrollView>
+                    ) : (
+                        <View style={styles?.noDataContainer}>
+                            <Image
+                                source={Nodata}
+                                style={styles?.noDataImage}
+                            />
+                            <Text style={{ fontSize: 16 }}>Không có dữ liệu</Text>
                         </View>
-                        <View style={{ height: 120 }}></View>
-                    </ScrollView>
-                </ComLoading>
-            </View>
-            {/* <View style={{ height: 100, backgroundColor: "#fff" }}></View> */}
+                    )}
+            </ComLoading>
+        </View >
         </>
     );
 }
@@ -185,5 +161,15 @@ const styles = StyleSheet.create({
     scrollView: {
         flexGrow: 0,
         flexShrink: 0,
+    },
+    noDataContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 50,
+    },
+    noDataImage: {
+        width: 150,
+        height: 150,
+        marginBottom: 20,
     },
 });

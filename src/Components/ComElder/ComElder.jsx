@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { Image, View } from "react-native";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { useNavigation } from "@react-navigation/native";
+import ComDateConverter from "../ComDateConverter/ComDateConverter"
 
 export default function ComElder({ data, onPress, isSelected, style }) {
   const {
@@ -11,13 +12,33 @@ export default function ComElder({ data, onPress, isSelected, style }) {
   } = useContext(LanguageContext);
   const navigation = useNavigation();
 
+  const genderOptions = [
+    {
+      value: "Male",
+      label: "Nam",
+    },
+    {
+      value: "Female",
+      label: "Nữ",
+    },
+    {
+      value: "Other",
+      label: "Khác",
+    },
+  ];
+
+  const getGenderLabel = (value) => {
+    const genderOption = genderOptions.find((option) => option.value === value);
+    return genderOption ? genderOption.label : value;
+  };
+
   return (
     <TouchableOpacity
       style={[styles.body, isSelected && styles.selectedBody, style]}
       onPress={onPress}
     >
       <Image
-        source={{ uri: data?.img }}
+        source={{ uri: data?.imageUrl }}
         style={{
           width: 60,
           height: 60,
@@ -43,7 +64,7 @@ export default function ComElder({ data, onPress, isSelected, style }) {
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
               {healthMonitor?.age}
             </Text>
-            <Text>: {data?.age}</Text>
+            <Text>: <ComDateConverter> {data?.dateOfBirth} </ComDateConverter> </Text>
           </Text>
         </View>
         <View style={styles?.container}>
@@ -51,7 +72,7 @@ export default function ComElder({ data, onPress, isSelected, style }) {
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
               {healthMonitor?.sex}
             </Text>
-            <Text>: {data?.sex}</Text>
+            <Text>: {getGenderLabel(data?.gender)}</Text>
           </Text>
         </View>
         <View style={styles?.container}>
@@ -59,10 +80,10 @@ export default function ComElder({ data, onPress, isSelected, style }) {
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
               {healthMonitor?.room}
             </Text>
-            <Text>: {data?.room}</Text>
+            <Text>: {data?.room?.name}</Text>
           </Text>
         </View>
-       
+
       </View>
     </TouchableOpacity>
   );

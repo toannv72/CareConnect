@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { StyleSheet, View, Button, Keyboard } from "react-native";
+import React, { useContext, useState, useCallback } from "react";
+import { StyleSheet, View, ActivityIndicator, Keyboard } from "react-native";
 import * as yup from "yup";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -10,19 +10,30 @@ import ComTitlePage from "../../Components/ComTitlePage/ComTitlePage";
 import ComButton from "../../Components/ComButton/ComButton";
 import ComTitleLink from "../../Components/ComTitleLink/ComTitleLink";
 import ComTitle from "../../Components/ComTitle/ComTitle";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { postData, getData } from "../../api/api";
 import { useAuth } from "../../../auth/useAuth";
 import { FieldError } from "../../Components/FieldError/FieldError";
+import Toast from 'react-native-toast-message';
 
 export default function LoginScreen() {
   const [token, setToken] = useStorage("accessToken", null);
   const navigation = useNavigation();
-  const [LoginState, setLoginState] = useState(false);
+  const [LoginState, setLoginState] = useState(true);
   const [LoginError, setLoginError] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const { login } = useAuth();
-  const [user, setUser] = useStorage("user", {});
+
+  const showToast = (type, text1, text2, position) => {
+    Toast.show({
+      type: type,
+      text1: text1,
+      text2: text2,
+      position: position
+    });
+  }
+
   const {
     text: {
       Login,
@@ -32,11 +43,12 @@ export default function LoginScreen() {
   } = useContext(LanguageContext);
 
   const loginSchema = yup.object().shape({
-    username: yup
-      .string()
-      .required(Login?.message?.phoneRequired)
-      .matches(/^[0-9]+$/, "Phone number must be a valid number"),
-    password: yup.string().required(Login?.message?.password),
+    // username: yup
+    //   .string()
+    //   .trim()
+    //   .required(Login?.message?.phoneRequired)
+    //   .matches(/^0[0-9]{9,10}$/, Login?.message?.phoneInvalid),
+    // password: yup.string().trim().required(Login?.message?.password),
   });
 
   const methods = useForm({
@@ -54,23 +66,31 @@ export default function LoginScreen() {
     formState: { errors },
   } = methods;
 
+  useFocusEffect(
+    useCallback(() => {
+      // This code will run when the screen comes into focus
+      // Perform any re-render or data fetching logic here if needed
+      // For example, you might want to reset the form state
+      setLoginState(false);
+      setLoginError(false);
+      setErrorMessage("");
+      setLoading(false);
+      methods.reset({
+        username: "",
+        password: "",
+      });
+    }, [])
+  );
+
   const handleLogin = (data) => {
     setLoginError(false);
     setLoginState(false);
+    setLoading(true);
     // Xử lý đăng nhập với dữ liệu từ data
     Keyboard.dismiss();
-    console.log(data);
     postData("/auth/login", data, {})
       .then((data) => {
         setToken(data?.accessToken);
-
-        getData("/users/profile")
-          .then((userData) => {
-            login(userData?.data);
-          })
-          .catch((error) => {
-            console.error("Error getData fetching items:", error);
-          });
         // Chờ setToken hoàn thành trước khi navigate
         return new Promise((resolve) => {
           setTimeout(() => {
@@ -78,20 +98,24 @@ export default function LoginScreen() {
               navigation.navigate("Homes", { screen: "Home" });
             else if (data?.listRole[0] === "Nurse")
               navigation.navigate("NurseHomes", { screen: "NurseHome" });
-
+            else {
+              setLoginState(true);
+              setLoginError(true);
+              setErrorMessage(Login?.message?.invalidRole);
+            }
             resolve(); // Báo hiệu Promise đã hoàn thành
           }, 0); // Thời gian chờ 0ms để đảm bảo setToken đã được thực hiện
         });
       })
       .catch((error) => {
         if (error?.response?.status === 401) {
-          setLoginState(true);
-          setLoginError(true);
-          setErrorMessage(Login?.message?.invalidCredential);
+          console.log("Error login :", error);
+          setLoading(false)
+          showToast("error", "Đăng nhập thất bại", Login?.message?.invalidCredential, "bottom")
         } else {
-          setLoginState(true);
-          setLoginError(true);
-          setErrorMessage(Login?.message?.loginError);
+          console.log("Error login:", error);
+          setLoading(false)
+          showToast("error", "Đăng nhập thất bại", Login?.message?.loginError, "bottom")
         }
       });
   };
@@ -123,8 +147,10 @@ export default function LoginScreen() {
             <FieldError style={{ color: "red" }}>
               {LoginState || LoginError ? errorMessage : ""}
             </FieldError>
+
             <ComButton onPress={handleSubmit(handleLogin)}>
-              {Login?.button?.login}
+              {loading ? <ActivityIndicator color="#fff" /> : Login?.button?.login}
+
             </ComButton>
 
             <View style={styles?.link}>

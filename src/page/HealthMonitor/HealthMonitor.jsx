@@ -1,33 +1,18 @@
 import React, { useContext, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View, Text } from "react-native";
 import ComHealth from "./ComHealth";
 import { FormProvider, useForm } from "react-hook-form";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ComHeader from "../../Components/ComHeader/ComHeader";
+import Nodata from "../../../assets/Nodata.png";
+import { useStorage } from "../../hooks/useLocalStorage";
 
 export default function HealthMonitor() {
-  const [data, setData] = useState([
-    {
-      img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
-      name: "Nguyễn Văn toàn",
-      age: "34",
-      sex: "Nam",
-      room: "17",
-      bed: "3",
-      id: 1,
-    },
-    {
-      img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
-      name: "Nguyễn Văn toàn",
-      age: "34",
-      sex: "Nam",
-      room: "17",
-      bed: "3",
-      id: 2,
-    },
-  ]);
+  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useStorage("user", {});
+
   const searchSchema = yup.object().shape({
     search: yup.string(),
   });
@@ -63,23 +48,14 @@ export default function HealthMonitor() {
         showTitle
       />
       <View style={styles.body}>
-        {/* <FormProvider {...methods}>
-        <ComInputSearch
-          placeholder="Tìm kiếm"
-          keyboardType="default"
-          name="search"
-          control={control}
-          onSubmitEditing={handleSubmit(onSubmit)}
-          errors={errors}
-        />
-      </FormProvider> */}
         <ScrollView
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           style={styles?.scrollView}
         >
           <View>
-            {data?.map((value, index) => (
+            {/* <Text>abc</Text> */}
+            {user?.elders?.map((value, index) => (
               <ComHealth key={index} data={value} />
             ))}
           </View>

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { View, StyleSheet, ScrollView, Image, Text } from 'react-native';
+import { View, StyleSheet, ScrollView, Image, Text, Keyboard } from 'react-native';
 import { LanguageContext } from "../../../contexts/LanguageContext";
 import { useRoute } from "@react-navigation/native";
 import { FormProvider, useForm } from "react-hook-form";
@@ -9,16 +9,19 @@ import { useNavigation } from '@react-navigation/native';
 import ComHeader from "../../../Components/ComHeader/ComHeader";
 import ComButton from "../../../Components/ComButton/ComButton";
 import ComPopup from "../../../Components/ComPopup/ComPopup";
-import ComSelectedOneDate from "../../../Components/ComDate/ComSelectedOneDate";
+// import ComSelectedOneDate from "../../../Components/ComDate/ComSelectedOneDate";
+import ComDatePicker from "../../../Components/ComInput/ComDatePicker";
 import moment from "moment";
+import { postData, getData } from "../../../api/api";
 
 export default function ServicePackageDetail({ }) {
   const today = moment().format("YYYY-MM-DD");
   const navigation = useNavigation();
   const route = useRoute();
   const serviceData = route.params?.data || {};
-  const [selectedDate, setSelectedDate] = useState(today);//cho calendar một giá trị mặc định là ngày hiện tại
+  const [selectedDate, setSelectedDate] = useState();//cho calendar một giá trị mặc định là ngày hiện tại
   const [popupDate, setPopupDate] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const {
     text: { servicePackages },
@@ -44,12 +47,11 @@ export default function ServicePackageDetail({ }) {
   };
 
   const loginSchema = yup.object().shape({
-    name: yup.string().trim().required("Vui lòng nhập tên người đại diện"),
+    date: yup.date().required("Vui lòng chọn ngày đặt lịch"),
   });
   const methods = useForm({
     resolver: yupResolver(loginSchema),
     defaultValues: {
-      name: "",
     },
   });
   const {
@@ -58,6 +60,27 @@ export default function ServicePackageDetail({ }) {
     register,
     formState: { errors },
   } = methods;
+
+  const handleCreateAppointment = (data) => {
+    // setLoading(true);
+    // Xử lý đăng nhập với dữ liệu từ data
+    Keyboard.dismiss();
+    const formData = {
+      ...data, // Include all form data
+      nursingPackageId: serviceData?.id,
+      // Add more fields as needed
+    };
+    postData("/appointments/RegisterPackage", formData, {})
+      .then((data) => {
+        // Chờ setToken hoàn thành trước khi navigate
+        navigation.navigate("ServicePackageRegisterSuccess", { data: data });
+      })
+      .catch((error) => {
+        console.log("Error register :", error);
+        // setLoading(false)
+        showToast("error", "Đăng ký hẹn thất bại", Login?.message?.invalidCredential, "bottom")
+      });
+  };
 
   return (
     <>
@@ -68,9 +91,9 @@ export default function ServicePackageDetail({ }) {
       />
       <View style={styles?.body}>
         <Image
-          source={{ uri: serviceData?.img }}
+          source={{ uri: serviceData?.imageUrl }}
           style={{
-            height: 200,
+            height: 250,
             objectFit: "fill",
           }}
         />
@@ -79,10 +102,10 @@ export default function ServicePackageDetail({ }) {
           showsHorizontalScrollIndicator={false}
         >
           <View style={styles?.content}>
-            <Text style={styles?.title}>{serviceData?.text}</Text>
+            <Text style={styles?.title}>{serviceData?.name}</Text>
             <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
               <Text style={{ fontWeight: "bold", fontSize: 20 }}>
-                {formatCurrency(serviceData?.money)}
+                {formatCurrency(serviceData?.price)}
               </Text>
               <Text style={{ fontSize: 16 }}>
                 /tháng
@@ -93,7 +116,7 @@ export default function ServicePackageDetail({ }) {
                 {servicePackages?.package?.living}
               </Text>
               <Text style={{ fontSize: 16 }}>
-                : {serviceData?.people} người
+                : {serviceData?.capacity} người
               </Text>
             </View>
             <View >
@@ -103,18 +126,6 @@ export default function ServicePackageDetail({ }) {
               <Text style={{ fontSize: 16 }}>
                 {serviceData?.description}
               </Text>
-            </View>
-            <View >
-              <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-                {servicePackages?.detail?.service}:
-              </Text>
-              {
-                serviceData?.services.map((item, index) => (
-                  <Text style={{ fontSize: 16 }} key={index}>
-                    • {item}
-                  </Text>
-                ))
-              }
             </View>
           </View>
         </ScrollView>
@@ -135,7 +146,21 @@ export default function ServicePackageDetail({ }) {
         <Text style={{ color: "#A3A3A3", textAlign: "center" }}>{servicePackages?.popup?.limitDays}</Text>
         <FormProvider {...methods}>
           <View style={{ width: "100%", gap: 10 }}>
-            <ComSelectedOneDate date={changeSelectedDate} />
+            {/* <ComSelectedOneDate
+              date={changeSelectedDate}
+              name="date"
+              control={control}
+              errors={errors} /> */}
+            <ComDatePicker
+              // label={EditProfile?.label?.dateOfBirth}
+              // placeholder={EditProfile?.placeholder?.dateOfBirth}
+              name="date"
+              control={control}
+              errors={errors} // Pass errors object
+              enabled={true}
+              mode={"date"}
+              required
+            />
             <View
               style={{
                 backgroundColor: "#fff",
@@ -151,9 +176,7 @@ export default function ServicePackageDetail({ }) {
                 Hủy
               </ComButton>
               <ComButton
-                onPress={() => {
-                  navigation.navigate("ServicePackageRegisterSuccess", { date: selectedDate });
-                }}
+                onPress={handleSubmit(handleCreateAppointment)}
                 style={{ flex: 1 }}>
                 Xác nhận
               </ComButton>
@@ -173,7 +196,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: "600",
-    fontSize: 18,
+    fontSize: 22,
     textAlign: "center"
   },
   content: {

@@ -74,6 +74,10 @@ export default function EditProfile() {
       value: "Female",
       label: "Nữ",
     },
+    {
+      value: "Other",
+      label: "Khác",
+    },
   ];
 
   const setImg = (data) => {
@@ -187,7 +191,7 @@ export default function EditProfile() {
             </View>
             <View>
               <ComButton onPress={handleSubmit(handleEdit)}>
-                {EditProfile?.button?.EditProfile}
+                {EditProfile?.button?.SaveProfile}
               </ComButton>
             </View>
           </FormProvider>

@@ -20,13 +20,13 @@ export default function ComPackage({ data }) {
   const navigation = useNavigation();
   return (
     <TouchableOpacity
-      style={[styles.body, { backgroundColor: data?.color || "#F7E863" }]}
+      style={[styles.body, { backgroundColor: data?.color || "#F7FFFE" }]}
       onPress={() => {
         navigation.navigate("ServicePackageDetail", { data: data });
       }}
     >
       <Image
-        source={{ uri: data?.img }}
+        source={{ uri: data?.imageUrl }}
         style={{
           width: 100,
           height: 100,
@@ -37,22 +37,22 @@ export default function ComPackage({ data }) {
         }}
       />
       <View style={styles?.container}>
-        <Text style={{ fontWeight: "bold", fontSize: 16 }}>{data?.text}</Text>
+        <Text style={{ fontWeight: "bold", fontSize: 16 }}>{data?.name}</Text>
         <View style={{ flexDirection: "row" }}>
           <Text style={{ fontWeight: "bold", fontSize: 14 }}>
             {servicePackages?.package?.living}
           </Text>
           <View style={{ flexDirection: "row" }}>
             <Text>
-              : {data?.people}
+              : {data?.capacity}
             </Text>
             <Text> {servicePackages?.package?.people}</Text>
           </View>
         </View>
-        <Text numberOfLines={2}>{data?.context}</Text>
+        <Text numberOfLines={2}>{data?.description}</Text>
         <Text>
           <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-            {formatCurrency(data?.money)}
+            {formatCurrency(data?.price)}
           </Text>
           /{servicePackages?.package?.month}
         </Text>
@@ -68,6 +68,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     padding: 10,
     borderRadius: 10,
+    borderWidth: 2,
+    borderColor: "#ACDED3",
   },
   container: {
     flex: 1,

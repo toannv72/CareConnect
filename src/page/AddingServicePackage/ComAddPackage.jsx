@@ -23,11 +23,11 @@ export default function ComAddPackage({ data }) {
     <TouchableOpacity
       style={styles.body}
       onPress={() => {
-        navigation.navigate("AddingServiceDetail", { id: data.id });
+        navigation.navigate("AddingServiceDetail", { id: data?.id });
       }}
     >
       <Image
-        source={{ uri: data?.img }}
+        source={{ uri: data?.imageUrl }}
         style={{
           width: 100,
           height: 100,
@@ -36,20 +36,20 @@ export default function ComAddPackage({ data }) {
         }}
       />
       <View style={styles?.container}>
-        <Text style={{ fontWeight: "bold", fontSize: 16 }}>{data?.text}</Text>
-        <Text numberOfLines={2}>{data?.context}</Text>
+        <Text style={{ fontWeight: "bold", fontSize: 16 }}>{data?.name}</Text>
+        <Text numberOfLines={2}>{data?.description}</Text>
 
         <Text style={{ flexDirection: "row" }}>
           <Text style={{ fontWeight: "bold", fontSize: 14 }}>
             {addingPackages?.package?.category}
           </Text>
           <Text>
-            : {data?.category}
+            : {data?.servicePackageCategory?.name}
           </Text>
         </Text>
       <Text>
         <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-          {formatCurrency(data?.money)}
+          {formatCurrency(data?.price)}
         </Text>
         /{addingPackages?.package?.month}
       </Text>

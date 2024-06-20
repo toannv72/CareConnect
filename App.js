@@ -3,6 +3,7 @@ import Routes from "./Routes.jsx";
 import { LanguageProvider } from "./src/contexts/LanguageContext";
 import { Styles } from "./src/styles/Styles.jsx";
 import { AuthProvider } from "./auth/useAuth.jsx";
+import Toast from 'react-native-toast-message';
 
 const App = () => {
   return (
@@ -10,8 +11,10 @@ const App = () => {
       <AuthProvider>
         {/* <Styles> */}
         <Routes />
+        <Toast/>
         {/* </Styles> */}
       </AuthProvider>
+      
     </LanguageProvider>
 
   );

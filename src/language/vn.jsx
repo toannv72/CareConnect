@@ -28,10 +28,12 @@ export const vn = {
       username: "Tên người dùng không được để trống",
       emailRequired: "Email không được để trống",
       emailInvalid: "Định dạng email không hợp lệ",
+      phoneInvalid: "Định dạng số điện thoại không hợp lệ",
       password: "Mật khẩu không được để trống",
       invalidCredential: "Thông tin đăng nhập không hợp lệ. Vui lòng thử lại.",
       loginError: "Đã có lỗi xảy ra. Vui lòng thử lại sau.",
       phoneRequired: "Số điện thoại không được để trống",
+      invalidRole: "Bạn không có quyền truy cập vào ứng dụng"
     },
     link: {
       forgetPassword: "Quên mật khẩu?",
@@ -90,6 +92,7 @@ export const vn = {
     },
     placeholder: {
       username: "Tên người dùng",
+      fullName: "Họ và tên",
       email: "Email",
       yourName: "Họ và Tên",
       phone: "Số điện thoại",
@@ -103,13 +106,13 @@ export const vn = {
       emailExisted: "Email đã được đăng ký",
       name: "Họ và Tên không được để trống",
       nameTooShort: "Họ và Tên phải có ít nhất 2 ký tự",
+      gender: "Giới tính không được để trống",
+      dateOfBirth: "Ngày sinh không được để trống",
       phoneRequired: "Số điện thoại không được để trống",
       phoneInvalid: "Định dạng số điện thoại không hợp lệ",
       password: "Mật khẩu không được để trống",
-      passwordTooShort: "Mật khẩu phải có ít nhất 8 ký tự",
-      passwordInvalid:
-        "Mật khẩu phải có ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt",
-      passwordNotMatch: "Mật khẩu không trùng khớp",
+      passwordInvalid: "Mật khẩu phải có ít nhất 8 ký tự, chứa ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt",
+      passwordNotMatch: "Mật khẩu xác nhận không trùng khớp",
       confirmPassword: "Xác nhận mật khẩu không được để trống",
       registerError: "Đã có lỗi xảy ra. Vui lòng thử lại sau.",
     },
@@ -169,6 +172,10 @@ export const vn = {
       description: "Mô tả",
       category: "Phân loại",
       month: "tháng",
+      people: "người",
+      time: "lần",
+      registrationLimit: "Giới hạn người đăng ký",
+      timeBetweenServices: "Tần suất thực hiện"
     },
     register: {
       registerElder: "Bạn muốn đăng ký dịch vụ cho",
@@ -247,8 +254,8 @@ export const vn = {
   },
   healthMonitor: {
     title: "Theo dõi sức khỏe",
-    name: "Cụ",
-    age: "Tuổi",
+    name: "Họ và tên",
+    age: "Năm sinh",
     sex: "Giới tính",
     room: "Phòng",
     bed: "Giường",
@@ -259,7 +266,7 @@ export const vn = {
   },
   HealthMonitorDetail: {
     title: "Chi tiết sức khỏe",
-    name: "Cụ",
+    name: "Họ và tên",
     yearOld: "Tuổi",
     YearOfBirth: "Năm sinh",
     weight: "Cân nặng",
@@ -269,7 +276,7 @@ export const vn = {
     label: {
       fullName: "Họ và Tên",
       gender: "Giới tính",
-      dateOfBirth: "Năm sinh",
+      dateOfBirth: "Ngày sinh",
       phoneNumber: "Số điện thoại",
       email: "Địa chỉ gmail",
       idNumber: "Số CCCD hoặc CMND",
@@ -287,16 +294,20 @@ export const vn = {
     message: {
       fullName: "Vui lòng Nhập họ và tên",
       emailInvalid: "Địa chỉ mail không hợp lệ",
-      gender: "Vui lòng Chọn giới tính",
-      dateOfBirth: "Vui lòng Chọn ngày sinh",
+      gender: "Vui lòng chọn giới tính",
+      dateOfBirth: "Vui lòng chọn ngày sinh",
       phoneNumber: "Vui lòng Nhập số điện thoại",
       email: "Vui lòng Nhập địa chỉ email",
       idNumber: "Vui lòng Nhập số CCCD hoặc CMND",
       address: "Vui lòng Nhập địa chỉ",
     },
     button: {
-      EditProfile: "Lưu thông tin",
+      SaveProfile: "Lưu thông tin",
+      EditProfile: "Chỉnh sửa thông tin",
     },
+  },
+  UserProfile:{
+    title: "Thông tin cá nhân",
   },
   ChangePassword: {
     pageTitle: "Đổi mật khẩu",
@@ -368,8 +379,8 @@ export const vn = {
   ElderProfile:{
     title: "Hồ sơ người thân",
     detail:{
-      title: "Thông tin người lớn tuổi",
-      name: "Họ và tên cụ",
+      title: "Thông tin người cao tuổi",
+      name: "Họ và tên người cao tuổi",
       contractID: "Mã hợp đồng",
       relationship: "Mối quan hệ",
       nursingHomeAdd: "Nơi sinh hoạt",

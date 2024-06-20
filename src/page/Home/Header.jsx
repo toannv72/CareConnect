@@ -1,16 +1,27 @@
 import React from 'react'
 import ComAvatar from "../../Components/ComAvatar/ComAvatar";
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import search from "../../../assets/icon/search.png";
+import { useNavigation } from "@react-navigation/native";
+import ComLoading from "../../Components/ComLoading/ComLoading";
 
-export default function Header() {
+export default function Header({user}) {
+  const navigation = useNavigation();
   return (
-    <View style={styles.header}>
-      <ComAvatar />
-      <View style={styles.text}>
-        <Text>Xin chào!</Text>
-        <Text style={styles.textName}>Thảo My</Text>
-      </View>
+    <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15, alignItems: "center", }}>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("DetailProfile");
+        }}
+        style={styles.header}
+      >
+        <ComAvatar link={user?.avatarUrl} />
+        <View style={styles.text}>
+          <Text>Xin chào!</Text>
+          <Text style={styles.textName}>{user?.fullName}</Text>
+        </View>
+
+      </TouchableOpacity>
       <Image
         source={search}
         style={{
@@ -19,19 +30,21 @@ export default function Header() {
           borderRadius: 10,
           objectFit: "fill",
           borderColor: "#000",
+          flex: 1
         }}
       />
     </View>
+
   );
 }
 const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
-    paddingHorizontal: 15,
     gap: 6,
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom:10
+    marginBottom: 10,
+    flex: 6
   },
   text: {
     flex: 1,

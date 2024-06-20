@@ -4,26 +4,26 @@ import { Image, View } from "react-native";
 import { LanguageContext } from "../../../contexts/LanguageContext";
 import { useNavigation } from "@react-navigation/native";
 
-export default function ComMedical({ data, onPress, isSelected, style }) {
+export default function ComMedical({ image, title, value, unit, onPress, isSelected, style }) {
 
     return (
         <>
             <View style={styles?.body}>
                 <View style={styles?.title}>
                     <Image
-                        source={{ uri: data?.img }}
+                        source={image}
                         style={styles?.image}
                     />
                     <Text
                         style={{ fontWeight: "600", fontSize: 16, flex: 3 }}
                         numberOfLines={2}
                         ellipsizeMode='tail'>
-                        {data?.title}
+                        { title}
                     </Text>
                 </View>
                 <View style={styles?.valueContain}>
-                    <Text style={{ fontSize: 25, fontWeight: "bold", color: "#66CAB8" }}>{data?.value}</Text>
-                    <Text style={{ fontSize: 20, color: "#707776"}} numberOfLines={1} ellipsizeMode='tail' >{data?.unit}</Text>
+                    <Text style={{ fontSize: 25, fontWeight: "bold", color: "#66CAB8" }}>{value}</Text>
+                    <Text style={{ fontSize: 20, color: "#707776"}} numberOfLines={1} ellipsizeMode='tail' >{unit}</Text>
                 </View>
             </View>
         </>
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     title:{
         flexDirection: "row", 
         alignItems: "center", 
-        marginBottom: 10, 
+        marginBottom: 5, 
         flexWrap: "wrap"
     },
     image:{
