@@ -47,8 +47,8 @@ export default function EditProfile({ }) {
     phoneNumber: yup
       .string()
       .trim()
-      .required(Register?.message?.phoneRequired)
-      .matches(/^0[0-9]{9,10}$/, Register?.message?.phoneInvalid),
+      .required(EditProfile?.message?.phoneNumber)
+      .matches(/^0[0-9]{9,10}$/, EditProfile?.message?.phoneInvalid),
     email: yup
       .string()
       .email(EditProfile?.message?.emailInvalid)
