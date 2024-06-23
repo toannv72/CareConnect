@@ -375,6 +375,7 @@ export const vn = {
     titleContract: "Hợp đồng dưỡng lão",
     id: "Mã",
     representative: "Người đại diện",
+    elder: "Người cao tuổi",
     duration: "Thời hạn ",
     status: "Trạng thái",
   },

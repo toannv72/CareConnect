@@ -3,6 +3,8 @@ import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { Image, View } from "react-native";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { useNavigation } from "@react-navigation/native";
+import ContractImg from "../../../assets/images/Contract/Contract.png";
+import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter";
 
 export default function ComAddContract({ data }) {
   const {
@@ -12,13 +14,23 @@ export default function ComAddContract({ data }) {
 
   const navigation = useNavigation();
 
-  const formatCurrency = (number) => {
-    // Sử dụng hàm toLocaleString() để định dạng số
-    return number.toLocaleString("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    });
+  const getStatusText = (status) => {
+    switch (status) {
+      case 'InUse':
+        return { text: 'Còn hạn', color: 'green' };
+      case 'Cancelled':
+        return { text: 'Đã hủy', color: 'red' };
+      case 'Expired':
+        return { text: 'Hết hạn' };
+      case 'Pending':
+        return { text: 'Đang chờ' };
+      default:
+        return status;
+    }
   };
+
+  const status = getStatusText(data?.status);
+
   return (
     <TouchableOpacity
       style={styles.body}
@@ -27,7 +39,7 @@ export default function ComAddContract({ data }) {
       }}
     >
       <Image
-        source={{ uri: data?.img }}
+        source={ContractImg}
         style={{
           width: 100,
           height: 100,
@@ -37,17 +49,17 @@ export default function ComAddContract({ data }) {
       />
       <View style={styles?.container}>
         <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-          {contractsPage?.titleContract}
+          {data?.name}
         </Text>
-        <Text style={{ flexDirection: "row" }}>
+        {/* <Text style={{ flexDirection: "row" }}>
           <Text style={{ fontWeight: "bold", fontSize: 14 }}>
             {contractsPage?.id}
           </Text>
           <Text>: {data?.category}</Text>
-        </Text>
+        </Text> */}
         <Text style={{ flexDirection: "row" }}>
           <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-            {contractsPage?.representative}
+            {contractsPage?.elder}
           </Text>
           <Text>: {data?.category}</Text>
         </Text>
@@ -55,13 +67,13 @@ export default function ComAddContract({ data }) {
           <Text style={{ fontWeight: "bold", fontSize: 14 }}>
             {contractsPage?.duration}
           </Text>
-          <Text>: 8/10/2023 - 8/10/2024</Text>
+          <Text>: <ComDateConverter>{data?.startDate}</ComDateConverter> - <ComDateConverter>{data?.endDate}</ComDateConverter></Text>
         </Text>
         <Text style={{ flexDirection: "row" }}>
           <Text style={{ fontWeight: "bold", fontSize: 14 }}>
             {contractsPage?.status}
           </Text>
-          <Text>: Còn hạn</Text>
+          <Text style={{ color: status.color }}>: {status.text}</Text>
         </Text>
       </View>
     </TouchableOpacity>

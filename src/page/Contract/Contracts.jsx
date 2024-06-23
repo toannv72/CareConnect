@@ -9,52 +9,25 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import ComLoading from "../../Components/ComLoading/ComLoading";
 import ComAddContract from "./ComAddContract";
 import { LanguageContext } from "../../contexts/LanguageContext";
+import { useAuth } from "../../../auth/useAuth";
+import ComNoData from "../../Components/ComNoData/ComNoData";
 
 export default function Contracts() {
+  const { contracts } = useAuth();
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [select, setSelect] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const categories = ["InUse", "Cancelled", "Expired", "Pending"];
+
+  const handlePress = (category) => {
+    setSelectedCategory(category);
+    setSelect(true);
+  };
+
   const {
     text: { contractsPage },
     setLanguage,
   } = useContext(LanguageContext);
-  const [data, setData] = useState([
-    {
-      img: "https://png.pngtree.com/thumb_back/fw800/background/20230123/pngtree-old-people-physical-therapy-center-released-ball-photo-image_49464146.jpg",
-      color: "#F7E863",
-      text: "Vật lý trị liệu",
-      context:
-        "giúp người cao tuổi duy trì và cải thiện khả năng vận động, giảm đau, tăng cường sức mạnh cơ bắp và sự linh hoạt. Các bài tập được thiết kế phù hợp với tình trạng sức khỏe và nhu cầu của từng cá nhân, nhằm nâng cao chất lượng cuộc sống và khả năng tự lập của họ.",
-      category: "1111111111111",
-    },
-  ]);
-  const [loading, setLoading] = useState(false);
-
-  const [select, setSelect] = useState(false);
-  const [select1, setSelect1] = useState(true);
-  const [select2, setSelect2] = useState(true);
-  const [select3, setSelect3] = useState(true);
-  const check = () => {
-    setSelect(false);
-    setSelect1(true);
-    setSelect2(true);
-    setSelect3(true);
-  };
-  const check1 = () => {
-    setSelect(true);
-    setSelect1(false);
-    setSelect2(true);
-    setSelect3(true);
-  };
-  const check2 = () => {
-    setSelect(true);
-    setSelect1(true);
-    setSelect3(true);
-    setSelect2(false);
-  };
-  const check3 = () => {
-    setSelect(true);
-    setSelect1(true);
-    setSelect2(true);
-    setSelect3(false);
-  };
 
   const searchSchema = yup.object().shape({
     search: yup.string(),
@@ -78,6 +51,29 @@ export default function Contracts() {
     console.log("====================================");
     setLoading(!loading);
   };
+
+  const check = (category) => {
+    setSelectedCategory(category)
+    setSelect(false);
+  };
+
+  const getStatusText = (status) => {
+    switch (status) {
+      case 'InUse':
+        return { text: 'Còn hạn', color: 'green' };
+      case 'Cancelled':
+        return { text: 'Đã hủy', color: 'red' };
+      case 'Expired':
+        return { text: 'Hết hạn' };
+      case 'Pending':
+        return { text: 'Đang chờ' };
+      default:
+        return status;
+    }
+  };
+
+  const filteredData = !select ? contracts : contracts.filter(item => item?.status === selectedCategory);
+
   return (
     <>
       <ComHeader
@@ -103,18 +99,20 @@ export default function Contracts() {
           style={styles?.scrollView}
         >
           <View style={styles?.buttonContainer}>
+
             <ComSelectButton onPress={check} check={select}>
               Tất cả
             </ComSelectButton>
-            <ComSelectButton onPress={check1} check={select1}>
-              Còn hạn
-            </ComSelectButton>
-            <ComSelectButton onPress={check2} check={select2}>
-              Sắp hết hạn
-            </ComSelectButton>
-            <ComSelectButton onPress={check3} check={select3}>
-              Hết hạn
-            </ComSelectButton>
+            {categories.map((category) => (
+              <ComSelectButton
+                key={category}
+                onPress={() => handlePress(category)}
+                check={selectedCategory === category ? false : true}
+              >
+                {getStatusText(category).text}
+              </ComSelectButton>
+            ))}
+
           </View>
         </ScrollView>
 
@@ -123,12 +121,17 @@ export default function Contracts() {
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
           >
-            <View>
-              {data?.map((value, index) => (
-                <ComAddContract key={index} data={value} />
-              ))}
-            </View>
-            <View style={{ height: 120 }}></View>
+            {filteredData?.length > 0 ? (
+              <>
+                <View>
+                  {filteredData?.map((value, index) => (
+                    <ComAddContract key={index} data={value} />
+                  ))}
+                </View>
+                <View style={{ height: 120 }}></View></>
+            ) : (
+              <ComNoData>Không có hợp đồng nào</ComNoData>
+            )}
           </ScrollView>
         </ComLoading>
       </View>

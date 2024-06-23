@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import ComButton from "../../Components/ComButton/ComButton";
@@ -12,13 +12,24 @@ import { LanguageContext } from "../../contexts/LanguageContext";
 import ComSelectedOneDate from "../../Components/ComDate/ComSelectedOneDate";
 import moment from "moment";
 import ContractImg from "../../../assets/images/Contract/Contract.png";
+import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter";
+import { useRoute } from "@react-navigation/native";
+import { useAuth } from "../../../auth/useAuth";
+import { postData, getData } from "../../api/api";
+import ComLoading from "../../Components/ComLoading/ComLoading";
 
 export default ContractDetail = () => {
   const today = moment().format("YYYY-MM-DD");
+  const { user } = useAuth();
   const [popup, setPopup] = useState(false);
+  const [data, setData] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [popupDate, setPopupDate] = useState(false);
   const [selectedDate, setSelectedDate] = useState(today);//cho calendar một giá trị mặc định là ngày hiện tại
   const navigation = useNavigation();
+  const route = useRoute();
+  const { id } = route.params;
+
   const handleClosePopup = () => {
     setPopup(false);
   };
@@ -69,6 +80,39 @@ export default ContractDetail = () => {
     handleClosePopup()
     navigation.navigate("ContractCandSuccess");
   };
+
+  const getStatusText = (status) => {
+    switch (status) {
+      case 'InUse':
+        return { text: 'Còn hạn', color: 'green' };
+      case 'Cancelled':
+        return { text: 'Đã hủy', color: 'red' };
+      case 'Expired':
+        return { text: 'Hết hạn' };
+      case 'Pending':
+        return { text: 'Đang chờ' };
+      default:
+        return status;
+    }
+  };
+
+  const status = getStatusText(data?.status);
+
+  useEffect(() => {
+    // Lấy danh sách sản phẩm
+    setLoading(!loading);
+    getData(`/contract/${id}`, {})
+      .then((contract) => {
+        console.log(contract?.data)
+        setLoading(loading);
+        setData(contract?.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching service-package:", error);
+        setLoading(loading);
+      });
+  }, [])
+
   return (
     <>
       <ComPopup
@@ -157,36 +201,39 @@ export default ContractDetail = () => {
               objectFit: "fill",
             }} />
         </View>
-        <View style={styles.contex}>
-          <View style={styles.bodySeparator}>
-            <Text style={styles.text}>Hợp đồng</Text>
-            <Text style={styles.text2}>Hợp đồng</Text>
+        <ComLoading show={loading}>
+          <View style={styles.contex}>
+            <View style={styles.bodySeparator}>
+              <Text style={styles.text}>Hợp đồng</Text>
+              <Text style={styles.text2}>{data?.name}</Text>
+            </View>
+            <View style={styles.bodySeparator}>
+              <Text style={styles.text}>Mã hợp đồng</Text>
+              <Text style={styles.text2}>{data?.id}</Text>
+            </View>
+            <View style={styles.bodySeparator}>
+              <Text style={styles.text}>Tên người đại diện</Text>
+              <Text style={styles.text2}>{user?.fullName}</Text>
+            </View>
+            <View style={styles.bodySeparator}>
+              <Text style={styles.text}>Tên người lớn tuổi</Text>
+              <Text style={styles.text2}>Hợp đồng</Text>
+            </View>
+            <View style={styles.bodySeparator}>
+              <Text style={styles.text}>Ngày bắt đầu</Text>
+              <Text style={styles.text2}> <ComDateConverter>{data?.startDate}</ComDateConverter> </Text>
+            </View>
+            <View style={styles.bodySeparator}>
+              <Text style={styles.text}>Ngày kết thúc</Text>
+              <Text style={styles.text2}> <ComDateConverter>{data?.endDate}</ComDateConverter></Text>
+            </View>
+            <View style={styles.bodySeparator2}>
+              <Text style={styles.text}>Trạng thái</Text>
+              <Text style={[styles.text2, { color: status?.color }]}>{status?.text}</Text>
+            </View>
           </View>
-          <View style={styles.bodySeparator}>
-            <Text style={styles.text}>Mã hợp đồng</Text>
-            <Text style={styles.text2}>Hợp đồng</Text>
-          </View>
-          <View style={styles.bodySeparator}>
-            <Text style={styles.text}>Tên người đại diện</Text>
-            <Text style={styles.text2}>Hợp đồng</Text>
-          </View>
-          <View style={styles.bodySeparator}>
-            <Text style={styles.text}>Tên người lớn tuổi</Text>
-            <Text style={styles.text2}>Hợp đồng</Text>
-          </View>
-          <View style={styles.bodySeparator}>
-            <Text style={styles.text}>Mối quan hệ</Text>
-            <Text style={styles.text2}>Hợp đồng</Text>
-          </View>
-          <View style={styles.bodySeparator}>
-            <Text style={styles.text}>Thời hạn</Text>
-            <Text style={styles.text2}>8/10/2022 - 8/10/2023</Text>
-          </View>
-          <View style={styles.bodySeparator2}>
-            <Text style={styles.text}>Trạng thái</Text>
-            <Text style={styles.text2}>Nguyễn văn toàn</Text>
-          </View>
-        </View>
+
+        </ComLoading>
       </View>
       <View
         style={{
