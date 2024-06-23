@@ -91,13 +91,18 @@ export default function LoginScreen() {
     postData("/auth/login", data, {})
       .then((data) => {
         setToken(data?.accessToken);
+        setLoading(false)
         // Chờ setToken hoàn thành trước khi navigate
         return new Promise((resolve) => {
           setTimeout(() => {
-            if (data?.listRole[0] === "Customer")
+            if (data?.listRole[0] === "Customer") {
+              showToast("success", "Đăng nhập thành công","", "bottom")
               navigation.navigate("Homes", { screen: "Home" });
-            else if (data?.listRole[0] === "Nurse")
+            }
+            else if (data?.listRole[0] === "Nurse") {
+              showToast("success", "Đăng nhập thành công", "", "bottom")
               navigation.navigate("NurseHomes", { screen: "NurseHome" });
+            }
             else {
               setLoginState(true);
               setLoginError(true);
@@ -150,7 +155,6 @@ export default function LoginScreen() {
 
             <ComButton onPress={handleSubmit(handleLogin)}>
               {loading ? <ActivityIndicator color="#fff" /> : Login?.button?.login}
-
             </ComButton>
 
             <View style={styles?.link}>

@@ -87,6 +87,7 @@ export const vn = {
       email: "Email",
       yourName: "Họ và Tên",
       phone: "Số điện thoại",
+      cccd: "Căn cước công dân",
       password: "Mật khẩu",
       confirmPassword: "Xác nhận mật khẩu",
     },
@@ -101,6 +102,7 @@ export const vn = {
     },
     message: {
       username: "Tên người dùng không được để trống",
+      userExisted: "Tên người dùng đã tồn tại",
       emailRequired: "Email không được để trống",
       emailInvalid: "Định dạng email không hợp lệ",
       emailExisted: "Email đã được đăng ký",
@@ -110,6 +112,9 @@ export const vn = {
       dateOfBirth: "Ngày sinh không được để trống",
       phoneRequired: "Số điện thoại không được để trống",
       phoneInvalid: "Định dạng số điện thoại không hợp lệ",
+      phoneExisted: "Số điện thoại đã được đăng ký",
+      cccd: "Số căn cước công dân không được để trống",
+      cccdExisted: "Số căn cước công dân đã tồn tại",
       password: "Mật khẩu không được để trống",
       passwordInvalid: "Mật khẩu phải có ít nhất 8 ký tự, chứa ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt",
       passwordNotMatch: "Mật khẩu xác nhận không trùng khớp",
@@ -127,7 +132,7 @@ export const vn = {
   RegisterSuccess: {
     button: "Đăng Nhập",
     pageTitle: "Đăng ký thành công",
-    content: "Chúc mừng bạn đăng ký thành công Cùng khám phá CareConnect nào!",
+    content: "Chúc mừng bạn đăng ký thành công. Cùng khám phá CareConnect nào!",
   },
   Otp: {
     button: "Xác nhận",

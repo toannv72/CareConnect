@@ -6,8 +6,8 @@ import { useRoute } from "@react-navigation/native";
 import backArrowWhite from "../../../assets/icon/backArrowWhite.png";
 import { useNavigation } from '@react-navigation/native';
 import ComElder from "../../Components/ComElder/ComElder";
-import { postData, getData } from "../../api/api";
 import ComLoading from "../../Components/ComLoading/ComLoading";
+import ComNoData from "../../Components/ComNoData/ComNoData";
 import Nodata from "../../../assets/Nodata.png";
 import { useStorage } from "../../hooks/useLocalStorage";
 
@@ -95,7 +95,7 @@ export default function AddingServiceElderRegister() {
                     </Text>
 
                     <ComLoading show={loading}>
-                        { user?.elders?.length > 0 ? (
+                        {user?.elders?.length > 0 ? (
                             <>
                                 <View>
                                     {user?.elders?.map((value, index) => (
@@ -108,21 +108,16 @@ export default function AddingServiceElderRegister() {
                                 <View style={{ height: 120 }}></View>
                             </>
                         ) : (
-                            <View style={styles?.noDataContainer}>
-                                <Image
-                                    source={Nodata}
-                                    style={styles?.noDataImage}
-                                />
-                                <Text style={{ fontSize: 16 }}>Không có dữ liệu</Text>
-                            </View>
+                           <ComNoData>Hiện tại đang không có người cao tuổi nào</ComNoData>
                         )}
                     </ComLoading>
 
                 </ScrollView>
                 <View style={{ marginVertical: 20 }}>
                     <ComSelectButton
+                        disable={selectedElderId ? false : true}
                         onPress={() => {
-                            navigation.navigate("AddingServiceCalendarRegister", { id: data.id });
+                            navigation.navigate("AddingServiceCalendarRegister", { id: selectedElderId, data: data });
                         }}>
                         Tiếp tục
                     </ComSelectButton>

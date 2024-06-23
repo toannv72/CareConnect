@@ -72,6 +72,7 @@ const ComDatePicker = ({
                 mode={mode}
                 is24Hour={true}
                 display="default"
+                locale="vi-VN"
                 onChange={(event, selectedDate) => {
                   onChangeD(event, selectedDate);
                   onChange(selectedDate);

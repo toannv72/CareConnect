@@ -23,7 +23,7 @@ const TopPlacesCarousel = ({list}) => {
             style={[styles.card, style]}
             shadowType="dark"
             onPress={() => {
-              // navigation.navigate('TripDetails', { trip: item }); 
+              navigation.navigate('AddingService'); 
             }}>
             {/* <CardFavoriteIcon active={false} onPress={() => { }} /> */}
             <SharedElement
@@ -33,7 +33,6 @@ const TopPlacesCarousel = ({list}) => {
             </SharedElement>
             <View style={styles.titleBox}>
               <Text style={styles.title}>{item.title}</Text>
-              <Text style={styles.location}>{item.location}</Text>
             </View>
           </Card>
         );
@@ -52,7 +51,7 @@ const styles = StyleSheet.create({
     left: 16,
   },
   title: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600',
     color: '#fff',
   },

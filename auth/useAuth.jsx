@@ -8,12 +8,19 @@ const AuthContext = createContext({});
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useStorage("user", null);
   const [elders, setElders] = useStorage("elders", []);
+  const [contracts, setContracts] = useStorage("contracts", []);
   const [accessToken, setAccessToken] = useStorage("accessToken", null);
 
   const login = (userData) => {
     const ability = new Ability(defineRulesFor(userData));
     setUser({ ...userData});
     setElders(userData?.elders)
+    setContracts(userData?.contracts)
+  };
+
+  const update = (userData) => {
+    const ability = new Ability(defineRulesFor(userData));
+    setUser({ ...userData});
   };
 
   const logout = () => {
@@ -22,7 +29,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user,setUser, login, logout, update }}>
       {children}
     </AuthContext.Provider>
   );

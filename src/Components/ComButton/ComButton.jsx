@@ -2,6 +2,7 @@ import React from "react";
 import { Text, TouchableOpacity } from "react-native";
 import { StyleSheet, View } from "react-native";
 import { Button } from "react-native";
+import { colors  } from '../../styles/Styles';
 
 export default function ComButton({ children, onPress, check,  style  }) {
   return (
@@ -32,11 +33,11 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
-    borderColor: "#33B39C",
+    borderColor:  colors.primary,
     borderWidth: 1,
   },
   buttonText: {
-    color: "#33B39C",
+    color:  colors.primary,
     fontWeight: "bold",
     fontSize: 16,
     textAlign: "center",
@@ -45,7 +46,7 @@ const styles = StyleSheet.create({
   buttonCheck: {
     marginTop: 10,
     marginBottom: 10,
-    backgroundColor: "#33B39C",
+    backgroundColor: colors.primary,
     paddingVertical: 15,
     paddingHorizontal: 20,
     borderRadius: 10,

@@ -6,24 +6,20 @@ import News from "./News/News";
 import Services from "./News/Services";
 import TopPlacesCarousel from "../../Components/ComImg/TopPlacesCarousel";
 import { TOP_PLACES } from "../../../db";
-import { useStorage } from "../../hooks/useLocalStorage";
 import { useAuth } from "../../../auth/useAuth";
 import { postData, getData } from "../../api/api";
 
 export default function Home({ navigation }) {
-  const [user, setUser] = useState({});
+  const { user, setUser } = useAuth();
   const { login } = useAuth();
 
   useEffect(() => {
-    // Lấy danh sách sản phẩm
-    // setLoading(!loading);
     getData("/users/profile")
       .then((userData) => {
         login(userData?.data);
         setUser(userData?.data)
       })
       .catch((error) => {
-        setLoading(false)
         console.error("Error getData fetching items:", error);
       });
   }, [])

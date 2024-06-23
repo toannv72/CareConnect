@@ -1,18 +1,13 @@
 import React, { useContext, useState } from "react";
-import { ScrollView, StyleSheet, View, Text } from "react-native";
+import { ScrollView, StyleSheet, View, Text, Image } from "react-native";
 import ComHealth from "./ComHealth";
-import { FormProvider, useForm } from "react-hook-form";
-import { LanguageContext } from "../../contexts/LanguageContext";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
 import ComHeader from "../../Components/ComHeader/ComHeader";
+import ComNoData from "../../Components/ComNoData/ComNoData";
 import { useStorage } from "../../hooks/useLocalStorage";
+import { LanguageContext } from "../../contexts/LanguageContext";
 
 export default function ElderProfile() {
   const [elders, setElders] = useStorage("elders", []);
-  const searchSchema = yup.object().shape({
-    search: yup.string(),
-  });
   const {
     text: {
       ElderProfile,
@@ -20,24 +15,7 @@ export default function ElderProfile() {
     },
     setLanguage,
   } = useContext(LanguageContext);
-  const methods = useForm({
-    resolver: yupResolver(searchSchema),
-    defaultValues: {
-      search: "",
-    },
-  });
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = methods;
-
-  const onSubmit = (data) => {
-    console.log("====================================");
-    console.log(data);
-    console.log("====================================");
-  };
   return (
     <>
       <ComHeader
@@ -46,18 +24,22 @@ export default function ElderProfile() {
         showBackIcon
       />
       <View style={styles.body}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          style={styles?.scrollView}
-        >
-          <View>
-            {elders?.map((value, index) => (
-              <ComHealth key={index} data={value} />
-            ))}
-          </View>
-          <View style={{ height: 120 }}></View>
-        </ScrollView>
+        {elders.length > 0 ? (
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            style={styles?.scrollView}
+          >
+            <View>
+              {elders?.map((value, index) => (
+                <ComHealth key={index} data={value} />
+              ))}
+            </View>
+            <View style={{ height: 120 }}></View>
+          </ScrollView>
+        ) : (
+          <ComNoData />
+        )}
       </View>
     </>
   );

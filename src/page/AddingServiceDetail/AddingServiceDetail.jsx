@@ -60,7 +60,7 @@ export default function AddingServiceDetail() {
                 <Image
                     source={{ uri: data?.imageUrl }}
                     style={{
-                        height: 200,
+                        height: 250,
                         objectFit: "fill",
                     }}
                 />
@@ -140,7 +140,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
     },
     header: {
-        paddingTop: 50
+        paddingTop: 50,
+        backgroundColor: "#fff",
     },
     contentBold: {
         fontSize: 16,

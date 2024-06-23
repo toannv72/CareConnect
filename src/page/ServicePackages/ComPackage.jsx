@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { Image, View } from "react-native";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { useNavigation } from '@react-navigation/native';
+import { stylesApp } from "../../styles/Styles";
 
 export default function ComPackage({ data }) {
 
@@ -20,7 +21,7 @@ export default function ComPackage({ data }) {
   const navigation = useNavigation();
   return (
     <TouchableOpacity
-      style={[styles.body, { backgroundColor: data?.color || "#F7FFFE" }]}
+      style={[styles.body, stylesApp.shadow, { backgroundColor: data?.color || "#F7FFFE" }]}
       onPress={() => {
         navigation.navigate("ServicePackageDetail", { data: data });
       }}
@@ -68,7 +69,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     padding: 10,
     borderRadius: 10,
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: "#ACDED3",
   },
   container: {

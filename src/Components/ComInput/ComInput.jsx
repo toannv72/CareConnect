@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { Controller } from "react-hook-form";
-import { StyleSheet, View, Text, TextInput } from "react-native";
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, Image } from "react-native";
+import Eye from "../../../assets/Eye.png"
+import EyeInvisible from "../../../assets/EyeInvisible.png"
 
 const ComInput = (
   {
@@ -18,6 +20,7 @@ const ComInput = (
   },
   ...props
 ) => {
+  const [secureTextEntry, setSecureTextEntry] = useState(true);
   const errorMessage = errors[name]?.message;
   return (
     <View>
@@ -32,7 +35,7 @@ const ComInput = (
         <Controller
           control={control}
           render={({ field: { onChange, onBlur, value } }) => (
-            <View>
+            <View style={styles.inputContainer}>
               <TextInput
                 style={[
                   styles.input,
@@ -47,9 +50,18 @@ const ComInput = (
                 keyboardType={keyboardType} // Set keyboardType here
                 ref={ref}
                 editable={edit}
-                secureTextEntry
+                secureTextEntry={password && secureTextEntry}
                 {...props}
               />
+                <TouchableOpacity
+                  style={styles.iconContainer}
+                  onPress={() => setSecureTextEntry(!secureTextEntry)}
+                >
+                  <Image
+                    source={secureTextEntry ? Eye : EyeInvisible} // Update the path to your image
+                    style={styles.icon}
+                  />
+                </TouchableOpacity>
               {errorMessage && <Text style={styles.error}>{errorMessage}</Text>}
             </View>
           )}
@@ -105,6 +117,9 @@ const styles = StyleSheet.create({
     color: "red",
     fontSize: 14,
   },
+  inputContainer: {
+    position: "relative",
+  },
   input: {
     backgroundColor: "#fff",
     height: 50,
@@ -112,13 +127,21 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "#33B39C",
-    fontWeight: "bold",
     color: "#000",
     elevation: 5, // Bóng đổ cho Android
     shadowColor: "#000", // Màu của bóng đổ cho iOS
-    shadowOffset: { width: 0, height: 200 },
+    shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
+  },
+  iconContainer: {
+    position: "absolute",
+    right: 5,
+    padding: 15
+  },
+  icon: {
+    width: 20,
+    height: 20,
   },
   error: {
     color: "red",

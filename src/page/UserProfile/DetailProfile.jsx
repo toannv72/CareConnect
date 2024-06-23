@@ -1,44 +1,54 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useContext, useState, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import * as yup from "yup";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import ComInput from "../../Components/ComInput/ComInput";
 import ComButton from "../../Components/ComButton/ComButton";
 import ComSelect from "../../Components/ComInput/ComSelect";
-import ComDatePicker from "../../Components/ComInput/ComDatePicker";
 import { ScrollView } from "react-native";
 import ComHeader from "../../Components/ComHeader/ComHeader";
-import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter";
-import { useStorage } from "../../hooks/useLocalStorage";
 import moment from 'moment';
+import { useAuth } from "../../../auth/useAuth";
 
-export default function DetailProfile() {
-  const [user, setUser] = useStorage("user", {});
-  const [image, setImage] = useState(user?.avatarUrl);
+export default function DetailProfile({ route }) {
   const navigation = useNavigation();
+  const { user } = useAuth();
+  const [image, setImage] = useState(user?.avatarUrl);
+
+  useEffect(() => { // cập nhật giá trị user sau mỗi lần update
+    setImage(user?.avatarUrl);
+    Object.keys(user).forEach(key => {
+      setValue(key, user[key]);
+    });
+    setValue("dateOfBirth", moment(user?.dateOfBirth, "YYYY-MM-DD").format("DD/MM/YYYY") ?? "",);
+  }, [user]);
+
   const {
     text: {
       EditProfile,
       UserProfile,
       common: { button },
     },
-    setLanguage,
   } = useContext(LanguageContext);
   const loginSchema = yup.object().shape({
 
   });
   const Edit = () => {
-    navigation.navigate("EditProfile");
+    navigation.navigate("EditProfile", { user });
   };
   const methods = useForm({
-    resolver: yupResolver(loginSchema),
+    resolver: yupResolver(),
     defaultValues: {
-      // fullName: user?.fullName ?? "",
-      // email: "toan@gmail.com",
-      // dateOfBirth: moment(user?.dateOfBirth, "YYYY-MM-DD").format("DD/MM/YYYY") ?? "",
+      fullName: user?.fullName ?? "",
+      email: user?.email ?? "",
+      gender: user?.gender ?? "",
+      dateOfBirth: moment(user?.dateOfBirth, "YYYY-MM-DD").format("DD/MM/YYYY") ?? "",
+      phoneNumber: user?.phoneNumber ?? "",
+      idNumber: user?.cccd ?? "",
+      address: user?.address ?? ""
     },
   });
   const {
@@ -56,25 +66,8 @@ export default function DetailProfile() {
     {
       value: "Female",
       label: "Nữ",
-    },
-    {
-      value: "Other",
-      label: "Khác",
-    },
-  ];
-
-  useEffect(() => {
-    if (user) {
-      setValue("fullName", user?.fullName ?? "");
-      setValue("email", user?.email ?? "");
-      setValue("gender", user?.gender ?? "");
-      setValue("dateOfBirth", moment(user?.dateOfBirth, "YYYY-MM-DD").format("DD/MM/YYYY") ?? "");
-      setValue("phoneNumber", user?.phoneNumber ?? "");
-      setValue("idNumber", user?.cccd ?? "");
-      setValue("address", user?.address ?? "");
-      setImage(user?.avatarUrl);
     }
-  }, [user, setValue]);
+  ];
 
   return (
     <>
@@ -94,7 +87,7 @@ export default function DetailProfile() {
                 <View style={styles.avatarContainer}>
                   <Image
                     source={{
-                      uri: image,
+                      uri: image ? image : "https://firebasestorage.googleapis.com/v0/b/careconnect-2d494.appspot.com/o/images%2F3be127ed-a90e-4364-8160-99338def0144.png?alt=media&token=3de8a6cb-0986-4347-9a22-eb369f7d02ff",
                     }}
                     style={styles.avatar}
                   />
@@ -122,7 +115,6 @@ export default function DetailProfile() {
                         label={EditProfile?.label?.gender}
                         name="gender"
                         control={control}
-                        // keyboardType="visible-password" // Set keyboardType for Last Name input
                         errors={errors} // Pass errors object
                         options={genderOptions}
                         enabled={false}
@@ -134,7 +126,6 @@ export default function DetailProfile() {
                         placeholder={EditProfile?.label?.dateOfBirth}
                         name="dateOfBirth"
                         control={control}
-                        keyboardType="default" // Set keyboardType for First Name input
                         errors={errors} // Pass errors object
                         edit={false}
                       />
@@ -145,7 +136,6 @@ export default function DetailProfile() {
                     placeholder={EditProfile?.placeholder?.phoneNumber}
                     name="phoneNumber"
                     control={control}
-                    keyboardType="default" // Set keyboardType for First Name input
                     errors={errors} // Pass errors object
                     edit={false}
                   />
@@ -155,7 +145,6 @@ export default function DetailProfile() {
                     name="email"
                     edit={false}
                     control={control}
-                    keyboardType="default" // Set keyboardType for First Name input
                     errors={errors} // Pass errors object
                   />
                   <ComInput

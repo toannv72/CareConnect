@@ -11,15 +11,6 @@ import ComRadioGroup from "../../Components/ComRadioGroup/ComRadioGroup";
 import ComPeriodCalendar from "./ComPeriodCalendar";
 
 export default function AddingServiceCalendarRegister() {
-    const [data, setData] = useState({
-        img: "https://cdn.youmed.vn/tin-tuc/wp-content/uploads/2021/06/cham-cuu.png",
-        color: "#8DF7AB",
-        text: "Châm cứu bấm huyệt",
-        context: "giúp người cao tuổi duy trì và cải thiện khả năng vận động, giảm đau, tăng cường sức mạnh cơ bắp và sự linh hoạt. Các bài tập được thiết kế phù hợp với tình trạng sức khỏe và nhu cầu của từng cá nhân, nhằm nâng cao chất lượng cuộc sống và khả năng tự lập của họ.",
-        category: "Y tế",
-        money: 350000,
-    });
-
     const [selectedId, setSelectedId] = useState('1');
 
     const radioButtons = useMemo(() => ([
@@ -56,7 +47,8 @@ export default function AddingServiceCalendarRegister() {
     } = useContext(LanguageContext);
 
     const route = useRoute();
-    const { id } = route.params;
+    const { id, data } = route.params;
+    console.log( "CalendarRegiste id:", id)
 
     const navigation = useNavigation();
 
@@ -88,7 +80,7 @@ export default function AddingServiceCalendarRegister() {
                     />
                 </TouchableOpacity>
                 <Image
-                    source={{ uri: data?.img }}
+                    source={{ uri: data?.imageUrl }}
                     style={{
                         height: 200,
                         objectFit: "fill",
@@ -97,12 +89,12 @@ export default function AddingServiceCalendarRegister() {
             </View>
             <ScrollView style={styles.body}>
                 <Text style={{ fontWeight: "bold", fontSize: 20, marginBottom: 10 }} numberOfLines={2}>
-                    {data?.text}
+                    {data?.name}
                 </Text>
                 {/* price */}
                 <Text style={{ fontSize: 16, marginBottom: 10 }}>
                     <Text style={{ fontWeight: "bold" }}>
-                        {formatCurrency(data?.money)}
+                        {formatCurrency(data?.price)}
                     </Text>
                     /{addingPackages?.package?.month}
                 </Text>
@@ -113,7 +105,7 @@ export default function AddingServiceCalendarRegister() {
                         {addingPackages?.package?.category}
                     </Text>
                     <Text style={{ fontSize: 16 }}>
-                        : {data?.category}
+                        :  {data?.servicePackageCategory?.name}
                     </Text>
                 </Text>
 
@@ -155,7 +147,7 @@ export default function AddingServiceCalendarRegister() {
                 <View style={{ marginBottom: 30 }}>
                     <ComSelectButton
                         onPress={() => {
-                            navigation.navigate("ServicePayment", { id: data.id });
+                            // navigation.navigate("ServicePayment", { id: data.id });
                         }}>
                         Tiếp tục
                     </ComSelectButton>

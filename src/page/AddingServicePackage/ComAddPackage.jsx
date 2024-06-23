@@ -51,7 +51,7 @@ export default function ComAddPackage({ data }) {
         <Text style={{ fontWeight: "bold", fontSize: 16 }}>
           {formatCurrency(data?.price)}
         </Text>
-        /{addingPackages?.package?.month}
+        /{addingPackages?.package?.time}
       </Text>
     </View>
     </TouchableOpacity >

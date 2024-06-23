@@ -42,7 +42,7 @@ export const postData = async (endpoint, data, headers = {}) => {
 
 export const putData = async (endpoint, id, data, headers = {}) => {
   try {
-    const response = await api.put(`${endpoint}/${id}`, data, { headers });
+    const response = await api.put( id ? `${endpoint}/${id}` : `${endpoint}`, data, { headers });
     return response.data;
   } catch (error) {
     throw error;
