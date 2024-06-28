@@ -9,21 +9,12 @@ import { useRoute } from "@react-navigation/native";
 import ComButtonDay from "../../Components/ComButton/ComButtonDay";
 import ComHealthIndex from "../../Components/ComHealthIndex/ComHealthIndex";
 import ComTextArea from "../../Components/ComInput/ComTextArea";
+import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter";
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import { postData, getData } from "../../api/api";
 import User_fill from "../../../assets/User_fill.png"
 
 export default function HealthMonitorDetail() {
-  // const [data, setData] = useState({
-  //   img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
-  //   name: "Lê Hiếu Nghĩa Đệ Nhất ",
-  //   age: "34",
-  //   sex: "Nam",
-  //   room: "17",
-  //   bed: "3",
-  //   id: 1,
-  // });
-
   const route = useRoute();
   const { data } = route.params;
   const [loading, setLoading] = useState(false);
@@ -43,7 +34,6 @@ export default function HealthMonitorDetail() {
     console.log("====================================");
   };
   const loginSchema = yup.object().shape({});
-
   const methods = useForm({
     resolver: yupResolver(loginSchema),
     values: {
@@ -52,8 +42,6 @@ export default function HealthMonitorDetail() {
 
   const {
     control,
-    handleSubmit,
-    register,
     formState: { errors },
   } = methods;
 
@@ -70,7 +58,6 @@ export default function HealthMonitorDetail() {
     setLoading(!loading);
     getData(`/health-report?ElderId=${data?.elderId}`, {})
       .then((healthMonitor) => {
-        console.log("setHealthMonitor", healthMonitor?.data?.contends)
         setHealthMonitor(healthMonitor?.data?.contends);
         setLoading(loading);
       })
@@ -78,8 +65,6 @@ export default function HealthMonitorDetail() {
         setLoading(loading);
         console.error("Error getData fetching items:", error);
       });
-
-
   }, []);
 
   const formattedTime = (dateValue) => {
@@ -88,6 +73,12 @@ export default function HealthMonitorDetail() {
     const seconds = new Date(dateValue).getSeconds();
     return `${hours}:${minutes}`;
   };
+
+  const datePart = new Date(data?.createdAt).toISOString().split('T')[0];
+  // Filter healthMonitor list based on date part
+  const filteredHealthMonitor = healthMonitor.filter(item =>
+    new Date(item.createdAt).toISOString().split('T')[0] === datePart
+  );
   return (
     <>
       <ComHeader
@@ -101,7 +92,7 @@ export default function HealthMonitorDetail() {
             <ComPatient data={data?.elder} />
           </View>
           <View style={styles.patient40}>
-            <ComButtonDay>8/8/2023</ComButtonDay>
+            <ComButtonDay><ComDateConverter>{datePart}</ComDateConverter></ComButtonDay>
           </View>
         </View>
         <ScrollView
@@ -109,46 +100,38 @@ export default function HealthMonitorDetail() {
           showsHorizontalScrollIndicator={false}
           style={styles?.scrollView}
         >
-
-          {
-            healthMonitor?.map((item, index) => (
-              <View key={index}>
-                <ComTimeDivision time={`Lần ${index + 1} - ${formattedTime(item?.createdAt)}`}></ComTimeDivision>
-                <View style={{ flexDirection: "row",  alignItems: "center", justifyContent: "space-between" }}>
-                  <Text>Chỉ số sức khỏe</Text>
-                  <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                    <Image
-                      source={User_fill}
-                      style={{
-                        width: 30,
-                        height: 30,
-                        objectFit: "fill",
-                      }}/>
-
-                    <Text>Ten y ta</Text>
-
-                  </View>
-
+          {filteredHealthMonitor?.map((item, index) => (
+            <View key={index}>
+              <ComTimeDivision time={`Lần ${index + 1} - ${formattedTime(item?.createdAt)}`}></ComTimeDivision>
+              <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                <Text>Chỉ số sức khỏe</Text>
+                <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+                  <Image
+                    source={User_fill}
+                    style={{
+                      width: 30,
+                      height: 30,
+                      objectFit: "fill",
+                    }} />
+                  <Text>{item?.creatorInfo?.fullName}</Text>
                 </View>
-
-                {item?.healthReportDetails?.map((detail, detailIndex) => (
-                  <ComHealthIndex key={detailIndex} data={detail} healthMonitor={healthMonitor}></ComHealthIndex>
-                ))}
-                <ComTextArea
-                  label={"Ghi chú"}
-                  placeholder={"Ghi chú"}
-                  name="email"
-                  edit={false}
-                  control={control}
-                  keyboardType="default" // Set keyboardType for First Name input
-                  errors={errors}
-                  defaultValue={item?.notes}
-                />
               </View>
-            )
-            )
-          }
 
+              {item?.healthReportDetails?.map((detail, detailIndex) => (
+                <ComHealthIndex key={detailIndex} data={detail} healthMonitor={healthMonitor} date={item?.createdAt} index={index + 1}></ComHealthIndex>
+              ))}
+              <ComTextArea
+                label={"Ghi chú tổng quát"}
+                placeholder={"Ghi chú"}
+                name="email"
+                edit={false}
+                control={control}
+                keyboardType="default" // Set keyboardType for First Name input
+                errors={errors}
+                defaultValue={item?.notes}
+              />
+            </View>
+          ))}
           <View style={{ height: 30 }}></View>
         </ScrollView>
       </View>

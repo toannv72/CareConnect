@@ -6,13 +6,13 @@ import selecDay from "../../../assets/icon/selecDay.png";
 
 export default function ComButtonDay({ children, onPress }) {
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress}>
+    <View style={styles.button} onPress={onPress}>
       <Text style={styles.buttonText}>{children}</Text>
-      <Image
+      {/* <Image
         source={selecDay}
         style={{ width: 14, height: 10, objectFit: "fill", marginTop: 2 }}
-      />
-    </TouchableOpacity>
+      /> */}
+    </View>
   );
 }
 

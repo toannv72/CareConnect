@@ -64,9 +64,8 @@ export default function HealthMonitorList({ }) {
             />
             <View style={styles.body}>
                 <ComLoading show={loading}>
-
                     {
-                        groupedData.length == 0 ? (
+                        healthMonitor.length == 0 ? (
                             <ComNoData>Không có dữ liệu</ComNoData>
                         ) : (
                             Object.entries(groupedData).map(([date, items]) => (
