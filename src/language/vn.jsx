@@ -226,6 +226,7 @@ export const vn = {
       pleasure: "Mức độ hài lòng",
       file: "Tệp đính kèm",
       send: "Gửi đánh giá",
+      service: "Tên dịch vụ"
     },
     placeholder: {
       title: "Mô tả ngắn gọn đánh giá của bạn",

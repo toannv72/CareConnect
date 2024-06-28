@@ -10,42 +10,16 @@ import ComLoading from "../../Components/ComLoading/ComLoading";
 import ComFeedback from "./ComFeedback";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { postData, getData } from "../../api/api";
+import { useAuth } from "../../../auth/useAuth";
 
 export default function FeedbackHistory() {
+    const { user } = useAuth();
+
     const {
         text: { feedback },
         setLanguage,
     } = useContext(LanguageContext);
-    const [data, setData] = useState([
-        {
-            img: "https://png.pngtree.com/thumb_back/fw800/background/20230123/pngtree-old-people-physical-therapy-center-released-ball-photo-image_49464146.jpg",
-            date: "09/05/2024",
-            title: "Đánh giá về dịch vụ xoa bóp tháng 05/2024",
-            content: "giúp người cao tuổi duy trì và cải thiện khả năng vận động, giảm đau, tăng cường sức mạnh cơ bắp và sự linh hoạt. Các bài tập được thiết kế phù hợp với tình trạng sức khỏe và nhu cầu của từng cá nhân, nhằm nâng cao chất lượng cuộc sống và khả năng tự lập của họ.",
-            service: "Xoa bóp",
-        },
-        {
-            img: "https://png.pngtree.com/thumb_back/fw800/background/20230123/pngtree-old-people-physical-therapy-center-released-ball-photo-image_49464146.jpg",
-            date: "09/05/2024",
-            title: "Đánh giá về dịch vụ xoa bóp tháng 05/2024",
-            content: "giúp người cao tuổi duy trì và cải thiện khả năng vận động, giảm đau, tăng cường sức mạnh cơ bắp và sự linh hoạt. Các bài tập được thiết kế phù hợp với tình trạng sức khỏe và nhu cầu của từng cá nhân, nhằm nâng cao chất lượng cuộc sống và khả năng tự lập của họ.",
-            service: "Xoa bóp",
-        },
-        {
-            img: "https://png.pngtree.com/thumb_back/fw800/background/20230123/pngtree-old-people-physical-therapy-center-released-ball-photo-image_49464146.jpg",
-            date: "09/05/2024",
-            title: "Đánh giá về dịch vụ xoa bóp tháng 05/2024",
-            content: "giúp người cao tuổi duy trì và cải thiện khả năng vận động, giảm đau, tăng cường sức mạnh cơ bắp và sự linh hoạt. Các bài tập được thiết kế phù hợp với tình trạng sức khỏe và nhu cầu của từng cá nhân, nhằm nâng cao chất lượng cuộc sống và khả năng tự lập của họ.",
-            service: "Xoa bóp",
-        },
-        {
-            img: "https://png.pngtree.com/thumb_back/fw800/background/20230123/pngtree-old-people-physical-therapy-center-released-ball-photo-image_49464146.jpg",
-            date: "09/05/2024",
-            title: "Đánh giá về dịch vụ xoa bóp tháng 05/2024",
-            content: "giúp người cao tuổi duy trì và cải thiện khả năng vận động, giảm đau, tăng cường sức mạnh cơ bắp và sự linh hoạt. Các bài tập được thiết kế phù hợp với tình trạng sức khỏe và nhu cầu của từng cá nhân, nhằm nâng cao chất lượng cuộc sống và khả năng tự lập của họ.",
-            service: "Xoa bóp",
-        },
-    ]);
+    const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
 
     const searchSchema = yup.object().shape({
@@ -73,7 +47,7 @@ export default function FeedbackHistory() {
 
     useEffect(() => {
         setLoading(!loading);
-        getData(`/feedback`, {})
+        getData(`/feedback?UserId=${user?.id}`, {})
             .then((feedbacks) => {
                 setData(feedbacks?.data?.contends);
                 setLoading(loading);

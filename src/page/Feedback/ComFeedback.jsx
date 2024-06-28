@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { Image, View } from "react-native";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { useNavigation } from "@react-navigation/native";
+import feedbackImg from "../../../assets/images/feedback/feedbackImg.png"
 
 export default function ComFeedback({ data }) {
   const {
@@ -27,10 +28,10 @@ export default function ComFeedback({ data }) {
       }}
     >
       <Image
-        source={{ uri: data?.img }}
+        source={feedbackImg}
         style={{
-          width: 100,
-          height: 100,
+          width: 80,
+          height: 80,
           borderRadius: 5,
           objectFit: "fill",
         }}
@@ -46,15 +47,14 @@ export default function ComFeedback({ data }) {
           </Text>
         </Text>
 
-        {/* <Text style={{ flexDirection: "row" }}>
+        <Text style={{ flexDirection: "row" }}>
           <Text style={{fontWeight: "600", fontSize: 14 }}>
           {feedback?.history?.service}
           </Text>
           <Text>
-            : {data?.orderId}
+            : {data?.orderDetail?.servicePackage?.name}
           </Text>
-        </Text> */}
-
+        </Text>
     </View>
     </TouchableOpacity >
   );
@@ -63,9 +63,10 @@ export default function ComFeedback({ data }) {
 const styles = StyleSheet.create({
   body: {
     flexDirection: "row",
-    gap: 10,
+    gap: 15,
     marginBottom: 10,
-    padding: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "#33B39C",
@@ -75,5 +76,6 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "center",
     flexWrap: "wrap",
+    gap: 3
   },
 });

@@ -145,7 +145,9 @@ export default function CareSchedule({ }) {
                         <Text style={[styles.dateTitle, styles.taskContainer]}>
                         {moment(selectedDate).format('DD/MM/YYYY')}
                         </Text>
-                        <ScrollView>
+                        <ScrollView
+                          showsVerticalScrollIndicator={false}
+                          showsHorizontalScrollIndicator={false}>
                             {filteredData.map((item, index) => (
                                 <ComSchedule
                                     key={index}
