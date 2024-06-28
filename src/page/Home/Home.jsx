@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { StyleSheet, View, Text, Image, ScrollView } from "react-native";
 import Header from "./Header";
 import Catalogue from "./Catalogue/Catalogue";
@@ -8,26 +8,28 @@ import TopPlacesCarousel from "../../Components/ComImg/TopPlacesCarousel";
 import { TOP_PLACES } from "../../../db";
 import { useAuth } from "../../../auth/useAuth";
 import { postData, getData } from "../../api/api";
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function Home({ navigation }) {
   const { user, setUser } = useAuth();
   const { login } = useAuth();
 
-  useEffect(() => {
-    getData("/users/profile")
-      .then((userData) => {
-        login(userData?.data);
-        setUser(userData?.data)
-      })
-      .catch((error) => {
-        console.error("Error getData fetching items:", error);
-      });
-  }, [])
-
+  useFocusEffect(
+    useCallback(() => {
+      getData("/users/profile")
+        .then((userData) => {
+          login(userData?.data);
+          setUser(userData?.data)
+        })
+        .catch((error) => {
+          console.error("Error getData fetching items:", error);
+        });
+    }, [])
+  );
 
   return (
     <View style={styles.container}>
-      <Header user={user}/>
+      <Header user={user} />
       <ScrollView
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}

@@ -8,6 +8,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import Nodata from "../../../assets/Nodata.png";
 import { useStorage } from "../../hooks/useLocalStorage";
+import ComNoData from "../../Components/ComNoData/ComNoData";
+import ComLoading from "../../Components/ComLoading/ComLoading";
 
 export default function HealthMonitor() {
   const [loading, setLoading] = useState(false);
@@ -48,19 +50,26 @@ export default function HealthMonitor() {
         showTitle
       />
       <View style={styles.body}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          style={styles?.scrollView}
-        >
-          <View>
-            {/* <Text>abc</Text> */}
-            {user?.elders?.map((value, index) => (
-              <ComHealth key={index} data={value} />
-            ))}
-          </View>
-          <View style={{ height: 120 }}></View>
-        </ScrollView>
+        <ComLoading show={loading}>
+
+          {user.length == 0 ? (
+            <ComNoData />
+          ) : (
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+              style={styles?.scrollView}
+            >
+              <View>
+                {user?.elders?.map((value, index) => (
+                  <ComHealth key={index} data={value} />
+                ))}
+              </View>
+              <View style={{ height: 120 }}></View>
+            </ScrollView>
+          )
+          }
+        </ComLoading>
       </View>
     </>
   );

@@ -1,8 +1,9 @@
-import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import React, { useEffect, useCallback  } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import editIcon from "../../../assets/profile_icons/edit.png";
 import { useStorage } from "../../hooks/useLocalStorage";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function HeaderUser() {
   const navigation = useNavigation();
@@ -15,6 +16,23 @@ export default function HeaderUser() {
     navigation.navigate("DetailProfile");
     
   }
+
+  const loadUser = useCallback(async () => {
+    try {
+      const userData = await AsyncStorage.getItem("user");
+      if (userData) {
+        setUser(JSON.parse(userData));
+      }
+    } catch (error) {
+      console.error("Failed to load user data", error);
+    }
+  }, []);
+
+  // Load user data when the screen is focused
+  useFocusEffect(() => {
+    loadUser();
+  });
+
 
   return (
     <View style={styles.body}>

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { FormProvider, useForm } from "react-hook-form";
 import ComHeader from '../../Components/ComHeader/ComHeader';
@@ -9,6 +9,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import ComLoading from "../../Components/ComLoading/ComLoading";
 import ComFeedback from "./ComFeedback";
 import { LanguageContext } from "../../contexts/LanguageContext";
+import { postData, getData } from "../../api/api";
 
 export default function FeedbackHistory() {
     const {
@@ -47,35 +48,6 @@ export default function FeedbackHistory() {
     ]);
     const [loading, setLoading] = useState(false);
 
-    const [select, setSelect] = useState(false);
-    const [select1, setSelect1] = useState(true);
-    const [select2, setSelect2] = useState(true);
-    const [select3, setSelect3] = useState(true);
-    const check = () => {
-        setSelect(false);
-        setSelect1(true);
-        setSelect2(true);
-        setSelect3(true);
-    };
-    const check1 = () => {
-        setSelect(true);
-        setSelect1(false);
-        setSelect2(true);
-        setSelect3(true);
-    };
-    const check2 = () => {
-        setSelect(true);
-        setSelect1(true);
-        setSelect3(true);
-        setSelect2(false);
-    };
-    const check3 = () => {
-        setSelect(true);
-        setSelect1(true);
-        setSelect2(true);
-        setSelect3(false);
-    };
-
     const searchSchema = yup.object().shape({
         search: yup.string(),
     });
@@ -98,6 +70,19 @@ export default function FeedbackHistory() {
         console.log("====================================");
         setLoading(!loading);
     };
+
+    useEffect(() => {
+        setLoading(!loading);
+        getData(`/feedback`, {})
+            .then((feedbacks) => {
+                setData(feedbacks?.data?.contends);
+                setLoading(loading);
+            })
+            .catch((error) => {
+                setLoading(loading);
+                console.error("Error getData fetching feedbacks items:", error);
+            });
+    }, []);
     return (
         <>
             <ComHeader
@@ -106,29 +91,6 @@ export default function FeedbackHistory() {
                 title={feedback?.title}
             />
             <View style={styles.container}>
-               
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false}
-                    horizontal={true}
-                    style={styles?.scrollView}
-                >
-                    <View style={styles?.buttonContainer}>
-                        <ComSelectButton onPress={check} check={select}>
-                            Tất cả
-                        </ComSelectButton>
-                        <ComSelectButton onPress={check1} check={select1}>
-                            Y tế
-                        </ComSelectButton>
-                        <ComSelectButton onPress={check2} check={select2}>
-                            Trị liệu
-                        </ComSelectButton>
-                        <ComSelectButton onPress={check3} check={select3}>
-                            Dinh dưỡng
-                        </ComSelectButton>
-                    </View>
-                </ScrollView>
-
                 <ComLoading show={loading}>
                     <ScrollView
                         showsVerticalScrollIndicator={false}

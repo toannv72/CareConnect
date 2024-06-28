@@ -37,25 +37,23 @@ export default function ComFeedback({ data }) {
       />
       <View style={styles?.container}>
         <Text style={{ fontWeight: "600" , fontSize: 16 }}>{data?.title}</Text>
-
-        
         <Text style={{ flexDirection: "row" }}>
           <Text style={{ fontWeight: "600", fontSize: 14 }}>
           {feedback?.history?.date}
           </Text>
           <Text>
-            : {data?.date}
+            : {data?.createdAt}
           </Text>
         </Text>
 
-        <Text style={{ flexDirection: "row" }}>
+        {/* <Text style={{ flexDirection: "row" }}>
           <Text style={{fontWeight: "600", fontSize: 14 }}>
           {feedback?.history?.service}
           </Text>
           <Text>
-            : {data?.service}
+            : {data?.orderId}
           </Text>
-        </Text>
+        </Text> */}
 
     </View>
     </TouchableOpacity >

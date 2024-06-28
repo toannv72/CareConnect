@@ -70,14 +70,10 @@ export default function MedicalProfile() {
         >
           <Text style={{ fontWeight: "600", fontSize: 16 }}>{MedicalProfile?.generalIndex}</Text>
           <View style={styles?.content}>
-            {/* {medicalData.map((medical, index) => (
-              <ComMedical key={index} data={medical}></ComMedical>
-
-            ))} */}
              <ComMedical image={weight} title={"Cân nặng"} value={medicalData?.weight} unit={"Kg"} ></ComMedical>
              <ComMedical image={height} title={"Chiều cao"} value={medicalData?.height} unit={"Cm"} ></ComMedical>
              <ComMedical image={blood} title={"Nhóm máu"} value={medicalData?.bloodType} unit={""} ></ComMedical>
-             {/* <ComMedical image={weight} title={"Khả năng di chuyển"} value={medicalData?.weight} unit={"Kg"} ></ComMedical> */}
+             <ComMedical image={move} title={"Khả năng di chuyển"} value={medicalData?.move} unit={""} ></ComMedical>
           </View>
 
           <Text style={{ fontWeight: "600", fontSize: 16 }}>{MedicalProfile?.underlyingMedical}</Text>

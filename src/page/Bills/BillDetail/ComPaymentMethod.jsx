@@ -1,12 +1,22 @@
 import React, { useContext, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { Image, View } from "react-native";
-import checkIcon from "../../../assets/Vector.png";
+import checkIcon from "../../../../assets/Vector.png";
 
 const ComPaymentMethod = ({ name, logo, isSelected, onPress }) => {
     return (
         <TouchableOpacity onPress={onPress}>
             <View style={styles.paymentMethod}>
+                    <View >
+                        <Image source={checkIcon}
+                            style={{
+                                width: 25,
+                                height: 25,
+                                borderRadius: 5,
+                                objectFit: "fill",
+                                tintColor: isSelected ? null : "#ddd"
+                            }} />
+                    </View>
                 <View
                     style={{
                         flexDirection: "row", alignItems: 'center',
@@ -20,21 +30,8 @@ const ComPaymentMethod = ({ name, logo, isSelected, onPress }) => {
                             objectFit: "fill",
                         }} />
                     <Text style={{ fontWeight: 600, fontSize: 16 }}>{name}</Text>
-
                 </View>
-                {isSelected && (
-                    <View >
-                        <Image source={checkIcon}
-                            style={{
-                                width: 25,
-                                height: 25,
-                                borderRadius: 5,
-                                objectFit: "fill",
-                            }} />
-                    </View>
-                )}
             </View>
-
         </TouchableOpacity>
     );
 }
@@ -47,7 +44,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         gap: 10,
-        justifyContent: 'space-between',
         paddingVertical: 10
     }
 })

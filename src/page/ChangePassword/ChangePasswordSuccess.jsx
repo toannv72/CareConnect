@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    gap: 10,
+    gap: 30,
     width: "90%",
   },
 });

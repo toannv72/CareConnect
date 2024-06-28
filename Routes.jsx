@@ -14,8 +14,10 @@ import ServicePackages from "./src/page/ServicePackages/ServicePackages";
 import ServicePackageDetail from "./src/page/ServicePackages/ServicePackageDetail/ServicePackageDetail";
 import ServicePackageRegisterSuccess from "./src/page/ServicePackages/ServicePackageDetail/ServicePackageRegisterSuccess";
 import HealthMonitor from "./src/page/HealthMonitor/HealthMonitor";
+import HealthMonitorList from "./src/page/HealthMonitor/HealthMonitorList";
 import Notification from "./src/page/Notification/Notification";
 import HealthMonitorDetail from "./src/page/HealthMonitorDetail/HealthMonitorDetail";
+import HealthMonitorIndexList from "./src/page/HealthMonitorDetail/HealthMonitorIndexList/HealthMonitorIndexList";
 import VisitationSchedule from "./src/page/VisitationSchedule/VisitationSchedule";
 import AddingServicePackages from "./src/page/AddingServicePackage/AddingServicePackage";
 import AddingServiceDetail from "./src/page/AddingServiceDetail/AddingServiceDetail";
@@ -29,7 +31,7 @@ import CreateFeedback from "./src/page/Feedback/CreateFeedback";
 import FeedbackHistory from "./src/page/Feedback/FeedbackHistory";
 import FeedbackDetail from "./src/page/Feedback/FeedbackDetail";
 import BillHistory from "./src/page/Bills/BillHistory";
-import BillDetail from "./src/page/Bills/BillDetail";
+import BillDetail from "./src/page/Bills/BillDetail/BillDetail";
 import UserProfile from "./src/page/UserProfile/UserProfile";
 import ElderProfile from "./src/page/ElderProfile/ElderProfile";
 import ElderDetailProfile from "./src/page/ElderProfile/ElderDetailProfile";
@@ -185,6 +187,11 @@ const Routes = () => {
           name="HealthMonitorDetail"
           component={HealthMonitorDetail}
         />
+         <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="HealthMonitorIndexList"
+          component={HealthMonitorIndexList}
+        />
         {/* đăng ký thăm nuôi */}
         <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
@@ -302,6 +309,11 @@ const Routes = () => {
           options={{ headerLeft: null, headerShown: false }}
           name="NurseHealthMonitor"
           component={NurseHealthMonitor}
+        />
+          <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="HealthMonitorList"
+          component={HealthMonitorList}
         />
         <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}

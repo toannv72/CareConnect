@@ -8,7 +8,6 @@ import { useNavigation } from '@react-navigation/native';
 import ComElder from "../../Components/ComElder/ComElder";
 import ComLoading from "../../Components/ComLoading/ComLoading";
 import ComNoData from "../../Components/ComNoData/ComNoData";
-import Nodata from "../../../assets/Nodata.png";
 import { useStorage } from "../../hooks/useLocalStorage";
 
 export default function AddingServiceElderRegister() {

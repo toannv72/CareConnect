@@ -19,10 +19,10 @@ export default function ComPatient({ data }) {
       }}
     >
       <Image
-        source={{ uri: data?.img }}
+        source={{ uri: data?.imageUrl }}
         style={{
           width: 65,
-          height: 80,
+          height: 65,
           borderRadius: 50,
           objectFit: "fill",
           borderWidth: 0.5,
@@ -41,25 +41,17 @@ export default function ComPatient({ data }) {
         <View style={styles?.container}>
           <Text style={{ flexDirection: "row" }}>
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-              {HealthMonitorDetail?.yearOld}
-            </Text>
-            <Text>: {data?.age}</Text>
-          </Text>
-        </View>
-        <View style={styles?.container}>
-          <Text style={{ flexDirection: "row" }}>
-            <Text style={{ fontWeight: "bold", fontSize: 14 }}>
               {HealthMonitorDetail?.YearOfBirth}
             </Text>
-            <Text>: {data?.room}</Text>
+            <Text>: {data?.dateOfBirth}</Text>
           </Text>
         </View>
         <View style={styles?.container}>
           <Text style={{ flexDirection: "row" }}>
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-              {HealthMonitorDetail?.weight}
+              {HealthMonitorDetail?.gender}
             </Text>
-            <Text>: {data?.room}kg</Text>
+            <Text>: { data?.gender === 'Male' ? 'Nam' : data?.gender === 'Female' ? 'Nữ' : ''}</Text>
           </Text>
         </View>
       </View>

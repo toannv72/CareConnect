@@ -9,7 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import ComHeader from "../../../Components/ComHeader/ComHeader";
 import ComButton from "../../../Components/ComButton/ComButton";
 import ComPopup from "../../../Components/ComPopup/ComPopup";
-// import ComSelectedOneDate from "../../../Components/ComDate/ComSelectedOneDate";
+import ComSelectedOneDate from "../../../Components/ComDate/ComSelectedOneDate";
 import ComDatePicker from "../../../Components/ComInput/ComDatePicker";
 import moment from "moment";
 import { postData, getData } from "../../../api/api";
@@ -146,12 +146,12 @@ export default function ServicePackageDetail({ }) {
         <Text style={{ color: "#A3A3A3", textAlign: "center" }}>{servicePackages?.popup?.limitDays}</Text>
         <FormProvider {...methods}>
           <View style={{ width: "100%", gap: 10 }}>
-            {/* <ComSelectedOneDate
+            <ComSelectedOneDate
               date={changeSelectedDate}
               name="date"
               control={control}
-              errors={errors} /> */}
-            <ComDatePicker
+              errors={errors} />
+            {/* <ComDatePicker
               // label={EditProfile?.label?.dateOfBirth}
               // placeholder={EditProfile?.placeholder?.dateOfBirth}
               name="date"
@@ -160,7 +160,7 @@ export default function ServicePackageDetail({ }) {
               enabled={true}
               mode={"date"}
               required
-            />
+            /> */}
             <View
               style={{
                 backgroundColor: "#fff",

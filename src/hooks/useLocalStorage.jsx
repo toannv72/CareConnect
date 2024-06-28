@@ -32,7 +32,7 @@ export const useStorage = (key, initialValue) => {
     }
   };
 
-  const removeValue = async () => {
+  const removeStoredValue = async () => {
     try {
       setStoredValue(null);
       await AsyncStorage.removeItem(key);
@@ -41,5 +41,5 @@ export const useStorage = (key, initialValue) => {
     }
   };
 
-  return [storedValue, updateStoredValue, removeValue];
+  return [storedValue, updateStoredValue, removeStoredValue];
 };

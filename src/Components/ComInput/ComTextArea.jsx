@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { Controller } from "react-hook-form";
 import { StyleSheet, View, Text, TextInput } from "react-native";
 
@@ -14,9 +14,11 @@ const ComTextArea = (
     errors,
     edit,
     placeholder,
+    defaultValue
   },
   ...props
 ) => {
+  const [numberOfLines, setNumberOfLines] = useState(2);
   const errorMessage = errors[name]?.message;
   return (
     <View>
@@ -38,7 +40,9 @@ const ComTextArea = (
               onChangeText={(value) => onChange(value)}
               placeholder={placeholder}
               value={value}
-              numberOfLines={4}
+              onContentSizeChange={(e) => {
+                setNumberOfLines(e.nativeEvent.contentSize.height / 20); // Adjust numberOfLines based on content height
+              }}
               multiline={true}
               editable={edit}
               keyboardType={keyboardType} // Set keyboardType here
@@ -49,6 +53,7 @@ const ComTextArea = (
                   borderColor: errorMessage ? "red" : "#33B39C",
                 },
               ]}
+              defaultValue={defaultValue}
               {...props}
             />
             {errorMessage && <Text style={styles.error}>{errorMessage}</Text>}

@@ -244,6 +244,7 @@ export const vn = {
     billId: "Mã hóa đơn",
     elder: "Người thụ hưởng",
     dueDate: "Hạn thanh toán",
+    total: "Tổng tiền",
     status: "Trạng thái",
     detail:{
       title: "Chi tiết hóa đơn",
@@ -275,6 +276,7 @@ export const vn = {
     yearOld: "Tuổi",
     YearOfBirth: "Năm sinh",
     weight: "Cân nặng",
+    gender: "Giới tính"
   },
   EditProfile: {
     title: "Chỉnh sửa thông tin",
@@ -333,7 +335,8 @@ export const vn = {
     },
     placeholder: {
       phone: "Nhập số điện thoại",
-      password: "Vui lòng nhập khẩu mới",
+      password: "Vui lòng nhập mật khẩu mới",
+      olePassword: "Vui lòng nhập mật khẩu hiện tại",
       confirmPassword: "Vui lòng xác nhận mật khẩu mới",
     },
     message: {
@@ -343,10 +346,13 @@ export const vn = {
       password: "Mật khẩu không được để trống",
       minPassword: "Mật khẩu phải lớn hơn 5 kí tự",
       confirmPassword: "Xác nhận mật khẩu không được để trống",
+      olePassword: "Mật khẩu hiện tại không chính xác",
       minConfirmPassword: "Xác nhận mật khẩu phải lớn hơn 5 kí tự",
       invalidCredential:
         "Thông tin số điẹn thoại không hợp lệ. Vui lòng thử lại.",
       loginError: "Đã có lỗi xảy ra. Vui lòng thử lại sau.",
+      passwordInvalid: "Mật khẩu phải có ít nhất 8 ký tự, chứa ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt",
+      passwordNotMatch: "Mật khẩu xác nhận không trùng khớp",
     },
     link: {
       textLogin: "Bạn đã có tài khoản?",

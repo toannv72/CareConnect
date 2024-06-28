@@ -66,7 +66,6 @@ export default function AddingServicePackages() {
             .then((categoryData) => {
                 setCategoryData(categoryData?.data?.contends);
                 setLoading(loading);
-
             })
             .catch((error) => {
                 console.error("Error fetching categoryData:", error);
@@ -118,19 +117,8 @@ export default function AddingServicePackages() {
                         ))}
                     </View>
                 </ScrollView>
-
                 <ComLoading show={loading}>
-                    {filteredData.length > 0 ? (
-                        <ScrollView
-                            showsVerticalScrollIndicator={false}
-                            showsHorizontalScrollIndicator={false}
-                        >
-                                {filteredData?.map((value, index) => (
-                                    <ComAddPackage key={index} data={value} />
-                                ))}
-                            <View style={{height: 230 }}></View>
-                        </ScrollView>
-                    ) : (
+                    {filteredData.length == 0 ? (
                         <View style={styles?.noDataContainer}>
                             <Image
                                 source={Nodata}
@@ -138,9 +126,20 @@ export default function AddingServicePackages() {
                             />
                             <Text style={{ fontSize: 16 }}>Không có dữ liệu</Text>
                         </View>
+                    ) : (
+                        <ScrollView
+                            showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={false}
+                        >
+                            {filteredData?.map((value, index) => (
+                                <ComAddPackage key={index} data={value} />
+                            ))}
+                            <View style={{ height: 230 }}></View>
+                        </ScrollView>
                     )}
-            </ComLoading>
-        </View >
+                </ComLoading>
+
+            </View >
         </>
     );
 }

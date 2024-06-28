@@ -39,55 +39,60 @@ export default function Register() {
   } = useContext(LanguageContext);
 
   const registerSchema = yup.object().shape({
-    // fullName: yup
-    //   .string()
-    //   .trim()
-    //   .required(Register?.message?.name),
+    fullName: yup
+      .string()
+      .trim()
+      .required(Register?.message?.name),
 
-    // gender: yup
-    //   .string()
-    //   .required(EditProfile?.message?.gender),
+    gender: yup
+      .string()
+      .required(EditProfile?.message?.gender),
 
-    // dateOfBirth: yup
-    //   .string()
-    //   .required(EditProfile?.message?.dateOfBirth),
+    dateOfBirth: yup
+      .string()
+      .required(EditProfile?.message?.dateOfBirth),
 
-    // email: yup
-    //   .string()
-    //   .trim()
-    //   .email(Register?.message?.emailInvalid)
-    //   .required(Register?.message?.emailRequired),
+    email: yup
+      .string()
+      .trim()
+      .email(Register?.message?.emailInvalid)
+      .required(Register?.message?.emailRequired),
 
-    // password: yup
-    //   .string()
-    //   .trim()
-    //   .required(Register?.message?.password)
-    //   .matches(
-    //     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-    //     Register?.message?.passwordInvalid
-    //   ),
+    password: yup
+      .string()
+      .trim()
+      .required(Register?.message?.password)
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+        Register?.message?.passwordInvalid
+      ),
 
-    // confirmPassword: yup
-    //   .string()
-    //   .trim()
-    //   .required(Register?.message?.confirmPassword)
-    //   .oneOf([yup.ref('password'), null], Register?.message?.passwordNotMatch),
+    confirmPassword: yup
+      .string()
+      .trim()
+      .required(Register?.message?.confirmPassword)
+      .oneOf([yup.ref('password'), null], Register?.message?.passwordNotMatch),
 
-    // phoneNumber: yup
-    //   .string()
-    //   .trim()
-    //   .required(Register?.message?.phoneRequired)
-    //   .matches(/^0[0-9]{9,10}$/, Register?.message?.phoneInvalid),
+    phoneNumber: yup
+      .string()
+      .trim()
+      .required(Register?.message?.phoneRequired)
+      .matches(/^0[0-9]{9,10}$/, Register?.message?.phoneInvalid),
 
-    // cccd: yup
-    //   .string()
-    //   .trim()
-    //   .required(Register?.message?.cccd),
+    cccd: yup
+      .string()
+      .trim()
+      .required(Register?.message?.cccd),
   });
   const formattedDate = (dateValue) => {
-    const day = dateValue.getDate().toString().padStart(2, "0");
-    const month = (dateValue.getMonth() + 1).toString().padStart(2, "0");
-    const year = dateValue.getFullYear();
+    
+    console.log("dateValue", new Date(dateValue))
+    // if (!dateValue || !(dateValue instanceof Date)) {
+    //   return ""; // Return empty string for invalid dates
+    // }
+    const day = new Date(dateValue).getDate().toString().padStart(2, "0");
+    const month = (new Date(dateValue).getMonth() + 1).toString().padStart(2, "0");
+    const year = new Date(dateValue).getFullYear();
     return `${year}-${month}-${day}`;
   };
   const methods = useForm({
@@ -134,7 +139,7 @@ export default function Register() {
       address: "",
       dateOfBirth: formattedDate(formData.dateOfBirth)
     };
-   
+
     console.log("newData: ", newData)
 
     postData("/users/customer-register", newData, {})

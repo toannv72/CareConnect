@@ -5,6 +5,7 @@ import { LanguageContext } from "../../contexts/LanguageContext";
 import { useNavigation } from "@react-navigation/native";
 import billImg from "../../../assets/bill.png";
 import ComTag from "./ComTag";
+import moment from 'moment';
 
 export default function ComBill({ data }) {
   const {
@@ -14,11 +15,19 @@ export default function ComBill({ data }) {
 
   const navigation = useNavigation();
 
+  const formatCurrency = (number) => {
+    // Sử dụng hàm toLocaleString() để định dạng số
+    return number.toLocaleString("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+  };
+
   return (
     <TouchableOpacity
       style={[styles.body, { backgroundColor: data.status === "Đã quá hạn" ? "#FF000037" : "none" }]}
       onPress={() => {
-        navigation.navigate("BillDetail", { id: data.id });
+        navigation.navigate("BillDetail", { id: data?.id });
       }}
     >
       <Image
@@ -32,41 +41,36 @@ export default function ComBill({ data }) {
         }}
       />
       <View style={styles?.container}>
-        <Text style={{ fontWeight: "600", fontSize: 16 }}>{data?.title}</Text>
-
-
+        <Text style={{ fontWeight: "600", fontSize: 16 }} numberOfLines={2}>
+          {data?.description}
+        </Text>
         <Text style={{ flexDirection: "row", marginBottom: 3 }}>
           <Text style={{ fontWeight: "600", fontSize: 14 }}>
             {bill?.billId}
           </Text>
           <Text>
-            : {data?.billId}
+            : {data?.id}
           </Text>
         </Text>
-
         <Text style={{ flexDirection: "row", marginBottom: 3 }}>
           <Text style={{ fontWeight: "600", fontSize: 14 }}>
-            {bill?.elder}
+            {bill?.total}
           </Text>
           <Text>
-            : Cụ {data?.elder}
+            : {formatCurrency(data?.amount)}
           </Text>
         </Text>
-
         <Text style={{ flexDirection: "row", marginBottom: 3 }}>
           <Text style={{ fontWeight: "600", fontSize: 14 }}>
             {bill?.dueDate}
           </Text>
           <Text>
-            : {data?.dueDate}
+            : {moment(data?.dueDate, "YYYY-MM-DD").format("DD/MM/YYYY") ?? ""}
           </Text>
         </Text>
-
-        <Text style={{ flexDirection: "row", marginBottom: 3 }}>
-          <ComTag text={data?.status} paid={data?.status == "Đã thanh toán"? true: false}></ComTag>
-
+        <Text style={{ flexDirection: "row", marginVertical: 3 }}>
+          <ComTag status={data?.status} ></ComTag>
         </Text>
-
       </View>
     </TouchableOpacity >
   );
@@ -87,5 +91,6 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "center",
     flexWrap: "wrap",
+    gap: 2
   },
 });

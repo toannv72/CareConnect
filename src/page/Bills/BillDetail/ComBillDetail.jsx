@@ -29,10 +29,12 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     labelText: {
-        fontWeight: '600'
+        fontWeight: '600',
+        flex: 0.40
     },
     contentText: {
-        width: '50%',
-        textAlign: "right"
+        textAlign: "right",
+        flex: 0.60,
+        flexWrap: "wrap",
     }
 })
