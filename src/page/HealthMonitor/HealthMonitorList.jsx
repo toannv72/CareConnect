@@ -2,7 +2,6 @@ import React, { useContext, useState, useEffect } from "react";
 import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity } from 'react-native';
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { useRoute } from "@react-navigation/native";
-import plusIcon from "../../../assets/profile_icons/plus.png";
 import { useNavigation } from '@react-navigation/native';
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import ComHealthMonitor from "./ComHealthMonitor";
@@ -15,7 +14,6 @@ export default function HealthMonitorList({ }) {
     const [loading, setLoading] = useState(false);
     const route = useRoute();
     const { id } = route.params;
-    console.log("healthMonitor", healthMonitor.length)
 
     const {
         text: { NurseHealthMonitor },
@@ -23,10 +21,9 @@ export default function HealthMonitorList({ }) {
     } = useContext(LanguageContext);
     const navigation = useNavigation();
 
-
     useEffect(() => {
         setLoading(!loading);
-        getData(`/health-report?ElderId=${id}`, {})
+        getData(`/health-report?ElderId=${id}&SortColumn=createdAt&SortDir=Desc`, {})
             .then((healthMonitor) => {
                 setHealthMonitor(healthMonitor?.data?.contends);
                 setLoading(loading);
@@ -35,13 +32,16 @@ export default function HealthMonitorList({ }) {
                 setLoading(loading);
                 console.error("Error getData fetching items:", error);
             });
-
-
     }, []);
 
+    const toVietnamTime = (dateValue) => {
+        const date = new Date(dateValue);
+        date.setHours(date.getHours() + 7); // Convert to UTC+7
+        return date;
+    };
+
     const groupedData = healthMonitor.reduce((acc, item) => {
-        const date = new Date(item.createdAt).toISOString().split('T')[0]; // Chuẩn hóa ngày thành yyyy-mm-dd
-        // const date = item?.createdAt;
+        const date = toVietnamTime(item.createdAt).toISOString().split('T')[0]; // Convert to Vietnam time and format date as yyyy-mm-dd
         acc[date] = acc[date] || [];
         acc[date].push(item);
         return acc;
@@ -64,20 +64,24 @@ export default function HealthMonitorList({ }) {
             />
             <View style={styles.body}>
                 <ComLoading show={loading}>
-                    {
-                        healthMonitor.length == 0 ? (
-                            <ComNoData>Không có dữ liệu</ComNoData>
-                        ) : (
-                            Object.entries(groupedData).map(([date, items]) => (
-                                <View key={date}>
-                                    <Text style={styles.dateHeader}>{formattedDate(date)}</Text>
-                                    {items[0] && ( // Chỉ hiển thị nếu có mục cho ngày đó
-                                        <ComHealthMonitor data={items[0]} />
-                                    )}
-                                </View>
-                            ))
-                        )
-                    }
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        showsHorizontalScrollIndicator={false}>
+                        {
+                            healthMonitor.length == 0 ? (
+                                <ComNoData>Không có dữ liệu</ComNoData>
+                            ) : (
+                                Object.entries(groupedData).map(([date, items]) => (
+                                    <View key={date}>
+                                        <Text style={styles.dateHeader}>{formattedDate(date)}</Text>
+                                        {items[0] && ( // Chỉ hiển thị nếu có mục cho ngày đó
+                                            <ComHealthMonitor data={items[0]} time={groupedData[date].length}/>
+                                        )}
+                                    </View>
+                                ))
+                            )
+                        }
+                    </ScrollView>
                 </ComLoading>
             </View>
         </>
@@ -87,7 +91,6 @@ export default function HealthMonitorList({ }) {
 const styles = StyleSheet.create({
     body: {
         flex: 1,
-        paddingTop: 20,
         backgroundColor: "#fff",
         paddingHorizontal: 15,
     },

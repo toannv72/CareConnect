@@ -31,13 +31,13 @@ export default function ComCatalogue({ img, url, children, color, backgroundColo
 const styles = StyleSheet.create({
     body: {
         padding: 15,
-        gap: 7,
+        gap: 5,
         borderRadius: 20,
         height: 150,
         width: "100%"
     },
     textTitle: {
-        fontSize: 17,
+        fontSize: 16,
         fontWeight: "600",
         textAlign: "left",
     },
@@ -49,8 +49,8 @@ const styles = StyleSheet.create({
     iconContain: {
         backgroundColor: "white",
         padding: 10,
-        width: "34%",
-        borderRadius: 50,
+        width: "32%",
+        borderRadius: 100,
         alignItems: 'left',
     }
 });

@@ -83,12 +83,12 @@ export default ContractDetail = () => {
 
   const getStatusText = (status) => {
     switch (status) {
-      case 'InUse':
+      case 'Valid':
         return { text: 'Còn hạn', color: 'green' };
       case 'Cancelled':
         return { text: 'Đã hủy', color: 'red' };
-      case 'Expired':
-        return { text: 'Hết hạn' };
+      case 'Invalid':
+        return { text: 'Hết hạn', color: 'red' };
       case 'Pending':
         return { text: 'Đang chờ' };
       default:
@@ -158,8 +158,13 @@ export default ContractDetail = () => {
         <Text style={{ color: "#A3A3A3", textAlign: "center" }}>Bạn chỉ có thể hẹn trước 14 ngày tính từ hôm nay</Text>
         <FormProvider {...methods}>
           <View style={{ width: "100%", gap: 10 }}>
-            <ComSelectedOneDate date={changeSelectedDate} />
-            {console.log("selectedDate", selectedDate)}
+            {/* <ComSelectedOneDate date={changeSelectedDate} /> */}
+            <ComSelectedOneDate
+              date={changeSelectedDate}
+              name="date"
+              control={control}
+              errors={errors}
+              enabled={true} />
             <View
               style={{
                 backgroundColor: "#fff",

@@ -136,7 +136,7 @@ export default function LoginScreen() {
               placeholder={Login?.placeholder?.phone}
               name="username"
               control={control}
-              keyboardType="number-pad" // Set keyboardType for First Name input
+              // keyboardType="number-pad" // Set keyboardType for First Name input
               errors={errors} // Pass errors object
               required
             />

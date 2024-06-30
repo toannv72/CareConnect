@@ -1,14 +1,16 @@
-import React, { useContext } from "react";
+import React, { useContext, useCallback } from "react";
 import { StyleSheet, View, Text, Image, ScrollView } from "react-native";
 import Header from "./Header";
 import ComButton from "../../Components/ComButton/ComButton";
 import Catalogue from "./Catalogue/Catalogue";
-// import News from "./News/News";
-
+import { useAuth } from "../../../auth/useAuth";
+import { postData, getData } from "../../api/api";
 import nurseHome from "../../../assets/images/nurseHome/nurseHome.png"
 import { LanguageContext } from "../../contexts/LanguageContext";
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function NurseHome({ navigation }) {
+  const { user, setUser, login } = useAuth();
 
   const {
     text: {
@@ -18,9 +20,22 @@ export default function NurseHome({ navigation }) {
     setLanguage,
   } = useContext(LanguageContext);
 
+  useFocusEffect(
+    useCallback(() => {
+      getData("/users/profile")
+        .then((userData) => {
+          login(userData?.data);
+          setUser(userData?.data)
+        })
+        .catch((error) => {
+          console.error("Error getData fetching items:", error);
+        });
+    }, [])
+  );
+
   return (
     <View style={styles.container}>
-      <Header />
+      <Header  user={user}/>
       <ScrollView>
         <View style={styles.imageBody}>
           <Image

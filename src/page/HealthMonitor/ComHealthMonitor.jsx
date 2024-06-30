@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import healthRecord from "../../../assets/images/HealthMonitor/healthRecord.png";
 import { postData, getData } from "../../api/api";
 
-export default function ComHealthMonitor({ data, isSelected, style }) {
+export default function ComHealthMonitor({ data, isSelected, style, time }) {
   const {
     text: { healthMonitor },
     setLanguage,
@@ -23,6 +23,14 @@ export default function ComHealthMonitor({ data, isSelected, style }) {
     const seconds = new Date(dateValue).getSeconds();
     return `${hours}:${minutes}`;
   };
+
+  const formattedDate = (dateValue) => {
+    console.log("dateValue", new Date(dateValue))
+    const day = new Date(dateValue).getDate().toString().padStart(2, "0");
+    const month = (new Date(dateValue).getMonth() + 1).toString().padStart(2, "0");
+    const year = new Date(dateValue).getFullYear();
+    return `${day}/${month}/${year}`;
+};
 
   useEffect(() => {
     setLoading(!loading);
@@ -65,18 +73,10 @@ export default function ComHealthMonitor({ data, isSelected, style }) {
       />
       <View style={styles?.container1}>
 
-        {/* <View style={styles?.container}>
-          <Text style={{ flexDirection: "row" }}>
-            <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-              {healthMonitor?.room}
-            </Text>
-            <Text>: {roomData?.name}</Text>
-          </Text>
-        </View> */}
         <View style={styles?.container}>
           <Text style={{ flexDirection: "row" }}>
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-              {data?.notes}
+              Báo cáo sức khỏe ngày {formattedDate(data?.createdAt)}
             </Text>
           </Text>
         </View>
@@ -96,6 +96,14 @@ export default function ComHealthMonitor({ data, isSelected, style }) {
             <Text>:  {nurseData?.fullName}</Text>
           </Text>
         </View>
+         <View style={styles?.container}>
+          <Text style={{ flexDirection: "row" }}>
+            <Text style={{ fontWeight: "bold", fontSize: 14 }}>
+              Số lần đo
+            </Text>
+            <Text>: {time}</Text>
+          </Text>
+        </View>
         {/* <View style={styles?.container}>
           <Text style={{ flexDirection: "row" }}>
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
@@ -104,7 +112,6 @@ export default function ComHealthMonitor({ data, isSelected, style }) {
             <Text>: {data?.status}</Text>
           </Text>
         </View> */}
-
       </View>
     </TouchableOpacity>
   );

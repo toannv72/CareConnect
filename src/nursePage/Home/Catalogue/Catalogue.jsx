@@ -68,7 +68,7 @@ export default function Catalogue() {
                     }
                     color={"#B35500"}
                     backgroundColor={"#FCCA9B"}
-                    title={"Các dịch vụ đã được đăng ký"}
+                    title={"Các dịch vụ cần thực hiện"}
                     content={"Xem chi tiết"}
                 > </ComCatalogue>
             </TouchableOpacity>

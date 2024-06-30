@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity } from 'react-native';
 import ComSelectButton from "../../Components/ComButton/ComSelectButton";
 import { LanguageContext } from "../../contexts/LanguageContext";
@@ -7,6 +7,9 @@ import backArrowWhite from "../../../assets/icon/backArrowWhite.png";
 import { useNavigation } from '@react-navigation/native';
 import ComElder from "../../Components/ComElder/ComElder";
 import ComHeader from "../../Components/ComHeader/ComHeader";
+import { postData, getData } from "../../api/api";
+import ComNoData from "../../Components/ComNoData/ComNoData";
+import ComLoading from "../../Components/ComLoading/ComLoading";
 
 export default function NurseHealthMonitor({ data }) {
     const {
@@ -14,36 +17,23 @@ export default function NurseHealthMonitor({ data }) {
         setLanguage,
     } = useContext(LanguageContext);
     const navigation = useNavigation();
+    const [elderData, setElderData] = useState([])
+    const [loading, setLoading] = useState(false);
 
-    const [elderData, setElderData] = useState([
-        {
-            img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
-            name: "Nguyễn Văn toàn",
-            age: "34",
-            sex: "Nam",
-            room: "17",
-            bed: "3",
-            id: 1,
-        },
-        {
-            img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
-            name: "Nguyễn Văn toàn",
-            age: "34",
-            sex: "Nam",
-            room: "17",
-            bed: "3",
-            id: 2,
-        },
-        {
-            img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
-            name: "Nguyễn Văn toàn",
-            age: "34",
-            sex: "Nam",
-            room: "17",
-            bed: "3",
-            id: 3,
-        },
-    ])
+    useEffect(() => {
+        setLoading(!loading);
+        getData(`/elders?RoomId=1`, {})
+        // getData(`/elders?RoomId==${id}`, {})
+            .then((elders) => {
+                console.log(" elders", elders?.data?.contends)
+                setElderData(elders?.data?.contends);
+                setLoading(loading);
+            })
+            .catch((error) => {
+                setLoading(loading);
+                console.error("Error getData fetching items:", error);
+            });
+    }, []);
 
     return (
         <>

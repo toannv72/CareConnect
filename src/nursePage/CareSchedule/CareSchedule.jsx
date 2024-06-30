@@ -106,8 +106,6 @@ export default function CareSchedule({ }) {
         },
     ])
 
-    const task = { key: 'task', color: 'red', selectedDotColor: 'blue' }; //style for dot
-
     const [markedDates, setMarkedDates] = useState({
         [today]: { selected: true }
     });
@@ -141,8 +139,8 @@ export default function CareSchedule({ }) {
                     {...LocaleConfig}
                 />
                 {filteredData.length > 0 ? (//if has data => display list òf task
-                    <>
-                        <Text style={[styles.dateTitle, styles.taskContainer]}>
+                    <View style={styles.taskContainer}>
+                        <Text style={[styles.dateTitle]}>
                         {moment(selectedDate).format('DD/MM/YYYY')}
                         </Text>
                         <ScrollView
@@ -157,7 +155,7 @@ export default function CareSchedule({ }) {
                             ))}
                             <View style={{ height: 100 }} />
                         </ScrollView>
-                    </>
+                    </View>
                 ) : ( //ìf no data => display no task component
                     <View style={[styles.taskContainer, { alignItems: "center" }]}>
                         <Text style={styles.dateTitle}>

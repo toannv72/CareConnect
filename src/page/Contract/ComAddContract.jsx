@@ -16,12 +16,12 @@ export default function ComAddContract({ data }) {
 
   const getStatusText = (status) => {
     switch (status) {
-      case 'InUse':
+      case 'Valid':
         return { text: 'Còn hạn', color: 'green' };
       case 'Cancelled':
         return { text: 'Đã hủy', color: 'red' };
-      case 'Expired':
-        return { text: 'Hết hạn' };
+      case 'Invalid':
+        return { text: 'Hết hạn', color: 'red' };
       case 'Pending':
         return { text: 'Đang chờ' };
       default:

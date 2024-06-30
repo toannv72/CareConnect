@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity } from 'react-native';
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { useRoute } from "@react-navigation/native";
@@ -6,8 +6,13 @@ import plusIcon from "../../../assets/profile_icons/plus.png";
 import { useNavigation } from '@react-navigation/native';
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import ComHealthMonitor from "./ComHealthMonitor";
+import { postData, getData } from "../../api/api";
+import ComNoData from "../../Components/ComNoData/ComNoData";
+import ComLoading from "../../Components/ComLoading/ComLoading";
 
 export default function ListHealthMonitor({ data }) {
+    const [healthMonitor, setHealthMonitor] = useState([])
+    const [loading, setLoading] = useState(false);
 
     const {
         text: { NurseHealthMonitor },
@@ -15,108 +20,39 @@ export default function ListHealthMonitor({ data }) {
     } = useContext(LanguageContext);
     const navigation = useNavigation();
 
-    const [healthMonitor, setHealthMonitor] = useState([
-        {
-            id: 1,
-            elder: "Nguyễn Văn A",
-            room: 101,
-            nurse: "Thảo My",
-            date: "08-06-2024",
-            time: "10:00",
-            status: "Bình thường",
-            healthItem: [
-                {
-                    img: "https://png.pngtree.com/element_our/20190529/ourlarge/pngtree-weighing-vector-icon-material-image_1197044.jpg",
-                    title: "Huyết áp",
-                    value: "118/80",
-                    unit: "mmHg",
-                    status: "Bình thường",
-                    id: 1
-                },
-                {
-                    img: "https://png.pngtree.com/element_our/20190529/ourlarge/pngtree-weighing-vector-icon-material-image_1197044.jpg",
-                    title: "Nhịp tim",
-                    value: "70",
-                    unit: "nhịp/giây",
-                    status: "Bình thường",
-                    id: 2
-                },
-                {
-                    img: "https://png.pngtree.com/element_our/20190529/ourlarge/pngtree-weighing-vector-icon-material-image_1197044.jpg",
-                    title: "Đường Huyết",
-                    value: "4.5",
-                    unit: "mmol/l",
-                    status: "Bình thường",
-                    id: 3
-                },
-                {
-                    img: "https://png.pngtree.com/element_our/20190529/ourlarge/pngtree-weighing-vector-icon-material-image_1197044.jpg",
-                    title: "Cholesterol",
-                    value: "5.1",
-                    unit: "mmol/l",
-                    status: "Bình thường",
-                    id: 4
-                },
+    useEffect(() => {
+        setLoading(!loading);
+        getData(`/health-report?ElderId=2&SortColumn=createdAt&SortDir=Desc`, {})
+        // getData(`/health-report?ElderId=${id}&SortColumn=createdAt&SortDir=Desc`, {})
+            .then((healthMonitor) => {
+                setHealthMonitor(healthMonitor?.data?.contends);
+                setLoading(loading);
+            })
+            .catch((error) => {
+                setLoading(loading);
+                console.error("Error getData fetching items:", error);
+            });
+    }, []);
 
-            ]
-        },
-        {
-            id: 2,
-            elder: "Nguyễn Văn A",
-            room: 101,
-            nurse: "Thảo My",
-            date: "08-06-2024",
-            time: "11:00",
-            status: "Bình thường",
-            healthItem: [
-                {
-                    img: "https://png.pngtree.com/element_our/20190529/ourlarge/pngtree-weighing-vector-icon-material-image_1197044.jpg",
-                    title: "Huyết áp và nhịp tim",
-                    value: "118/80",
-                    unit: "mmHg",
-                    status: "Bình thường",
-                    id: 1
-                },
-                {
-                    img: "https://png.pngtree.com/element_our/20190529/ourlarge/pngtree-weighing-vector-icon-material-image_1197044.jpg",
-                    title: "Nhịp tim",
-                    value: "70",
-                    unit: "nhịp/giây",
-                    status: "Bình thường",
-                    id: 2
-                },
-                {
-                    img: "https://png.pngtree.com/element_our/20190529/ourlarge/pngtree-weighing-vector-icon-material-image_1197044.jpg",
-                    title: "Đường Huyết",
-                    value: "4.5",
-                    unit: "mmol/l",
-                    status: "Bình thường",
-                    id: 3
-                },
-                {
-                    img: "https://png.pngtree.com/element_our/20190529/ourlarge/pngtree-weighing-vector-icon-material-image_1197044.jpg",
-                    title: "Cholesterol",
-                    value: "5.1",
-                    unit: "mmol/l",
-                    status: "Bình thường",
-                    id: 4
-                },
-
-            ]
-        }
-    ])
+    const toVietnamTime = (dateValue) => {
+        const date = new Date(dateValue);
+        date.setHours(date.getHours() + 7); // Convert to UTC+7
+        return date;
+    };
 
     const groupedData = healthMonitor.reduce((acc, item) => {
-        const date = item.date;
+        const date = toVietnamTime(item.createdAt).toISOString().split('T')[0]; // Convert to Vietnam time and format date as yyyy-mm-dd
         acc[date] = acc[date] || [];
         acc[date].push(item);
         return acc;
     }, {});
 
-    const formatDate = (dateString) => {
-        const [day, month, year] = dateString.split('-');
-        return new Date(year, month - 1, day); // Chuyển về kiểu Date để dễ so sánh
-      };
+    const formattedDate = (dateValue) => {
+        const day = new Date(dateValue).getDate().toString().padStart(2, "0");
+        const month = (new Date(dateValue).getMonth() + 1).toString().padStart(2, "0");
+        const year = new Date(dateValue).getFullYear();
+        return `${day}/${month}/${year}`;
+    };
 
     return (
         <>
@@ -126,16 +62,26 @@ export default function ListHealthMonitor({ data }) {
                 title={NurseHealthMonitor?.title}
             />
             <View style={styles.body}>
-                {Object.entries(groupedData)
-                 .sort(([dateA], [dateB]) => formatDate(dateB) - formatDate(dateA))
-                .map(([date, items]) => (
-                    <View key={date}>
-                        <Text style={styles.dateHeader}>{date}</Text>
-                        {items[0] && ( // Chỉ hiển thị nếu có mục cho ngày đó
-                              <ComHealthMonitor data={items[0]} /> 
-                        )}
-                    </View>
-                ))}
+                <ComLoading show={loading}>
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        showsHorizontalScrollIndicator={false}>
+                        {
+                            healthMonitor.length == 0 ? (
+                                <ComNoData>Không có dữ liệu</ComNoData>
+                            ) : (
+                                Object.entries(groupedData).map(([date, items]) => (
+                                    <View key={date}>
+                                        <Text style={styles.dateHeader}>{formattedDate(date)}</Text>
+                                        {items[0] && ( // Chỉ hiển thị nếu có mục cho ngày đó
+                                            <ComHealthMonitor data={items[0]} time={groupedData[date].length} />
+                                        )}
+                                    </View>
+                                ))
+                            )
+                        }
+                    </ScrollView>
+                </ComLoading>
                 <TouchableOpacity
                     style={styles.imageContainer}
                     onPress={() => navigation.navigate("ListHealthIndex")} // Chuyển đến trang mới
@@ -150,7 +96,6 @@ export default function ListHealthMonitor({ data }) {
                         }
                     />
                 </TouchableOpacity>
-
             </View>
         </>
     )
@@ -159,7 +104,6 @@ export default function ListHealthMonitor({ data }) {
 const styles = StyleSheet.create({
     body: {
         flex: 1,
-        paddingTop: 20,
         backgroundColor: "#fff",
         paddingHorizontal: 15,
     },
@@ -168,7 +112,7 @@ const styles = StyleSheet.create({
         bottom: 40,
         right: 40,
     },
-    dateHeader:{
+    dateHeader: {
         fontWeight: "600",
         fontSize: 16,
         marginVertical: 5

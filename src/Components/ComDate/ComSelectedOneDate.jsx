@@ -17,12 +17,14 @@ export default function ComSelectedOneDate({
   required,
   errors,
   placeholder,
-  enabled, // Bỏ qua placeholder vì không cần thiết
+  enabled,
   ...props }) {
   const today = moment().format("YYYY-MM-DD");
   console.log("children ", today)
 
   const [selectedDate, setSelectedDate] = useState(today);
+  console.log("selectedDate ", selectedDate)
+
   const errorMessage = errors[name]?.message;
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
@@ -70,40 +72,24 @@ export default function ComSelectedOneDate({
       )}
       <Controller
         control={control}
-        name="dateOfBirth"
+        name="date"
         defaultValue={today}
         render={({ field: { onChange, value } }) => (
           <View>
-            <TouchableOpacity onPress={enabled ? handleOpen : null} activeOpacity={1}>
-              <View
-                style={[
-                  styles.input,
-                  { borderColor: errorMessage ? "red" : "#33B39C" }, // Đổi màu viền khi có lỗi
-                ]}
-              >
-                <Text>{<ComDateConverter>{value || today}</ComDateConverter>}</Text>
-                {/* <Text>{formattedDate(value || date)}</Text> */}
-              </View>
-            </TouchableOpacity>
-            {open && (//Trích xuất thuộc tính field và các thuộc tính onChange và value của field từ đối tượng được trả về bởi Controller
-              <ComPopup
-              visible={open}>
-                <Calendar
-                  {...LocaleConfig}
-                  onDayPress={(day) => {
-                    onChange(day.dateString);  // Gọi onChange để cập nhật giá trị của dateOfBirth
-                    handleClose();
-
-                  }}
-                  markedDates={{
-                    [value]: {        // value: Giá trị hiện tại của trường dữ liệu.
-                      selected: true,
-                      selectedColor: '#33B39C'
-                    }
-                  }}
-                />
-              </ComPopup>
-            )}
+            <Calendar
+              {...LocaleConfig}
+              onDayPress={(day) => {
+                onChange(day.dateString);  // Gọi onChange để cập nhật giá trị của dateOfBirth
+                console.log( "day.dateString", day.dateString)
+              }}
+              markedDates={{
+                [value]: {        // value: Giá trị hiện tại của trường dữ liệu.
+                  selected: true,
+                  selectedColor: '#33B39C'
+                }
+              }}
+              minDate={today}
+            />
             {errorMessage && <Text style={styles.error}>{errorMessage}</Text>}
           </View>
         )}

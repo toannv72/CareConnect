@@ -20,43 +20,38 @@ export default function HealthMonitorIndexList() {
         },
     } = useContext(LanguageContext);
 
-    // Filter healthMonitor by createdAt date
+    const toVietnamTime = (dateValue) => {
+        const date = new Date(dateValue);
+        date.setHours(date.getHours() + 7); // Convert to UTC+7
+        return date;
+    };
+
+    // Filter healthMonitor by createdAt date in Vietnam time
     const filteredHealthMonitor = healthMonitor.filter(item => {
-        // Extract the date portion from the createdAt string
-        const createdAtDate = item?.createdAt.split('T')[0];
-        const formattedDate = date.split('T')[0];
+        const createdAtDate = toVietnamTime(item?.createdAt).toISOString().split('T')[0];
+        const formattedDate = toVietnamTime(date).toISOString().split('T')[0];
         return createdAtDate === formattedDate;
     });
 
     const filteredHealthReportDetails = [];
-
-    // Lặp qua mảng filteredHealthMonitor để thu thập chi tiết
     filteredHealthMonitor.forEach(item => {
-        // Lọc các chi tiết trong mỗi item dựa trên healthCategoryId
         const details = item?.healthReportDetails.filter(detail => detail?.healthCategoryId === id);
-
-        // Thêm trường createdAt vào mỗi đối tượng chi tiết
         details.forEach(detail => {
             filteredHealthReportDetails.push({
                 ...detail,
-                createdAt: item.createdAt, // Thêm trường createdAt từ item
+                createdAt: item.createdAt,
                 creatorInfo: item.creatorInfo.fullName
             });
         });
     });
 
     const formattedTime = (dateValue) => {
-        const date = new Date(dateValue);
-
-        // Format time: hh:mm
-        const hours = date.getHours().toString().padStart(2, '0');
-        const minutes = date.getMinutes().toString().padStart(2, '0');
-
-        // Format date: DD/MM/YYYY
-        const day = date.getDate().toString().padStart(2, '0');
-        const month = (date.getMonth() + 1).toString().padStart(2, '0'); // getMonth() returns 0-indexed month
-        const year = date.getFullYear();
-
+        // const date = toVietnamTime(dateValue);
+        const hours = new Date(dateValue).getHours().toString().padStart(2, '0');
+        const minutes = new Date(dateValue).getMinutes().toString().padStart(2, '0');
+        const day = new Date(dateValue).getDate().toString().padStart(2, '0');
+        const month = (new Date(dateValue).getMonth() + 1).toString().padStart(2, '0');
+        const year = new Date(dateValue).getFullYear();
         return `${hours}:${minutes} - ${day}/${month}/${year}`;
     };
 
@@ -72,8 +67,7 @@ export default function HealthMonitorIndexList() {
     const loginSchema = yup.object().shape({});
     const methods = useForm({
         resolver: yupResolver(loginSchema),
-        values: {
-        },
+        values: {},
     });
 
     const {
@@ -91,13 +85,12 @@ export default function HealthMonitorIndexList() {
                 showBackIcon
             />
             <View style={styles.body}>
-                <Text style={{ fontWeight: "600", fontSize: 16, textAlign: "center" }}>{filteredHealthReportDetails[0]?.healthCategory?.name}</Text>
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                 >
                     {filteredHealthReportDetails.map((detail, detailindex) => (
-                        <View style={{ gap: 5, marginVertical: 5 }}>
+                        <View key={detailindex} style={{ gap: 5, marginVertical: 5 }}>
                             <ComTimeDivision time={`${formattedTime(detail?.createdAt)}`} />
                             <ComHealthIndex key={detailindex} data={detail} clickable={false} />
                             <ComTextArea
@@ -121,7 +114,6 @@ export default function HealthMonitorIndexList() {
                                 defaultValue={detail?.healthReportDetailMeasures[0]?.note}
                             />
                         </View>
-
                     ))}
                 </ScrollView>
             </View>

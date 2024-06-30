@@ -13,6 +13,7 @@ import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import { postData, getData } from "../../api/api";
 import User_fill from "../../../assets/User_fill.png"
+import { stylesApp } from "../../styles/Styles";
 
 export default function HealthMonitorDetail() {
   const route = useRoute();
@@ -67,6 +68,12 @@ export default function HealthMonitorDetail() {
       });
   }, []);
 
+  const toVietnamTime = (dateValue) => {
+    const date = new Date(dateValue);
+    date.setHours(date.getHours() + 7); // Convert to UTC+7
+    return date;
+  };
+
   const formattedTime = (dateValue) => {
     const hours = new Date(dateValue).getHours().toString().padStart(2, '0');
     const minutes = new Date(dateValue).getMinutes().toString().padStart(2, '0');
@@ -74,10 +81,11 @@ export default function HealthMonitorDetail() {
     return `${hours}:${minutes}`;
   };
 
-  const datePart = new Date(data?.createdAt).toISOString().split('T')[0];
-  // Filter healthMonitor list based on date part
+  const datePart = toVietnamTime(data?.createdAt).toISOString().split('T')[0];
+
+  // Filter healthMonitor list based on Vietnam time date part
   const filteredHealthMonitor = healthMonitor.filter(item =>
-    new Date(item.createdAt).toISOString().split('T')[0] === datePart
+    toVietnamTime(item.createdAt).toISOString().split('T')[0] === datePart
   );
   return (
     <>
@@ -87,19 +95,19 @@ export default function HealthMonitorDetail() {
         showBackIcon
       />
       <View style={styles.body}>
-        <View style={styles.patient}>
-          <View style={styles.patient60}>
-            <ComPatient data={data?.elder} />
-          </View>
-          <View style={styles.patient40}>
-            <ComButtonDay><ComDateConverter>{datePart}</ComDateConverter></ComButtonDay>
-          </View>
-        </View>
+
         <ScrollView
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
-          style={styles?.scrollView}
         >
+          <View style={styles.patient}>
+            <View style={styles.patient60}>
+              <ComPatient data={data?.elder} />
+            </View>
+            <View style={styles.patient40}>
+              <ComButtonDay><ComDateConverter>{datePart}</ComDateConverter></ComButtonDay>
+            </View>
+          </View>
           {filteredHealthMonitor?.map((item, index) => (
             <View key={index}>
               <ComTimeDivision time={`Lần ${index + 1} - ${formattedTime(item?.createdAt)}`}></ComTimeDivision>
@@ -118,18 +126,27 @@ export default function HealthMonitorDetail() {
               </View>
 
               {item?.healthReportDetails?.map((detail, detailIndex) => (
-                <ComHealthIndex key={detailIndex} data={detail} healthMonitor={healthMonitor} date={item?.createdAt} index={index + 1}></ComHealthIndex>
+                <ComHealthIndex
+                  key={detailIndex}
+                  data={detail}
+                  healthMonitor={healthMonitor}
+                  date={item?.createdAt}
+                  index={index + 1}
+                  collapse={true}
+                />
               ))}
-              <ComTextArea
-                label={"Ghi chú tổng quát"}
-                placeholder={"Ghi chú"}
-                name="email"
-                edit={false}
-                control={control}
-                keyboardType="default" // Set keyboardType for First Name input
-                errors={errors}
-                defaultValue={item?.notes}
-              />
+              <View>
+                <ComTextArea
+                  label={"Ghi chú tổng quát"}
+                  placeholder={"Ghi chú"}
+                  name="email"
+                  edit={false}
+                  control={control}
+                  keyboardType="default" // Set keyboardType for First Name input
+                  errors={errors}
+                  defaultValue={item?.notes}
+                />
+              </View>
             </View>
           ))}
           <View style={{ height: 30 }}></View>
@@ -142,7 +159,6 @@ export default function HealthMonitorDetail() {
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    paddingTop: 10,
     backgroundColor: "#fff",
     paddingHorizontal: 15,
   },
@@ -150,10 +166,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   patient60: {
-    flex: 0.7,
+    flex: 0.65,
   },
   patient40: {
-    flex: 0.3,
+    flex: 0.35,
     justifyContent: "center",
     alignItems: "center",
   },

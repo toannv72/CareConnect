@@ -1,25 +1,25 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity } from 'react-native';
 import { LanguageContext } from "../../../contexts/LanguageContext";
-import { useRoute } from "@react-navigation/native";
 import { useNavigation } from '@react-navigation/native';
 import ComHeader from "../../../Components/ComHeader/ComHeader";
-import ComButton from "../../../Components/ComButton/ComButton";
-import Checkbox from 'expo-checkbox';
+import ComSelectButton from "../../../Components/ComButton/ComSelectButton";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 import ComInputSearch from "../../../Components/ComInput/ComInputSearch";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm } from "react-hook-form";
+import { postData, getData } from "../../../api/api";
 
 export default function ListHealthIndex({ data }) {
+    const [selectedHealthIndexItems, setSelectedHealthIndexItems] = useState([]);
+    const [healthIndex, setHealthIndex] = useState([])
+    const [loading, setLoading] = useState(false);
 
     const {
         text: { NurseHealthMonitor },
-        setLanguage,
     } = useContext(LanguageContext);
     const navigation = useNavigation();
-
-    const [selectedHealthIndexItems, setSelectedHealthIndexItems] = useState([]);
 
     const handleCheckboxClick = (item) => {
         setSelectedHealthIndexItems(prevItems => {
@@ -57,65 +57,18 @@ export default function ListHealthIndex({ data }) {
         setLoading(!loading);
     };
 
-    const [healthIndex, setHealthIndex] = useState([
-        {
-            img: "https://png.pngtree.com/element_our/png_detail/20180910/blood-pressure-icon-design-vector-png_86788.jpg",
-            title: "Huyết áp",
-            unit: "mmHg",
-            id: 1
-        },
-        {
-            img: "https://static.vecteezy.com/system/resources/thumbnails/022/979/495/small/heart-rhythm-graph-checking-your-heartbeat-for-diagnosis-png.png",
-            title: "Nhịp tim",
-            unit: "nhịp/giây",
-            id: 2
-        },
-        {
-            img: "https://png.pngtree.com/png-clipart/20201223/ourlarge/pngtree-diabetes-blood-glucose-meter-png-image_2596889.jpg",
-            title: "Đường Huyết",
-            unit: "mmol/l",
-            id: 3
-        },
-        {
-            img: "https://cdn-icons-png.flaticon.com/512/6192/6192010.png",
-            title: "Cholesterol",
-            unit: "mmol/l",
-            id: 4
-        },
-        {
-            img: "https://png.pngtree.com/element_our/20190529/ourlarge/pngtree-weighing-vector-icon-material-image_1197044.jpg",
-            title: "Cân nặng",
-            unit: "Kg",
-            id: 5
-        },
-        {
-            img: "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRY-gvCfdzIMZ0e-8ezrIgW_nQO1A0VkbgSYcq-gXEQLbpeEqF2",
-            title: "Chiều cao",
-            unit: "Cm",
-            id: 6
-        },
-        {
-            img: "https://png.pngtree.com/element_our/20190529/ourlarge/pngtree-weighing-vector-icon-material-image_1197044.jpg",
-            title: "Cholesterol 2",
-            unit: "mmol/l",
-            id: 7
-        }, {
-            img: "https://png.pngtree.com/element_our/20190529/ourlarge/pngtree-weighing-vector-icon-material-image_1197044.jpg",
-            title: "Cholesterol 2",
-            unit: null,
-            id: 8
-        }, {
-            img: "https://png.pngtree.com/element_our/20190529/ourlarge/pngtree-weighing-vector-icon-material-image_1197044.jpg",
-            title: "Cholesterol 2",
-            unit: "mmol/l",
-            id: 9
-        }, {
-            img: "https://png.pngtree.com/element_our/20190529/ourlarge/pngtree-weighing-vector-icon-material-image_1197044.jpg",
-            title: "Cholesterol 2",
-            unit: "mmol/l",
-            id: 10
-        },
-    ])
+    useEffect(() => {
+        setLoading(true);
+        getData(`/health-category`, {})
+            .then((categories) => {
+                setHealthIndex(categories?.data?.contends);
+                setLoading(false);
+            })
+            .catch((error) => {
+                setLoading(false);
+                console.error("Error fetching order items:", error);
+            });
+    }, []);
 
     return (
         <>
@@ -125,7 +78,6 @@ export default function ListHealthIndex({ data }) {
                 title={NurseHealthMonitor?.healthIndex}
             />
             <View style={styles?.body}>
-
                 <FormProvider {...methods}>
                     <ComInputSearch
                         placeholder="Tìm kiếm"
@@ -143,34 +95,43 @@ export default function ListHealthIndex({ data }) {
                     showsVerticalScrollIndicator={false}
                 >
                     {healthIndex.map((item, index) => (
-                        <TouchableOpacity
-                         style={styles.section}
-                          onPress={() => handleCheckboxClick(item)}
-                          key={index}>
-                            <Checkbox
-                                value={selectedHealthIndexItems.some(i => i.id === item.id)}
-                                onValueChange={() => handleCheckboxClick(item)}
-                                color={selectedHealthIndexItems.some(i => i.id === item.id) ? "#33B39C" : undefined}
-                            />
-                            <Image
-                                source={{ uri: item?.img }} // Đường dẫn tới ảnh của bạn
-                                style={
-                                    {
-                                        width: 50,
-                                        height: 50
-                                    }
-                                }
-                            />
-                            <Text style={styles.paragraph}>{item?.title}</Text>
-                        </TouchableOpacity>
+                        <BouncyCheckbox
+                            key={index}
+                            fillColor="#33B39C"
+                            style={{
+                                marginVertical: 5,
+                                borderWidth: 1,
+                                borderColor: "#33B39C",
+                                padding: 10,
+                                borderRadius: 10,
+                            }}
+                            textComponent={
+                                    <View style={styles.textComponentContainer}>
+                                        <Image source={{ uri: item?.imageUrl }}
+                                            style={
+                                                {
+                                                    width: 50,
+                                                    height: 50,
+                                                    marginHorizontal: 10,
+                                                    flex: 1
+                                                }
+                                            } />
+                                        <Text style={styles.paragraph}>{item?.name}</Text>
+                                    </View>
+                            }
+                            innerIconStyle={{ borderWidth: 2 }}
+                            onPress={(isChecked) => { handleCheckboxClick(item) }}
+                            isChecked={selectedHealthIndexItems.some(i => i.id === item.id)}
+                        />
                     ))}
                 </ScrollView>
 
-                <ComButton
-                    style={{ borderRadius: 50, marginBottom: 30 }}
-                    onPress={() => navigation.navigate("CreateHealthMonitor", { selectedIndexs:  selectedHealthIndexItems })}>
+                <ComSelectButton
+                    disable={selectedHealthIndexItems.length == 0 ? true : false}
+                    style={{ borderRadius: 50, marginBottom: 30, height: 50 }}
+                    onPress={() => navigation.navigate("CreateHealthMonitor", { selectedIndexs: selectedHealthIndexItems })}>
                     Tiếp tục
-                </ComButton>
+                </ComSelectButton>
             </View>
         </>
     )
@@ -183,17 +144,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         paddingHorizontal: 20,
     },
-    imageContainer: {
-        position: 'absolute',
-        bottom: 40,
-        right: 40,
-    },
-    section: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginVertical: 10,
-        gap: 10
-    },
     chooseText: {
         fontSize: 16,
         paddingVertical: 15,
@@ -201,5 +151,18 @@ const styles = StyleSheet.create({
     },
     paragraph: {
         fontSize: 16,
+        paddingRight: 10,
+        flexWrap: "wrap",
+        flex: 3,
+    },
+    image: {
+        width: 20,
+        height: 20,
+        marginHorizontal: 5,
+    },
+    textComponentContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        flex: 1,
     },
 })

@@ -10,9 +10,9 @@ import ComHeader from "../../../Components/ComHeader/ComHeader";
 import ComButton from "../../../Components/ComButton/ComButton";
 import ComPopup from "../../../Components/ComPopup/ComPopup";
 import ComSelectedOneDate from "../../../Components/ComDate/ComSelectedOneDate";
-import ComDatePicker from "../../../Components/ComInput/ComDatePicker";
 import moment from "moment";
 import { postData, getData } from "../../../api/api";
+import Toast from 'react-native-toast-message';
 
 export default function ServicePackageDetail({ }) {
   const today = moment().format("YYYY-MM-DD");
@@ -25,7 +25,6 @@ export default function ServicePackageDetail({ }) {
 
   const {
     text: { servicePackages },
-    setLanguage,
   } = useContext(LanguageContext);
 
   const handleClosePopupDate = () => {
@@ -46,39 +45,42 @@ export default function ServicePackageDetail({ }) {
     });
   };
 
+  const showToast = (type, text1, text2, position) => {
+    Toast.show({
+      type: type,
+      text1: text1,
+      text2: text2,
+      position: position
+    });
+  }
+
   const loginSchema = yup.object().shape({
     date: yup.date().required("Vui lòng chọn ngày đặt lịch"),
   });
   const methods = useForm({
     resolver: yupResolver(loginSchema),
-    defaultValues: {
-    },
   });
   const {
     control,
     handleSubmit,
-    register,
     formState: { errors },
   } = methods;
 
   const handleCreateAppointment = (data) => {
-    // setLoading(true);
-    // Xử lý đăng nhập với dữ liệu từ data
     Keyboard.dismiss();
     const formData = {
-      ...data, // Include all form data
+      ...data,
       nursingPackageId: serviceData?.id,
-      // Add more fields as needed
+      date: moment(data?.date).format("YYYY-MM-DD"), // Đảm bảo chuyển đổi ngày về định dạng chuẩn
     };
     postData("/appointments/RegisterPackage", formData, {})
       .then((data) => {
-        // Chờ setToken hoàn thành trước khi navigate
+        handleClosePopupDate()
         navigation.navigate("ServicePackageRegisterSuccess", { data: data });
       })
       .catch((error) => {
-        console.log("Error register :", error);
-        // setLoading(false)
-        showToast("error", "Đăng ký hẹn thất bại", Login?.message?.invalidCredential, "bottom")
+        console.log("Error registering:", error);
+        showToast("error", "Đã có lỗi xảy ra, vui lòng thử lại", "", "bottom")
       });
   };
 
@@ -95,8 +97,7 @@ export default function ServicePackageDetail({ }) {
           style={{
             height: 250,
             objectFit: "fill",
-          }}
-        />
+          }} />
         <ScrollView
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
@@ -131,8 +132,7 @@ export default function ServicePackageDetail({ }) {
         </ScrollView>
         <View style={styles?.content}>
           <ComButton
-            onPress={handleOpenPopupDate}
-          >
+            onPress={handleOpenPopupDate}>
             {servicePackages?.detail?.registerForm}
           </ComButton>
         </View>
@@ -140,8 +140,7 @@ export default function ServicePackageDetail({ }) {
 
       <ComPopup
         visible={popupDate}
-        title="Chọn ngày hẹn"
-      >
+        title="Chọn ngày hẹn">
         <Text style={{ color: "#A3A3A3", textAlign: "center" }}> {servicePackages?.popup?.signContractSubTitle}</Text>
         <Text style={{ color: "#A3A3A3", textAlign: "center" }}>{servicePackages?.popup?.limitDays}</Text>
         <FormProvider {...methods}>
@@ -151,24 +150,12 @@ export default function ServicePackageDetail({ }) {
               name="date"
               control={control}
               errors={errors} />
-            {/* <ComDatePicker
-              // label={EditProfile?.label?.dateOfBirth}
-              // placeholder={EditProfile?.placeholder?.dateOfBirth}
-              name="date"
-              control={control}
-              errors={errors} // Pass errors object
-              enabled={true}
-              mode={"date"}
-              required
-            /> */}
             <View
               style={{
-                backgroundColor: "#fff",
                 flexDirection: "row",
                 justifyContent: "space-around",
                 gap: 25
-              }}
-            >
+              }}>
               <ComButton
                 check
                 onPress={handleClosePopupDate}

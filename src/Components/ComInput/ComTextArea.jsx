@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import { Controller } from "react-hook-form";
 import { StyleSheet, View, Text, TextInput } from "react-native";
+import { stylesApp } from "../../styles/Styles";
 
 const ComTextArea = (
   {
@@ -32,7 +33,7 @@ const ComTextArea = (
       <Controller
         control={control}
         render={({ field: { onChange, onBlur, value } }) => (
-          <View>
+          <View >
             <TextInput
               onBlur={() => {
                 onBlur();
@@ -48,6 +49,7 @@ const ComTextArea = (
               keyboardType={keyboardType} // Set keyboardType here
               ref={ref}
               style={[
+                stylesApp.shadow,
                 styles.input,
                 {
                   borderColor: errorMessage ? "red" : "#33B39C",
@@ -68,9 +70,6 @@ const ComTextArea = (
 
 export default ComTextArea;
 const styles = StyleSheet.create({
-  inputContainer: {
-    marginBottom: 20,
-  },
   labelContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -87,13 +86,13 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: "#fff",
-    // height: 40,
-    padding: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingHorizontal: 10,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "gray",
-    fontWeight: "bold",
-    color:"#000"
+    color:"#000",
   },
   error: {
     color: "red",

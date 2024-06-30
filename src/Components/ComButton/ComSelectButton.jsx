@@ -35,9 +35,9 @@ export default function ComSelectButton({ children, onPress, check, disable }) {
 const styles = StyleSheet.create({
   button: {
     marginTop: 10,
-    marginBottom: 10,
+    marginBottom: 20,
     backgroundColor: "#fff",
-    paddingVertical: 8,
+    paddingVertical: 15,
     paddingHorizontal: 20,
     borderRadius: 10,
     // width: 100,
@@ -52,9 +52,9 @@ const styles = StyleSheet.create({
   },
   button1: {
     marginTop: 10,
-    marginBottom: 10,
+    marginBottom: 20,
     backgroundColor: "#33B39C",
-    paddingVertical: 8,
+    paddingVertical: 15,
     borderWidth: 1,
     borderColor: "#33B39C",
     borderRadius: 10,
@@ -63,9 +63,9 @@ const styles = StyleSheet.create({
   },
   buttonDisable: {
     marginTop: 10,
-    marginBottom: 10,
+    marginBottom: 20,
     backgroundColor: "#33B39C",
-    paddingVertical: 8,
+    paddingVertical: 15,
     borderWidth: 1,
     borderColor: "#33B39C",
     borderRadius: 10,

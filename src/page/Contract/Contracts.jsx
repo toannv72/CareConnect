@@ -17,7 +17,7 @@ export default function Contracts() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [select, setSelect] = useState(false);
   const [loading, setLoading] = useState(false);
-  const categories = ["InUse", "Cancelled", "Expired", "Pending"];
+  const categories = ["Valid",  "Invalid", "Cancelled", "Pending"];
 
   const handlePress = (category) => {
     setSelectedCategory(category);
@@ -59,12 +59,12 @@ export default function Contracts() {
 
   const getStatusText = (status) => {
     switch (status) {
-      case 'InUse':
+      case 'Valid':
         return { text: 'Còn hạn', color: 'green' };
       case 'Cancelled':
         return { text: 'Đã hủy', color: 'red' };
-      case 'Expired':
-        return { text: 'Hết hạn' };
+      case 'Invalid':
+        return { text: 'Hết hạn', color: 'red' };
       case 'Pending':
         return { text: 'Đang chờ' };
       default:

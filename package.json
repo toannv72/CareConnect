@@ -38,6 +38,7 @@
     "react-hook-form": "^7.51.4",
     "react-native": "0.73.6",
     "react-native-autofocus": "^0.0.7",
+    "react-native-bouncy-checkbox": "^4.0.1",
     "react-native-calendars": "^1.1304.1",
     "react-native-check-box": "^2.1.7",
     "react-native-date-picker": "^5.0.4",

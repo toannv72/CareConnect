@@ -1,34 +1,58 @@
-import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import React, { useEffect, useCallback } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import editIcon from "../../../assets/profile_icons/edit.png";
+import { useStorage } from "../../hooks/useLocalStorage";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function HeaderNurse() {
   const navigation = useNavigation();
+  const [user, setUser] = useStorage("user", {});
 
   const edit = () => {
     navigation.navigate("EditProfile");
   };
   const DetailProfile = () => {
     navigation.navigate("DetailProfile");
-    
   }
+
+  const loadUser = useCallback(async () => {
+    try {
+      const userData = await AsyncStorage.getItem("user");
+      if (userData) {
+        setUser(JSON.parse(userData));
+      }
+    } catch (error) {
+      console.error("Failed to load user data", error);
+    }
+  }, []);
+
+  // Load user data when the screen is focused
+  useFocusEffect(() => {
+    loadUser();
+  });
+
   return (
     <View style={styles.body}>
-      <TouchableOpacity style={styles.container} onPress={DetailProfile}>
+    <TouchableOpacity style={styles.container} onPress={DetailProfile}>
+      <Image
+        source={{
+          uri: user?.avatarUrl
+        }}
+        style={styles.avatar}
+      />
+      <View style={styles.info}>
+        <Text style={styles.name}>{user?.fullName}</Text>
+        <Text style={styles.phone}>{user?.phoneNumber}</Text>
+      </View>
+      {/* <TouchableOpacity style={styles.editButton} onPress={edit}>
         <Image
-          source={{
-            uri: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
-          }}
-          style={styles.avatar}
+          source={editIcon} // Thay thế bằng đường dẫn đến icon chỉnh sửa
+          style={styles.editIcon}
         />
-        <View style={styles.info}>
-          <Text style={styles.name}>Cao Văn B</Text>
-          <Text style={styles.phone}>0909799799</Text>
-        </View>
-       
-      </TouchableOpacity>
-    </View>
+      </TouchableOpacity> */}
+    </TouchableOpacity>
+  </View>
   );
 }
 const styles = StyleSheet.create({
@@ -60,6 +84,6 @@ const styles = StyleSheet.create({
   },
   editIcon: {
     width: 30,
-    height:30,
+    height: 30,
   },
 });

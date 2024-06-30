@@ -82,7 +82,6 @@ export default function AddingServicePackages() {
     return (
         <>
             <ComHeader
-                showBackIcon={true}
                 showTitle={true}
                 title={addingPackages?.title}
             />

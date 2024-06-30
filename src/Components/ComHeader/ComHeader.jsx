@@ -1,7 +1,7 @@
 import React from "react";
 import { TouchableOpacity, View, Text, StyleSheet, Image } from "react-native";
 import backArrowBlack from "../../../assets/icon/backArrowBlack.png";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 const ComHeader = ({
   showBackIcon = false,
@@ -10,12 +10,13 @@ const ComHeader = ({
   backgroundColor = "white",
 }) => {
   const navigation = useNavigation();
+  const route = useRoute();
 
   const handleBackPress = () => {
-    if (navigation.canGoBack()) {
-      navigation.goBack();
+    if (route.name === 'EditProfile' || !navigation.canGoBack()) {
+      navigation.navigate("Home");
     } else {
-      navigation.navigate("Homes");
+      navigation.goBack();
     }
   };
 
@@ -41,11 +42,8 @@ const ComHeader = ({
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    // alignItems: "center",
     paddingTop: 55,
     paddingBottom: 5,
-    // justifyContent: "center",
-    // position: "relative",
   },
   backIconContainer: {
     position: "absolute",
