@@ -36,16 +36,6 @@ export default function UserProfile() {
       icon: changePassword,
     },
     {
-      name: "Đổi ngôn ngữ",
-      link: "FeedbackHistory",
-      icon: changeLanguage,
-    },
-    // {
-    //   name: "Thông báo",
-    //   link: "notification",
-    //   icon: notification,
-    // },
-    {
       name: "Đánh giá",
       link: "FeedbackHistory",
       icon: feedback,

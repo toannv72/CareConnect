@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { StyleSheet, View, Text, Button, Keyboard, Image } from "react-native";
+import { StyleSheet, View, Text, KeyboardAvoidingView, Keyboard, Image } from "react-native";
 import * as yup from "yup";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -78,7 +78,7 @@ export default function CreateFeedback() {
                 showTitle={true}
                 title={feedback?.title}
             />
-            <View style={styles.container}>
+            <KeyboardAvoidingView style={styles.container} behavior="padding">
                 <View style={styles.body}>
                     <Image
                         source={feedbackImg}
@@ -120,7 +120,7 @@ export default function CreateFeedback() {
                         </View>
                     </FormProvider>
                 </View>
-            </View >
+            </KeyboardAvoidingView >
         </>
     )
 }

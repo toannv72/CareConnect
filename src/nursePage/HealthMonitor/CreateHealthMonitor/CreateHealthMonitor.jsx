@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { View, StyleSheet, ScrollView, Image, Text } from 'react-native';
+import { View, StyleSheet, ScrollView, Image, Text, KeyboardAvoidingView } from 'react-native';
 import { LanguageContext } from "../../../contexts/LanguageContext";
 import { useRoute } from "@react-navigation/native";
 import HealthMonitor from "../../../../assets/images/HealthMonitor/HealthMonitor.png";
@@ -36,16 +36,16 @@ export default function CreateHealthMonitor() {
     }
 
     const loginSchema = yup.object().shape({
-        notes: yup.string().required('Ghi chú tổng quát là bắt buộc'),
+        notes: yup.string().required('Vui lòng nhập ghi chú tổng quát'),
         ...selectedIndexs.reduce((acc, category) => {
             category.measureUnits.forEach(unit => {
                 acc[`value_${unit.id}`] = yup
                     .string()
-                    .required('Vui lòng nhập giá trị')
-                    .matches(/^\d+(\.\d{1,2})?$/, 'Giá trị phải là số dương và không quá hai chữ số thập phân')
-                    .test('is-positive', 'Giá trị phải là số dương', value => parseFloat(value) > 0 || value === "")
+                    .required('Vui lòng nhập kết quả')
+                    .matches(/^\d+(\.\d{1,2})?$/, 'Kết quả phải là số dương và không quá hai chữ số thập phân')
+                    .test('is-positive', 'Kết quả phải là số dương', value => parseFloat(value) > 0 || value === "")
                 acc[`status_${unit.id}`] = yup.string().required('Vui lòng nhập trạng thái');
-                acc[`note_${unit.id}`] = yup.string().required('Vui lòng nhập ghi chú');
+                // acc[`note_${unit.id}`] = yup.string().required('Vui lòng nhập ghi chú');
             });
             return acc;
         }, {})
@@ -58,6 +58,7 @@ export default function CreateHealthMonitor() {
             ...selectedIndexs.reduce((acc, category) => {
                 category.measureUnits.forEach(unit => {
                     acc[`status_${unit.id}`] = "Normal";
+                    acc[`note_${unit.id}`] = "";
                 });
                 return acc;
             }, {})
@@ -102,14 +103,14 @@ export default function CreateHealthMonitor() {
     return (
         <>
             <ComHeader showBackIcon showTitle title={NurseHealthMonitor?.createHealthMonitor} />
-            <View style={styles.body}>
-                <View style={{ alignItems: "center" }}>
-                    <Image source={HealthMonitor} style={{ height: 180, objectFit: "fill" }} />
-                </View>
+            <KeyboardAvoidingView style={styles.body}>
                 <View style={styles.container}>
                     <FormProvider {...methods}>
                         <View style={{ width: "100%", gap: 10, flex: 1 }}>
                             <ScrollView showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
+                                <View style={{ alignItems: "center" }}>
+                                    <Image source={HealthMonitor} style={{ height: 160, objectFit: "fill" }} />
+                                </View>
                                 <Text style={{ fontSize: 16, fontWeight: "600" }}>{NurseHealthMonitor?.healthIndex}</Text>
                                 {selectedIndexs.map((item, index) => (
                                     <View style={styles.index} key={index}>
@@ -120,8 +121,8 @@ export default function CreateHealthMonitor() {
                                                 <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 10 }}>
                                                     <View style={{ flex: 1 }}>
                                                         <ComInput
-                                                            label={"Giá trị"}
-                                                            placeholder={"Giá trị"}
+                                                            label={"Kết quả"}
+                                                            placeholder={"Kết quả"}
                                                             name={`value_${unit.id}`}
                                                             control={control}
                                                             keyboardType="number-pad"
@@ -148,7 +149,6 @@ export default function CreateHealthMonitor() {
                                                         control={control}
                                                         keyboardType="default"
                                                         errors={errors}
-                                                        required
                                                     />
                                                 </View>
                                             </View>
@@ -171,7 +171,7 @@ export default function CreateHealthMonitor() {
                         </View>
                     </FormProvider>
                 </View>
-            </View>
+            </KeyboardAvoidingView>
         </>
     );
 }

@@ -80,7 +80,7 @@ export default function HealthMonitorIndexList() {
     return (
         <>
             <ComHeader
-                title={HealthMonitorDetail?.title}
+                title="Chỉ số sức khỏe trong ngày"
                 showTitle
                 showBackIcon
             />
