@@ -30,7 +30,8 @@ export default function LoginScreen() {
       type: type,
       text1: text1,
       text2: text2,
-      position: position
+      position: position,
+      visibilityTime: 2000
     });
   }
 

@@ -6,6 +6,7 @@ import { useRoute } from "@react-navigation/native";
 import backArrowWhite from "../../../assets/icon/backArrowWhite.png";
 import { useNavigation } from '@react-navigation/native';
 import { postData, getData } from "../../api/api";
+import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter";
 
 export default function AddingServiceDetail() {
 
@@ -26,15 +27,10 @@ export default function AddingServiceDetail() {
     };
 
     const formatCurrency = (number) => {
-        if (number) {
-            // Sử dụng hàm toLocaleString() để định dạng số
-            return number.toLocaleString("vi-VN", {
-                style: "currency",
-                currency: "VND",
-            });
-        } else {
-            return null; // or any default value you want to return
-        }
+        return number?.toLocaleString("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }) ?? '';
     };
 
     useEffect(() => {
@@ -70,54 +66,79 @@ export default function AddingServiceDetail() {
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}>
-                    <Text style={{ fontWeight: "bold", fontSize: 20, marginBottom: 10 }} numberOfLines={2}>
-                        {data?.name}
-                    </Text>
-                    {/* price */}
-                    <Text style={{ fontSize: 16, marginBottom: 10 }}>
-                        <Text style={{ fontWeight: "bold" }}>
-                            {formatCurrency(data?.price)}
+                    <View style={{flex: 1, gap: 10}}>
+                        <Text style={{ fontWeight: "bold", fontSize: 20 }} numberOfLines={2}>
+                            {data?.name}
                         </Text>
-                        /{addingPackages?.package?.month}
-                    </Text>
-                    {/* category */}
-                    <Text style={{ flexDirection: "row", marginBottom: 10 }}>
-                        <Text style={styles.contentBold}>
-                            {addingPackages?.package?.category}
-                        </Text>
+                        {/* price */}
                         <Text style={{ fontSize: 16 }}>
-                            : {data?.servicePackageCategory?.name}
+                            <Text style={{ fontWeight: "bold", fontSize: 20 }}>
+                                {formatCurrency(data?.price)}
+                            </Text>
+                            /{addingPackages?.package?.time}
                         </Text>
-                    </Text>
-
-                    {data?.registrationLimit !== 0 && (
-                        <Text style={{ flexDirection: "row", marginBottom: 10 }}>
+                        {/* category */}
+                        <Text style={{ flexDirection: "row" }}>
                             <Text style={styles.contentBold}>
-                                {addingPackages?.package?.registrationLimit}
+                                {addingPackages?.package?.category}
                             </Text>
                             <Text style={{ fontSize: 16 }}>
-                                : {data?.registrationLimit}
+                                : {data?.servicePackageCategory?.name}
                             </Text>
-                            / {addingPackages?.package?.time}
                         </Text>
-                    )}
 
-                    {data?.timeBetweenServices !== 0 && (
-                        <Text style={{ flexDirection: "row", marginBottom: 10 }}>
-                            <Text style={styles.contentBold}>
-                                {addingPackages?.package?.timeBetweenServices}
+                        {data?.registrationLimit !== 0 && (
+                            <Text style={{ flexDirection: "row" }}>
+                                <Text style={styles.contentBold}>
+                                    {addingPackages?.package?.registrationLimit}
+                                </Text>
+                                <Text style={{ fontSize: 16 }}>
+                                    : {data?.registrationLimit} {addingPackages?.package?.people}
+                                </Text>
                             </Text>
-                            <Text style={{ fontSize: 16 }}>
-                                : {data?.timeBetweenServices}
+                        )}
+
+                        {data?.timeBetweenServices !== 0 && (
+                            <Text style={{ flexDirection: "row" }}>
+                                <Text style={styles.contentBold}>
+                                    {addingPackages?.package?.timeBetweenServices}
+                                </Text>
+                                <Text style={{ fontSize: 16 }}>
+                                    : {data?.timeBetweenServices}
+                                </Text>
+                                {" " + addingPackages?.package?.dayBetweenServices}
                             </Text>
-                            {" " + addingPackages?.package?.people}
+                        )}
+
+                        {
+                            data?.eventDate && (
+                                <>
+                                    <Text style={{ flexDirection: "row" }}>
+                                        <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                                            {addingPackages?.package?.endRegistrationStartDate}
+                                        </Text>
+                                        <Text>
+                                            : <ComDateConverter>{data?.endRegistrationStartDate}</ComDateConverter>
+                                        </Text>
+                                    </Text>
+                                    <Text style={{ flexDirection: "row" }}>
+                                        <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                                            {addingPackages?.package?.eventDate}
+                                        </Text>
+                                        <Text>
+                                            : <ComDateConverter>{data?.eventDate}</ComDateConverter>
+                                        </Text>
+                                    </Text>
+                                </>
+                            )
+                        }
+                        {/* mô tả */}
+                        <Text style={styles.contentBold}>
+                            {addingPackages?.package?.description}
                         </Text>
-                    )}
-                    {/* mô tả */}
-                    <Text style={styles.contentBold}>
-                        {addingPackages?.package?.description}
-                    </Text>
-                    <Text style={{ fontSize: 16 }}>{data?.description}</Text>
+                        <Text style={{ fontSize: 16 }}>{data?.description}</Text>
+
+                    </View>
                 </ScrollView>
                 <View style={{ marginVertical: 20 }}>
                     <ComSelectButton

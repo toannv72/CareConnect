@@ -107,7 +107,9 @@ export default function CreateHealthMonitor() {
                 <View style={styles.container}>
                     <FormProvider {...methods}>
                         <View style={{ width: "100%", gap: 10, flex: 1 }}>
-                            <ScrollView showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
+                            <ScrollView
+                                showsVerticalScrollIndicator={false}
+                                showsHorizontalScrollIndicator={false}>
                                 <View style={{ alignItems: "center" }}>
                                     <Image source={HealthMonitor} style={{ height: 160, objectFit: "fill" }} />
                                 </View>

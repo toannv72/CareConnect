@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { View, StyleSheet, ScrollView, Image, Text } from 'react-native';
+import { View, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { FormProvider, useForm } from "react-hook-form";
 import ComHeader from '../../Components/ComHeader/ComHeader';
 import ComSelectButton from "../../Components/ComButton/ComSelectButton";
@@ -9,15 +9,17 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import ComLoading from "../../Components/ComLoading/ComLoading";
 import ComAddPackage from "./ComAddPackage";
 import { LanguageContext } from "./../../contexts/LanguageContext";
-import Nodata from "../../../assets/Nodata.png";
+import ComNoData from "../../Components/ComNoData/ComNoData";
+import Cart from "../../../assets/cart.png";
 import { postData, getData } from "../../api/api";
+import { stylesApp } from "../../styles/Styles";
+import { useNavigation } from '@react-navigation/native';
 
 export default function AddingServicePackages() {
     const {
         text: { addingPackages },
-        setLanguage,
     } = useContext(LanguageContext);
-
+    const navigation = useNavigation();
     const [data, setData] = useState([]);
     const [categoryData, setCategoryData] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(select);
@@ -52,7 +54,6 @@ export default function AddingServicePackages() {
     };
 
     useEffect(() => {
-        // Lấy danh sách sản phẩm
         setLoading(!loading);
         getData('/service-package', {})
             .then((packageData) => {
@@ -86,16 +87,32 @@ export default function AddingServicePackages() {
                 title={addingPackages?.title}
             />
             <View style={styles.container}>
-                <FormProvider {...methods}>
-                    <ComInputSearch
-                        placeholder="Tìm kiếm"
-                        keyboardType="default"
-                        name="search"
-                        control={control}
-                        onSubmitEditing={handleSubmit(onSubmit)}
-                        errors={errors}
-                    />
-                </FormProvider>
+                <View style={{ flexDirection: "row", gap: 5 }}>
+                    <View style={{ flex: 5.5 }}>
+                        <FormProvider {...methods} style>
+                            <ComInputSearch
+                                placeholder="Tìm kiếm"
+                                keyboardType="default"
+                                name="search"
+                                control={control}
+                                onSubmitEditing={handleSubmit(onSubmit)}
+                                errors={errors}
+                            />
+                        </FormProvider>
+                    </View>
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate("Cart")}
+                        style={[styles.cart, stylesApp.shadow]}>
+                        <Image
+                            source={Cart}
+                            style={{
+                                width: 30,
+                                height: 30,
+                                tintColor: "#fff"
+                            }}
+                        />
+                    </TouchableOpacity>
+                </View>
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
@@ -118,13 +135,7 @@ export default function AddingServicePackages() {
                 </ScrollView>
                 <ComLoading show={loading}>
                     {filteredData.length == 0 ? (
-                        <View style={styles?.noDataContainer}>
-                            <Image
-                                source={Nodata}
-                                style={styles?.noDataImage}
-                            />
-                            <Text style={{ fontSize: 16 }}>Không có dữ liệu</Text>
-                        </View>
+                        <ComNoData>Không có dữ liệu</ComNoData>
                     ) : (
                         <ScrollView
                             showsVerticalScrollIndicator={false}
@@ -133,11 +144,10 @@ export default function AddingServicePackages() {
                             {filteredData?.map((value, index) => (
                                 <ComAddPackage key={index} data={value} />
                             ))}
-                            <View style={{ height: 230 }}></View>
+                            <View style={{ height: 300 }}></View>
                         </ScrollView>
                     )}
                 </ComLoading>
-
             </View >
         </>
     );
@@ -170,4 +180,13 @@ const styles = StyleSheet.create({
         height: 150,
         marginBottom: 20,
     },
+    cart: {
+        flex: 1,
+        paddingTop: 5,
+        paddingBottom: 5,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#33B39C",
+        borderRadius: 10
+    }
 });

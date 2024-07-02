@@ -49,6 +49,7 @@ export default function ServicePayment() {
                     source={servicePayment}
                     style={{
                         height: 200,
+                        width: "100%",
                         objectFit: "fill",
                     }}
                 />
@@ -132,7 +133,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
     },
     header:{
-        paddingTop: 50
+        paddingTop: 50,
+        backgroundColor: "#fff",
     },
     contentBold: {
         fontSize: 16,

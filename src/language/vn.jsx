@@ -179,13 +179,17 @@ export const vn = {
       month: "tháng",
       people: "người",
       time: "lần",
+      dayBetweenServices: "ngày/lần",
       registrationLimit: "Giới hạn người đăng ký",
-      timeBetweenServices: "Tần suất thực hiện"
+      timeBetweenServices: "Tần suất thực hiện",
+      eventDate: "Ngày diễn ra",
+      endRegistrationStartDate: "Hạn đăng ký"
     },
     register: {
       registerElder: "Bạn muốn đăng ký dịch vụ cho",
       registerTime: "Thời gian thực hiện",
       registerTitle: "Đăng ký dịch vụ",
+      cart: "Giỏ hàng"
     },
     payment: {
       title: "Thanh toán",
@@ -286,7 +290,7 @@ export const vn = {
       gender: "Giới tính",
       dateOfBirth: "Ngày sinh",
       phoneNumber: "Số điện thoại",
-      email: "Địa chỉ gmail",
+      email: "Email",
       idNumber: "Số CCCD hoặc CMND",
       address: "Địa chỉ thường trú",
     },
@@ -424,7 +428,7 @@ export const vn = {
     takeRest: "Bạn có thể nghỉ ngơi rồi",
     room: "Phòng",
     area: "Khu",
-    capacity: "Số người",
+    capacity: "Số người cao tuổi",
     type: "Loại",
   },
   NurseHealthMonitor:{

@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigation } from "@react-navigation/native";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import * as yup from "yup";
@@ -11,54 +11,69 @@ import ComSelect from "../../Components/ComInput/ComSelect";
 import ComDatePicker from "../../Components/ComInput/ComDatePicker";
 import { ScrollView } from "react-native";
 import ComHeader from "../../Components/ComHeader/ComHeader";
+import { useRoute } from "@react-navigation/native";
+import { postData, getData } from "../../api/api";
+import moment from 'moment';
 
 export default function NurseElderDetailProfile() {
   const [date, setDate] = useState(new Date());
   const [user, setUser] = useState({ role: "user" });
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([])
+
   const navigation = useNavigation();
+  const route = useRoute();
+  const { id, selectedRoom } = route.params || {};
 
   const {
     text: {
       ElderProfile,
       EditProfile,
+      CareSchedule,
       common: { button },
     },
     setLanguage,
   } = useContext(LanguageContext);
 
-  const loginSchema = yup.object().shape({
-    fullName: yup.string().trim().required(EditProfile?.message?.fullName),
-    gender: yup.string().trim().required(EditProfile?.message?.gender),
-    dateOfBirth: yup
-      .string()
-      .trim()
-      .required(EditProfile?.message?.dateOfBirth),
-    phoneNumber: yup
-      .string()
-      .trim()
-      .required(EditProfile?.message?.phoneNumber),
-    email: yup
-      .string()
-      .email(EditProfile?.message?.emailInvalid)
-      .trim()
-      .required(EditProfile?.message?.email),
-    idNumber: yup.string().trim().required(EditProfile?.message?.idNumber),
-    address: yup.string().trim().required(EditProfile?.message?.address),
-  });
+  useEffect(() => {
+    setLoading(!loading);
+    getData(`/elders/${id}`, {})
+      .then((elders) => {
+        setData(elders?.data);
+        setLoading(loading);
+        const formattedDate = moment(elders?.data?.dateOfBirth, "YYYY-MM-DD").format("DD/MM/YYYY");
+        methods.reset({
+          fullName: elders?.data?.name,
+          dateOfBirth: formattedDate,
+          gender: elders?.data?.gender,
+          nurseHomeAddress: CareSchedule?.room + " " + selectedRoom?.name + ", " + CareSchedule?.area + " " + selectedRoom?.block?.name,
+          address: elders?.data?.address
+        });
+      })
+      .catch((error) => {
+        setLoading(loading);
+        console.error("Error fetching service-package:", error);
+      });
+  }, [])
+
+  const loginSchema = yup.object().shape({});
 
   const medicalProfile = () => {
-    navigation.navigate("MedicalProfile");
+    navigation.navigate("MedicalProfile", { elderData: data });
   };
 
   const representative = () => {
-    navigation.navigate("CustomerProfile");
+    navigation.navigate("CustomerProfile", { userData: data?.user });
   };
 
   const methods = useForm({
     resolver: yupResolver(loginSchema),
     defaultValues: {
-      email: "toan@gmail.com",
-      dateOfBirth: date,
+      fullName: '',
+      dateOfBirth: '',
+      gender: '',
+      nurseHomeAddress: '',
+      address: ''
     },
   });
   const {
@@ -67,15 +82,15 @@ export default function NurseElderDetailProfile() {
     formState: { errors },
   } = methods;
 
-  const data = [
+  const genderData = [
     {
-      value: "2",
+      value: "Male",
       label: "Nam",
     },
     {
-      value: "3",
+      value: "Female",
       label: "Nữ",
-    },
+    }
   ];
 
   return (
@@ -96,7 +111,7 @@ export default function NurseElderDetailProfile() {
                 <View style={styles.avatarContainer}>
                   <Image
                     source={{
-                      uri: "https://firebasestorage.googleapis.com/v0/b/swd-longchim.appspot.com/o/376577375_998270051209102_4679797004619533760_n.jpg?alt=media&token=90d94961-bc1b-46e4-b60a-ad731606b13b",
+                      uri: data?.imageUrl || "https://firebasestorage.googleapis.com/v0/b/careconnect-2d494.appspot.com/o/images%2F3be127ed-a90e-4364-8160-99338def0144.png?alt=media&token=3de8a6cb-0986-4347-9a22-eb369f7d02ff",
                     }}
                     style={styles.avatar}
                   />
@@ -124,17 +139,18 @@ export default function NurseElderDetailProfile() {
                         name="gender"
                         control={control}
                         errors={errors} // Pass errors object
-                        options={data}
+                        options={genderData}
                         enabled={false}
                       />
                     </View>
                     <View style={{ flex: 1 }}>
-                      <ComDatePicker
+                      <ComInput
                         label={EditProfile?.label?.dateOfBirth}
-                        placeholder={EditProfile?.placeholder?.dateOfBirth}
+                        placeholder={EditProfile?.label?.dateOfBirth}
                         name="dateOfBirth"
                         control={control}
                         errors={errors} // Pass errors object
+                        edit={false}
                       />
                     </View>
                   </View>

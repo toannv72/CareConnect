@@ -1,13 +1,14 @@
 import React, { useContext } from "react";
 import { Image, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { LanguageContext } from "../../../contexts/LanguageContext";
+import { stylesApp } from "../../../styles/Styles";
 
 export default function ComCatalogue({ img, url, children, color, backgroundColor, title, content }) {
     const {
         text: { Home },
     } = useContext(LanguageContext);
     return (
-                <View style={[styles?.body, { backgroundColor: backgroundColor }]}>
+                <View style={[styles?.body, stylesApp.shadow, { backgroundColor: backgroundColor }]}>
                     <View style={styles?.iconContain}>
                         <Image
                             source={url}
@@ -21,11 +22,9 @@ export default function ComCatalogue({ img, url, children, color, backgroundColo
                             }}
                         />
                     </View>
-
                     <Text style={[styles?.textTitle, { color: color }]} numberOfLines={2} ellipsizeMode="tail">{title}</Text>
                     <Text style={[styles?.textContent, { color: color }]}>{content}</Text>
                 </View>
-
     );
 }
 const styles = StyleSheet.create({

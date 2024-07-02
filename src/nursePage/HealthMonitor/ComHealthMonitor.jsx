@@ -5,6 +5,7 @@ import { LanguageContext } from "../../contexts/LanguageContext";
 import { useNavigation } from "@react-navigation/native";
 import healthRecord from "../../../assets/images/HealthMonitor/healthRecord.png";
 import { postData, getData } from "../../api/api";
+import { stylesApp } from "../../styles/Styles";
 
 export default function ComHealthMonitor({ data, isSelected, style, time }) {
   const {
@@ -59,7 +60,7 @@ export default function ComHealthMonitor({ data, isSelected, style, time }) {
 
   return (
     <TouchableOpacity
-      style={[styles.body, isSelected && styles.selectedBody, style]}
+      style={[styles.body, stylesApp.shadow, isSelected && styles.selectedBody, style]}
       onPress={() => navigation.navigate("HealthMonitorDetail", { id: data?.id, data: data})} // Chuyển đến trang mới
     >
       <Image
@@ -126,7 +127,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "#33B39C",
-    alignItems: "center"
+    alignItems: "center",
+    backgroundColor: "#fff"
   },
   selectedBody: {
     backgroundColor: "rgba(51, 179, 156, 0.26)",

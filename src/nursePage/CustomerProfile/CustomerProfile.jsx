@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigation } from "@react-navigation/native";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Image, StyleSheet, View } from "react-native";
 import * as yup from "yup";
@@ -11,10 +11,15 @@ import ComSelect from "../../Components/ComInput/ComSelect";
 import ComDatePicker from "../../Components/ComInput/ComDatePicker";
 import { ScrollView } from "react-native";
 import ComHeader from "../../Components/ComHeader/ComHeader";
+import { useRoute } from "@react-navigation/native";
+import moment from 'moment';
 
 export default function CustomerProfile() {
     const [date, setDate] = useState(new Date());
     const navigation = useNavigation();
+    const route = useRoute();
+    const { userData } = route.params;
+
     const {
         text: {
             ElderProfile,
@@ -23,31 +28,16 @@ export default function CustomerProfile() {
         },
         setLanguage,
     } = useContext(LanguageContext);
-    const loginSchema = yup.object().shape({
-        fullName: yup.string().trim().required(EditProfile?.message?.fullName),
-        gender: yup.string().trim().required(EditProfile?.message?.gender),
-        dateOfBirth: yup
-            .string()
-            .trim()
-            .required(EditProfile?.message?.dateOfBirth),
-        phoneNumber: yup
-            .string()
-            .trim()
-            .required(EditProfile?.message?.phoneNumber),
-        email: yup
-            .string()
-            .email(EditProfile?.message?.emailInvalid)
-            .trim()
-            .required(EditProfile?.message?.email),
-        idNumber: yup.string().trim().required(EditProfile?.message?.idNumber),
-        address: yup.string().trim().required(EditProfile?.message?.address),
-    });
-   
+    const loginSchema = yup.object().shape({});
+
     const methods = useForm({
         resolver: yupResolver(loginSchema),
         defaultValues: {
-            email: "toan@gmail.com",
-            dateOfBirth: date,
+            email: "",
+            dateOfBirth: "",
+            fullName: "",
+            gender: "",
+            phoneNumber: ""
         },
     });
     const {
@@ -56,16 +46,30 @@ export default function CustomerProfile() {
         formState: { errors },
     } = methods;
 
-    const data = [
+    const genderData = [
         {
-            value: "2",
+            value: "Male",
             label: "Nam",
         },
         {
-            value: "3",
+            value: "Female",
             label: "Nữ",
-        },
+        }
     ];
+
+    useEffect(() => {
+        const formattedDate = moment(userData?.dateOfBirth, "YYYY-MM-DD").format("DD/MM/YYYY");
+
+        if (userData) {
+            methods.reset({
+                fullName: userData?.fullName,
+                gender: userData?.gender,
+                dateOfBirth: formattedDate,
+                phoneNumber: userData?.phoneNumber,
+                email: userData?.email,
+            });
+        }
+    }, [userData]);
 
     return (
         <>
@@ -85,7 +89,7 @@ export default function CustomerProfile() {
                                 <View style={styles.avatarContainer}>
                                     <Image
                                         source={{
-                                            uri: "https://firebasestorage.googleapis.com/v0/b/swd-longchim.appspot.com/o/376577375_998270051209102_4679797004619533760_n.jpg?alt=media&token=90d94961-bc1b-46e4-b60a-ad731606b13b",
+                                            uri: userData?.avatarUrl || "https://firebasestorage.googleapis.com/v0/b/careconnect-2d494.appspot.com/o/images%2F3be127ed-a90e-4364-8160-99338def0144.png?alt=media&token=3de8a6cb-0986-4347-9a22-eb369f7d02ff",
                                         }}
                                         style={styles.avatar}
                                     />
@@ -113,17 +117,18 @@ export default function CustomerProfile() {
                                                 name="gender"
                                                 control={control}
                                                 errors={errors} // Pass errors object
-                                                options={data}
+                                                options={genderData}
                                                 enabled={false}
                                             />
                                         </View>
                                         <View style={{ flex: 1 }}>
-                                            <ComDatePicker
+                                            <ComInput
                                                 label={EditProfile?.label?.dateOfBirth}
-                                                placeholder={EditProfile?.placeholder?.dateOfBirth}
+                                                placeholder={EditProfile?.label?.dateOfBirth}
                                                 name="dateOfBirth"
                                                 control={control}
                                                 errors={errors} // Pass errors object
+                                                edit={false}
                                             />
                                         </View>
                                     </View>

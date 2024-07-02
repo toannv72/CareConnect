@@ -1,55 +1,86 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity } from 'react-native';
 import ComSelectButton from "../../Components/ComButton/ComSelectButton";
 import { LanguageContext } from "../../contexts/LanguageContext";
-import { useRoute } from "@react-navigation/native";
+import { useRoute, useNavigation } from "@react-navigation/native";
 import backArrowWhite from "../../../assets/icon/backArrowWhite.png";
-import { useNavigation } from '@react-navigation/native';
 import ComElder from "../../Components/ComElder/ComElder";
 import ComLoading from "../../Components/ComLoading/ComLoading";
 import ComNoData from "../../Components/ComNoData/ComNoData";
 import { useStorage } from "../../hooks/useLocalStorage";
+import { useCart } from '../../contexts/CartContext';
+import Toast from 'react-native-toast-message';
 
 export default function AddingServiceElderRegister() {
-    const [user, setUser] = useStorage("user", {});
+    const [user] = useStorage("user", {});
     const [selectedElderId, setSelectedElderId] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const [selectedElder, setSelectedElder] = useState({});
+    const [loading] = useState(false);
+    const route = useRoute();
+    const { data } = route.params;
+    const navigation = useNavigation();
+    const { dispatch, cart } = useCart();
+
+    const showToast = (type, text1, text2, position) => {
+        Toast.show({
+            type: type,
+            text1: text1,
+            text2: text2,
+            position: position
+        });
+    }
+
+    const addToCart = () => {
+        console.log("Đã add to cart");
+        if (checkDuplicateCartItem()) {
+            showToast("error", "Đã đăng ký", "Dịch vụ này đã được đăng ký cho người cao tuổi", "bottom");
+        } else {
+            dispatch({
+                type: 'ADD_ITEM', payload: {
+                    "notes": "string",
+                    "servicePackageId": data?.id,
+                    "servicePackage": data,
+                    "elder": selectedElder,
+                    "elderId": selectedElderId,
+                    "orderDates": [
+                        {
+                            "date": data?.eventDate
+                        }
+                    ]
+                }
+            });
+            showToast("success", "Thêm vào giỏ hàng thành công", "", "bottom");
+        }
+    };
+
+    const checkDuplicateCartItem = () => {
+        return cart.some(item => item.elderId === selectedElderId && item.servicePackageId === data?.id);
+    };
 
     const {
         text: { addingPackages },
-        setLanguage,
     } = useContext(LanguageContext);
-
-    const route = useRoute();
-    const { data } = route.params;
-
-
-    const navigation = useNavigation();
-
-    const handleBackPress = () => {
-        navigation.goBack();
-    };
 
     const formatCurrency = (number) => {
         if (number) {
-            // Sử dụng hàm toLocaleString() để định dạng số
             return number.toLocaleString("vi-VN", {
                 style: "currency",
                 currency: "VND",
             });
         } else {
-            return null; // or any default value you want to return
+            return null;
         }
     };
 
-    const handleElderPress = (id) => {
-        setSelectedElderId(id);
+    const handleElderPress = (elder) => {
+        setSelectedElderId(elder?.id);
+        setSelectedElder(elder);
     };
 
     return (
         <>
             <View style={styles.header}>
-                <TouchableOpacity onPress={handleBackPress} style={styles.backIconContainer}>
+                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backIconContainer}>
                     <Image
                         source={backArrowWhite}
                         style={styles.backIcon}
@@ -71,15 +102,12 @@ export default function AddingServiceElderRegister() {
                     <Text style={{ fontWeight: "bold", fontSize: 20, marginBottom: 10 }} numberOfLines={2}>
                         {data?.name}
                     </Text>
-                    {/* price */}
                     <Text style={{ fontSize: 16, marginBottom: 10 }}>
                         <Text style={{ fontWeight: "bold" }}>
                             {formatCurrency(data?.price)}
                         </Text>
                         /{addingPackages?.package?.month}
                     </Text>
-
-                    {/* category */}
                     <Text style={{ flexDirection: "row", marginBottom: 10 }}>
                         <Text style={styles.contentBold}>
                             {addingPackages?.package?.category}
@@ -88,37 +116,36 @@ export default function AddingServiceElderRegister() {
                             :  {data?.servicePackageCategory?.name}
                         </Text>
                     </Text>
-
                     <Text style={{ fontWeight: "bold", fontSize: 16, marginBottom: 10 }}>
                         {addingPackages?.register?.registerElder}
                     </Text>
-
                     <ComLoading show={loading}>
                         {user?.elders?.length > 0 ? (
-                            <>
                                 <View>
                                     {user?.elders?.map((value, index) => (
                                         <ComElder key={index} data={value}
-                                            onPress={() => handleElderPress(value.id)}
+                                            onPress={() => handleElderPress(value)}
                                             isSelected={selectedElderId === value.id}
                                         />
                                     ))}
+                                    <View style={{ height: 120 }}></View>
                                 </View>
-                                <View style={{ height: 120 }}></View>
-                            </>
                         ) : (
-                           <ComNoData>Hiện tại đang không có người cao tuổi nào</ComNoData>
+                            <ComNoData>Hiện tại đang không có người cao tuổi nào</ComNoData>
                         )}
                     </ComLoading>
-
                 </ScrollView>
                 <View style={{ marginVertical: 20 }}>
                     <ComSelectButton
-                        disable={selectedElderId ? false : true}
+                        disable={!selectedElderId}
                         onPress={() => {
-                            navigation.navigate("AddingServiceCalendarRegister", { id: selectedElderId, data: data });
+                            if (data?.type === "OneDay") {
+                                addToCart(); //nếu là service OneDay => không chọn ngày
+                            } else {//nếu là service khác => chọn ngày
+                                navigation.navigate("AddingServiceCalendarRegister", { id: selectedElderId, data: data });
+                            }
                         }}>
-                        Tiếp tục
+                        {data?.type === "OneDay" ? "Thêm vào giỏ hàng" : "Tiếp tục"}
                     </ComSelectButton>
                 </View>
             </View>

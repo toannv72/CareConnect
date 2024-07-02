@@ -21,7 +21,7 @@ const stylesApp = StyleSheet.create({
     // flex: 1,
   },
   shadow: {
-    elevation: 5, // Bóng đổ cho Android
+    elevation: 7, // Bóng đổ cho Android
     shadowColor: "#000", // Màu của bóng đổ cho iOS
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.2,
