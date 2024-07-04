@@ -19,11 +19,10 @@ export default function CreateHealthMonitor() {
     const navigation = useNavigation();
     const route = useRoute();
     const selectedIndexs = route.params?.selectedIndexs || [];
-
     const statusData = [
         { value: "Normal", label: "Bình thường" },
         { value: "Warning", label: "Bất thường" },
-        { value: "Critical", label: "Nguy hiểm" },
+        // { value: "Critical", label: "Nguy hiểm" },
     ];
 
     const showToast = (type, text1, text2, position) => {
@@ -38,14 +37,13 @@ export default function CreateHealthMonitor() {
     const loginSchema = yup.object().shape({
         notes: yup.string().required('Vui lòng nhập ghi chú tổng quát'),
         ...selectedIndexs.reduce((acc, category) => {
-            category.measureUnits.forEach(unit => {
+            category?.measureUnitsActive.forEach(unit => {
                 acc[`value_${unit.id}`] = yup
                     .string()
                     .required('Vui lòng nhập kết quả')
                     .matches(/^\d+(\.\d{1,2})?$/, 'Kết quả phải là số dương và không quá hai chữ số thập phân')
                     .test('is-positive', 'Kết quả phải là số dương', value => parseFloat(value) > 0 || value === "")
                 acc[`status_${unit.id}`] = yup.string().required('Vui lòng nhập trạng thái');
-                // acc[`note_${unit.id}`] = yup.string().required('Vui lòng nhập ghi chú');
             });
             return acc;
         }, {})
@@ -56,7 +54,7 @@ export default function CreateHealthMonitor() {
         defaultValues: {
             // Set default values for status fields here
             ...selectedIndexs.reduce((acc, category) => {
-                category.measureUnits.forEach(unit => {
+                category.measureUnitsActive.forEach(unit => {
                     acc[`status_${unit.id}`] = "Normal";
                     acc[`note_${unit.id}`] = "";
                 });
@@ -70,7 +68,7 @@ export default function CreateHealthMonitor() {
     const onSubmit = (data) => {
         const healthReportDetails = selectedIndexs.map((category) => ({
             healthCategoryId: category.id,
-            healthReportDetailMeasures: category.measureUnits.map((unit) => ({
+            healthReportDetailMeasures: category?.measureUnitsActive.map((unit) => ({
                 value: data[`value_${unit.id}`],
                 status: data[`status_${unit.id}`],
                 note: data[`note_${unit.id}`],
@@ -117,7 +115,7 @@ export default function CreateHealthMonitor() {
                                 {selectedIndexs.map((item, index) => (
                                     <View style={styles.index} key={index}>
                                         <Text style={{ fontWeight: "600", fontSize: 16, marginVertical: 10 }}>{item?.name}</Text>
-                                        {item.measureUnits.map((unit, unitIndex) => (
+                                        {item?.measureUnitsActive.map((unit, unitIndex) => (
                                             <View key={unitIndex}>
                                                 <Text style={{ fontWeight: "600", fontSize: 16, marginVertical: 10 }}>{unit?.name + " (" + unit?.unitType + ")"}</Text>
                                                 <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 10 }}>

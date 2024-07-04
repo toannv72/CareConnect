@@ -70,7 +70,12 @@ export default function Cart() {
                         </ComSelectButton>
                     </>
                 ) : (
-                    <ComNoData>Không có dịch vụ nào</ComNoData>
+                    <View style={{gap: 20}}>
+                        <ComNoData>Giỏ hàng đang trống</ComNoData>
+                        <ComSelectButton onPress={handleProceedToCheckout}>
+                            Đi đến danh sách các dịch vụ
+                        </ComSelectButton>
+                    </View>
                 )}
             </View>
         </>
@@ -82,6 +87,7 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 20,
         backgroundColor: '#fff',
+        justifyContent: "center"
     },
     emptyCartText: {
         fontSize: 18,

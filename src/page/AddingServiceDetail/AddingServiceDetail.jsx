@@ -111,7 +111,7 @@ export default function AddingServiceDetail() {
                         )}
 
                         {
-                            data?.eventDate && (
+                            data?.type == "OneDay" && (
                                 <>
                                     <Text style={{ flexDirection: "row" }}>
                                         <Text style={{ fontWeight: "bold", fontSize: 16 }}>
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     contentBold: {
         fontSize: 16,
         marginBottom: 10,
-        fontWeight: "bold"
+        fontWeight: "600"
     },
     backIconContainer: {
         position: 'absolute',

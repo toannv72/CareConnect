@@ -1,14 +1,17 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { ScrollView, StyleSheet, Text } from "react-native";
 import { View } from "react-native";
 import TopicContent from "../TopicContent";
 import { LanguageContext } from "../../../contexts/LanguageContext";
-import ComButton from "../../../Components/ComButton/ComButton";
+// import ComSkeleton from "../../../Components/ComSkeleton/ComSkeleton";
 import ComSelectButton from "../../../Components/ComButton/ComSelectButton";
-import ComNew from "./ComNew";
+import ComService from "./ComService";
+import { postData, getData } from "../../../api/api";
 
 export default function Services() {
-  const [data, setData] = useState([{}, {}, {}, {}, {}]);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+
   const {
     text: { Home },
   } = useContext(LanguageContext);
@@ -22,6 +25,20 @@ export default function Services() {
     setSelect(false);
     setSelect1(true);
   };
+
+  useEffect(() => {
+    setLoading(!loading);
+    getData('/service-package?PageSize=5&SortColumn=totalOrder&SortDir=Desc', {})
+      .then((packageData) => {
+        setData(packageData?.data?.contends);
+        setLoading(loading);
+      })
+      .catch((error) => {
+        console.error("Error fetching service-package:", error);
+        setLoading(loading);
+      });
+  }, [])
+
   return (
     <View style={styles?.body}>
       <TopicContent>{Home?.services}</TopicContent>
@@ -37,28 +54,17 @@ export default function Services() {
           <ComSelectButton onPress={check1} check={select1}>
             Sức khỏe
           </ComSelectButton>
-      
+
         </View>
       </ScrollView>
-
+      {/* <ComSkeleton
+        show={loading}
+        image={true}
+        lines={5}> */}
       {data.map((value, index) => (
-        <ComNew
-          id={1}
-          key={index}
-          url={
-            "https://i.pinimg.com/736x/65/c9/8e/65c98ee90bc6888757d3ff2f6c7e67e4.jpg"
-          }
-          context="Thực đơn dinh dưỡng"
-        >
-          Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry. Lorem Ipsum has been the industry's standard dummy text ever
-          since the 1500s. Lorem Ipsum is simply dummy text of the printing and
-          typesetting industry. Lorem Ipsum has been the industry's standard
-          dummy text ever since the 1500s. Lorem Ipsum is simply dummy text of
-          the printing and typesetting industry. Lorem Ipsum has been the
-          industry's standard dummy text ever since the 1500s.
-        </ComNew>
+        <ComService key={index} data={value}></ComService>
       ))}
+      {/* </ComSkeleton> */}
     </View>
   );
 }

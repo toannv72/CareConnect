@@ -1,9 +1,8 @@
-import React, { useContext, useState, useEffect } from "react";
-import { View, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
-import { FormProvider, useForm } from "react-hook-form";
+import React, { useContext, useState, useCallback, useEffect } from "react";
+import { View, StyleSheet, Image, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
+import { useForm, FormProvider } from "react-hook-form";
 import ComHeader from '../../Components/ComHeader/ComHeader';
 import ComSelectButton from "../../Components/ComButton/ComSelectButton";
-import ComInputSearch from "../../Components/ComInput/ComInputSearch";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ComLoading from "../../Components/ComLoading/ComLoading";
@@ -13,7 +12,9 @@ import ComNoData from "../../Components/ComNoData/ComNoData";
 import Cart from "../../../assets/cart.png";
 import { postData, getData } from "../../api/api";
 import { stylesApp } from "../../styles/Styles";
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import CategoryButtons from '../../Components/ComCategories/ComCategories';
+import ComInputSearch from '../../Components/ComInput/ComInputSearch';
 
 export default function AddingServicePackages() {
     const {
@@ -22,17 +23,19 @@ export default function AddingServicePackages() {
     const navigation = useNavigation();
     const [data, setData] = useState([]);
     const [categoryData, setCategoryData] = useState([]);
-    const [selectedCategory, setSelectedCategory] = useState(select);
+    const [selectedCategory, setSelectedCategory] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [select, setSelect] = useState(false);
+    const [loadMoreLoading, setLoadMoreLoading] = useState(false);
+    const [page, setPage] = useState(1); // Track pagination page
+    const [hasMore, setHasMore] = useState(true); // Track if there are more items to load
+    const [searchQuery, setSearchQuery] = useState("");
+    console.log("searchQuery", searchQuery);
+    console.log("page", page);
 
-    const check = () => {
-        setSelectedCategory(null)
-        setSelect(false);
-    };
     const searchSchema = yup.object().shape({
         search: yup.string(),
     });
+
     const methods = useForm({
         resolver: yupResolver(searchSchema),
         defaultValues: {
@@ -43,23 +46,38 @@ export default function AddingServicePackages() {
     const {
         control,
         handleSubmit,
+        reset,
         formState: { errors },
     } = methods;
 
     const onSubmit = (data) => {
-        console.log("====================================");
-        console.log(data);
-        console.log("====================================");
-        setLoading(!loading);
+        setPage(1);
+        setData([]);
+        console.log("onSubmit", "onSubmit");
+        setSearchQuery(encodeURIComponent(data.search.trim()));
     };
 
-    useEffect(() => {
-        setLoading(!loading);
-        getData('/service-package', {})
+    const fetchNextPage = async () => {
+        setLoadMoreLoading(!loadMoreLoading);
+        let url = `/service-package?PageIndex=${page}&PageSize=2`;
+        if (selectedCategory) {
+            url += `&PackageCategoryId=${selectedCategory}`;
+        }
+        if (searchQuery) {
+            url += `&Search=${searchQuery}`;
+        }
+
+        getData(url, {})
             .then((packageData) => {
-                setData(packageData?.data?.contends);
+                const newItems = packageData?.data?.contends || [];
+                setData(prevData => [...prevData, ...newItems]);
+                setPage(prevPage => prevPage + 1);
+                setLoadMoreLoading(false);
+                setLoading(loading);
+                setHasMore(page < packageData?.data?.totalPages);
             })
             .catch((error) => {
+                setLoading(loading);
                 console.error("Error fetching service-package:", error);
             });
 
@@ -69,16 +87,50 @@ export default function AddingServicePackages() {
                 setLoading(loading);
             })
             .catch((error) => {
+                setLoading(loading);
                 console.error("Error fetching categoryData:", error);
             });
-    }, [])
-
-    const handleCategorySelect = (id) => {
-        setSelect(true);
-        setSelectedCategory(id);
     };
 
-    const filteredData = !select ? data : data.filter(item => item?.servicePackageCategory?.id === selectedCategory);
+    useEffect(() => {
+        if (selectedCategory || selectedCategory == 0 || searchQuery != "") {
+            fetchNextPage();
+        }
+    }, [selectedCategory, searchQuery]);
+
+    useFocusEffect(
+        useCallback(() => {
+            reset();
+            setData([]);
+            setLoading(!loading);
+            setSearchQuery("");
+            fetchNextPage();
+            if (!selectedCategory) {
+                setSelectedCategory(null); // Only reset if not already null
+            }
+        }, [])
+    );
+
+    const handleCategorySelect = (id) => {
+        setSelectedCategory(id);
+        setPage(1);
+        setData([])
+    };
+
+    const handleClearSelection = () => {
+        setSelectedCategory(0);
+        setPage(1);
+        setData([]);
+    };
+
+    const handleClearSearch = () => {
+        setSelectedCategory(0);
+        setPage(1);
+        setData([]);
+        setSearchQuery("");
+    };
+
+    const filteredData = !selectedCategory ? data : data.filter(item => item?.servicePackageCategory?.id === selectedCategory);
 
     return (
         <>
@@ -87,9 +139,9 @@ export default function AddingServicePackages() {
                 title={addingPackages?.title}
             />
             <View style={styles.container}>
-                <View style={{ flexDirection: "row", gap: 5 }}>
+                <View style={{ flexDirection: "row", gap: 10 }}>
                     <View style={{ flex: 5.5 }}>
-                        <FormProvider {...methods} style>
+                        <FormProvider {...methods}>
                             <ComInputSearch
                                 placeholder="Tìm kiếm"
                                 keyboardType="default"
@@ -97,6 +149,7 @@ export default function AddingServicePackages() {
                                 control={control}
                                 onSubmitEditing={handleSubmit(onSubmit)}
                                 errors={errors}
+                                handleClearSelection={handleClearSearch}
                             />
                         </FormProvider>
                     </View>
@@ -109,48 +162,41 @@ export default function AddingServicePackages() {
                                 width: 30,
                                 height: 30,
                                 tintColor: "#fff"
-                            }}
-                        />
+                            }} />
                     </TouchableOpacity>
                 </View>
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false}
-                    horizontal={true}
-                    style={styles?.scrollView}
-                >
-                    <View style={styles?.buttonContainer}>
-                        <ComSelectButton onPress={check} check={select}>
-                            Tất cả
-                        </ComSelectButton>
-                        {categoryData?.map((value, index) => (
-                            <ComSelectButton
-                                key={index}
-                                onPress={() => handleCategorySelect(value.id)}
-                                check={selectedCategory === value?.id ? false : true}>
-                                {value?.name}
-                            </ComSelectButton>
-                        ))}
-                    </View>
-                </ScrollView>
-                <ComLoading show={loading}>
-                    {filteredData.length == 0 ? (
-                        <ComNoData>Không có dữ liệu</ComNoData>
+                <CategoryButtons
+                    categoryData={categoryData}
+                    selectedCategory={selectedCategory}
+                    onSelectCategory={handleCategorySelect}
+                    onClearSelection={handleClearSelection} // Pass handleClearSelection as prop
+                />
+                {loading ? (
+                    <ComLoading show={true} />
+                ) : (
+                    filteredData.length == 0 ? (
+                        <ComNoData>Không có dịch vụ nào</ComNoData>
                     ) : (
-                        <ScrollView
-                            showsVerticalScrollIndicator={false}
-                            showsHorizontalScrollIndicator={false}
-                        >
-                            {filteredData?.map((value, index) => (
-                                <ComAddPackage key={index} data={value} />
-                            ))}
-                            <View style={{ height: 300 }}></View>
-                        </ScrollView>
-                    )}
-                </ComLoading>
+                        <FlatList
+                            data={filteredData}
+                            renderItem={({ item }) => <ComAddPackage data={item} />}
+                            contentContainerStyle={{ gap: 5 }}
+                            showsVerticalScrollIndicator={false} // Tắt scrollbar dọc
+                            showsHorizontalScrollIndicator={false} // Tắt scrollbar ngang
+                            ListFooterComponent={() => (
+                                <View style={{ justifyContent: "center", alignItems: "center" }}>
+                                    <View style={{ width: "35%" }}>
+                                        {loadMoreLoading ? (<ActivityIndicator />) :
+                                            (<ComSelectButton onPress={fetchNextPage} disable={!hasMore}>Xem thêm</ComSelectButton>)}
+                                        <View style={{ height: 100 }}></View>
+                                    </View>
+                                </View>
+                            )}
+                        />
+                    ))}
             </View >
         </>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
@@ -159,26 +205,6 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         backgroundColor: "#fff",
         paddingHorizontal: 15
-    },
-    buttonContainer: {
-        flexDirection: "row",
-        gap: 15,
-        flexWrap: "wrap",
-        marginBottom: 10,
-    },
-    scrollView: {
-        flexGrow: 0,
-        flexShrink: 0,
-    },
-    noDataContainer: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 50,
-    },
-    noDataImage: {
-        width: 150,
-        height: 150,
-        marginBottom: 20,
     },
     cart: {
         flex: 1,

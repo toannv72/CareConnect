@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import ComButton from "../../Components/ComButton/ComButton";
 import ComPopup from "../../Components/ComPopup/ComPopup";
@@ -197,55 +197,67 @@ export default ContractDetail = () => {
           showTitle={true}
           title={"Chi tiết hợp đồng"}
         />
-        <View style={{ alignItems: 'center', marginVertical: 30 }}>
-          <Image
-            source={ContractImg}
-            style={{
-              height: 120,
-              width: 120,
-              objectFit: "fill",
-            }} />
-        </View>
-        <ComLoading show={loading}>
-          <View style={styles.contex}>
-            <View style={styles.bodySeparator}>
-              <Text style={styles.text}>Hợp đồng</Text>
-              <Text style={styles.text2}>{data?.name}</Text>
-            </View>
-            <View style={styles.bodySeparator}>
-              <Text style={styles.text}>Mã hợp đồng</Text>
-              <Text style={styles.text2}>{data?.id}</Text>
-            </View>
-            <View style={styles.bodySeparator}>
-              <Text style={styles.text}>Tên người đại diện</Text>
-              <Text style={styles.text2}>{user?.fullName}</Text>
-            </View>
-            <View style={styles.bodySeparator}>
-              <Text style={styles.text}>Tên người lớn tuổi</Text>
-              <Text style={styles.text2}>Hợp đồng</Text>
-            </View>
-            <View style={styles.bodySeparator}>
-              <Text style={styles.text}>Ngày bắt đầu</Text>
-              <Text style={styles.text2}> <ComDateConverter>{data?.startDate}</ComDateConverter> </Text>
-            </View>
-            <View style={styles.bodySeparator}>
-              <Text style={styles.text}>Ngày kết thúc</Text>
-              <Text style={styles.text2}> <ComDateConverter>{data?.endDate}</ComDateConverter></Text>
-            </View>
-            <View style={styles.bodySeparator2}>
-              <Text style={styles.text}>Trạng thái</Text>
-              <Text style={[styles.text2, { color: status?.color }]}>{status?.text}</Text>
-            </View>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}>
+          <View style={{ alignItems: 'center', marginVertical: 20 }}>
+            <Image
+              source={ContractImg}
+              style={{
+                height: 100,
+                width: 100,
+                objectFit: "fill",
+              }} />
           </View>
+          <ComLoading show={loading}>
 
-        </ComLoading>
+            <View style={styles.contex}>
+              <View style={styles.bodySeparator}>
+                <Text style={styles.text}>Hợp đồng</Text>
+                <Text style={styles.text2}>{data?.name}</Text>
+              </View>
+              <View style={styles.bodySeparator}>
+                <Text style={styles.text}>Mã hợp đồng</Text>
+                <Text style={styles.text2}>{data?.id}</Text>
+              </View>
+              <View style={styles.bodySeparator}>
+                <Text style={styles.text}>Người đại diện</Text>
+                <Text style={styles.text2}>{data?.user?.fullName}</Text>
+              </View>
+              <View style={styles.bodySeparator}>
+                <Text style={styles.text}>Người lớn tuổi</Text>
+                <Text style={styles.text2}>{data?.elder?.name}</Text>
+              </View>
+              <View style={styles.bodySeparator}>
+                <Text style={styles.text}>Gói dưỡng lão</Text>
+                <Text style={styles.text2}>{data?.nursingPackage?.name}</Text>
+              </View>
+              <View style={styles.bodySeparator}>
+                <Text style={styles.text}>Ngày ký</Text>
+                <Text style={styles.text2}> <ComDateConverter>{data?.signingDate}</ComDateConverter> </Text>
+              </View>
+              <View style={styles.bodySeparator}>
+                <Text style={styles.text}>Ngày bắt đầu</Text>
+                <Text style={styles.text2}> <ComDateConverter>{data?.startDate}</ComDateConverter> </Text>
+              </View>
+              <View style={styles.bodySeparator}>
+                <Text style={styles.text}>Ngày kết thúc</Text>
+                <Text style={styles.text2}> <ComDateConverter>{data?.endDate}</ComDateConverter> </Text>
+              </View>
+              <View style={styles.bodySeparator2}>
+                <Text style={styles.text}>Trạng thái</Text>
+                <Text style={[styles.text2, { color: status?.color }]}>{status?.text}</Text>
+              </View>
+            </View>
+          </ComLoading>
+        </ScrollView>
       </View>
       <View
         style={{
           backgroundColor: "#fff",
           flexDirection: "row",
           justifyContent: "space-around",
-          paddingBottom: 20,
+          paddingVertical: 20,
         }}
       >
         <ComButton onPress={handleOpenPopupDate}>Yêu cầu gia hạn</ComButton>
@@ -267,10 +279,10 @@ const styles = StyleSheet.create({
   bodySeparator: {
     flexDirection: "row",
     justifyContent: "space-between",
-
-    paddingVertical: 10,
+    flexWrap: "wrap",
+    paddingVertical: 15,
     borderBottomWidth: 0.5,
-    borderBottomColor: "#000",
+    borderBottomColor: "#33B39C",
     alignItems: "center",
     marginHorizontal: 15,
   },
@@ -281,15 +293,20 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
   },
   text: {
+    flex: 0.35,
     fontSize: 16,
     fontWeight: "600",
   },
   text2: {
     fontSize: 16,
+    flex: 0.65,
+    textAlign: "right"
   },
   contex: {
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "#33B39C",
+    paddingHorizontal: 5,
+    paddingVertical: 10
   },
 });

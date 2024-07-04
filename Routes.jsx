@@ -1,4 +1,5 @@
 import React from "react";
+import { Platform } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -72,13 +73,13 @@ const Tab = createBottomTabNavigator();
 const Routes = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="NurseHomes">
+      <Stack.Navigator initialRouteName="Homes">
         <Stack.Screen
           name="Homes"
           options={{ headerLeft: null, headerShown: false }}
           component={MyBottomNavigationBar}
         />
-          <Stack.Screen
+        <Stack.Screen
           name="NurseHomes"
           options={{ headerLeft: null, headerShown: false }}
           component={NurseBottomNavigationBar}
@@ -108,7 +109,7 @@ const Routes = () => {
           name="Service"
           component={ServicePackages}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="ServicePackageDetail"
           component={ServicePackageDetail}
@@ -138,7 +139,7 @@ const Routes = () => {
           name="AddingServiceCalendarRegister"
           component={AddingServiceCalendarRegister}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="Cart"
           component={Cart}
@@ -168,22 +169,22 @@ const Routes = () => {
           name="CreateFeedback"
           component={CreateFeedback}
         />
-           <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="FeedbackHistory"
           component={FeedbackHistory}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="FeedbackDetail"
           component={FeedbackDetail}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="BillHistory"
           component={BillHistory}
         />
-          <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="BillDetail"
           component={BillDetail}
@@ -193,7 +194,7 @@ const Routes = () => {
           name="HealthMonitorDetail"
           component={HealthMonitorDetail}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="HealthMonitorIndexList"
           component={HealthMonitorIndexList}
@@ -225,21 +226,21 @@ const Routes = () => {
           name="DetailProfile"
           component={DetailProfile}
         />
-          <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="ElderProfile"
           component={ElderProfile}
-          />
-           <Stack.Screen
+        />
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="ElderDetailProfile"
           component={ElderDetailProfile}
-          />
-           <Stack.Screen
+        />
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="MedicalProfile"
           component={MedicalProfile}
-          />
+        />
         <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="ChangePassword"
@@ -285,7 +286,7 @@ const Routes = () => {
           name="ContractCandSuccess"
           component={ContractCandSuccess}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="ContractRenewSuccess"
           component={ContractRenewSuccess}
@@ -296,27 +297,27 @@ const Routes = () => {
           name="RoomList"
           component={RoomList}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="RoomDetail"
           component={RoomDetail}
         />
-           <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="NurseElderDetailProfile"
           component={NurseElderDetailProfile}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="CustomerProfile"
           component={CustomerProfile}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="NurseHealthMonitor"
           component={NurseHealthMonitor}
         />
-          <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="HealthMonitorList"
           component={HealthMonitorList}
@@ -326,27 +327,27 @@ const Routes = () => {
           name="NurseHealthMonitorDetail"
           component={NurseHealthMonitorDetail}
         />
-           <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="ListHealthMonitor"
           component={ListHealthMonitor}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="CreateHealthMonitor"
           component={CreateHealthMonitor}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="ListHealthIndex"
           component={ListHealthIndex}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="RegisterService"
           component={RegisterService}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="RegisterServiceDetail"
           component={RegisterServiceDetail}
@@ -388,10 +389,10 @@ function MyBottomNavigationBar() {
         tabBarHideOnKeyboard: true,
         tabBarShowLabel: false,
         tabBarStyle: {
-          position: "absolute",
-          bottom: 10,
-          left: 10,
-          right: 10,
+          position: Platform.OS === 'android' ? "absolute" : undefined,
+          bottom: Platform.OS === 'android' ? 10 : undefined,
+          left: Platform.OS === 'android' ? 10 : undefined,
+          right: Platform.OS === 'android' ? 10 : undefined,
           elevation: 0,
           backgroundColor: "#14A499",
           borderRadius: 15,
@@ -423,7 +424,7 @@ function MyBottomNavigationBar() {
           return <ComIcon icon={iconName} />;
         },
       })}
-      // keyboardShouldPersistTaps="handled"
+    // keyboardShouldPersistTaps="handled"
     >
       <Tab.Screen
         name="Home"
@@ -466,10 +467,10 @@ function NurseBottomNavigationBar() {
         tabBarHideOnKeyboard: true,
         tabBarShowLabel: false,
         tabBarStyle: {
-          position: "absolute",
-          bottom: 10,
-          left: 10,
-          right: 10,
+          position: Platform.OS === 'android' ? "absolute" : undefined,
+          bottom: Platform.OS === 'android' ? 10 : undefined,
+          left: Platform.OS === 'android' ? 10 : undefined,
+          right: Platform.OS === 'android' ? 10 : undefined,
           elevation: 0,
           backgroundColor: "#14A499",
           borderRadius: 15,
@@ -499,7 +500,7 @@ function NurseBottomNavigationBar() {
           return <ComNurseIcon icon={iconName} />;
         },
       })}
-      // keyboardShouldPersistTaps="handled"
+    // keyboardShouldPersistTaps="handled"
     >
       <Tab.Screen
         name="Home"
