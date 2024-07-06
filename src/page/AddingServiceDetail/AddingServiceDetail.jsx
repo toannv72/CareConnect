@@ -19,7 +19,7 @@ export default function AddingServiceDetail() {
     const { id } = route.params;
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState({});
-
+    const [isRegistrationClosed, setIsRegistrationClosed] = useState(false);
     const navigation = useNavigation();
 
     const handleBackPress = () => {
@@ -38,11 +38,19 @@ export default function AddingServiceDetail() {
         getData(`/service-package/${id}`, {})
             .then((packageData) => {
                 setData(packageData?.data);
+                if (packageData?.data?.type === "OneDay") {
+                    const currentDate = new Date();
+                    const endRegistrationDate = new Date(packageData?.data?.endRegistrationStartDate);
+                    if (currentDate > endRegistrationDate) {
+                        setIsRegistrationClosed(true);
+                    }
+                }
             })
             .catch((error) => {
                 console.error("Error fetching service-package:", error);
             });
     }, [])
+
 
     return (
         <>
@@ -66,7 +74,7 @@ export default function AddingServiceDetail() {
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}>
-                    <View style={{flex: 1, gap: 10}}>
+                    <View style={{ flex: 1, gap: 10 }}>
                         <Text style={{ fontWeight: "bold", fontSize: 20 }} numberOfLines={2}>
                             {data?.name}
                         </Text>
@@ -84,6 +92,15 @@ export default function AddingServiceDetail() {
                             </Text>
                             <Text style={{ fontSize: 16 }}>
                                 : {data?.servicePackageCategory?.name}
+                            </Text>
+                        </Text>
+
+                        <Text style={{ flexDirection: "row" }}>
+                            <Text style={styles.contentBold}>
+                                Type
+                            </Text>
+                            <Text style={{ fontSize: 16 }}>
+                                : {data?.type}
                             </Text>
                         </Text>
 
@@ -137,15 +154,24 @@ export default function AddingServiceDetail() {
                             {addingPackages?.package?.description}
                         </Text>
                         <Text style={{ fontSize: 16 }}>{data?.description}</Text>
-
                     </View>
                 </ScrollView>
                 <View style={{ marginVertical: 20 }}>
+                    {
+                        isRegistrationClosed &&
+                        <View style={{}}>
+                            <Text style={{color: "red", textAlign: "center"}}>Đã hết hạn đăng ký dịch vụ</Text>
+                        </View>
+                    }
                     <ComSelectButton
                         onPress={() => {
-                            navigation.navigate("AddingServiceRegister", { data: data });
-                        }}>
-                        {addingPackages?.register?.registerTitle}
+                            if (!isRegistrationClosed) {
+                                navigation.navigate("AddingServiceRegister", { data: data });
+                            }
+                        }}
+                        disable={isRegistrationClosed}
+                    >
+                        {isRegistrationClosed ? "Đã hết hạn đăng ký dịch vụ" : addingPackages?.register?.registerTitle}
                     </ComSelectButton>
                 </View>
             </View>

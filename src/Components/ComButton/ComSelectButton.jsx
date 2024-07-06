@@ -35,7 +35,7 @@ export default function ComSelectButton({ children, onPress, check, disable }) {
 const styles = StyleSheet.create({
   button: {
     marginTop: 10,
-    marginBottom: 20,
+    marginBottom: 10,
     backgroundColor: "#fff",
     paddingVertical: 15,
     paddingHorizontal: 20,
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   },
   button1: {
     marginTop: 10,
-    marginBottom: 20,
+    marginBottom: 10,
     backgroundColor: "#33B39C",
     paddingVertical: 15,
     borderWidth: 1,
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   },
   buttonDisable: {
     marginTop: 10,
-    marginBottom: 20,
+    marginBottom: 10,
     backgroundColor: "#33B39C",
     paddingVertical: 15,
     borderWidth: 1,

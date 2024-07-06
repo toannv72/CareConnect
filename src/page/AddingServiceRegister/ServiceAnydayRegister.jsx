@@ -1,71 +1,45 @@
 import React, { useContext, useState, useMemo, useEffect } from "react";
-import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity } from 'react-native';
 import ComSelectButton from "../../Components/ComButton/ComSelectButton";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { useRoute } from "@react-navigation/native";
 import backArrowWhite from "../../../assets/icon/backArrowWhite.png";
 import { useNavigation } from '@react-navigation/native';
-import SelectedDates from "../../Components/ComDate/ComSelectedDates";
+import SelectedDates from "./ComSelectedDates";
 import ComSelectWeekDays from "./ComSelectWeekDays";
 import ComRadioGroup from "../../Components/ComRadioGroup/ComRadioGroup";
 import moment from "moment";
 import Toast from 'react-native-toast-message';
 import { getData } from "../../api/api"; // Import your API function
 import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter"
+import { Calendar } from "react-native-calendars";
 
-export default function AddingServiceCalendarRegister() {
-    const [selectedId, setSelectedId] = useState('');
+export default function ServiceAnydayRegister() {
+    const [selectedId, setSelectedId] = useState('1');
     const [registeredDates, setRegisteredDates] = useState([]);
     const [selectedDates, setSelectedDates] = useState([]);
     const [loading, setLoading] = useState(false);
     const route = useRoute();
     const { elder, data } = route.params;
+    console.log(" selectedDates", selectedDates)
     const navigation = useNavigation();
+    const tomorrow = moment().add(1, 'day').format('YYYY-MM-DD');
+
     const {
         text: { addingPackages },
         setLanguage,
     } = useContext(LanguageContext);
-    const showToast = (type, text1, text2, position) => {
-        Toast.show({
-            type: type,
-            text1: text1,
-            text2: text2,
-            position: position
-        });
-    }
 
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true)
-            // Step 1: Enable from servicePackageDates if type is WeeklyDays
-            let updatedWeekDays = [...weekDays]; // Create a copy of weekDays to avoid mutating state directly
-            if (data?.type === "WeeklyDays" && data?.servicePackageDates) {
-                const activeDays = data?.servicePackageDates.map(date => date?.dayOfWeek);
-                // Enable days based on servicePackageDates
-                updatedWeekDays = updatedWeekDays.map(day => ({
-                    ...day,
-                    disable: !activeDays.includes(day?.value)
-                }));
-            }
-            // Step 2: Fetch registeredDates from API
-            try {
-                const orderDetail = await getData(`/order-detail?ElderId=${elder?.id}&ServicePackageId=${data?.id}`, {});
-                const registeredDates = orderDetail?.data?.map(date => date?.dayOfWeek);
-                // Step 3: Disable registered dates in updatedWeekDays
-                updatedWeekDays = updatedWeekDays.map(day => ({
-                    ...day,
-                    disable: day.disable || registeredDates.includes(day?.value)
-                }));
-                // Update state after processing
-                setRegisteredDates(orderDetail?.data);
-                setWeekDays(updatedWeekDays);
-                setLoading(false)
-            } catch (error) {
-                console.error("Error fetching orderDetail items:", error);
-            }
-        };
-        fetchData();
-    }, [data?.type, data?.servicePackageDates, elder?.id, data?.id, weekDays]); // Dependency array to watch for changes
+    const handleBackPress = () => {
+        navigation.goBack();
+    };
+
+    const formatCurrency = (number) => {
+        return number.toLocaleString("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        });
+    };
 
     const radioButtons = useMemo(() => ([
         {
@@ -85,6 +59,41 @@ export default function AddingServiceCalendarRegister() {
         }
     ]), []);
 
+    const handleDayPress = (index) => {
+        const updatedDays = [...weekDays]; // Sao chép mảng weekDays để không thay đổi trực tiếp state
+        updatedDays[index] = {
+            ...updatedDays[index],
+            check: !updatedDays[index].check
+        };
+        setWeekDays(updatedDays);
+    };
+
+    const handleAnyDayPress = (day) => {
+        const dateString = day.dateString;
+
+        // Tạo một bản sao của mảng selectedDates hiện tại
+        const updatedSelectedDates = [...selectedDates];
+
+        // Kiểm tra xem ngày đã được chọn hay chưa
+        const index = updatedSelectedDates.indexOf(dateString);
+        if (index !== -1) {
+            // Nếu ngày đã được chọn, loại bỏ nó khỏi mảng
+            updatedSelectedDates.splice(index, 1);
+        } else {
+            // Nếu ngày chưa được chọn, thêm nó vào mảng
+            updatedSelectedDates.push(dateString);
+        }
+
+        // Cập nhật selectedDates với mảng mới
+        setSelectedDates(updatedSelectedDates);
+    };
+
+    const handleRadioGroupChange = (id) => {
+        setSelectedId(id);
+        setSelectedDates([])
+    };
+
+
     const [weekDays, setWeekDays] = useState([
         { value: "Monday", label: "T2", check: true, disable: false },
         { value: "Tuesday", label: "T3", check: true, disable: false },
@@ -94,24 +103,19 @@ export default function AddingServiceCalendarRegister() {
         { value: "Saturday", label: "T7", check: true, disable: false },
         { value: "Sunday", label: "CN", check: true, disable: false },
     ]);
+    console.log(" weekDays", weekDays)
 
-    const handleBackPress = () => {
-        navigation.goBack();
-    };
-
-    const formatCurrency = (number) => {
-        return number.toLocaleString("vi-VN", {
-            style: "currency",
-            currency: "VND",
-        });
-    };
-    const handleDayPress = (index) => {
-        const updatedDays = [...weekDays]; // Sao chép mảng weekDays để không thay đổi trực tiếp state
-        updatedDays[index] = {
-            ...updatedDays[index],
-            check: !updatedDays[index].check
-        };
-        setWeekDays(updatedDays);
+    const getType = (selectedId) => {
+        switch (selectedId) {
+            case '1':
+                return 'One_Time';
+            case '2':
+                return 'RecurringWeeks';
+            case '3':
+                return 'RecurringDay';
+            default:
+                return '';
+        }
     };
 
     const getOrderDates = (selectedDays) => {
@@ -130,16 +134,40 @@ export default function AddingServiceCalendarRegister() {
         return dates;
     };
 
-    const handleSelectedDatesChange = (dates) => {
-        setSelectedDates(dates); // Update selectedDates state
-    };
-
     const calculateSelectedDates = () => {
         const selectedDays = weekDays.filter(day => day.check).map(day => day.value);
         const dates = getOrderDates(selectedDays); // Assuming getOrderDates is defined to return formatted dates
         return dates;
     };
 
+    const handleSelectedDatesChange = (dates) => {
+        setSelectedDates(dates); // Update selectedDates state
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true)
+            try {
+                const orderDetail = await getData(`/order-detail?ElderId=${elder?.id}&ServicePackageId=${data?.id}`, {});
+                const registeredDates = orderDetail?.data?.map(date => date?.date);
+                console.log( " /order-detail?", registeredDates)
+                setRegisteredDates(registeredDates);
+                setLoading(false);
+            } catch (error) {
+                console.error("Error fetching orderDetail items:", error);
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, [elder?.id, data?.id]);
+
+    const disableDates = useMemo(() => {
+        const disabledDates = {};
+        registeredDates.forEach(date => {
+            disabledDates[date] = { disabled: true, disableTouchEvent: true };
+        });
+        return disabledDates;
+    }, [registeredDates]);
 
     return (
         <>
@@ -157,6 +185,7 @@ export default function AddingServiceCalendarRegister() {
                         objectFit: "fill",
                     }}
                 />
+
             </View>
             <ScrollView style={styles.body}
                 showsVerticalScrollIndicator={false}
@@ -184,24 +213,27 @@ export default function AddingServiceCalendarRegister() {
                 <Text style={{ fontWeight: "bold", fontSize: 16, marginBottom: 10 }}>
                     {addingPackages?.register?.registerTime}
                 </Text>
-                {data?.type == "AnyDay" &&
-                    <ComRadioGroup
-                        radioButtons={radioButtons}
-                        onPress={setSelectedId}
-                        selectedId={selectedId}
-                    />}
-
-                {(selectedId === '1' || selectedId === '3' || data?.type == "MultipleDays") && (
-                    <View>
-                        <SelectedDates
-                            servicePackageDates={data?.servicePackageDates}
-                            onDatesChange={handleSelectedDatesChange} // Callback to receive selected dates
-                        />
-                    </View>
+                <ComRadioGroup
+                    radioButtons={radioButtons}
+                    onPress={handleRadioGroupChange}
+                    selectedId={selectedId} />
+                {(selectedId === '1' || data?.type == "MultipleDays") && (
+                    <Calendar
+                        minDate={tomorrow}
+                        onDayPress={(day) => handleAnyDayPress(day)}
+                        markedDates={{
+                            ...selectedDates.reduce((dates, date) => {
+                                dates[date] = { selected: true, selectedColor: '#33B39C' };
+                                return dates;
+                            }, {}),
+                            ...disableDates
+                        }}
+                        hideExtraDays={true}
+                    />
                 )}
                 {(selectedId === '2' || data?.type == "WeeklyDays") && (
                     <>
-                        <Text style={{color: "gray"}}>Dịch vụ sẽ được gia hạn vào tháng sau với những thứ trong tuần bạn chọn dưới đây</Text>
+                        <Text style={{ color: "gray" }}>Dịch vụ sẽ được gia hạn vào tháng sau với những thứ trong tuần bạn chọn dưới đây</Text>
                         <View style={{ flex: 1, flexDirection: 'row', justifyContent: "space-between" }}>
                             {
                                 loading ? (
@@ -222,38 +254,50 @@ export default function AddingServiceCalendarRegister() {
                                 )
                             }
                         </View>
-                        <View style={{ marginVertical: 10, gap: 5 }}>
-                            <Text style={{ fontWeight: "600" }}>Danh sách những ngày sẽ thực hiện dịch vụ trong tháng này:</Text>
-                            {
-                                calculateSelectedDates()?.map((date, index) => (
-                                    <Text  key={index}> • <ComDateConverter>{date}</ComDateConverter></Text>
-                                ))
-                            }
-
-                        </View>
                     </>
+                )}
+                {(selectedId === '3') && (
+                    <View>
+                        <Calendar
+                            onDayPress={(day) => handleAnyDayPress(day)}
+                            markedDates={selectedDates.reduce((dates, date) => {
+                                dates[date] = { selected: true, selectedColor: '#33B39C' };
+                                return dates;
+                            }, {})}
+                            hideExtraDays={true}
+                            renderHeader={() => null}
+                            renderArrow={() => null}
+                            hideDayNames={true}
+                        />
+                    </View>
                 )}
                 <View style={{ height: 50 }}></View>
             </ScrollView>
             <View style={{ paddingHorizontal: 20, backgroundColor: "#fff" }}>
                 <ComSelectButton
-                    disable={calculateSelectedDates()?.length === 0} 
+                    disable={selectedDates?.length === 0}
                     onPress={() => {
-                        const selectedDates = calculateSelectedDates();
-                        navigation.navigate("ServicePayment", { servicePackage: data, elder: elder, orderDates: selectedDates, type: 'RecurringWeeks' });
-                    }}>
-                    Thanh toán ngay
-                </ComSelectButton>
+                        let orderDates = [];
+                        if (selectedId === '1' || selectedId === '3') {
+                            orderDates = selectedDates;
+                        } else if (selectedId === '2') {
+                            orderDates = calculateSelectedDates();
+                        }
+                        navigation.navigate("ServicePayment", { servicePackage: data, elder: elder, orderDates: orderDates, type: getType(selectedId) });
+                    }}> Thanh toán ngay </ComSelectButton>
             </View>
         </>
-    );
+    )
+
 }
+
 
 const styles = StyleSheet.create({
     body: {
         flex: 1,
-        padding: 20,
+        paddingTop: 20,
         backgroundColor: "#fff",
+        paddingHorizontal: 15,
     },
     header: {
         paddingTop: 50,

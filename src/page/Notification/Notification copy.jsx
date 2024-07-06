@@ -62,7 +62,7 @@ export default function NotificationPage({ }) {
         justifyContent: "space-around",
       }}
     >
-    <SelectedDates/>
+    {/* <SelectedDates/> */}
       <Button
         title="Press to schedule a notification"
         onPress={() => {

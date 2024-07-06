@@ -20,10 +20,8 @@ export default function ComSelectedOneDate({
   enabled,
   ...props }) {
   const today = moment().format("YYYY-MM-DD");
-  console.log("children ", today)
 
   const [selectedDate, setSelectedDate] = useState(today);
-  console.log("selectedDate ", selectedDate)
 
   const errorMessage = errors[name]?.message;
   const [open, setOpen] = useState(false);
@@ -36,7 +34,7 @@ export default function ComSelectedOneDate({
     const selectedDateMoment = moment(day.dateString);
     const now = moment();
 
-    if (selectedDateMoment.isSameOrBefore(now, "day")) {
+    if (selectedDateMoment?.isSameOrBefore(now, "day")) {
       return; // Không cho chọn ngày quá khứ
     }
 
@@ -80,7 +78,6 @@ export default function ComSelectedOneDate({
               {...LocaleConfig}
               onDayPress={(day) => {
                 onChange(day.dateString);  // Gọi onChange để cập nhật giá trị của dateOfBirth
-                console.log( "day.dateString", day.dateString)
               }}
               markedDates={{
                 [value]: {        // value: Giá trị hiện tại của trường dữ liệu.

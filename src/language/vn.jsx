@@ -189,6 +189,7 @@ export const vn = {
       registerElder: "Bạn muốn đăng ký dịch vụ cho",
       registerTime: "Thời gian thực hiện",
       registerTitle: "Đăng ký dịch vụ",
+      addToCart: "Lưu dịch vụ",
       cart: "Giỏ hàng"
     },
     payment: {
@@ -198,7 +199,7 @@ export const vn = {
       registerName: "Người đăng ký",
       elderName: "Người thụ hưởng",
       time: "Thời gian",
-      totalMoney: "Tổng chi phí",
+      totalMoney: "Tổng tiền",
     },
     history: {
       title: "Lịch sử dịch vụ",

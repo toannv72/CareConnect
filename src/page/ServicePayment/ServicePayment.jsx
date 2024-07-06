@@ -1,43 +1,103 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity } from 'react-native';
+import ComNoData from "../../Components/ComNoData/ComNoData";
 import ComSelectButton from "../../Components/ComButton/ComSelectButton";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { useRoute } from "@react-navigation/native";
 import backArrowWhite from "../../../assets/icon/backArrowWhite.png";
 import servicePayment from "../../../assets/images/service/payment.png";
 import { useNavigation } from '@react-navigation/native';
+import { useCart } from '../../contexts/CartContext';
+import ComServicePayment from "./ComServicePayment";
+import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter"
+import ComPaymentMethod from "../Bills/BillDetail/ComPaymentMethod";
+import momo from "../../../assets/momo.png";
+import vnpay from "../../../assets/vnpay.png";
+import moment from "moment";
+import { postData } from "../../api/api"; // Import your API function
+import { Linking } from 'react-native';
 
 export default function ServicePayment() {
-    const [data, setData] = useState({
-        id: "54326789",
-        servicePrice: 100000,
-        serviceName: "Châm cứu bấm huyệt",
-        register: "Nguyễn Văn A",
-        elder: "Trần Thị B",
-        time: ["09/05/2024", "24//05/2024", "25/05/2024"],
-        totalMoney: 300000
-    });
-
     const {
         text: { addingPackages },
         setLanguage,
     } = useContext(LanguageContext);
 
-    const route = useRoute();
-    const { id } = route.params;
     const navigation = useNavigation();
+    const route = useRoute();
+    const { servicePackage, elder, orderDates, type } = route?.params;
+    const [selectedMethod, setSelectedMethod] = useState('momo');
 
-    const handleBackPress = () => {
-        navigation.goBack();
+    const handleMethodPress = (methodName) => {
+        setSelectedMethod(methodName);
     };
+    console.log(" orderDates: ", orderDates)
+    console.log(" servicePackage: ", servicePackage)
+    console.log(" elder: ", elder)
+    console.log(" type: ", type)
+
+    const handleBackPress = () => { navigation.goBack() };
 
     const formatCurrency = (number) => {
         // Sử dụng hàm toLocaleString() để định dạng số
-        return number.toLocaleString("vi-VN", {
+        return number?.toLocaleString("vi-VN", {
             style: "currency",
             currency: "VND",
         });
     };
+
+    const totalMoney = () => {
+
+        if (servicePackage?.type === "OneDay") {
+            return servicePackage?.price; // Nếu là dịch vụ theo ngày thì trả về giá dịch vụ
+        } else {
+            const today = moment(); // Lấy ngày hiện tại
+            const futureDates = orderDates?.filter(date => moment(date)?.isAfter(today)); // Lọc những ngày trong tương lai từ orderDates
+            return servicePackage?.price * futureDates?.length; // Nhân giá dịch vụ với số ngày trong tương lai
+        }
+    }
+
+    const payment = () => {
+        const dueDate = moment()?.format('YYYY-MM-DD');
+        const transformedDates = servicePackage?.type === "OneDay" ? [{"date": servicePackage?.eventDate}] : orderDates.map(date => ({ date }));
+        const formattedData = {
+            "method": selectedMethod,
+            "dueDate": dueDate,
+            "description": "Thanh toán hóa đơn dịch vụ " + servicePackage?.name,
+            "content": "Thanh toán hóa đơn dịch vụ " + servicePackage?.name,
+            "notes": "Thanh toán hóa đơn dịch vụ " + servicePackage?.name,
+            "orderDetails": [
+                {
+                    "notes": "Thanh toán hóa đơn dịch vụ " + servicePackage?.name + " cho người cao tuổi " + elder?.name,
+                    "servicePackageId": servicePackage?.id,
+                    "elderId": elder?.id,
+                    "type": type,
+                    "orderDates": transformedDates
+                }
+            ]
+        }
+        console.log("formattedData, ", formattedData);
+        console.log("orderDates, ", formattedData?.orderDetails[0]?.orderDates);
+        postData("/orders/service-package?returnUrl=a", formattedData)
+            .then((response) => {
+                console.log("API Response: ", response.message);
+                // showToast("success", "Tạo báo cáo thành công", "", "bottom")
+                // navigation.navigate("AddingServiceDetail", {id : servicePackage?.id});
+                const url = response.message; // Assuming response.message contains the URL
+                // Open the URL in the default browser
+                Linking.openURL(url)
+                    .then(() => {
+                        console.log("Opened successfully");
+                    })
+                    .catch((err) => {
+                        console.error("Failed to open URL: ", err);
+                    });
+            })
+            .catch((error) => {
+                console.error("API Error: ", error);
+                // showToast("error", "Có lỗi xảy ra, vui lòng thử lại!", "", "bottom")
+            });
+    }
 
     return (
         <>
@@ -58,69 +118,92 @@ export default function ServicePayment() {
                 <Text style={{ fontWeight: "bold", fontSize: 20, marginBottom: 10, textAlign: 'center' }} numberOfLines={2}>
                     {addingPackages?.payment?.title}
                 </Text>
-                {/* price */}
-                <Text style={{ fontSize: 16, marginBottom: 10 }}>
-                    <Text style={{ fontWeight: "bold" }}>
-                        {addingPackages?.payment?.billId}
-                    </Text>
-                    : {data.id}
-                </Text>
-                {/* category */}
+
                 <Text style={{ flexDirection: "row", marginBottom: 10 }}>
                     <Text style={styles.contentBold}>
                         {addingPackages?.payment?.serviceName}
                     </Text>
                     <Text style={{ fontSize: 16 }}>
-                        : {data?.serviceName}
+                        : {servicePackage?.name}
                     </Text>
                 </Text>
-                {/* register */}
                 <Text style={{ flexDirection: "row", marginBottom: 10 }}>
                     <Text style={styles.contentBold}>
-                        {addingPackages?.payment?.registerName}
+                        Giá dịch vụ
                     </Text>
                     <Text style={{ fontSize: 16 }}>
-                        : {data?.register}
+                        : {formatCurrency(servicePackage?.price)}
                     </Text>
                 </Text>
-                {/* elder */}
+
                 <Text style={{ flexDirection: "row", marginBottom: 10 }}>
                     <Text style={styles.contentBold}>
                         {addingPackages?.payment?.elderName}
                     </Text>
                     <Text style={{ fontSize: 16 }}>
-                        : {data?.elder}
+                        : {elder?.name}
                     </Text>
                 </Text>
-                {/* time */}
                 <Text style={styles.contentBold}>
                     {addingPackages?.payment?.time}:
                 </Text>
-                {data?.time.map((day, index) => (
-                    <Text style={{ fontSize: 16 }} key={index}>
-                        - {day}
+                {servicePackage?.type === "OneDay" ? (
+                    <Text style={{ fontSize: 16, marginBottom: 5 }}>
+                        - <ComDateConverter>{orderDates}</ComDateConverter>
                     </Text>
-                ))}
-                {/* total */}
-                <Text style={{ flexDirection: "row", marginBottom: 10 }}>
+                ) : (
+                    orderDates?.map((day, index) => {
+                        const isFutureDate = moment(day)?.isAfter(moment(), 'day'); // Kiểm tra xem ngày có phải là ngày trong tương lai không
+                        if (isFutureDate) {
+                            return (
+                                <Text style={{ fontSize: 16, marginBottom: 5 }} key={index}>
+                                    - <ComDateConverter>{day}</ComDateConverter>
+                                </Text>
+                            );
+                        } else {
+                            return null; // Nếu không phải ngày trong tương lai, trả về null để không render
+                        }
+                    })
+                )}
+
+                <Text style={styles.contentBold}>Phương thức thanh toán</Text>
+                <View style={styles.tableContainer}>
+                    <ComPaymentMethod
+                        name="Momo"
+                        logo={momo}
+                        isSelected={selectedMethod === 'momo'}
+                        onPress={() => handleMethodPress('momo')}
+                    />
+                    <ComPaymentMethod
+                        name="VnPay"
+                        logo={vnpay}
+                        isSelected={selectedMethod === 'VnPay'}
+                        onPress={() => handleMethodPress('VnPay')}
+                    />
+                </View>
+
+            </ScrollView>
+            <View style={{ backgroundColor: "#fff", paddingHorizontal: 15 }}>
+                <Text style={{ flexDirection: "row", marginTop: 5 }}>
                     <Text style={styles.contentBold}>
                         {addingPackages?.payment?.totalMoney}
                     </Text>
                     <Text style={{ fontSize: 16, fontWeight: "bold", color: "#33B39C" }}>
-                        : {formatCurrency(data?.servicePrice)} x {data?.time.length} = {formatCurrency(data?.totalMoney)}
+                        {servicePackage?.type === "OneDay" ? (
+                            <>
+                                : {formatCurrency(servicePackage?.price)} x 1 = {formatCurrency(totalMoney())}
+                            </>
+                        ) : (
+                            <>
+                                : {formatCurrency(servicePackage?.price)} x {orderDates?.filter(date => moment(date)?.isAfter(moment()))?.length} = {formatCurrency(totalMoney())}
+                            </>
+                        )}
                     </Text>
                 </Text>
-
-                <View style={{ marginVertical: 20 }}>
-                    <ComSelectButton
-                    // onPress={() => {
-                    //     navigation.navigate("AddingServiceRegister", { id: data.id });
-                    // }}
-                    >
-                        {addingPackages?.payment?.title}
-                    </ComSelectButton>
-                </View>
-            </ScrollView>
+                <ComSelectButton onPress={() => payment()} >
+                    {addingPackages?.payment?.title}
+                </ComSelectButton>
+            </View>
         </>
     );
 }
@@ -132,7 +215,8 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         paddingHorizontal: 15,
     },
-    header:{
+
+    header: {
         paddingTop: 50,
         backgroundColor: "#fff",
     },
@@ -153,5 +237,16 @@ const styles = StyleSheet.create({
     backIcon: {
         width: 50,
         height: 50,
+    },
+    row: {
+        flexDirection: "row",
+        justifyContent: "space-between"
+    },
+    tableContainer: {
+        borderWidth: 1,
+        borderRadius: 10,
+        borderColor: "#33B39C",
+        paddingHorizontal: 10,
+        marginBottom: 20
     },
 });

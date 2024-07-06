@@ -75,7 +75,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "flex-start",
     justifyContent: "center",
-    flexWrap: "wrap",
     gap: 3
   },
 });

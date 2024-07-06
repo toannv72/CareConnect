@@ -24,6 +24,8 @@ import AddingServicePackages from "./src/page/AddingServicePackage/AddingService
 import AddingServiceDetail from "./src/page/AddingServiceDetail/AddingServiceDetail";
 import AddingServiceElderRegister from "./src/page/AddingServiceRegister/AddingServiceElderRegister";
 import AddingServiceCalendarRegister from "./src/page/AddingServiceRegister/AddingServiceCalendarRegister";
+import ServiceDayRegister from "./src/page/AddingServiceRegister/ServiceDayRegister";
+import ServiceAnydayRegister from "./src/page/AddingServiceRegister/ServiceAnydayRegister";
 import Cart from "./src/page/AddingServiceRegister/Cart/Cart";
 import ServicePayment from "./src/page/ServicePayment/ServicePayment";
 import ServiceHistory from "./src/page/ServiceHistory/ServiceHistory/ServiceHistory";
@@ -138,6 +140,16 @@ const Routes = () => {
           options={{ headerLeft: null, headerShown: false }}
           name="AddingServiceCalendarRegister"
           component={AddingServiceCalendarRegister}
+        />
+           <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ServiceDayRegister"
+          component={ServiceDayRegister}
+        />
+           <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ServiceAnydayRegister"
+          component={ServiceAnydayRegister}
         />
         <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
@@ -366,6 +378,7 @@ function HomeStackScreen() {
         name="NotificationPage"
         component={Home}
       />
+      
       <HomeStack.Screen name="Details" component={Login} />
     </HomeStack.Navigator>
   );
@@ -409,7 +422,7 @@ function MyBottomNavigationBar() {
 
           if (route.name === "Home") {
             iconName = focused ? "Nav1" : "Nav1_1";
-          } else if (route.name === "Visitation") {
+          } else if (route.name === "AddingServicePackages") {
             iconName = focused ? "Nav2" : "Nav2_1";
           } else if (route.name === "HealthCondition") {
             iconName = focused ? "Nav3" : "Nav3_1";
@@ -432,7 +445,7 @@ function MyBottomNavigationBar() {
         component={HomeStackScreen}
       />
       <Tab.Screen
-        name="Visitation"
+        name="AddingServicePackages"
         options={{ headerShown: false }}
         component={AddingServicePackages}
       />

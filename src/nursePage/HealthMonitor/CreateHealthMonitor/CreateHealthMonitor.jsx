@@ -82,9 +82,6 @@ export default function CreateHealthMonitor() {
             healthReportDetails,
         };
 
-        console.log("Formatted Data: ", formattedData);
-        console.log("healthReportDetailMeasures: ", formattedData?.healthReportDetails[0]?.healthReportDetailMeasures);
-
         // Send data to API
         postData("/health-report", formattedData)
             .then((response) => {

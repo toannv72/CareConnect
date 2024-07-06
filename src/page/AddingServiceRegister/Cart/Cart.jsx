@@ -1,30 +1,74 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useCallback } from "react";
 import { View, StyleSheet, ScrollView, Text } from 'react-native';
 import ComSelectButton from "../../../Components/ComButton/ComSelectButton";
 import { LanguageContext } from "../../../contexts/LanguageContext";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import ComHeader from "../../../Components/ComHeader/ComHeader";
 import ComCart from "./ComCart";
 import ComNoData from "../../../Components/ComNoData/ComNoData";
 import { useCart } from '../../../contexts/CartContext';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 
 export default function Cart() {
     const { cart } = useCart();
     const [totalPrice, setTotalPrice] = useState(0);
+    const [selectedItems, setSelectedItems] = useState([]);
+    const [selectAll, setSelectAll] = useState(false);
     const navigation = useNavigation();
+console.log("selectedItems", selectedItems)
+    const calculateTotalPrice = (items) => {
+        const total = items?.reduce((sum, item) => {
+            return sum + (item?.servicePackage?.price * item?.orderDates?.length);
+        }, 0);
+        setTotalPrice(total);
+    };
+
+    useFocusEffect(
+        useCallback(() => {
+            // Reset selected items and checkboxes when the screen is focused
+            setSelectedItems([]);
+            if (cart?.length > 0) {
+                cart.forEach(item => {
+                    item.isSelected = false;
+                });
+            }
+            setSelectAll(false); // Reset "Select All" checkbox when screen is focused
+            setTotalPrice(0); // Reset total price when screen is focused
+        }, [cart])
+    );
 
     useEffect(() => {
-        const calculateTotalPrice = () => {
-            const total = cart?.reduce((sum, item) => {
-                return sum + (item?.servicePackage?.price * item?.orderDates?.length);
-            }, 0);
-            setTotalPrice(total);
-        };
-        calculateTotalPrice();
-    }, [cart]);
+        calculateTotalPrice(selectedItems);
+    }, [selectedItems]);
+
+    const handleCheck = (item, isChecked) => {
+        item.isSelected = isChecked;
+        const updatedItems = [...selectedItems];
+        if (isChecked) {
+            updatedItems.push(item);
+        } else {
+            const index = updatedItems.findIndex(selectedItem => selectedItem === item);
+            if (index !== -1) {
+                updatedItems.splice(index, 1);
+            }
+        }
+        setSelectedItems(updatedItems);
+        // Check if all items are selected to toggle "Select All" checkbox
+        const allSelected = cart.every(item => selectedItems.includes(item));
+        setSelectAll(allSelected);
+    };
+
+    const handleSelectAll = () => {
+        const updatedItems = cart.map(item => {
+            item.isSelected = !selectAll;
+            return item;
+        });
+        setSelectedItems(!selectAll ? updatedItems : []);
+        setSelectAll(!selectAll);
+    };
 
     const handleProceedToCheckout = () => {
-        navigation.navigate('CheckoutScreen');
+        navigation.navigate('ServicePayment', { selectedItems });
     };
 
     const {
@@ -53,9 +97,23 @@ export default function Cart() {
                             showsHorizontalScrollIndicator={false}
                         >
                             {cart.map((item, index) => (
-                                <ComCart key={index} data={item} />
+                                <ComCart key={index} data={item}
+                                    deleteIcon={true}
+                                    onCheck={handleCheck}
+                                    isSelected={selectedItems.includes(item)}
+                                />
                             ))}
                         </ScrollView>
+
+                        <View>
+                            <BouncyCheckbox
+                                size={25}
+                                isChecked={selectAll}
+                                onPress={handleSelectAll}
+                                fillColor="#33B39C"
+                                textComponent={<Text>  Chọn tất cả</Text>}
+                            />
+                        </View>
 
                         <View style={[styles.row, { marginVertical: 10 }]}>
                             <Text style={{ fontWeight: "600", fontSize: 16 }}>
@@ -70,9 +128,9 @@ export default function Cart() {
                         </ComSelectButton>
                     </>
                 ) : (
-                    <View style={{gap: 20}}>
+                    <View style={{ gap: 20 }}>
                         <ComNoData>Giỏ hàng đang trống</ComNoData>
-                        <ComSelectButton onPress={handleProceedToCheckout}>
+                        <ComSelectButton onPress={() => navigation.navigate("AddingService")}>
                             Đi đến danh sách các dịch vụ
                         </ComSelectButton>
                     </View>
