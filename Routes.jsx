@@ -26,7 +26,7 @@ import AddingServiceElderRegister from "./src/page/AddingServiceRegister/AddingS
 import AddingServiceCalendarRegister from "./src/page/AddingServiceRegister/AddingServiceCalendarRegister";
 import ServiceDayRegister from "./src/page/AddingServiceRegister/ServiceDayRegister";
 import ServiceAnydayRegister from "./src/page/AddingServiceRegister/ServiceAnydayRegister";
-import Cart from "./src/page/AddingServiceRegister/Cart/Cart";
+import Favorite from "./src/page/AddingServiceRegister/Favorite/Favorite";
 import ServicePayment from "./src/page/ServicePayment/ServicePayment";
 import ServiceHistory from "./src/page/ServiceHistory/ServiceHistory/ServiceHistory";
 import ServiceHistoryDetail from "./src/page/ServiceHistory/ServiceHistoryDetail/ServiceHistoryDetail";
@@ -75,7 +75,7 @@ const Tab = createBottomTabNavigator();
 const Routes = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator initialRouteName="Homes">
         <Stack.Screen
           name="Homes"
           options={{ headerLeft: null, headerShown: false }}
@@ -153,8 +153,8 @@ const Routes = () => {
         />
         <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
-          name="Cart"
-          component={Cart}
+          name="Favorite"
+          component={Favorite}
         />
         <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}

@@ -2,11 +2,13 @@ import React, { useContext, useState, useEffect } from "react";
 import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity } from 'react-native';
 import ComSelectButton from "../../Components/ComButton/ComSelectButton";
 import { LanguageContext } from "../../contexts/LanguageContext";
+import { FavoriteContext } from "../../contexts/FavoriteContext";
 import { useRoute } from "@react-navigation/native";
 import backArrowWhite from "../../../assets/icon/backArrowWhite.png";
 import { useNavigation } from '@react-navigation/native';
 import { postData, getData } from "../../api/api";
 import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter";
+import Heart from "../../../assets/heart.png";
 
 export default function AddingServiceDetail() {
 
@@ -14,14 +16,13 @@ export default function AddingServiceDetail() {
         text: { addingPackages },
         setLanguage,
     } = useContext(LanguageContext);
-
+    const { favorites, toggleFavorite } = useContext(FavoriteContext);
     const route = useRoute();
     const { id } = route.params;
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState({});
     const [isRegistrationClosed, setIsRegistrationClosed] = useState(false);
     const navigation = useNavigation();
-
     const handleBackPress = () => {
         navigation.goBack();
     };
@@ -34,7 +35,7 @@ export default function AddingServiceDetail() {
     };
 
     useEffect(() => {
-        // Lấy danh sách sản phẩm
+        setLoading(true)
         getData(`/service-package/${id}`, {})
             .then((packageData) => {
                 setData(packageData?.data);
@@ -45,12 +46,15 @@ export default function AddingServiceDetail() {
                         setIsRegistrationClosed(true);
                     }
                 }
+                setLoading(false)
             })
             .catch((error) => {
+                setLoading(false)
                 console.error("Error fetching service-package:", error);
             });
     }, [])
 
+    const isFavorite = favorites.some(item => item.id === data?.id);
 
     return (
         <>
@@ -74,93 +78,99 @@ export default function AddingServiceDetail() {
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}>
-                    <View style={{ flex: 1, gap: 10 }}>
-                        <Text style={{ fontWeight: "bold", fontSize: 20 }} numberOfLines={2}>
-                            {data?.name}
-                        </Text>
-                        {/* price */}
-                        <Text style={{ fontSize: 16 }}>
-                            <Text style={{ fontWeight: "bold", fontSize: 20 }}>
-                                {formatCurrency(data?.price)}
+                    <View style={{ flex: 1, gap: 10, backgroundColor: "#ebe9e4", borderRadius: 20 }}>
+                        <View style={{ flexDirection: "row", marginTop: 20, justifyContent: "space-between" }}>
+                            <View style={{ padding: 10, backgroundColor: "#33B39C", justifyContent: "center", borderTopRightRadius: 50, borderBottomRightRadius: 50, width: "45%" }}>
+                                <Text style={{ fontSize: 16, color: "#fff", fontWeight: "600", paddingLeft: 5 }} numberOfLines={1}>
+                                    {data?.servicePackageCategory?.name}
+                                </Text>
+                            </View>
+                            <TouchableOpacity
+                                onPress={() => toggleFavorite(data)}
+                                style={[{ backgroundColor: isFavorite ? "#fac8d2" : "#949292", justifyContent: "center", padding: 10, borderRadius: 50, marginRight: 15 }]}>
+                                <Image source={Heart}
+                                    style={{ width: 25, height: 25, tintColor: isFavorite ? "red" : "#636360" }} />
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{ padding: 15, gap: 10 }}>
+                            <Text style={{ fontWeight: "bold", fontSize: 20, textAlign: "center" }}>
+                                {data?.name}
                             </Text>
-                            /{addingPackages?.package?.time}
-                        </Text>
-                        {/* category */}
-                        <Text style={{ flexDirection: "row" }}>
-                            <Text style={styles.contentBold}>
-                                {addingPackages?.package?.category}
-                            </Text>
+                            {/* price */}
                             <Text style={{ fontSize: 16 }}>
-                                : {data?.servicePackageCategory?.name}
+                                <Text style={{ fontWeight: "bold", fontSize: 20 }}>
+                                    {formatCurrency(data?.price)}
+                                </Text>
+                                /{addingPackages?.package?.time}
                             </Text>
-                        </Text>
 
-                        <Text style={{ flexDirection: "row" }}>
-                            <Text style={styles.contentBold}>
-                                Type
-                            </Text>
-                            <Text style={{ fontSize: 16 }}>
-                                : {data?.type}
-                            </Text>
-                        </Text>
-
-                        {data?.registrationLimit !== 0 && (
                             <Text style={{ flexDirection: "row" }}>
                                 <Text style={styles.contentBold}>
-                                    {addingPackages?.package?.registrationLimit}
+                                    Type
                                 </Text>
                                 <Text style={{ fontSize: 16 }}>
-                                    : {data?.registrationLimit} {addingPackages?.package?.people}
+                                    : {data?.type}
                                 </Text>
                             </Text>
-                        )}
 
-                        {data?.timeBetweenServices !== 0 && (
-                            <Text style={{ flexDirection: "row" }}>
-                                <Text style={styles.contentBold}>
-                                    {addingPackages?.package?.timeBetweenServices}
+                            {data?.registrationLimit !== 0 && (
+                                <Text style={{ flexDirection: "row" }}>
+                                    <Text style={styles.contentBold}>
+                                        {addingPackages?.package?.registrationLimit}
+                                    </Text>
+                                    <Text style={{ fontSize: 16 }}>
+                                        : {data?.registrationLimit} {addingPackages?.package?.people}
+                                    </Text>
                                 </Text>
-                                <Text style={{ fontSize: 16 }}>
-                                    : {data?.timeBetweenServices}
+                            )}
+
+                            {/* {data?.timeBetweenServices !== 0 && (
+                                <Text style={{ flexDirection: "row" }}>
+                                    <Text style={styles.contentBold}>
+                                        {addingPackages?.package?.timeBetweenServices}
+                                    </Text>
+                                    <Text style={{ fontSize: 16 }}>
+                                        : {data?.timeBetweenServices}
+                                    </Text>
+                                    {" " + addingPackages?.package?.dayBetweenServices}
                                 </Text>
-                                {" " + addingPackages?.package?.dayBetweenServices}
+                            )} */}
+
+                            {
+                                data?.type == "OneDay" && (
+                                    <>
+                                        <Text style={{ flexDirection: "row" }}>
+                                            <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                                                {addingPackages?.package?.endRegistrationStartDate}
+                                            </Text>
+                                            <Text>
+                                                : <ComDateConverter>{data?.endRegistrationStartDate}</ComDateConverter>
+                                            </Text>
+                                        </Text>
+                                        <Text style={{ flexDirection: "row" }}>
+                                            <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                                                {addingPackages?.package?.eventDate}
+                                            </Text>
+                                            <Text>
+                                                : <ComDateConverter>{data?.eventDate}</ComDateConverter>
+                                            </Text>
+                                        </Text>
+                                    </>
+                                )
+                            }
+                            {/* mô tả */}
+                            <Text style={styles.contentBold}>
+                                {addingPackages?.package?.description}
                             </Text>
-                        )}
-
-                        {
-                            data?.type == "OneDay" && (
-                                <>
-                                    <Text style={{ flexDirection: "row" }}>
-                                        <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-                                            {addingPackages?.package?.endRegistrationStartDate}
-                                        </Text>
-                                        <Text>
-                                            : <ComDateConverter>{data?.endRegistrationStartDate}</ComDateConverter>
-                                        </Text>
-                                    </Text>
-                                    <Text style={{ flexDirection: "row" }}>
-                                        <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-                                            {addingPackages?.package?.eventDate}
-                                        </Text>
-                                        <Text>
-                                            : <ComDateConverter>{data?.eventDate}</ComDateConverter>
-                                        </Text>
-                                    </Text>
-                                </>
-                            )
-                        }
-                        {/* mô tả */}
-                        <Text style={styles.contentBold}>
-                            {addingPackages?.package?.description}
-                        </Text>
-                        <Text style={{ fontSize: 16 }}>{data?.description}</Text>
+                            <Text style={{ fontSize: 16 }}>{data?.description}</Text>
+                        </View>
                     </View>
                 </ScrollView>
                 <View style={{ marginVertical: 20 }}>
                     {
                         isRegistrationClosed &&
                         <View style={{}}>
-                            <Text style={{color: "red", textAlign: "center"}}>Đã hết hạn đăng ký dịch vụ</Text>
+                            <Text style={{ color: "red", textAlign: "center" }}>Đã hết hạn đăng ký dịch vụ</Text>
                         </View>
                     }
                     <ComSelectButton

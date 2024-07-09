@@ -7,8 +7,6 @@ import { useRoute } from "@react-navigation/native";
 import backArrowWhite from "../../../assets/icon/backArrowWhite.png";
 import servicePayment from "../../../assets/images/service/payment.png";
 import { useNavigation } from '@react-navigation/native';
-import { useCart } from '../../contexts/CartContext';
-import ComServicePayment from "./ComServicePayment";
 import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter"
 import ComPaymentMethod from "../Bills/BillDetail/ComPaymentMethod";
 import momo from "../../../assets/momo.png";

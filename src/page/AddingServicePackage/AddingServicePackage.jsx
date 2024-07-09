@@ -132,12 +132,12 @@ export default function AddingServicePackages() {
                             />
                         </FormProvider>
                     </View>
-                    {/* <TouchableOpacity
-                        onPress={() => navigation.navigate("Cart")}
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate("Favorite")}
                         style={[styles.cart, stylesApp.shadow]}>
                         <Image source={Heart}
                             style={{ width: 30, height: 30, tintColor: "#fff" }} />
-                    </TouchableOpacity> */}
+                    </TouchableOpacity>
                 </View>
                 <CategoryButtons
                     categoryData={categoryData}
