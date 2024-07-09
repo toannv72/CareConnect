@@ -61,11 +61,11 @@ export default function Register() {
     password: yup
       .string()
       .trim()
-      .required(Register?.message?.password)
-      .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-        Register?.message?.passwordInvalid
-      ),
+      .required(Register?.message?.password),
+      // .matches(
+      //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      //   Register?.message?.passwordInvalid
+      // ),
 
     confirmPassword: yup
       .string()
