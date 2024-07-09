@@ -26,12 +26,13 @@ export default function EditProfile({ }) {
   const [image, setImage] = useState(user?.avatarUrl);
   const [imageUrl, setImageUrl] = useState(null);
   const navigation = useNavigation();
-  const showToast = (type, text1, text2, position) => {
+  const showToast = (type, text1, text2, position, topOffset) => {
     Toast.show({
       type: type,
       text1: text1,
       text2: text2,
-      position: position
+      position: position,
+      topOffset: topOffset
     });
   }
 
@@ -100,7 +101,7 @@ export default function EditProfile({ }) {
             });
           return new Promise((resolve) => {
             setTimeout(() => {
-              showToast("success", "Chỉnh sửa thông tin thành công", "", "bottom")
+              showToast("success", "Chỉnh sửa thông tin thành công", "", "top", 50)
               resolve(); // Báo hiệu Promise đã hoàn thành
             }, 0); // Thời gian chờ 0ms để đảm bảo setToken đã được thực hiện
           });
@@ -123,8 +124,6 @@ export default function EditProfile({ }) {
       // Nếu không có hình ảnh mới, chỉ cập nhật dữ liệu người dùng
       handleUpdateData(newData);
     }
-
-
   }
 
   const genderOptions = [
@@ -160,7 +159,7 @@ export default function EditProfile({ }) {
         showTitle
         showBackIcon
       />
-      <KeyboardAvoidingView style={styles.body}  behavior="padding">
+      <KeyboardAvoidingView style={styles.body} >
         <View style={styles.container}>
           <FormProvider {...methods}>
             <View style={{ width: "100%", gap: 10, flex: 1 }}>
@@ -218,6 +217,7 @@ export default function EditProfile({ }) {
                     control={control}
                     keyboardType="default" // Set keyboardType for First Name input
                     errors={errors} // Pass errors object
+                    edit={false}
                     required
                   />
                   <ComInput

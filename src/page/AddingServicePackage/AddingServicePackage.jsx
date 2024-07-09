@@ -160,7 +160,7 @@ export default function AddingServicePackages() {
                                     <View style={{ width: "35%" }}>
                                         {loadMoreLoading ? (<ActivityIndicator />) :
                                             (<ComSelectButton onPress={fetchNextPage} disable={!hasMore}>Xem thêm</ComSelectButton>)}
-                                        {/* <View style={{ height: 100 }}></View> */}
+                                        <View style={{ height: 100 }} />
                                     </View>
                                 </View>
                             )}

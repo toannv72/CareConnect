@@ -5,35 +5,38 @@ import { LanguageContext } from "../../contexts/LanguageContext";
 import { useRoute } from "@react-navigation/native";
 import backArrowWhite from "../../../assets/icon/backArrowWhite.png";
 import { useNavigation } from '@react-navigation/native';
-import SelectedDates from "./ComSelectedDates";
 import ComSelectWeekDays from "./ComSelectWeekDays";
 import ComRadioGroup from "../../Components/ComRadioGroup/ComRadioGroup";
 import moment from "moment";
-import Toast from 'react-native-toast-message';
-import { getData } from "../../api/api"; // Import your API function
+import { getData } from "../../api/api";
 import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter"
 import { Calendar } from "react-native-calendars";
-
+import Calendar31Days from './Calendar31Days';
 export default function ServiceAnydayRegister() {
     const [selectedId, setSelectedId] = useState('1');
     const [registeredDates, setRegisteredDates] = useState([]);
     const [selectedDates, setSelectedDates] = useState([]);
+    const [orderDetail, setOrderDetail] = useState([]);
     const [loading, setLoading] = useState(false);
     const route = useRoute();
     const { elder, data } = route.params;
-    console.log(" selectedDates", selectedDates)
     const navigation = useNavigation();
-    const tomorrow = moment().add(1, 'day').format('YYYY-MM-DD');
+    const minDate = moment().add(3, 'day').format('YYYY-MM-DD');
+    const maxDate = useMemo(() => {
+        if (elder?.contractsInUse?.endDate) {
+            const endDate = moment(elder?.contractsInUse?.endDate);
+            const diffMonths = endDate.diff(moment(), 'months');
+            if (diffMonths < 2) { return endDate.format('YYYY-MM-DD'); }
+        }
+        return moment().add(2, 'months').endOf('month').format('YYYY-MM-DD');
+    }, [elder?.contractsInUse?.endDate]);
 
     const {
         text: { addingPackages },
         setLanguage,
     } = useContext(LanguageContext);
 
-    const handleBackPress = () => {
-        navigation.goBack();
-    };
-
+    const handleBackPress = () => { navigation.goBack(); };
     const formatCurrency = (number) => {
         return number.toLocaleString("vi-VN", {
             style: "currency",
@@ -56,8 +59,7 @@ export default function ServiceAnydayRegister() {
             id: '3',
             label: 'Theo tháng',
             value: '3'
-        }
-    ]), []);
+        }]), []);
 
     const handleDayPress = (index) => {
         const updatedDays = [...weekDays]; // Sao chép mảng weekDays để không thay đổi trực tiếp state
@@ -70,29 +72,27 @@ export default function ServiceAnydayRegister() {
 
     const handleAnyDayPress = (day) => {
         const dateString = day.dateString;
-
         // Tạo một bản sao của mảng selectedDates hiện tại
         const updatedSelectedDates = [...selectedDates];
-
         // Kiểm tra xem ngày đã được chọn hay chưa
         const index = updatedSelectedDates.indexOf(dateString);
-        if (index !== -1) {
-            // Nếu ngày đã được chọn, loại bỏ nó khỏi mảng
+        if (index !== -1) { // Nếu ngày đã được chọn, loại bỏ nó khỏi mảng
             updatedSelectedDates.splice(index, 1);
-        } else {
-            // Nếu ngày chưa được chọn, thêm nó vào mảng
+        } else { // Nếu ngày chưa được chọn, thêm nó vào mảng
             updatedSelectedDates.push(dateString);
-        }
-
-        // Cập nhật selectedDates với mảng mới
+        } // Cập nhật selectedDates với mảng mới
         setSelectedDates(updatedSelectedDates);
     };
 
     const handleRadioGroupChange = (id) => {
         setSelectedId(id);
         setSelectedDates([])
+        const resetWeekDays = weekDays.map(day => ({
+            ...day,
+            check: true // Reset lại trạng thái check về true
+        }));
+        setWeekDays(resetWeekDays);
     };
-
 
     const [weekDays, setWeekDays] = useState([
         { value: "Monday", label: "T2", check: true, disable: false },
@@ -103,7 +103,6 @@ export default function ServiceAnydayRegister() {
         { value: "Saturday", label: "T7", check: true, disable: false },
         { value: "Sunday", label: "CN", check: true, disable: false },
     ]);
-    console.log(" weekDays", weekDays)
 
     const getType = (selectedId) => {
         switch (selectedId) {
@@ -122,14 +121,10 @@ export default function ServiceAnydayRegister() {
         const currentMonth = moment().month();
         const daysInMonth = moment().daysInMonth();
         const dates = [];
-
         for (let i = 1; i <= daysInMonth; i++) {
             const date = moment().date(i).month(currentMonth).format("YYYY-MM-DD");
             const dayOfWeek = moment(date).isoWeekday();
-
-            if (!selectedDays.includes(moment.weekdays(dayOfWeek))) {
-                dates.push(date);
-            }
+            if (!selectedDays.includes(moment.weekdays(dayOfWeek))) { dates.push(date); }
         }
         return dates;
     };
@@ -137,11 +132,8 @@ export default function ServiceAnydayRegister() {
     const calculateSelectedDates = () => {
         const selectedDays = weekDays.filter(day => day.check).map(day => day.value);
         const dates = getOrderDates(selectedDays); // Assuming getOrderDates is defined to return formatted dates
-        return dates;
-    };
-
-    const handleSelectedDatesChange = (dates) => {
-        setSelectedDates(dates); // Update selectedDates state
+        const filteredDates = dates.filter(date => !registeredDates.includes(date));
+        return filteredDates;
     };
 
     useEffect(() => {
@@ -150,17 +142,24 @@ export default function ServiceAnydayRegister() {
             try {
                 const orderDetail = await getData(`/order-detail?ElderId=${elder?.id}&ServicePackageId=${data?.id}`, {});
                 const registeredDates = orderDetail?.data?.map(date => date?.date);
-                console.log( " /order-detail?", registeredDates)
                 setRegisteredDates(registeredDates);
+                setOrderDetail(orderDetail?.data)
                 setLoading(false);
             } catch (error) {
                 console.error("Error fetching orderDetail items:", error);
                 setLoading(false);
             }
-        };
-        fetchData();
+        }; fetchData();
     }, [elder?.id, data?.id]);
 
+    useEffect(() => {
+        const updatedWeekDays = weekDays.map(weekDayItem => ({
+            ...weekDayItem,
+            disable: orderDetail.some(item => item.dayOfWeek === weekDayItem.value)
+        }));
+        setWeekDays(updatedWeekDays);
+    }, [orderDetail]);
+    
     const disableDates = useMemo(() => {
         const disabledDates = {};
         registeredDates.forEach(date => {
@@ -185,7 +184,6 @@ export default function ServiceAnydayRegister() {
                         objectFit: "fill",
                     }}
                 />
-
             </View>
             <ScrollView style={styles.body}
                 showsVerticalScrollIndicator={false}
@@ -195,8 +193,7 @@ export default function ServiceAnydayRegister() {
                 </Text>
                 {/* price */}
                 <Text style={{ fontSize: 16, marginBottom: 10 }}>
-                    <Text style={{ fontWeight: "bold" }}>
-                        {formatCurrency(data?.price)}
+                    <Text style={{ fontWeight: "bold" }}> {formatCurrency(data?.price)}
                     </Text>
                     /{addingPackages?.package?.month}
                 </Text>
@@ -217,9 +214,10 @@ export default function ServiceAnydayRegister() {
                     radioButtons={radioButtons}
                     onPress={handleRadioGroupChange}
                     selectedId={selectedId} />
-                {(selectedId === '1' || data?.type == "MultipleDays") && (
+                {(selectedId === '1') && (
                     <Calendar
-                        minDate={tomorrow}
+                        minDate={minDate}
+                        maxDate={maxDate}
                         onDayPress={(day) => handleAnyDayPress(day)}
                         markedDates={{
                             ...selectedDates.reduce((dates, date) => {
@@ -231,12 +229,11 @@ export default function ServiceAnydayRegister() {
                         hideExtraDays={true}
                     />
                 )}
-                {(selectedId === '2' || data?.type == "WeeklyDays") && (
+                {(selectedId === '2') && (
                     <>
                         <Text style={{ color: "gray" }}>Dịch vụ sẽ được gia hạn vào tháng sau với những thứ trong tuần bạn chọn dưới đây</Text>
                         <View style={{ flex: 1, flexDirection: 'row', justifyContent: "space-between" }}>
-                            {
-                                loading ? (
+                            { loading ? (
                                     <View style={{ flex: 1, justifyContent: "center" }}>
                                         <ActivityIndicator />
                                     </View>) : (
@@ -254,43 +251,45 @@ export default function ServiceAnydayRegister() {
                                 )
                             }
                         </View>
+                        <View style={{ marginVertical: 10, gap: 5 }}>
+                            <Text style={{ fontWeight: "600" }}>Danh sách những ngày sẽ thực hiện dịch vụ trong tháng này:</Text>
+                            {calculateSelectedDates()?.filter(date => moment(date).isAfter(moment(), 'day')).length > 0 ? (
+                                calculateSelectedDates()?.filter(date => moment(date).isAfter(moment(), 'day'))?.map((date, index) => (
+                                    <Text key={index}> • <ComDateConverter>{date}</ComDateConverter></Text>
+                                ))
+                            ) : (
+                                <Text style={{ marginTop: 10 }}>
+                                    {weekDays.find(day => !day.check) && "Bạn đã đăng ký dịch vụ vào những ngày này rồi"}
+                                </Text>
+                            )}
+                        </View>
                     </>
                 )}
                 {(selectedId === '3') && (
                     <View>
-                        <Calendar
-                            onDayPress={(day) => handleAnyDayPress(day)}
-                            markedDates={selectedDates.reduce((dates, date) => {
-                                dates[date] = { selected: true, selectedColor: '#33B39C' };
-                                return dates;
-                            }, {})}
-                            hideExtraDays={true}
-                            renderHeader={() => null}
-                            renderArrow={() => null}
-                            hideDayNames={true}
-                        />
+                        <Calendar31Days selectedDates={selectedDates} setSelectedDates={setSelectedDates} disableDates={orderDetail?.filter(item => item?.dayOfMonth !== null)?.map(item => item?.dayOfMonth)}/>
                     </View>
                 )}
                 <View style={{ height: 50 }}></View>
             </ScrollView>
             <View style={{ paddingHorizontal: 20, backgroundColor: "#fff" }}>
                 <ComSelectButton
-                    disable={selectedDates?.length === 0}
+                    disable={selectedDates?.length === 0 && calculateSelectedDates()?.length == 0}
                     onPress={() => {
                         let orderDates = [];
+                        const filteredSelectedDates = selectedDates.filter(date => !registeredDates.includes(date));
+                        const filteredCalculatedDates = calculateSelectedDates().filter(date => !registeredDates.includes(date));
                         if (selectedId === '1' || selectedId === '3') {
-                            orderDates = selectedDates;
+                            orderDates = filteredSelectedDates;
                         } else if (selectedId === '2') {
-                            orderDates = calculateSelectedDates();
+                            orderDates = filteredCalculatedDates;
                         }
                         navigation.navigate("ServicePayment", { servicePackage: data, elder: elder, orderDates: orderDates, type: getType(selectedId) });
                     }}> Thanh toán ngay </ComSelectButton>
             </View>
         </>
     )
-
 }
-
 
 const styles = StyleSheet.create({
     body: {

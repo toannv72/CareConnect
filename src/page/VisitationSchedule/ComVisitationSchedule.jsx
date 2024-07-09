@@ -41,8 +41,13 @@ const [year, month, day] = date.split("-");
           <Text>: {data?.user?.fullName}</Text>
         </Text>
         <Text style={{ flexDirection: "row" }}>
-          <Text style={{ fontWeight: "bold", fontSize: 16 }}>Người cao tuổi</Text>
-          <Text>: Nguyễn Văn A</Text>
+          <Text style={{ fontWeight: "bold", fontSize: 16 }}>Người cao tuổi: </Text>
+         {
+          data?.elders?.length > 0 && (
+            data?.elders?.map((elder, index)=>(
+              <Text key={index}>{elder?.name}{index < data.elders.length - 1 && ", "}</Text>
+            )))
+         }
         </Text>
         <Text style={{ flexDirection: "row" }}>
           <Text style={{ fontWeight: "bold", fontSize: 16 }}>

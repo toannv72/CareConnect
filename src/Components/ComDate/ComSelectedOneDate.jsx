@@ -18,10 +18,11 @@ export default function ComSelectedOneDate({
   errors,
   placeholder,
   enabled,
+  minDate,
   ...props }) {
   const today = moment().format("YYYY-MM-DD");
 
-  const [selectedDate, setSelectedDate] = useState(today);
+  const [selectedDate, setSelectedDate] = useState(moment().add(1, 'day').format("YYYY-MM-DD"));
 
   const errorMessage = errors[name]?.message;
   const [open, setOpen] = useState(false);
@@ -37,7 +38,6 @@ export default function ComSelectedOneDate({
     if (selectedDateMoment?.isSameOrBefore(now, "day")) {
       return; // Không cho chọn ngày quá khứ
     }
-
     // Nếu đã có ngày được chọn, bỏ chọn ngày đó
     if (selectedDate && selectedDate === day.dateString) {
       setSelectedDate(null);
@@ -71,7 +71,7 @@ export default function ComSelectedOneDate({
       <Controller
         control={control}
         name="date"
-        defaultValue={today}
+        defaultValue={moment().add(1, 'day').format("YYYY-MM-DD")}
         render={({ field: { onChange, value } }) => (
           <View>
             <Calendar
@@ -85,7 +85,7 @@ export default function ComSelectedOneDate({
                   selectedColor: '#33B39C'
                 }
               }}
-              minDate={today}
+              minDate={minDate ? minDate : today}
             />
             {errorMessage && <Text style={styles.error}>{errorMessage}</Text>}
           </View>

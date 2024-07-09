@@ -22,9 +22,9 @@ const SelectedDates = ({ servicePackageDates, onDatesChange, disableHeader }) =>
         servicePackageDates.forEach(item => {
           const { repetitionDay } = item;
           const dateToCheck = moment(currentDate).set("date", repetitionDay);
-
+          const today = moment().date();
           // Nếu ngày hiện tại có day bằng repetitionDay
-          if (dateToCheck.isSame(currentDate, "day")) {
+          if (dateToCheck.isSame(currentDate, "day") && repetitionDay !== today) {
             disable = false; // Nếu trùng, không disabled
           }
         });

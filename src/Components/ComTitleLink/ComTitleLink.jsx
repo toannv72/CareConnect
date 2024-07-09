@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import { Text } from "react-native-elements";
+import { Text } from "react-native";
 
 export default function ComTitleLink({ children, style, to, id }) {
   const navigation = useNavigation();

@@ -34,27 +34,23 @@ export default function HealthMonitorList({ }) {
             });
     }, []);
 
-    const toVietnamTime = (dateValue) => {
-        const date = new Date(dateValue);
-        date.setHours(date.getHours() + 7); // Convert to UTC+7
-        return date;
-    };
-
     const groupedData = healthMonitor.reduce((acc, item) => {
-        const date = toVietnamTime(item.createdAt).toISOString().split('T')[0]; // Convert to Vietnam time and format date as yyyy-mm-dd
+        const date = item?.date;
         acc[date] = acc[date] || [];
         acc[date].push(item);
         return acc;
     }, {});
 
     const formattedDate = (dateValue) => {
-        console.log("dateValue", new Date(dateValue))
         const day = new Date(dateValue).getDate().toString().padStart(2, "0");
         const month = (new Date(dateValue).getMonth() + 1).toString().padStart(2, "0");
         const year = new Date(dateValue).getFullYear();
         return `${day}/${month}/${year}`;
     };
 
+    const checkWarning = (items) => {
+        return items.some(item => item.isWarning === true);
+    };
     return (
         <>
             <ComHeader
@@ -72,15 +68,28 @@ export default function HealthMonitorList({ }) {
                                 <ComNoData>Không có dữ liệu</ComNoData>
                             ) : (
                                 Object.entries(groupedData).map(([date, items]) => (
-                                    <View key={date}>
+                                    <View key={date} >
                                         <Text style={styles.dateHeader}>{formattedDate(date)}</Text>
                                         {items[0] && ( // Chỉ hiển thị nếu có mục cho ngày đó
-                                            <ComHealthMonitor data={items[0]} time={groupedData[date].length}/>
+                                            <ComHealthMonitor 
+                                            data={items[0]} 
+                                            time={groupedData[date].length} 
+                                            style={{
+                                                backgroundColor: checkWarning(items)?"#fac8d2" : "#caece6",
+                                                borderColor: checkWarning(items)?"#fa6180" : "#33B39C"
+                                            }}/>
                                         )}
+                                        {/* code hiển thị mỗi report 1 item */}
+                                         {/* {
+                                            items?.map((item, index) => (
+                                                <ComHealthMonitor key={index} data={item} />
+                                            ))
+                                        } */}
                                     </View>
                                 ))
                             )
                         }
+                        <View style={{ height: 50 }}></View>
                     </ScrollView>
                 </ComLoading>
             </View>

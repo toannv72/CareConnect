@@ -20,7 +20,6 @@ export default function HealthMonitorDetail() {
   const { data } = route.params;
   const [loading, setLoading] = useState(false);
   const [healthMonitor, setHealthMonitor] = useState([]);
-
   const {
     text: {
       HealthMonitorDetail,
@@ -110,7 +109,7 @@ export default function HealthMonitorDetail() {
           </View>
           {filteredHealthMonitor?.map((item, index) => (
             <View key={index}>
-              <ComTimeDivision time={`Lần ${index + 1} - ${formattedTime(item?.createdAt)}`}></ComTimeDivision>
+              <ComTimeDivision time={`Lần đo thứ ${index + 1} - ${formattedTime(item?.createdAt)}`}></ComTimeDivision>
               <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                 <Text>Chỉ số sức khỏe</Text>
                 <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>

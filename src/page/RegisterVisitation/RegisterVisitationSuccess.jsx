@@ -21,14 +21,7 @@ export default function RegisterVisitationSuccess() {
   const route = useRoute();
   const { formData } = route.params;
   const { user } = useAuth();
-
-  useFocusEffect(
-    useCallback(() => {
-  console.log("date:", formData);
-
-   
-    }, [])
-  );
+  console.log("date:RegisterVisitationSuccess", formData);
 
   const toHomes = () => {
     navigation.navigate("Homes");

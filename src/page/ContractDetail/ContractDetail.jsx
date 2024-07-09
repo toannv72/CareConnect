@@ -26,6 +26,8 @@ export default ContractDetail = () => {
   const [loading, setLoading] = useState(false);
   const [popupDate, setPopupDate] = useState(false);
   const [selectedDate, setSelectedDate] = useState(today);//cho calendar một giá trị mặc định là ngày hiện tại
+  console.log("selectedDate ", selectedDate)
+
   const navigation = useNavigation();
   const route = useRoute();
   const { id } = route.params;
@@ -44,6 +46,8 @@ export default ContractDetail = () => {
   };
 
   const changeSelectedDate = (data) => {
+  console.log("data selectedDate ", data)
+
     setSelectedDate(data);
   };
 
@@ -252,7 +256,7 @@ export default ContractDetail = () => {
           </ComLoading>
         </ScrollView>
       </View>
-      <View
+      {/* <View
         style={{
           backgroundColor: "#fff",
           flexDirection: "row",
@@ -262,7 +266,7 @@ export default ContractDetail = () => {
       >
         <ComButton onPress={handleOpenPopupDate}>Yêu cầu gia hạn</ComButton>
         <ComButton onPress={handleOpenPopup}>Yêu cầu hủy</ComButton>
-      </View>
+      </View> */}
     </>
   );
 };

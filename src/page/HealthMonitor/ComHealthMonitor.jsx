@@ -14,18 +14,15 @@ export default function ComHealthMonitor({ data, isSelected, style, time }) {
   const navigation = useNavigation();
 
   const [nurseData, setNurseData] = useState({})
-  const [roomData, setRoomData] = useState({})
   const [loading, setLoading] = useState(false);
 
   const formattedTime = (dateValue) => {
     const hours = new Date(dateValue).getHours().toString().padStart(2, '0');
     const minutes = new Date(dateValue).getMinutes().toString().padStart(2, '0');
-    const seconds = new Date(dateValue).getSeconds();
     return `${hours}:${minutes}`;
   };
 
   const formattedDate = (dateValue) => {
-    console.log("dateValue", new Date(dateValue))
     const day = new Date(dateValue).getDate().toString().padStart(2, "0");
     const month = (new Date(dateValue).getMonth() + 1).toString().padStart(2, "0");
     const year = new Date(dateValue).getFullYear();
@@ -36,7 +33,6 @@ export default function ComHealthMonitor({ data, isSelected, style, time }) {
     setLoading(!loading);
     getData(`/users/${data?.createdBy}`, {})
       .then((nurseData) => {
-        console.log("nurseData", nurseData?.data)
         setNurseData(nurseData?.data);
         setLoading(loading);
       })
@@ -44,17 +40,6 @@ export default function ComHealthMonitor({ data, isSelected, style, time }) {
         setLoading(loading);
         console.error("Error getData fetching nurseData:", error);
       });
-
-    // getData(`/room/${data?.elder?.roomId}`, {})
-    //   .then((roomData) => {
-    //     console.log("roomData", roomData?.data?.name)
-    //     setRoomData(roomData?.data);
-    //     setLoading(loading);
-    //   })
-    //   .catch((error) => {
-    //     setLoading(loading);
-    //     console.error("Error getData fetching nurseData:", error);
-    //   });
   }, []);
 
   return (
@@ -99,19 +84,11 @@ export default function ComHealthMonitor({ data, isSelected, style, time }) {
          <View style={styles?.container}>
           <Text style={{ flexDirection: "row" }}>
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-              Số lần đo
+              Tổng số lần đo
             </Text>
             <Text>: {time}</Text>
           </Text>
         </View>
-        {/* <View style={styles?.container}>
-          <Text style={{ flexDirection: "row" }}>
-            <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-              {healthMonitor?.status}
-            </Text>
-            <Text>: {data?.status}</Text>
-          </Text>
-        </View> */}
       </View>
     </TouchableOpacity>
   );

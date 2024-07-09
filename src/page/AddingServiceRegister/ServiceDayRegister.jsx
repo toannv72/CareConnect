@@ -12,11 +12,14 @@ import moment from "moment";
 import Toast from 'react-native-toast-message';
 import { getData } from "../../api/api"; // Import your API function
 import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter"
+import Calendar31Days from './Calendar31Days';
 
 export default function ServiceDayRegister() {
     const [selectedId, setSelectedId] = useState('');
     const [registeredDates, setRegisteredDates] = useState([]);
+    const [disabledDates, setDisabledDates] = useState([]);
     const [selectedDates, setSelectedDates] = useState([]);
+    const [orderDetail, setOrderDetail] = useState([]);
     const [loading, setLoading] = useState(false);
     const route = useRoute();
     const { elder, data } = route.params;
@@ -26,14 +29,6 @@ export default function ServiceDayRegister() {
         text: { addingPackages },
         setLanguage,
     } = useContext(LanguageContext);
-    const showToast = (type, text1, text2, position) => {
-        Toast.show({
-            type: type,
-            text1: text1,
-            text2: text2,
-            position: position
-        });
-    }
 
     const handleBackPress = () => {
         navigation.goBack();
@@ -49,6 +44,41 @@ export default function ServiceDayRegister() {
     const handleSelectedDatesChange = (dates) => {
         setSelectedDates(dates); // Update selectedDates state
     };
+
+    useEffect(() => {
+        setLoading(!loading);
+        getData(`/order-detail?ElderId=${elder?.id}&ServicePackageId=${data?.id}`, {})
+            .then((orderDetail) => {
+                setOrderDetail(orderDetail?.data);
+                setLoading(loading);
+            })
+            .catch((error) => {
+                setLoading(loading);
+                console.error("Error getData fetching items:", error);
+            });
+    }, []);
+
+    useEffect(() => {
+        if (data?.servicePackageDates) {
+
+            if (orderDetail.length === 0) {
+                // Nếu orderDetail rỗng, sử dụng các ngày từ servicePackageDates
+                const disabledDates = data?.servicePackageDates.map(date => date?.repetitionDay);
+
+                setDisabledDates(disabledDates);
+            } else {
+                // Extract dates from service package data
+                const serviceDates = data?.servicePackageDates.map(date => date?.repetitionDay);
+                // Filter order details to find disabled dates
+                const disabledDates = serviceDates.filter(date => 
+                    !orderDetail.some(item => item?.dayOfMonth === date)
+                );
+                    console.log("serviceDates1", disabledDates)
+                setDisabledDates(disabledDates);
+            }
+        }
+    }, [data?.servicePackageDates, orderDetail]);
+
 
     return (
         <>
@@ -96,11 +126,12 @@ export default function ServiceDayRegister() {
                 <Text style={{ color: "gray" }}>Dịch vụ sẽ được gia hạn vào tháng sau với những ngày bạn chọn dưới đây</Text>
 
                 <View>
-                    <SelectedDates
+                    {/* <SelectedDates
                         servicePackageDates={data?.servicePackageDates}
                         onDatesChange={handleSelectedDatesChange} // Callback to receive selected dates
                         disableHeader={true}
-                    />
+                    /> */}
+                        <Calendar31Days selectedDates={selectedDates} setSelectedDates={setSelectedDates} enableDates={disabledDates}/>
                 </View>
             </ScrollView>
             <View style={{ paddingHorizontal: 20, backgroundColor: "#fff", paddingVertical: 30 }}>

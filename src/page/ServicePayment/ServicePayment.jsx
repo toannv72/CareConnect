@@ -27,16 +27,29 @@ export default function ServicePayment() {
     const route = useRoute();
     const { servicePackage, elder, orderDates, type } = route?.params;
     const [selectedMethod, setSelectedMethod] = useState('momo');
+    const [adjustedOrderDates, setAdjustedOrderDates] = useState(orderDates);
+    const handleBackPress = () => { navigation.goBack() };
 
     const handleMethodPress = (methodName) => {
         setSelectedMethod(methodName);
     };
     console.log(" orderDates: ", orderDates)
-    console.log(" servicePackage: ", servicePackage)
-    console.log(" elder: ", elder)
-    console.log(" type: ", type)
-
-    const handleBackPress = () => { navigation.goBack() };
+    useEffect(() => {
+        const sortedDates = [...orderDates].sort((a, b) => moment(a).diff(moment(b)));
+        // Kiểm tra xem tất cả các ngày trong orderDates có phải là ngày quá khứ không
+        const allPastDates = sortedDates.every(date => moment(date).isSameOrBefore(moment(), 'day'));
+        if (allPastDates) {
+            // Lấy ngày tháng sau tương ứng nếu có
+            const nextMonthDates = sortedDates.map(date => {
+                const nextMonthDate = moment(date).add(1, 'months');
+                return nextMonthDate.isValid() ? nextMonthDate.format('YYYY-MM-DD') : date;
+            });
+            console.log(" nextMonthDates: ", nextMonthDates)
+            setAdjustedOrderDates(nextMonthDates);
+        }else{
+            setAdjustedOrderDates(sortedDates);
+        }
+    }, [orderDates]);
 
     const formatCurrency = (number) => {
         // Sử dụng hàm toLocaleString() để định dạng số
@@ -47,19 +60,20 @@ export default function ServicePayment() {
     };
 
     const totalMoney = () => {
-
         if (servicePackage?.type === "OneDay") {
-            return servicePackage?.price; // Nếu là dịch vụ theo ngày thì trả về giá dịch vụ
+            return servicePackage?.price;
         } else {
-            const today = moment(); // Lấy ngày hiện tại
-            const futureDates = orderDates?.filter(date => moment(date)?.isAfter(today)); // Lọc những ngày trong tương lai từ orderDates
-            return servicePackage?.price * futureDates?.length; // Nhân giá dịch vụ với số ngày trong tương lai
+            const today = moment();
+            const futureDates = adjustedOrderDates?.filter(date => moment(date)?.isAfter(today));
+            return servicePackage?.price * futureDates?.length;
         }
     }
 
     const payment = () => {
         const dueDate = moment()?.format('YYYY-MM-DD');
-        const transformedDates = servicePackage?.type === "OneDay" ? [{"date": servicePackage?.eventDate}] : orderDates.map(date => ({ date }));
+        const transformedDates = servicePackage?.type === "OneDay" ? [{ "date": servicePackage?.eventDate }] : adjustedOrderDates.map(date => ({ date }));
+        console.log("transformedDates, ", transformedDates);
+
         const formattedData = {
             "method": selectedMethod,
             "dueDate": dueDate,
@@ -77,7 +91,6 @@ export default function ServicePayment() {
             ]
         }
         console.log("formattedData, ", formattedData);
-        console.log("orderDates, ", formattedData?.orderDetails[0]?.orderDates);
         postData("/orders/service-package?returnUrl=a", formattedData)
             .then((response) => {
                 console.log("API Response: ", response.message);
@@ -85,13 +98,13 @@ export default function ServicePayment() {
                 // navigation.navigate("AddingServiceDetail", {id : servicePackage?.id});
                 const url = response.message; // Assuming response.message contains the URL
                 // Open the URL in the default browser
-                Linking.openURL(url)
-                    .then(() => {
-                        console.log("Opened successfully");
-                    })
-                    .catch((err) => {
-                        console.error("Failed to open URL: ", err);
-                    });
+                // Linking.openURL(url)
+                //     .then(() => {
+                //         console.log("Opened successfully");
+                //     })
+                //     .catch((err) => {
+                //         console.error("Failed to open URL: ", err);
+                //     });
             })
             .catch((error) => {
                 console.error("API Error: ", error);
@@ -152,7 +165,7 @@ export default function ServicePayment() {
                         - <ComDateConverter>{orderDates}</ComDateConverter>
                     </Text>
                 ) : (
-                    orderDates?.map((day, index) => {
+                    adjustedOrderDates?.map((day, index) => {
                         const isFutureDate = moment(day)?.isAfter(moment(), 'day'); // Kiểm tra xem ngày có phải là ngày trong tương lai không
                         if (isFutureDate) {
                             return (
@@ -195,7 +208,7 @@ export default function ServicePayment() {
                             </>
                         ) : (
                             <>
-                                : {formatCurrency(servicePackage?.price)} x {orderDates?.filter(date => moment(date)?.isAfter(moment()))?.length} = {formatCurrency(totalMoney())}
+                                : {formatCurrency(servicePackage?.price)} x {adjustedOrderDates?.filter(date => moment(date)?.isAfter(moment()))?.length} = {formatCurrency(totalMoney())}
                             </>
                         )}
                     </Text>

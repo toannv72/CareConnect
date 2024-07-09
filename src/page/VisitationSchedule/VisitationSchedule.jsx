@@ -16,6 +16,7 @@ import ComButton from "../../Components/ComButton/ComButton";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { postData, getData } from "../../api/api";
 import { useAuth } from "../../../auth/useAuth";
+import ComNoData from "../../Components/ComNoData/ComNoData";
 
 export default function VisitationSchedule() {
   const [data, setData] = useState([])
@@ -129,11 +130,13 @@ export default function VisitationSchedule() {
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
           >
-            <View>
-              {data?.map((value, index) => (
-                <ComVisitationSchedule key={index} data={value} />
-              ))}
-            </View>
+            {data?.length > 0 ? (
+              <View>
+                {data?.map((value, index) => (
+                  <ComVisitationSchedule key={index} data={value} />
+                ))}
+              </View>
+            ) : (<ComNoData>Không có lịch thăm nuôi nào</ComNoData>)}
             <View style={{ height: 320 }}></View>
           </ScrollView>
         </ComLoading>

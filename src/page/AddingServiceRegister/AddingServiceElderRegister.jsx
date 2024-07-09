@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity } from 'react-native';
 import ComSelectButton from "../../Components/ComButton/ComSelectButton";
 import { LanguageContext } from "../../contexts/LanguageContext";
@@ -10,17 +10,19 @@ import ComNoData from "../../Components/ComNoData/ComNoData";
 import { useStorage } from "../../hooks/useLocalStorage";
 import { postData, getData } from "../../api/api";
 import Toast from 'react-native-toast-message';
+import { useAuth } from "../../../auth/useAuth";
+import moment from "moment";
 
 export default function AddingServiceElderRegister() {
-    const [user] = useStorage("user", {});
+    const { user } = useAuth();
     const [selectedElder, setSelectedElder] = useState(null);
+    const [elderData, setElderData] = useState([]);
     const [loading, setLoading] = useState(false);
     const route = useRoute();
     const { data } = route.params;
     const navigation = useNavigation();
-    const [registeredDates, setRegisteredDates] = useState([]);
     const { text: { addingPackages } } = useContext(LanguageContext);
-
+    console.log("selectedElder ", selectedElder)
     const showToast = (type, text1, text2, position) => {
         Toast.show({
             type: type,
@@ -29,6 +31,23 @@ export default function AddingServiceElderRegister() {
             position: position
         });
     }
+
+    useEffect(() => {
+        setLoading(!loading);
+        getData(`/elders?UserId=${user?.id}`, {})
+            .then((elders) => {
+                const filteredElders = elders?.data?.contends.filter(elder => {
+                    // Kiểm tra nếu endDate là ngày trong tương lai
+                    return moment(elder?.contractsInUse?.endDate).isSameOrAfter(moment(), 'day');
+                });
+                setElderData(filteredElders); // Cập nhật danh sách elder đã lọc
+                setLoading(false);
+            })
+            .catch((error) => {
+                setLoading(loading);
+                console.error("Error getData fetching orderDetail items:", error);
+            });
+    }, []);
 
     const formatCurrency = (number) => {
         if (number) {
@@ -91,9 +110,9 @@ export default function AddingServiceElderRegister() {
                         {addingPackages?.register?.registerElder}
                     </Text>
                     <ComLoading show={loading}>
-                        {user?.elders?.length > 0 ? (
+                        {elderData?.length > 0 ? (
                             <View>
-                                {user?.elders?.map((value, index) => (
+                                {elderData?.map((value, index) => (
                                     <ComElder key={index} data={value}
                                         onPress={() => handleElderPress(value)}
                                         isSelected={selectedElder?.id === value.id}
@@ -109,7 +128,7 @@ export default function AddingServiceElderRegister() {
                         Thanh toán ngay
                     </ComSelectButton>
                 ) : (<ComSelectButton
-                    disable={selectedElder?.length === 0}
+                    disable={selectedElder == null}
                     onPress={() => {
                         if (data?.type === "MultipleDays") {
                             navigation.navigate("ServiceDayRegister", { elder: selectedElder, data: data });

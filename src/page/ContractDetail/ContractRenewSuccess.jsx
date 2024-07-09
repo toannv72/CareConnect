@@ -18,6 +18,7 @@ export default function ContractRenewSuccess() {
   } = useContext(LanguageContext);
   const route = useRoute();
   const { date } = route.params;
+  console.log("date ", date)
   const toHomes = () => {
     navigation.navigate("Homes");
   };
