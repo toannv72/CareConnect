@@ -13,7 +13,9 @@
           "icon": "./assets/splash.png",
           "color": "#ffffff",
           "mode": "production"
-        },
+        }
+      ],
+      [
         "expo-build-properties",
         {
           "android": {
