@@ -1,5 +1,5 @@
 import React, { useContext, useState, useCallback, useEffect } from "react";
-import { View, StyleSheet, Image, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { useForm, FormProvider } from "react-hook-form";
 import ComHeader from '../../Components/ComHeader/ComHeader';
 import ComSelectButton from "../../Components/ComButton/ComSelectButton";
@@ -150,21 +150,22 @@ export default function AddingServicePackages() {
                 ) : (
                     filteredData.length == 0 ? (<ComNoData>Không có dịch vụ nào</ComNoData>
                     ) : (
-                        <FlatList
-                            data={filteredData}
-                            renderItem={({ item }) => <ComAddPackage data={item} />}
-                            contentContainerStyle={{ gap: 5 }}
-                            showsVerticalScrollIndicator={false} // Tắt scrollbar dọc
-                            ListFooterComponent={() => (
-                                <View style={{ justifyContent: "center", alignItems: "center" }}>
-                                    <View style={{ width: "35%" }}>
-                                        {loadMoreLoading ? (<ActivityIndicator />) :
-                                            (<ComSelectButton onPress={fetchNextPage} disable={!hasMore}>Xem thêm</ComSelectButton>)}
-                                        <View style={{ height: 100 }} />
-                                    </View>
+                        <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        showsHorizontalScrollIndicator={false}>
+                            {
+                                filteredData?.map((item, index) => (
+                                    <ComAddPackage key={index} data={item} />
+                                ))
+                            }
+                            <View style={{ justifyContent: "center", alignItems: "center" }}>
+                                <View style={{ width: "35%" }}>
+                                    {loadMoreLoading ? (<ActivityIndicator />) :
+                                        (<ComSelectButton onPress={fetchNextPage} disable={!hasMore}>Xem thêm</ComSelectButton>)}
+                                    <View style={{ height: 100 }} />
                                 </View>
-                            )}
-                        />
+                            </View>
+                        </ScrollView>
                     ))}
             </View >
         </>

@@ -35,7 +35,8 @@ export default function HealthMonitorList({ }) {
     }, []);
 
     const groupedData = healthMonitor.reduce((acc, item) => {
-        const date = item?.date;
+        const date = item?.createdAt;
+        console.log("groupedData ", date)
         acc[date] = acc[date] || [];
         acc[date].push(item);
         return acc;

@@ -78,7 +78,7 @@ export default function AddingServiceDetail() {
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}>
-                    <View style={{ flex: 1, gap: 10, backgroundColor: "#ebe9e4", borderRadius: 20 }}>
+                    <View style={{ flex: 1, gap: 10, backgroundColor: "#f2f1eb", borderRadius: 20 }}>
                         <View style={{ flexDirection: "row", marginTop: 20, justifyContent: "space-between" }}>
                             <View style={{ padding: 10, backgroundColor: "#33B39C", justifyContent: "center", borderTopRightRadius: 50, borderBottomRightRadius: 50, width: "45%" }}>
                                 <Text style={{ fontSize: 16, color: "#fff", fontWeight: "600", paddingLeft: 5 }} numberOfLines={1}>
@@ -87,12 +87,12 @@ export default function AddingServiceDetail() {
                             </View>
                             <TouchableOpacity
                                 onPress={() => toggleFavorite(data)}
-                                style={[{ backgroundColor: isFavorite ? "#fac8d2" : "#949292", justifyContent: "center", padding: 10, borderRadius: 50, marginRight: 15 }]}>
+                                style={[{ backgroundColor: isFavorite ? "#fac8d2" : "#bdbbbb", justifyContent: "center", padding: 10, borderRadius: 50, marginRight: 25 }]}>
                                 <Image source={Heart}
                                     style={{ width: 25, height: 25, tintColor: isFavorite ? "red" : "#636360" }} />
                             </TouchableOpacity>
                         </View>
-                        <View style={{ padding: 15, gap: 10 }}>
+                        <View style={{ padding: 20, gap: 10 }}>
                             <Text style={{ fontWeight: "bold", fontSize: 20, textAlign: "center" }}>
                                 {data?.name}
                             </Text>

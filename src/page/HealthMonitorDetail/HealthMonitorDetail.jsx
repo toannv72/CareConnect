@@ -55,8 +55,12 @@ export default function HealthMonitorDetail() {
   };
 
   useEffect(() => {
+    const day = new Date(data?.createdAt).getDate().toString().padStart(2, "0");
+    const month = (new Date(data?.createdAt).getMonth() + 1).toString().padStart(2, "0");
+    const year = new Date(data?.createdAt).getFullYear();
+    const date = `${year}-${month}-${day}`;
     setLoading(!loading);
-    getData(`/health-report?ElderId=${data?.elderId}`, {})
+    getData(`/health-report?ElderId=${data?.elderId}&Date=${data?.date}`, {})
       .then((healthMonitor) => {
         setHealthMonitor(healthMonitor?.data?.contends);
         setLoading(loading);
@@ -67,12 +71,6 @@ export default function HealthMonitorDetail() {
       });
   }, []);
 
-  const toVietnamTime = (dateValue) => {
-    const date = new Date(dateValue);
-    date.setHours(date.getHours() + 7); // Convert to UTC+7
-    return date;
-  };
-
   const formattedTime = (dateValue) => {
     const hours = new Date(dateValue).getHours().toString().padStart(2, '0');
     const minutes = new Date(dateValue).getMinutes().toString().padStart(2, '0');
@@ -80,12 +78,6 @@ export default function HealthMonitorDetail() {
     return `${hours}:${minutes}`;
   };
 
-  const datePart = toVietnamTime(data?.createdAt).toISOString().split('T')[0];
-
-  // Filter healthMonitor list based on Vietnam time date part
-  const filteredHealthMonitor = healthMonitor.filter(item =>
-    toVietnamTime(item.createdAt).toISOString().split('T')[0] === datePart
-  );
   return (
     <>
       <ComHeader
@@ -104,10 +96,10 @@ export default function HealthMonitorDetail() {
               <ComPatient data={data?.elder} />
             </View>
             <View style={styles.patient40}>
-              <ComButtonDay><ComDateConverter>{datePart}</ComDateConverter></ComButtonDay>
+              <ComButtonDay><ComDateConverter>{data?.date}</ComDateConverter></ComButtonDay>
             </View>
           </View>
-          {filteredHealthMonitor?.map((item, index) => (
+          {healthMonitor?.map((item, index) => (
             <View key={index}>
               <ComTimeDivision time={`Lần đo thứ ${index + 1} - ${formattedTime(item?.createdAt)}`}></ComTimeDivision>
               <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>

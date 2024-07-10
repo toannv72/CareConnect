@@ -70,8 +70,6 @@ export default function ServicePayment() {
     const payment = () => {
         const dueDate = moment()?.format('YYYY-MM-DD');
         const transformedDates = servicePackage?.type === "OneDay" ? [{ "date": servicePackage?.eventDate }] : adjustedOrderDates.map(date => ({ date }));
-        console.log("transformedDates, ", transformedDates);
-
         const formattedData = {
             "method": selectedMethod,
             "dueDate": dueDate,
@@ -88,7 +86,6 @@ export default function ServicePayment() {
                 }
             ]
         }
-        console.log("formattedData, ", formattedData);
         postData("/orders/service-package?returnUrl=a", formattedData)
             .then((response) => {
                 console.log("API Response: ", response.message);

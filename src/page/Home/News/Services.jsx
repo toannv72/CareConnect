@@ -3,32 +3,25 @@ import { ScrollView, StyleSheet, Text } from "react-native";
 import { View } from "react-native";
 import TopicContent from "../TopicContent";
 import { LanguageContext } from "../../../contexts/LanguageContext";
-// import ComSkeleton from "../../../Components/ComSkeleton/ComSkeleton";
 import ComSelectButton from "../../../Components/ComButton/ComSelectButton";
 import ComService from "./ComService";
 import { postData, getData } from "../../../api/api";
+import CategoryButtons from '../../../Components/ComCategories/ComCategories';
 
 export default function Services() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const [categoryData, setCategoryData] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const {
     text: { Home },
   } = useContext(LanguageContext);
-  const [select, setSelect] = useState(true);
-  const [select1, setSelect1] = useState(false);
-  const check = () => {
-    setSelect(true);
-    setSelect1(false);
-  };
-  const check1 = () => {
-    setSelect(false);
-    setSelect1(true);
-  };
 
   useEffect(() => {
     setLoading(!loading);
-    getData('/service-package?PageSize=5&SortColumn=totalOrder&SortDir=Desc', {})
+    let url = `/service-package?PageSize=5&SortColumn=totalOrder&SortDir=Desc`;
+    if (selectedCategory) { url += `&PackageCategoryId=${selectedCategory}` }
+    getData(url, {})
       .then((packageData) => {
         setData(packageData?.data?.contends);
         setLoading(loading);
@@ -37,7 +30,26 @@ export default function Services() {
         console.error("Error fetching service-package:", error);
         setLoading(loading);
       });
-  }, [])
+    getData('/service-package-categories', {})
+      .then((categoryData) => {
+        setCategoryData(categoryData?.data?.contends);
+        setLoading(loading);
+      })
+      .catch((error) => {
+        setLoading(loading);
+        console.error("Error fetching service-package-categories:", error);
+      });
+  }, [selectedCategory])
+
+  const handleCategorySelect = (id) => {
+    setSelectedCategory(id);
+    setData([])
+  };
+
+  const handleClearSelection = () => {
+    setSelectedCategory(0);
+    setData([]);
+  };
 
   return (
     <View style={styles?.body}>
@@ -47,24 +59,21 @@ export default function Services() {
         showsHorizontalScrollIndicator={false}
         horizontal={true}
       >
-        <View style={styles?.buttonContainer}>
-          <ComSelectButton onPress={check} check={select}>
-            Vui chơi
-          </ComSelectButton>
-          <ComSelectButton onPress={check1} check={select1}>
-            Sức khỏe
-          </ComSelectButton>
-
-        </View>
+        <CategoryButtons
+          categoryData={categoryData}
+          selectedCategory={selectedCategory}
+          onSelectCategory={handleCategorySelect}
+          onClearSelection={handleClearSelection} // Pass handleClearSelection as prop
+        />
       </ScrollView>
       {/* <ComSkeleton
         show={loading}
-        image={true}
-        lines={5}> */}
+        // image={true}
+        // lines={5}
+        /> */}
       {data.map((value, index) => (
         <ComService key={index} data={value}></ComService>
       ))}
-      {/* </ComSkeleton> */}
     </View>
   );
 }

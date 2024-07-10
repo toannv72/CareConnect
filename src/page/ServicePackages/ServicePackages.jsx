@@ -9,7 +9,6 @@ import ComInputSearch from "../../Components/ComInput/ComInputSearch";
 import { ScrollView } from "react-native";
 import { ActivityIndicator } from "react-native";
 import ComLoading from "../../Components/ComLoading/ComLoading";
-import ComSkeleton from "../../Components/ComSkeleton/ComSkeleton";
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import { postData, getData } from "../../api/api";
 import Nodata from "../../../assets/Nodata.png";
@@ -89,9 +88,7 @@ export default function ServicePackages() {
             >
               <View>
                 {data?.map((value, index) => (
-                  <ComSkeleton image lines={3} show={loading} key={index}>
                     <ComPackage key={index} data={value} />
-                  </ComSkeleton>
                 ))}
               </View>
               <View style={{ height: 120 }}></View>

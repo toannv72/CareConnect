@@ -9,6 +9,7 @@ import Register from "./src/page/Register/Register";
 import Home from "./src/page/Home/Home";
 import RegisterSuccess from "./src/page/Register/RegisterSuccess";
 import Otp from "./src/page/Otp/Otp";
+import Search from "./src/page/Search/Search";
 import ComIcon from "./src/Components/ComIcon/ComIcon";
 import ComNurseIcon from "./src/Components/ComIcon/ComNurseIcon";
 import ServicePackages from "./src/page/ServicePackages/ServicePackages";
@@ -54,6 +55,7 @@ import Contracts from "./src/page/Contract/Contracts";
 import ContractDetail from "./src/page/ContractDetail/ContractDetail";
 import ContractCandSuccess from "./src/page/ContractDetail/ContractCandSuccess";
 import ContractRenewSuccess from "./src/page/ContractDetail/ContractRenewSuccess";
+import ScheduledService from "./src/page/ScheduledService/ScheduledService";
 // -------Role: Nurse--------
 import NurseHome from "./src/nursePage/Home/NurseHome";
 import NurseProfile from "./src/nursePage/NurseProfile/NurseProfile";
@@ -105,6 +107,11 @@ const Routes = () => {
           options={{ headerLeft: null, headerShown: false }}
           name="Otp"
           component={Otp}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="Search"
+          component={Search}
         />
         <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
@@ -302,6 +309,11 @@ const Routes = () => {
           options={{ headerLeft: null, headerShown: false }}
           name="ContractRenewSuccess"
           component={ContractRenewSuccess}
+        />
+         <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ScheduledService"
+          component={ScheduledService}
         />
         {/* =======nurse====== */}
         <Stack.Screen

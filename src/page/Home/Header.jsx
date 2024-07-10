@@ -5,7 +5,7 @@ import search from "../../../assets/icon/search.png";
 import { useNavigation } from "@react-navigation/native";
 import ComLoading from "../../Components/ComLoading/ComLoading";
 
-export default function Header({user}) {
+export default function Header({ user }) {
   const navigation = useNavigation();
   return (
     <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15, alignItems: "center", }}>
@@ -22,17 +22,21 @@ export default function Header({user}) {
         </View>
 
       </TouchableOpacity>
-      <Image
-        source={search}
-        style={{
-          width: 50,
-          height: 50,
-          borderRadius: 10,
-          objectFit: "fill",
-          borderColor: "#000",
-          flex: 1
-        }}
-      />
+      <TouchableOpacity 
+      onPress={() => {
+        navigation.navigate("Search");
+      }}
+      style={{borderRadius: 10}}>
+        <Image
+          source={search}
+          style={{
+            width: 50,
+            height: 50,
+            objectFit: "fill",
+            borderColor: "#000",
+          }}
+        />
+      </TouchableOpacity>
     </View>
 
   );

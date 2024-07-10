@@ -46,7 +46,7 @@ export default function ComAddPackage({ data }) {
           <Text style={{ fontWeight: "600", fontSize: 16, width: "80%" }} numberOfLines={2}>{data?.name}</Text>
           <TouchableOpacity
             onPress={() => toggleFavorite(data)}
-            style={[{ backgroundColor: isFavorite ? "#fac8d2" : "#949292", justifyContent: "center", padding: 5, borderRadius: 50, marginRight: 15 }]}>
+            style={[{ backgroundColor: isFavorite ? "#fac8d2" : "#bdbbbb", justifyContent: "center", padding: 5, borderRadius: 50, marginRight: 15 }]}>
             <Image source={Heart}
               style={{ width: 17, height: 17,  tintColor: isFavorite ? "red" : "#636360"  }} />
           </TouchableOpacity>

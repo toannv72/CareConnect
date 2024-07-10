@@ -197,7 +197,7 @@ export const vn = {
       billId: "Mã hóa đơn",
       serviceName: "Tên dịch vụ",
       registerName: "Người đăng ký",
-      elderName: "Người thụ hưởng",
+      elderName: "Người cao tuổi",
       time: "Thời gian",
       totalMoney: "Tổng tiền",
     },
@@ -248,7 +248,7 @@ export const vn = {
   bill: {
     title: "Hóa đơn",
     billId: "Mã hóa đơn",
-    elder: "Người thụ hưởng",
+    elder: "Người cao tuổi",
     dueDate: "Hạn thanh toán",
     total: "Tổng tiền",
     status: "Trạng thái",

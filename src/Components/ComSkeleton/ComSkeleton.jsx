@@ -1,5 +1,5 @@
 import React from 'react';
-import { Skeleton } from 'moti/';
+import { Skeleton } from 'moti/Skeleton';
 import { View, StyleSheet } from "react-native";
 
 const ComSkeleton = ({ children, avatar, lines, image, show, direction }) => {

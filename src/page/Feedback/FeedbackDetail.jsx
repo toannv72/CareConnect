@@ -11,13 +11,6 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 export default function FeedbackDetail() {
-    // const [data, setData] = useState({
-    //     img: "https://png.pngtree.com/thumb_back/fw800/background/20230123/pngtree-old-people-physical-therapy-center-released-ball-photo-image_49464146.jpg",
-    //     date: "09/05/2024",
-    //     title: "Đánh giá về dịch vụ xoa bóp tháng 05/2024",
-    //     content: "giúp người cao tuổi duy trì và cải thiện khả năng vận động, giảm đau, tăng cường sức mạnh cơ bắp và sự linh hoạt. Các bài tập được thiết kế phù hợp với tình trạng sức khỏe và nhu cầu của từng cá nhân, nhằm nâng cao chất lượng cuộc sống và khả năng tự lập của họ.",
-    //     service: "Xoa bóp bấm huyệt",
-    // });
 
     const {
         text: { feedback },
@@ -70,6 +63,13 @@ export default function FeedbackDetail() {
         },
     ];
 
+    const formattedDate = (dateValue) => {
+        const day = new Date(dateValue).getDate().toString().padStart(2, "0");
+        const month = (new Date(dateValue).getMonth() + 1).toString().padStart(2, "0");
+        const year = new Date(dateValue).getFullYear();
+        return `${day}/${month}/${year}`;
+    };
+
     return (
         <>
             <ComHeader
@@ -113,7 +113,7 @@ export default function FeedbackDetail() {
                         <Text style={styles.contentBold}>
                             {feedback?.history?.date}
                         </Text>
-                        <Text style={styles.textbox}>{data?.orderDetail?.servicePackage?.name}</Text>
+                        <Text style={styles.textbox}>{formattedDate(data?.createdAt)}</Text>
                     </View>
                     <FormProvider {...methods}>
                         <View style={{ marginVertical: 5 }}>

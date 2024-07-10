@@ -11,20 +11,16 @@ import ComButton from "../../Components/ComButton/ComButton";
 import { useNavigation } from '@react-navigation/native';
 import ComHeader from '../../Components/ComHeader/ComHeader';
 import feedbackImg from "../../../assets/images/feedback/feedback.png";
+import { postData } from "../../api/api";
+import { useRoute } from "@react-navigation/native";
 
 export default function CreateFeedback() {
     const navigation = useNavigation();
     const [value, setValue] = useState("1");
+    const route = useRoute();
+    const { data } = route.params;
 
-    const [data, setData] = useState(
-        {
-            img: "https://png.pngtree.com/thumb_back/fw800/background/20230123/pngtree-old-people-physical-therapy-center-released-ball-photo-image_49464146.jpg",
-            color: "#F7E863",
-            text: "Vật lý trị liệu",
-            context: "giúp người cao tuổi duy trì và cải thiện khả năng vận động, giảm đau, tăng cường sức mạnh cơ bắp và sự linh hoạt. Các bài tập được thiết kế phù hợp với tình trạng sức khỏe và nhu cầu của từng cá nhân, nhằm nâng cao chất lượng cuộc sống và khả năng tự lập của họ.",
-            category: "Y tế",
-            money: 100000,
-        })
+    // const [data, setData] = useState({})
 
     const {
         text: {
@@ -41,7 +37,7 @@ export default function CreateFeedback() {
         defaultValues: {
             title: "",
             content: "",
-            pleasure: "1"
+            ratings: "VerySatisfied"
         },
     });
 
@@ -52,19 +48,29 @@ export default function CreateFeedback() {
         formState: { errors },
     } = methods;
 
-    const handleSend = (data) => {
+    const handleSend = (formData) => {
         // Xử lý đăng nhập với dữ liệu từ data
-        setData(data);
+        const updatedData = {
+            ...formData,
+            orderDetailId: data?.orderDetails[0]?.id, // Thêm id với giá trị cụ thể. Bạn có thể thay thế "unique-id" bằng giá trị thực tế.
+        };
         Keyboard.dismiss();
-        console.log(data);
-        navigation.navigate("Homes");
-
+        postData("/feedback", updatedData)
+            .then((response) => {
+                console.log("Thành công");
+                // showToast("success", "Tạo báo cáo thành công", "", "bottom");
+                navigation.navigate("ServiceHistory");
+            })
+            .catch((error) => {
+                console.error("API Error: ", error);
+                // showToast("error", "Có lỗi xảy ra, vui lòng thử lại!", "", "bottom");
+            });
     };
 
     const options = [
-        { label: 'Rất hài lòng', value: '1' },
-        { label: 'Bình thường', value: '2' },
-        { label: 'Không hài lòng', value: '3' },
+        { label: 'Rất hài lòng', value: 'VerySatisfied' },
+        { label: 'Bình thường', value: 'Neutral' },
+        { label: 'Không hài lòng', value: 'Unsatisfied' },
     ];
 
     const handleSelect = (selectedItems, index) => {
@@ -78,14 +84,14 @@ export default function CreateFeedback() {
                 showTitle={true}
                 title={feedback?.title}
             />
-            <KeyboardAvoidingView style={styles.container} behavior="padding">
+            <KeyboardAvoidingView style={styles.container} >
                 <View style={styles.body}>
                     <Image
                         source={feedbackImg}
                     />
-                    <Text style={{ fontSize: 16, fontWeight: 'bold', textAlign: "center", paddingVertical: 20 }}>
+                    {/* <Text style={{ fontSize: 16, fontWeight: 'bold', textAlign: "center", paddingVertical: 20 }}>
                         {data.text}
-                    </Text>
+                    </Text> */}
                     <FormProvider {...methods}>
                         <View style={{ width: "90%", gap: 10 }}>
                             <ComInput
@@ -107,7 +113,7 @@ export default function CreateFeedback() {
                             />
                             <ComSelect
                                 label={'Mức độ hài lòng'}
-                                name="chon"
+                                name="ratings"
                                 options={options}
                                 control={control}
                                 errors={errors}
@@ -115,7 +121,7 @@ export default function CreateFeedback() {
                             ></ComSelect>
                             {/* Chờ bổ sung ComUpdate */}
                             <ComButton onPress={handleSubmit(handleSend)}>
-                            {feedback?.label?.send}
+                                {feedback?.label?.send}
                             </ComButton>
                         </View>
                     </FormProvider>
