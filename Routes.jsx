@@ -71,6 +71,7 @@ import CreateHealthMonitor from "./src/nursePage/HealthMonitor/CreateHealthMonit
 import ListHealthIndex from "./src/nursePage/HealthMonitor/CreateHealthMonitor/ListHealthIndex";
 import RegisterService from "./src/nursePage/RegisterService/RegisterService";
 import RegisterServiceDetail from "./src/nursePage/RegisterService/RegisterServiceDetail";
+import NotificationPage from "./src/page/Notification/Notification copy";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -414,10 +415,10 @@ function MyBottomNavigationBar() {
         tabBarHideOnKeyboard: true,
         tabBarShowLabel: false,
         tabBarStyle: {
-          position: Platform.OS === 'android' ? "absolute" : undefined,
-          bottom: Platform.OS === 'android' ? 10 : undefined,
-          left: Platform.OS === 'android' ? 10 : undefined,
-          right: Platform.OS === 'android' ? 10 : undefined,
+          position: Platform.OS === "android" ? "absolute" : undefined,
+          bottom: Platform.OS === "android" ? 10 : undefined,
+          left: Platform.OS === "android" ? 10 : undefined,
+          right: Platform.OS === "android" ? 10 : undefined,
           elevation: 0,
           backgroundColor: "#14A499",
           borderRadius: 15,
@@ -449,7 +450,7 @@ function MyBottomNavigationBar() {
           return <ComIcon icon={iconName} />;
         },
       })}
-    // keyboardShouldPersistTaps="handled"
+      // keyboardShouldPersistTaps="handled"
     >
       <Tab.Screen
         name="Home"
@@ -466,10 +467,15 @@ function MyBottomNavigationBar() {
         options={{ headerShown: false }}
         component={HealthMonitor}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Notification"
         options={{ headerShown: false }}
         component={Notification}
+      /> */}
+      <Tab.Screen
+        name="Notification"
+        options={{ headerShown: false }}
+        component={NotificationPage}
       />
       {/* <Tab.Screen
         name="Account"

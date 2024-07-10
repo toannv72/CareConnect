@@ -4,9 +4,6 @@ import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 import { useNavigation } from "@react-navigation/native";
-import {  SvgUri } from "react-native-svg";
-import ComIcon from "../../Components/ComIcon/ComIcon";
-import SelectedDates from "../../Components/ComDate/SelectedDates";
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,

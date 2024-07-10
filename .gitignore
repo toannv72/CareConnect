@@ -2,7 +2,7 @@
 
 # dependencies
 node_modules/
-
+.careconnect-2d494-firebase-adminsdk-mzhyg-7d9958342d.json
 # Expo
 .expo/
 dist/
