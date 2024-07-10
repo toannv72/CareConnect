@@ -2,8 +2,11 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, Alert } from "react-native";
 import messaging from "@react-native-firebase/messaging";
 import React, { useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 export default function NotificationApi() {
+  const navigation = useNavigation();
+
   const requestUserPermission = async () => {
     const authStatus = await messaging().requestPermission();
     const enabled =
@@ -36,6 +39,7 @@ export default function NotificationApi() {
               "Notification caused app to open from quit state:",
               remoteMessage.notification
             );
+            navigation.navigate("Homes");
           }
         });
 
@@ -44,6 +48,7 @@ export default function NotificationApi() {
           "Notification caused app to open from background state:",
           remoteMessage.notification
         );
+        navigation.navigate("Homes");
       });
 
       messaging().setBackgroundMessageHandler(async (remoteMessage) => {

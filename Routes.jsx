@@ -150,12 +150,12 @@ const Routes = () => {
           name="AddingServiceCalendarRegister"
           component={AddingServiceCalendarRegister}
         />
-           <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="ServiceDayRegister"
           component={ServiceDayRegister}
         />
-           <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="ServiceAnydayRegister"
           component={ServiceAnydayRegister}
@@ -312,7 +312,7 @@ const Routes = () => {
           name="ContractRenewSuccess"
           component={ContractRenewSuccess}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="ScheduledService"
           component={ScheduledService}
@@ -377,6 +377,11 @@ const Routes = () => {
           options={{ headerLeft: null, headerShown: false }}
           name="RegisterServiceDetail"
           component={RegisterServiceDetail}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="NotificationApi"
+          component={NotificationApi}
         />
       </Stack.Navigator>
     </NavigationContainer>
@@ -468,16 +473,16 @@ function MyBottomNavigationBar() {
         options={{ headerShown: false }}
         component={HealthMonitor}
       />
-      {/* <Tab.Screen
-        name="Notification"
-        options={{ headerShown: false }}
-        component={Notification}
-      /> */}
       <Tab.Screen
         name="Notification"
         options={{ headerShown: false }}
-        component={NotificationApi}
+        component={Notification}
       />
+      {/* <Tab.Screen
+        name="Notification"
+        options={{ headerShown: false }}
+        component={NotificationApi}
+      /> */}
       {/* <Tab.Screen
         name="Account"
         options={{ headerShown: false }}
