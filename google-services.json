@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "594446058865",
+    "firebase_url": "https://careconnect-2d494-default-rtdb.firebaseio.com",
+    "project_id": "careconnect-2d494",
+    "storage_bucket": "careconnect-2d494.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594446058865:android:bc28352bbfefff2d71a2d0",
+        "android_client_info": {
+          "package_name": "careconnect.com"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1O7JxkMCeMP53jSMUUIMEMfjhr1Jz-Q4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594446058865:android:7d5a0239bcfeeba671a2d0",
+        "android_client_info": {
+          "package_name": "com.toannv1712.CareConnect"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1O7JxkMCeMP53jSMUUIMEMfjhr1Jz-Q4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
