@@ -72,6 +72,7 @@ import ListHealthIndex from "./src/nursePage/HealthMonitor/CreateHealthMonitor/L
 import RegisterService from "./src/nursePage/RegisterService/RegisterService";
 import RegisterServiceDetail from "./src/nursePage/RegisterService/RegisterServiceDetail";
 import NotificationPage from "./src/page/Notification/Notification copy";
+import NotificationApi from "./src/page/Notification/NotificationApi";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -475,7 +476,7 @@ function MyBottomNavigationBar() {
       <Tab.Screen
         name="Notification"
         options={{ headerShown: false }}
-        component={NotificationPage}
+        component={NotificationApi}
       />
       {/* <Tab.Screen
         name="Account"
