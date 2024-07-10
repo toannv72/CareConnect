@@ -30,7 +30,8 @@ export default function LoginScreen() {
       type: type,
       text1: text1,
       text2: text2,
-      position: position
+      position: position,
+      visibilityTime: 2000
     });
   }
 
@@ -96,11 +97,9 @@ export default function LoginScreen() {
         return new Promise((resolve) => {
           setTimeout(() => {
             if (data?.listRole[0] === "Customer") {
-              showToast("success", "Đăng nhập thành công","", "bottom")
               navigation.navigate("Homes", { screen: "Home" });
             }
             else if (data?.listRole[0] === "Nurse") {
-              showToast("success", "Đăng nhập thành công", "", "bottom")
               navigation.navigate("NurseHomes", { screen: "NurseHome" });
             }
             else {

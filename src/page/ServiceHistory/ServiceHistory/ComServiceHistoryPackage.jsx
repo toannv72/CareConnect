@@ -9,25 +9,26 @@ export default function ComServiceHistoryPackage({ data }) {
     text: { addingPackages },
     setLanguage,
   } = useContext(LanguageContext);
-
   const navigation = useNavigation();
 
-  const formatCurrency = (number) => {
-    // Sử dụng hàm toLocaleString() để định dạng số
-    return number.toLocaleString("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    });
-  };
+  const formattedDate = (dateValue) => {
+    const day = new Date(dateValue).getDate().toString().padStart(2, "0");
+    const month = (new Date(dateValue).getMonth() + 1).toString().padStart(2, "0");
+    const year = new Date(dateValue).getFullYear();
+    return `${day}/${month}/${year}`;
+};
+
+const getStatus = data?.orderDetails[0]?.orderDates.every(item => item.status === "Complete");
+
   return (
     <TouchableOpacity
       style={styles.body}
       onPress={() => {
-        navigation.navigate("ServiceHistoryDetail", { id: data.id });
+        navigation.navigate("ServiceHistoryDetail", { id: data.id, status: getStatus });
       }}
     >
       <Image
-        source={{ uri: data?.img }}
+        source={{ uri: data?.orderDetails[0]?.servicePackage?.imageUrl }}
         style={{
           width: 100,
           height: 100,
@@ -36,14 +37,14 @@ export default function ComServiceHistoryPackage({ data }) {
         }}
       />
       <View style={styles?.container}>
-        <Text style={{ fontWeight: "bold", fontSize: 16 }}>{data?.text}</Text>
+        <Text style={{ fontWeight: "bold", fontSize: 16 }} numberOfLines={1}>{data?.orderDetails[0]?.servicePackage?.name}</Text>
 
         <Text style={{ flexDirection: "row" }}>
           <Text style={{ fontWeight: "bold", fontSize: 14 }}>
             {addingPackages?.history?.dates}
           </Text>
           <Text>
-            : {data?.registerDates}
+            : {formattedDate(data?.createdAt)}
           </Text>
         </Text>
 
@@ -52,7 +53,7 @@ export default function ComServiceHistoryPackage({ data }) {
             {addingPackages?.payment?.elderName}
           </Text>
           <Text>
-            : {data?.elder}
+            : {data?.orderDetails[0]?.elder?.name}
           </Text>
         </Text>
 
@@ -61,10 +62,9 @@ export default function ComServiceHistoryPackage({ data }) {
             {addingPackages?.history?.status}
           </Text>
           <Text>
-            : {data?.status}
+            : {getStatus ? "Đã kết thúc" : "Chưa kết thúc"}
           </Text>
         </Text>
-
       </View>
     </TouchableOpacity >
   );

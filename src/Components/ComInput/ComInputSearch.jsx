@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect,  useCallback } from "react";
 import { Controller } from "react-hook-form";
 import { StyleSheet, View, Text, TextInput, Image, TouchableOpacity } from "react-native";
 import iconSource from "../../../assets/Search.png";
 import iconClear from "../../../assets/icon/btnX.png";
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
 iconSource;
 const ComInputSearch = (
@@ -17,11 +18,19 @@ const ComInputSearch = (
     errors,
     onSubmitEditing,
     placeholder,
+    handleClearSelection
   },
   ...props
 ) => {
   const errorMessage = errors[name]?.message;
   const [showClearButton, setShowClearButton] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      setShowClearButton(false)
+    }, [])
+  );
+
   return (
     <View>
       <Controller
@@ -50,6 +59,7 @@ const ComInputSearch = (
                 onPress={() => {
                   onChange(""); // Xóa nội dung input
                   setShowClearButton(false);
+                  handleClearSelection()
                 }}
               >
                 <Image source={iconClear} style={styles.clearIcon} />

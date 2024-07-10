@@ -15,7 +15,7 @@ export default function ComPatient({ data }) {
     <TouchableOpacity
       style={styles.body}
       onPress={() => {
-        // navigation.navigate("HealthMonitorDetailDetail", { id: data.id });
+        // navigation.navigate("ElderDetailProfile", { data: data });
       }}
     >
       <Image

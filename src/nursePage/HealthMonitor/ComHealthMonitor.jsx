@@ -5,8 +5,9 @@ import { LanguageContext } from "../../contexts/LanguageContext";
 import { useNavigation } from "@react-navigation/native";
 import healthRecord from "../../../assets/images/HealthMonitor/healthRecord.png";
 import { postData, getData } from "../../api/api";
+import { stylesApp } from "../../styles/Styles";
 
-export default function ComHealthMonitor({ data, isSelected, style, time }) {
+export default function ComHealthMonitor({ data, isSelected, style, time, status }) {
   const {
     text: { healthMonitor },
     setLanguage,
@@ -25,7 +26,6 @@ export default function ComHealthMonitor({ data, isSelected, style, time }) {
   };
 
   const formattedDate = (dateValue) => {
-    console.log("dateValue", new Date(dateValue))
     const day = new Date(dateValue).getDate().toString().padStart(2, "0");
     const month = (new Date(dateValue).getMonth() + 1).toString().padStart(2, "0");
     const year = new Date(dateValue).getFullYear();
@@ -36,7 +36,6 @@ export default function ComHealthMonitor({ data, isSelected, style, time }) {
     setLoading(!loading);
     getData(`/users/${data?.createdBy}`, {})
       .then((nurseData) => {
-        console.log("nurseData", nurseData?.data)
         setNurseData(nurseData?.data);
         setLoading(loading);
       })
@@ -59,7 +58,7 @@ export default function ComHealthMonitor({ data, isSelected, style, time }) {
 
   return (
     <TouchableOpacity
-      style={[styles.body, isSelected && styles.selectedBody, style]}
+      style={[styles.body, stylesApp.shadow, isSelected && styles.selectedBody, style]}
       onPress={() => navigation.navigate("HealthMonitorDetail", { id: data?.id, data: data})} // Chuyển đến trang mới
     >
       <Image
@@ -109,7 +108,7 @@ export default function ComHealthMonitor({ data, isSelected, style, time }) {
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
               {healthMonitor?.status}
             </Text>
-            <Text>: {data?.status}</Text>
+            <Text>: {data?.isWarning ? "Bất thường" : "Bình thường"}</Text>
           </Text>
         </View> */}
       </View>
@@ -126,7 +125,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "#33B39C",
-    alignItems: "center"
+    alignItems: "center",
+    backgroundColor: "#fff"
   },
   selectedBody: {
     backgroundColor: "rgba(51, 179, 156, 0.26)",

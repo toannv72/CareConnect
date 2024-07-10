@@ -27,7 +27,7 @@ export default function BillHistory() {
 
     useEffect(() => {
         setLoading(true);
-        getData(`/orders?UserId=${user?.id}`, {})
+        getData(`/orders?UserId=${user?.id}&SortColumn=createdAt&SortDir=Desc`, {})
             .then((orders) => {
                 setData(orders?.data?.contends);
                 setLoading(false);

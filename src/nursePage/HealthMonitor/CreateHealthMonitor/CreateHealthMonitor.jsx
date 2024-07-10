@@ -1,17 +1,16 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { View, StyleSheet, ScrollView, Image, Text, KeyboardAvoidingView } from 'react-native';
 import { LanguageContext } from "../../../contexts/LanguageContext";
 import { useRoute } from "@react-navigation/native";
 import HealthMonitor from "../../../../assets/images/HealthMonitor/HealthMonitor.png";
 import { useNavigation } from '@react-navigation/native';
 import ComHeader from "../../../Components/ComHeader/ComHeader";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm, useWatch } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import ComSelect from "../../../Components/ComInput/ComSelect";
 import ComInput from "../../../Components/ComInput/ComInput";
 import ComButton from "../../../Components/ComButton/ComButton";
-import { postData } from "../../../api/api"; // Import your API function
+import { postData } from "../../../api/api";
 import Toast from 'react-native-toast-message';
 
 export default function CreateHealthMonitor() {
@@ -19,33 +18,18 @@ export default function CreateHealthMonitor() {
     const navigation = useNavigation();
     const route = useRoute();
     const selectedIndexs = route.params?.selectedIndexs || [];
+    const previousValues = useRef({});
 
-    const statusData = [
-        { value: "Normal", label: "Bình thường" },
-        { value: "Warning", label: "Bất thường" },
-        { value: "Critical", label: "Nguy hiểm" },
-    ];
-
-    const showToast = (type, text1, text2, position) => {
-        Toast.show({
-            type: type,
-            text1: text1,
-            text2: text2,
-            position: position
-        });
-    }
+    const showToast = (type, text1, text2, position) => { Toast.show({ type: type, text1: text1, text2: text2, position: position }) }
 
     const loginSchema = yup.object().shape({
         notes: yup.string().required('Vui lòng nhập ghi chú tổng quát'),
         ...selectedIndexs.reduce((acc, category) => {
-            category.measureUnits.forEach(unit => {
-                acc[`value_${unit.id}`] = yup
-                    .string()
+            category?.measureUnitsActive.forEach(unit => {
+                acc[`value_${unit.id}`] = yup.string()
                     .required('Vui lòng nhập kết quả')
                     .matches(/^\d+(\.\d{1,2})?$/, 'Kết quả phải là số dương và không quá hai chữ số thập phân')
                     .test('is-positive', 'Kết quả phải là số dương', value => parseFloat(value) > 0 || value === "")
-                acc[`status_${unit.id}`] = yup.string().required('Vui lòng nhập trạng thái');
-                // acc[`note_${unit.id}`] = yup.string().required('Vui lòng nhập ghi chú');
             });
             return acc;
         }, {})
@@ -54,9 +38,8 @@ export default function CreateHealthMonitor() {
     const methods = useForm({
         resolver: yupResolver(loginSchema),
         defaultValues: {
-            // Set default values for status fields here
             ...selectedIndexs.reduce((acc, category) => {
-                category.measureUnits.forEach(unit => {
+                category.measureUnitsActive.forEach(unit => {
                     acc[`status_${unit.id}`] = "Normal";
                     acc[`note_${unit.id}`] = "";
                 });
@@ -65,14 +48,35 @@ export default function CreateHealthMonitor() {
         }
     });
 
-    const { control, handleSubmit, formState: { errors } } = methods;
+    const { control, handleSubmit, setValue, formState: { errors } } = methods;
+    const updateStatus = (unit, value) => {
+        if (value === "") return;
+        const floatValue = parseFloat(value);
+        const newStatus = floatValue >= unit.minValue && floatValue <= unit.maxValue ? "Normal" : "Warning";
+        setValue(`status_${unit.id}`, newStatus);
+    };
+
+    selectedIndexs.forEach(category => {
+        category.measureUnitsActive.forEach(unit => {
+            const value = useWatch({
+                control,
+                name: `value_${unit.id}`,
+                defaultValue: ""
+            });
+            useEffect(() => {
+                if (previousValues.current[unit.id] !== value) {
+                    updateStatus(unit, value);
+                    previousValues.current[unit.id] = value;
+                }
+            }, [value, unit]);
+        });
+    });
 
     const onSubmit = (data) => {
         const healthReportDetails = selectedIndexs.map((category) => ({
             healthCategoryId: category.id,
-            healthReportDetailMeasures: category.measureUnits.map((unit) => ({
+            healthReportDetailMeasures: category?.measureUnitsActive.map((unit) => ({
                 value: data[`value_${unit.id}`],
-                status: data[`status_${unit.id}`],
                 note: data[`note_${unit.id}`],
                 measureUnitId: unit.id,
             })),
@@ -84,20 +88,26 @@ export default function CreateHealthMonitor() {
             healthReportDetails,
         };
 
-        console.log("Formatted Data: ", formattedData);
-        console.log("healthReportDetailMeasures: ", formattedData?.healthReportDetails[0]?.healthReportDetailMeasures);
-
-        // Send data to API
         postData("/health-report", formattedData)
             .then((response) => {
-                console.log("API Response: ", response);
-                showToast("success", "Tạo báo cáo thành công", "", "bottom")
+                showToast("success", "Tạo báo cáo thành công", "", "bottom");
                 navigation.navigate("ListHealthMonitor");
             })
             .catch((error) => {
                 console.error("API Error: ", error);
-                showToast("error", "Có lỗi xảy ra, vui lòng thử lại!", "", "bottom")
+                showToast("error", "Có lỗi xảy ra, vui lòng thử lại!", "", "bottom");
             });
+    };
+
+    const getStatusText = (status) => {
+        switch (status) {
+            case 'Normal':
+                return { text: 'Bình thường', color: '#000' };
+            case 'Warning':
+                return { text: 'Bất thường', color: 'red' };
+            default:
+                return status;
+        }
     };
 
     return (
@@ -107,7 +117,9 @@ export default function CreateHealthMonitor() {
                 <View style={styles.container}>
                     <FormProvider {...methods}>
                         <View style={{ width: "100%", gap: 10, flex: 1 }}>
-                            <ScrollView showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
+                            <ScrollView
+                                showsVerticalScrollIndicator={false}
+                                showsHorizontalScrollIndicator={false}>
                                 <View style={{ alignItems: "center" }}>
                                     <Image source={HealthMonitor} style={{ height: 160, objectFit: "fill" }} />
                                 </View>
@@ -115,11 +127,11 @@ export default function CreateHealthMonitor() {
                                 {selectedIndexs.map((item, index) => (
                                     <View style={styles.index} key={index}>
                                         <Text style={{ fontWeight: "600", fontSize: 16, marginVertical: 10 }}>{item?.name}</Text>
-                                        {item.measureUnits.map((unit, unitIndex) => (
+                                        {item?.measureUnitsActive.map((unit, unitIndex) => (
                                             <View key={unitIndex}>
                                                 <Text style={{ fontWeight: "600", fontSize: 16, marginVertical: 10 }}>{unit?.name + " (" + unit?.unitType + ")"}</Text>
                                                 <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 10 }}>
-                                                    <View style={{ flex: 1 }}>
+                                                    <View style={{ flex: 0.6 }}>
                                                         <ComInput
                                                             label={"Kết quả"}
                                                             placeholder={"Kết quả"}
@@ -130,15 +142,13 @@ export default function CreateHealthMonitor() {
                                                             required
                                                         />
                                                     </View>
-                                                    <View style={{ flex: 1 }}>
-                                                        <ComSelect
-                                                            label={"Trạng thái"}
-                                                            name={`status_${unit.id}`}
-                                                            control={control}
-                                                            errors={errors}
-                                                            options={statusData}
-                                                            required
-                                                        />
+                                                    <View style={{ flex: 0.4 }}>
+                                                        <View style={styles.labelContainer}>
+                                                            <Text style={{ fontWeight: "bold", marginRight: 4, }}>Trạng thái</Text>
+                                                        </View>
+                                                        <View style={[styles.status, { justifyContent: "center" }]}>
+                                                            <Text style={{ color: getStatusText(methods.watch(`status_${unit?.id}`))?.color }}>{getStatusText(methods.watch(`status_${unit?.id}`))?.text}</Text>
+                                                        </View>
                                                     </View>
                                                 </View>
                                                 <View style={{ flex: 1, marginVertical: 5 }}>
@@ -192,9 +202,21 @@ const styles = StyleSheet.create({
         borderBottomColor: "#A3A3A3",
         borderStyle: "dashed",
     },
-    errorText: {
-        color: 'red',
-        fontSize: 12,
-        marginTop: 5,
+    status: {
+        backgroundColor: "#fff",
+        height: 50,
+        padding: 10,
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: "#33B39C",
+        color: "#000",
+        elevation: 5, // Bóng đổ cho Android
+        shadowColor: "#000", // Màu của bóng đổ cho iOS
+        shadowOffset: { width: 0, height: 5 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+    },
+    labelContainer: {
+        marginBottom: 4,
     },
 });

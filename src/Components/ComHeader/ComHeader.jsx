@@ -14,8 +14,11 @@ const ComHeader = ({
 
   const handleBackPress = () => {
     if (route.name === 'EditProfile' || !navigation.canGoBack()) {
-      navigation.navigate("Home");
-    } else {
+      navigation.navigate("Homes");
+    }else if(route.name === 'Cart'){
+      navigation.navigate("AddingService");
+    }
+     else {
       navigation.goBack();
     }
   };

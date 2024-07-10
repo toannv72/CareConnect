@@ -74,6 +74,24 @@ export default function CareSchedule({ }) {
             nurseID: 234,
             roomId: 104,
             areaId: "A",
+            time: "06:00 - 14:00",
+            date: "2024-06-22"
+        },
+        {
+            id: 1,
+            staffId: 123,
+            nurseID: 234,
+            roomId: 404,
+            areaId: "D",
+            time: "06:00 - 14:00",
+            date: "2024-06-22"
+        },
+        {
+            id: 1,
+            staffId: 123,
+            nurseID: 234,
+            roomId: 102,
+            areaId: "A last",
             time: "06/:00 - 14:00",
             date: "2024-06-22"
         },
@@ -141,19 +159,22 @@ export default function CareSchedule({ }) {
                 {filteredData.length > 0 ? (//if has data => display list òf task
                     <View style={styles.taskContainer}>
                         <Text style={[styles.dateTitle]}>
-                        {moment(selectedDate).format('DD/MM/YYYY')}
+                            {moment(selectedDate).format('DD/MM/YYYY')}
                         </Text>
                         <ScrollView
-                          showsVerticalScrollIndicator={false}
-                          showsHorizontalScrollIndicator={false}>
-                            {filteredData.map((item, index) => (
-                                <ComSchedule
-                                    key={index}
-                                    data={item}
-                                    onPress={() => navigation.navigate("NurseHealthMonitor", { roomData: item })}
-                                />
-                            ))}
-                            <View style={{ height: 100 }} />
+                            showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={false}
+                        >
+                            {/* <View style={{paddingBottom: 250}}> */}
+                                {filteredData.map((item, index) => (
+                                    <ComSchedule
+                                        key={index}
+                                        data={item}
+                                        onPress={() => navigation.navigate("NurseHealthMonitor", { roomData: item })}
+                                    />
+                                ))}
+                            {/* </View> */}
+                            <View style={{ height: 500}} />
                         </ScrollView>
                     </View>
                 ) : ( //ìf no data => display no task component

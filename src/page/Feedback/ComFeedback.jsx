@@ -20,6 +20,12 @@ export default function ComFeedback({ data }) {
       currency: "VND",
     });
   };
+  const formattedDate = (dateValue) => {
+    const day = new Date(dateValue).getDate().toString().padStart(2, "0");
+    const month = (new Date(dateValue).getMonth() + 1).toString().padStart(2, "0");
+    const year = new Date(dateValue).getFullYear();
+    return `${day}/${month}/${year}`;
+};
   return (
     <TouchableOpacity
       style={styles.body}
@@ -43,7 +49,7 @@ export default function ComFeedback({ data }) {
           {feedback?.history?.date}
           </Text>
           <Text>
-            : {data?.createdAt}
+            : {formattedDate(data?.createdAt)}
           </Text>
         </Text>
 

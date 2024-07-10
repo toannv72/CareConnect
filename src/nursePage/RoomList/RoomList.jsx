@@ -2,9 +2,11 @@ import { useState, useEffect, useRef, useContext } from "react";
 import { Text, View, StyleSheet, ScrollView, Image, TouchableOpacity } from "react-native";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import ComHeader from "../../Components/ComHeader/ComHeader";
+import ComNoData from "../../Components/ComNoData/ComNoData";
 import ComRoom from "./ComRoom";
 import { useNavigation } from "@react-navigation/native";
-import RoomListImg from "./RoomListImg.png"
+import RoomListImg from "../../../assets/images/Nurse/Room/RoomListImg.png"
+import { postData, getData } from "../../api/api";
 
 export default function RoomList() {
     const {
@@ -13,48 +15,21 @@ export default function RoomList() {
     } = useContext(LanguageContext);
     const navigation = useNavigation();
 
-    const [data, setData] = useState([
-        {
-            roomId: 1,
-            name: "107",
-            capacity: 4,
-            type: "Cơ bản",
-            area: "A",
-            color: "#64CCC5"
-        },
-        {
-            roomId: 2,
-            name: "207",
-            capacity: 2,
-            type: "Thường",
-            area: "B",
-            color: "#F7E863"
-        },
-        {
-            roomId: 3,
-            name: "307",
-            capacity: 1,
-            type: "Cao cấp",
-            area: "C",
-            color: "#8DF7AB"
-        },
-        {
-            roomId: 4,
-            name: "307",
-            capacity: 1,
-            type: "Cao cấp Cao cấp",
-            area: "C",
-            color: "#8DF7AB"
-        },
-        {
-            roomId: 5,
-            name: "307",
-            capacity: 1,
-            type: "Cao cấp Cao cấp",
-            area: "C",
-            color: "#8DF7AB"
-        },
-    ])
+    const [data, setData] = useState([])
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        setLoading(!loading);
+        getData('/room', {})
+            .then((rooms) => {
+                setData(rooms?.data?.contends);
+                setLoading(loading);
+            })
+            .catch((error) => {
+                setLoading(loading);
+                console.error("Error fetching service-package:", error);
+            });
+    }, [])
 
     return (
         <>
@@ -71,24 +46,26 @@ export default function RoomList() {
                             style={{
                                 height: 150,
                                 objectFit: "fill",
-
                             }}
                         />
                     </View>
-                    <View style={{ padding: 20 }}>
-                        {data.map((room, index) => (
-                            
-                                <ComRoom
-                                    key={index}
-                                    data={room}
-                                    color={room?.color}
-                                    onPress={() => navigation.navigate("RoomDetail",{roomData: room})} // Pass roomData
-                                />
-                        ))}
-                    </View>
+                    {data.length == 0 ? (
+                        <ComNoData>Không có dữ liệu</ComNoData>
+                    ) : (
+                        <View style={{ padding: 20 }}>
+                            {data.map((room, index) => (
+                                room.isUsed ? (
+                                    <ComRoom
+                                        key={index}
+                                        data={room}
+                                        onPress={() => navigation.navigate("RoomDetail", { roomData: room })}
+                                    />
+                                ) : null
+                            ))}
+                        </View>
+                    )}
                 </ScrollView>
             </View>
-
         </>
     )
 }

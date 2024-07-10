@@ -2,84 +2,102 @@ import React, { useContext, useState, useEffect } from "react";
 import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity } from 'react-native';
 import ComSelectButton from "../../Components/ComButton/ComSelectButton";
 import { LanguageContext } from "../../contexts/LanguageContext";
-import { useRoute } from "@react-navigation/native";
+import { useRoute, useNavigation } from "@react-navigation/native";
 import backArrowWhite from "../../../assets/icon/backArrowWhite.png";
-import { useNavigation } from '@react-navigation/native';
 import ComElder from "../../Components/ComElder/ComElder";
 import ComLoading from "../../Components/ComLoading/ComLoading";
 import ComNoData from "../../Components/ComNoData/ComNoData";
 import { useStorage } from "../../hooks/useLocalStorage";
+import { postData, getData } from "../../api/api";
+import Toast from 'react-native-toast-message';
+import { useAuth } from "../../../auth/useAuth";
+import moment from "moment";
 
 export default function AddingServiceElderRegister() {
-    const [user, setUser] = useStorage("user", {});
-    const [selectedElderId, setSelectedElderId] = useState(null);
+    const { user } = useAuth();
+    const [selectedElder, setSelectedElder] = useState(null);
+    const [elderData, setElderData] = useState([]);
     const [loading, setLoading] = useState(false);
-
-    const {
-        text: { addingPackages },
-        setLanguage,
-    } = useContext(LanguageContext);
-
     const route = useRoute();
     const { data } = route.params;
-
-
     const navigation = useNavigation();
+    const { text: { addingPackages } } = useContext(LanguageContext);
+    console.log("selectedElder ", selectedElder)
+    const showToast = (type, text1, text2, position) => {
+        Toast.show({
+            type: type,
+            text1: text1,
+            text2: text2,
+            position: position
+        });
+    }
 
-    const handleBackPress = () => {
-        navigation.goBack();
-    };
+    useEffect(() => {
+        setLoading(!loading);
+        getData(`/elders?UserId=${user?.id}`, {})
+            .then((elders) => {
+                const filteredElders = elders?.data?.contends.filter(elder => {
+                    // Kiểm tra nếu endDate là ngày trong tương lai
+                    return moment(elder?.contractsInUse?.endDate).isSameOrAfter(moment(), 'day');
+                });
+                setElderData(filteredElders); // Cập nhật danh sách elder đã lọc
+                setLoading(false);
+            })
+            .catch((error) => {
+                setLoading(loading);
+                console.error("Error getData fetching orderDetail items:", error);
+            });
+    }, []);
 
     const formatCurrency = (number) => {
         if (number) {
-            // Sử dụng hàm toLocaleString() để định dạng số
             return number.toLocaleString("vi-VN", {
                 style: "currency",
                 currency: "VND",
             });
-        } else {
-            return null; // or any default value you want to return
-        }
+        } else { return null; }
+    };
+    const handleElderPress = (elder) => {
+        setSelectedElder(elder);
     };
 
-    const handleElderPress = (id) => {
-        setSelectedElderId(id);
-    };
+    const onpressPayment = () => {
+        setLoading(!loading);
+        getData(`/order-detail?ElderId=${selectedElder?.id}&ServicePackageId=${data?.id}`, {})
+            .then((orderDetail) => {
+                setLoading(loading);
+                if (orderDetail?.data?.length > 0)
+                    showToast('error', 'Dịch vụ đã được đăng ký', 'Dịch vụ này đã được đăng ký cho người cao tuổi bạn chọn', 'top')
+                else
+                    navigation.navigate("ServicePayment", { servicePackage: data, elder: selectedElder, orderDates: data?.eventDate, type: 'One_Time' });
+            })
+            .catch((error) => {
+                setLoading(loading);
+                console.error("Error getData fetching orderDetail items:", error);
+            });
+    }
 
     return (
         <>
             <View style={styles.header}>
-                <TouchableOpacity onPress={handleBackPress} style={styles.backIconContainer}>
-                    <Image
-                        source={backArrowWhite}
-                        style={styles.backIcon}
-                    />
+                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backIconContainer}>
+                    <Image source={backArrowWhite} style={styles.backIcon} />
                 </TouchableOpacity>
-                <Image
-                    source={{ uri: data?.imageUrl }}
-                    style={{
-                        height: 200,
-                        objectFit: "fill",
-                    }}
-                />
+                <Image source={{ uri: data?.imageUrl }} style={{ height: 200, objectFit: "fill" }} />
             </View>
             <View style={styles.body}>
                 <ScrollView
                     showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false}
-                >
+                    showsHorizontalScrollIndicator={false} >
                     <Text style={{ fontWeight: "bold", fontSize: 20, marginBottom: 10 }} numberOfLines={2}>
                         {data?.name}
                     </Text>
-                    {/* price */}
                     <Text style={{ fontSize: 16, marginBottom: 10 }}>
                         <Text style={{ fontWeight: "bold" }}>
                             {formatCurrency(data?.price)}
                         </Text>
-                        /{addingPackages?.package?.month}
+                        /{addingPackages?.package?.time}
                     </Text>
-
-                    {/* category */}
                     <Text style={{ flexDirection: "row", marginBottom: 10 }}>
                         <Text style={styles.contentBold}>
                             {addingPackages?.package?.category}
@@ -88,39 +106,39 @@ export default function AddingServiceElderRegister() {
                             :  {data?.servicePackageCategory?.name}
                         </Text>
                     </Text>
-
                     <Text style={{ fontWeight: "bold", fontSize: 16, marginBottom: 10 }}>
                         {addingPackages?.register?.registerElder}
                     </Text>
-
                     <ComLoading show={loading}>
-                        {user?.elders?.length > 0 ? (
-                            <>
-                                <View>
-                                    {user?.elders?.map((value, index) => (
-                                        <ComElder key={index} data={value}
-                                            onPress={() => handleElderPress(value.id)}
-                                            isSelected={selectedElderId === value.id}
-                                        />
-                                    ))}
-                                </View>
-                                <View style={{ height: 120 }}></View>
-                            </>
-                        ) : (
-                           <ComNoData>Hiện tại đang không có người cao tuổi nào</ComNoData>
-                        )}
+                        {elderData?.length > 0 ? (
+                            <View>
+                                {elderData?.map((value, index) => (
+                                    <ComElder key={index} data={value}
+                                        onPress={() => handleElderPress(value)}
+                                        isSelected={selectedElder?.id === value.id}
+                                    />))}
+                            </View>
+                        ) : (<ComNoData>Hiện tại đang không có người cao tuổi nào</ComNoData>)}
                     </ComLoading>
-
                 </ScrollView>
-                <View style={{ marginVertical: 20 }}>
+                {data?.type === "OneDay" ? (
                     <ComSelectButton
-                        disable={selectedElderId ? false : true}
-                        onPress={() => {
-                            navigation.navigate("AddingServiceCalendarRegister", { id: selectedElderId, data: data });
-                        }}>
-                        Tiếp tục
+                        disable={!selectedElder}
+                        onPress={() => onpressPayment()}>
+                        Thanh toán ngay
                     </ComSelectButton>
-                </View>
+                ) : (<ComSelectButton
+                    disable={selectedElder == null}
+                    onPress={() => {
+                        if (data?.type === "MultipleDays") {
+                            navigation.navigate("ServiceDayRegister", { elder: selectedElder, data: data });
+                        } else if (data?.type === "AnyDay") {
+                            navigation.navigate("ServiceAnydayRegister", { elder: selectedElder, data: data });
+                        } else if (data?.type === "WeeklyDays") {
+                            navigation.navigate("AddingServiceCalendarRegister", { elder: selectedElder, data: data });
+                        }
+                    }}> Tiếp tục </ComSelectButton>)
+                }
             </View>
         </>
     );
@@ -154,15 +172,5 @@ const styles = StyleSheet.create({
     backIcon: {
         width: 50,
         height: 50,
-    },
-    noDataContainer: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 50,
-    },
-    noDataImage: {
-        width: 150,
-        height: 150,
-        marginBottom: 20,
     },
 });

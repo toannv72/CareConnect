@@ -99,9 +99,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#33B39C",
   },
-  selectedBody: {
-    backgroundColor: "rgba(51, 179, 156, 0.26)",
-  },
   container: {
     alignItems: "flex-start",
     justifyContent: "center",
@@ -115,5 +112,8 @@ const styles = StyleSheet.create({
   },
   text: {
     flex: 1,
+  },
+  selectedBody: {
+    backgroundColor: "rgba(51, 179, 156, 0.26)",
   },
 });

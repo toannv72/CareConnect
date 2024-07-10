@@ -1,9 +1,9 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useCallback } from "react";
 import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity } from 'react-native';
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { useRoute } from "@react-navigation/native";
 import plusIcon from "../../../assets/profile_icons/plus.png";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import ComHealthMonitor from "./ComHealthMonitor";
 import { postData, getData } from "../../api/api";
@@ -20,32 +20,31 @@ export default function ListHealthMonitor({ data }) {
     } = useContext(LanguageContext);
     const navigation = useNavigation();
 
-    useEffect(() => {
-        setLoading(!loading);
-        getData(`/health-report?ElderId=2&SortColumn=createdAt&SortDir=Desc`, {})
-        // getData(`/health-report?ElderId=${id}&SortColumn=createdAt&SortDir=Desc`, {})
-            .then((healthMonitor) => {
-                setHealthMonitor(healthMonitor?.data?.contends);
-                setLoading(loading);
-            })
-            .catch((error) => {
-                setLoading(loading);
-                console.error("Error getData fetching items:", error);
-            });
-    }, []);
-
-    const toVietnamTime = (dateValue) => {
-        const date = new Date(dateValue);
-        date.setHours(date.getHours() + 7); // Convert to UTC+7
-        return date;
-    };
+    useFocusEffect(
+        useCallback(() => {
+            setLoading(!loading);
+            getData(`/health-report?ElderId=2&SortColumn=createdAt&SortDir=Desc`, {})
+                .then((healthMonitor) => {
+                    setHealthMonitor(healthMonitor?.data?.contends);
+                    setLoading(loading);
+                })
+                .catch((error) => {
+                    setLoading(loading);
+                    console.error("Error getData fetching items:", error);
+                });
+        }, [])
+    );
 
     const groupedData = healthMonitor.reduce((acc, item) => {
-        const date = toVietnamTime(item.createdAt).toISOString().split('T')[0]; // Convert to Vietnam time and format date as yyyy-mm-dd
+        const date = item?.date;
         acc[date] = acc[date] || [];
         acc[date].push(item);
         return acc;
     }, {});
+
+    const checkWarning = (items) => {
+        return items.some(item => item.isWarning === true);
+    };
 
     const formattedDate = (dateValue) => {
         const day = new Date(dateValue).getDate().toString().padStart(2, "0");
@@ -74,12 +73,25 @@ export default function ListHealthMonitor({ data }) {
                                     <View key={date}>
                                         <Text style={styles.dateHeader}>{formattedDate(date)}</Text>
                                         {items[0] && ( // Chỉ hiển thị nếu có mục cho ngày đó
-                                            <ComHealthMonitor data={items[0]} time={groupedData[date].length} />
+                                            <ComHealthMonitor
+                                                data={items[0]}
+                                                time={groupedData[date].length}
+                                                style={{
+                                                    backgroundColor: checkWarning(items) ? "#fac8d2" : "#caece6",
+                                                    borderColor: checkWarning(items) ? "#fa6180" : "#33B39C"
+                                                }} />
                                         )}
+                                        {/* code hiển thị mỗi report 1 item */}
+                                        {/* {
+                                            items?.map((item, index) => (
+                                                <ComHealthMonitor key={index} data={item} />
+                                            ))
+                                        } */}
                                     </View>
                                 ))
                             )
                         }
+                        <View style={{ height: 50 }}></View>
                     </ScrollView>
                 </ComLoading>
                 <TouchableOpacity

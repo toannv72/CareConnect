@@ -33,8 +33,8 @@ export default function ComHealthIndex({ data, healthMonitor, date, clickable, c
           styles.body,
           stylesApp.shadow,
           {
-            borderColor: overallStatus == 'Warning' ? "#fa6180" : "#33B39C",
-            backgroundColor: overallStatus == 'Warning' ? "#fac8d2" : "#caece6",
+            borderColor: data?.isWarning == true ? "#fa6180" : "#33B39C",
+            backgroundColor: data?.isWarning == true ? "#fac8d2" : "#caece6",
           },
           isExpanded && { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
         ]}
@@ -52,7 +52,7 @@ export default function ComHealthIndex({ data, healthMonitor, date, clickable, c
         >
           <Image
             source={isExpanded ? UpIcon : DownIcon}
-            style={[styles.icon, { borderColor: overallStatus == 'Warning' ? "#fa6180" : "#33B39C" }]} />
+            style={[styles.icon, { borderColor: data?.isWarning == true ? "#fa6180" : "#33B39C" }]} />
         </TouchableOpacity>
         <View style={{ flexDirection: "row" }}>
           <View style={styles?.left}>
@@ -72,7 +72,7 @@ export default function ComHealthIndex({ data, healthMonitor, date, clickable, c
             />
           </View>
           <View style={styles?.value}>
-            {(data?.healthReportDetailMeasures.length == 1 || data?.healthCategoryId == 1) &&
+            {/* {(data?.healthReportDetailMeasures.length == 1 || data?.healthCategoryId == 1) &&
               // chỉ hiển thị value và unit khi id = 1 là huyết áp hoặc chỉ có 1 chứ số con
               (<View style={{
                 flexDirection: "row",
@@ -94,7 +94,27 @@ export default function ComHealthIndex({ data, healthMonitor, date, clickable, c
                   {data?.healthReportDetailMeasures[0]?.measureUnit?.unitType}
                 </Text>
               </View>
-              )}
+              )} */}
+              <View style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 10,
+                flexWrap: "wrap",
+              }}>
+                <Text
+                  style={{
+                    fontWeight: "bold", fontSize: 25,
+                    color: getStatusText(data?.healthReportDetailMeasures[0]?.status)?.color
+                  }}>
+                  {data?.healthReportDetailMeasures.length == 1 ?
+                    data?.healthReportDetailMeasures[0]?.value :
+                    data?.healthReportDetailMeasures[0]?.value + '/' + data?.healthReportDetailMeasures[1]?.value}
+                </Text>
+                <Text style={{ fontSize: 16 }}>
+                  {data?.healthReportDetailMeasures[0]?.measureUnit?.unitType}
+                </Text>
+              </View>
 
             <View style={{ width: "100%", marginTop: 10 }}>
               <Text style={{

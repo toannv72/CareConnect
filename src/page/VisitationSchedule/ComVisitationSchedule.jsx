@@ -15,16 +15,20 @@ export default function ComVisitationSchedule({ data }) {
       currency: "VND",
     });
   };
+
+const [date] = data?.date?.split("T");
+const [year, month, day] = date.split("-");
+
   return (
     <TouchableOpacity style={[styles.body]}>
       <View style={styles.day}>
-        <Text style={styles.textYear}>2024</Text>
+        <Text style={styles.textYear}>{year}</Text>
         <View
           style={{ backgroundColor: "#33B39C", paddingHorizontal:10 ,paddingVertical:4, borderRadius: 10 }}
         >
-          <Text style={styles.textDay}>08</Text>
+          <Text style={styles.textDay}>{day}</Text>
           <Text style={styles.textDay}>- -</Text>
-          <Text style={styles.textDay}>05</Text>
+          <Text style={styles.textDay}>{month}</Text>
         </View>
       </View>
 
@@ -32,20 +36,26 @@ export default function ComVisitationSchedule({ data }) {
         {/* <Text style={{ fontWeight: "bold", fontSize: 16 }}>{data?.text}</Text> */}
         <Text style={{ flexDirection: "row" }}>
           <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-            Người Đăng Ký
+            Người đăng ký
           </Text>
-          <Text>: Thảo My</Text>
+          <Text>: {data?.user?.fullName}</Text>
+        </Text>
+        <Text style={{ flexDirection: "row" }}>
+          <Text style={{ fontWeight: "bold", fontSize: 16 }}>Người cao tuổi: </Text>
+         {
+          data?.elders?.length > 0 && (
+            data?.elders?.map((elder, index)=>(
+              <Text key={index}>{elder?.name}{index < data.elders.length - 1 && ", "}</Text>
+            )))
+         }
         </Text>
         <Text style={{ flexDirection: "row" }}>
           <Text style={{ fontWeight: "bold", fontSize: 16 }}>
             Số điện thoại
           </Text>
-          <Text>: 01234567890</Text>
+          <Text>: {data?.user?.phoneNumber}</Text>
         </Text>
-        <Text style={{ flexDirection: "row" }}>
-          <Text style={{ fontWeight: "bold", fontSize: 16 }}>Giờ</Text>
-          <Text>: 10:00</Text>
-        </Text>
+        
       </View>
     </TouchableOpacity>
   );

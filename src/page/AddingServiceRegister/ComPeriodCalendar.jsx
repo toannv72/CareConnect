@@ -25,8 +25,8 @@ export default function ComPeriodCalendar() {
         newMarkedDates[currentDate.format('YYYY-MM-DD')] = {
           selected: true,
           color: '#33B39C',
-          startingDay: currentDate.isSame(startDate),
-          endingDay: currentDate.isSame(endDate || day.dateString),
+          startingDay: currentDate?.isSame(startDate),
+          endingDay: currentDate?.isSame(endDate || day.dateString),
         };
         currentDate.add(1, 'days');
       }

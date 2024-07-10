@@ -1,4 +1,5 @@
 import React from "react";
+import { Platform } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -8,6 +9,7 @@ import Register from "./src/page/Register/Register";
 import Home from "./src/page/Home/Home";
 import RegisterSuccess from "./src/page/Register/RegisterSuccess";
 import Otp from "./src/page/Otp/Otp";
+import Search from "./src/page/Search/Search";
 import ComIcon from "./src/Components/ComIcon/ComIcon";
 import ComNurseIcon from "./src/Components/ComIcon/ComNurseIcon";
 import ServicePackages from "./src/page/ServicePackages/ServicePackages";
@@ -23,6 +25,9 @@ import AddingServicePackages from "./src/page/AddingServicePackage/AddingService
 import AddingServiceDetail from "./src/page/AddingServiceDetail/AddingServiceDetail";
 import AddingServiceElderRegister from "./src/page/AddingServiceRegister/AddingServiceElderRegister";
 import AddingServiceCalendarRegister from "./src/page/AddingServiceRegister/AddingServiceCalendarRegister";
+import ServiceDayRegister from "./src/page/AddingServiceRegister/ServiceDayRegister";
+import ServiceAnydayRegister from "./src/page/AddingServiceRegister/ServiceAnydayRegister";
+import Favorite from "./src/page/AddingServiceRegister/Favorite/Favorite";
 import ServicePayment from "./src/page/ServicePayment/ServicePayment";
 import ServiceHistory from "./src/page/ServiceHistory/ServiceHistory/ServiceHistory";
 import ServiceHistoryDetail from "./src/page/ServiceHistory/ServiceHistoryDetail/ServiceHistoryDetail";
@@ -50,6 +55,7 @@ import Contracts from "./src/page/Contract/Contracts";
 import ContractDetail from "./src/page/ContractDetail/ContractDetail";
 import ContractCandSuccess from "./src/page/ContractDetail/ContractCandSuccess";
 import ContractRenewSuccess from "./src/page/ContractDetail/ContractRenewSuccess";
+import ScheduledService from "./src/page/ScheduledService/ScheduledService";
 // -------Role: Nurse--------
 import NurseHome from "./src/nursePage/Home/NurseHome";
 import NurseProfile from "./src/nursePage/NurseProfile/NurseProfile";
@@ -71,13 +77,13 @@ const Tab = createBottomTabNavigator();
 const Routes = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator initialRouteName="Homes">
         <Stack.Screen
           name="Homes"
           options={{ headerLeft: null, headerShown: false }}
           component={MyBottomNavigationBar}
         />
-          <Stack.Screen
+        <Stack.Screen
           name="NurseHomes"
           options={{ headerLeft: null, headerShown: false }}
           component={NurseBottomNavigationBar}
@@ -104,10 +110,15 @@ const Routes = () => {
         />
         <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
+          name="Search"
+          component={Search}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
           name="Service"
           component={ServicePackages}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="ServicePackageDetail"
           component={ServicePackageDetail}
@@ -137,6 +148,21 @@ const Routes = () => {
           name="AddingServiceCalendarRegister"
           component={AddingServiceCalendarRegister}
         />
+           <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ServiceDayRegister"
+          component={ServiceDayRegister}
+        />
+           <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ServiceAnydayRegister"
+          component={ServiceAnydayRegister}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="Favorite"
+          component={Favorite}
+        />
         <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="ServicePayment"
@@ -162,22 +188,22 @@ const Routes = () => {
           name="CreateFeedback"
           component={CreateFeedback}
         />
-           <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="FeedbackHistory"
           component={FeedbackHistory}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="FeedbackDetail"
           component={FeedbackDetail}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="BillHistory"
           component={BillHistory}
         />
-          <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="BillDetail"
           component={BillDetail}
@@ -187,7 +213,7 @@ const Routes = () => {
           name="HealthMonitorDetail"
           component={HealthMonitorDetail}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="HealthMonitorIndexList"
           component={HealthMonitorIndexList}
@@ -219,21 +245,21 @@ const Routes = () => {
           name="DetailProfile"
           component={DetailProfile}
         />
-          <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="ElderProfile"
           component={ElderProfile}
-          />
-           <Stack.Screen
+        />
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="ElderDetailProfile"
           component={ElderDetailProfile}
-          />
-           <Stack.Screen
+        />
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="MedicalProfile"
           component={MedicalProfile}
-          />
+        />
         <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="ChangePassword"
@@ -279,10 +305,15 @@ const Routes = () => {
           name="ContractCandSuccess"
           component={ContractCandSuccess}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="ContractRenewSuccess"
           component={ContractRenewSuccess}
+        />
+         <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ScheduledService"
+          component={ScheduledService}
         />
         {/* =======nurse====== */}
         <Stack.Screen
@@ -290,27 +321,27 @@ const Routes = () => {
           name="RoomList"
           component={RoomList}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="RoomDetail"
           component={RoomDetail}
         />
-           <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="NurseElderDetailProfile"
           component={NurseElderDetailProfile}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="CustomerProfile"
           component={CustomerProfile}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="NurseHealthMonitor"
           component={NurseHealthMonitor}
         />
-          <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="HealthMonitorList"
           component={HealthMonitorList}
@@ -320,27 +351,27 @@ const Routes = () => {
           name="NurseHealthMonitorDetail"
           component={NurseHealthMonitorDetail}
         />
-           <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="ListHealthMonitor"
           component={ListHealthMonitor}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="CreateHealthMonitor"
           component={CreateHealthMonitor}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="ListHealthIndex"
           component={ListHealthIndex}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="RegisterService"
           component={RegisterService}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="RegisterServiceDetail"
           component={RegisterServiceDetail}
@@ -359,6 +390,7 @@ function HomeStackScreen() {
         name="NotificationPage"
         component={Home}
       />
+      
       <HomeStack.Screen name="Details" component={Login} />
     </HomeStack.Navigator>
   );
@@ -382,10 +414,10 @@ function MyBottomNavigationBar() {
         tabBarHideOnKeyboard: true,
         tabBarShowLabel: false,
         tabBarStyle: {
-          position: "absolute",
-          bottom: 10,
-          left: 10,
-          right: 10,
+          position: Platform.OS === 'android' ? "absolute" : undefined,
+          bottom: Platform.OS === 'android' ? 10 : undefined,
+          left: Platform.OS === 'android' ? 10 : undefined,
+          right: Platform.OS === 'android' ? 10 : undefined,
           elevation: 0,
           backgroundColor: "#14A499",
           borderRadius: 15,
@@ -402,7 +434,7 @@ function MyBottomNavigationBar() {
 
           if (route.name === "Home") {
             iconName = focused ? "Nav1" : "Nav1_1";
-          } else if (route.name === "Visitation") {
+          } else if (route.name === "AddingServicePackages") {
             iconName = focused ? "Nav2" : "Nav2_1";
           } else if (route.name === "HealthCondition") {
             iconName = focused ? "Nav3" : "Nav3_1";
@@ -417,7 +449,7 @@ function MyBottomNavigationBar() {
           return <ComIcon icon={iconName} />;
         },
       })}
-      // keyboardShouldPersistTaps="handled"
+    // keyboardShouldPersistTaps="handled"
     >
       <Tab.Screen
         name="Home"
@@ -425,7 +457,7 @@ function MyBottomNavigationBar() {
         component={HomeStackScreen}
       />
       <Tab.Screen
-        name="Visitation"
+        name="AddingServicePackages"
         options={{ headerShown: false }}
         component={AddingServicePackages}
       />
@@ -460,10 +492,10 @@ function NurseBottomNavigationBar() {
         tabBarHideOnKeyboard: true,
         tabBarShowLabel: false,
         tabBarStyle: {
-          position: "absolute",
-          bottom: 10,
-          left: 10,
-          right: 10,
+          position: Platform.OS === 'android' ? "absolute" : undefined,
+          bottom: Platform.OS === 'android' ? 10 : undefined,
+          left: Platform.OS === 'android' ? 10 : undefined,
+          right: Platform.OS === 'android' ? 10 : undefined,
           elevation: 0,
           backgroundColor: "#14A499",
           borderRadius: 15,
@@ -493,7 +525,7 @@ function NurseBottomNavigationBar() {
           return <ComNurseIcon icon={iconName} />;
         },
       })}
-      // keyboardShouldPersistTaps="handled"
+    // keyboardShouldPersistTaps="handled"
     >
       <Tab.Screen
         name="Home"

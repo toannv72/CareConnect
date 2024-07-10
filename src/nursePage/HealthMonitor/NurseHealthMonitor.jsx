@@ -49,7 +49,7 @@ export default function NurseHealthMonitor({ data }) {
                             onPress={() => {
                                 navigation.navigate("ListHealthMonitor", { id: value?.id });
                             }}
-                            style={{ backgroundColor: "rgba(51, 179, 156, 0.26)" }}
+                            style={{ backgroundColor: "#d3f5ef" }}
                         />
                     ))}
                 </View>

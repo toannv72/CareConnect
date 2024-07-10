@@ -21,7 +21,7 @@ export default function Header({ user }) {
         </View>
 
       </TouchableOpacity>
-      <Image
+      {/* <Image
         source={search}
         style={{
           width: 50,
@@ -31,7 +31,7 @@ export default function Header({ user }) {
           borderColor: "#000",
           flex: 1
         }}
-      />
+      /> */}
     </View>
 
   );

@@ -3,6 +3,8 @@ import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { Image, View } from "react-native";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { useNavigation } from "@react-navigation/native";
+import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter"
+
 
 export default function ComHealth({ data }) {
   const {
@@ -47,7 +49,7 @@ export default function ComHealth({ data }) {
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
               {healthMonitor?.age}
             </Text>
-            <Text>: {data?.dateOfBirth}</Text>
+            <Text>: <ComDateConverter>{data?.dateOfBirth}</ComDateConverter></Text>
           </Text>
         </View>
         <View style={styles?.container}>

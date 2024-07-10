@@ -17,7 +17,6 @@ export default function MedicalProfile() {
   const route = useRoute();
   const { elderData } = route.params;
   const [medicalData, setMedicalData] = useState([])
-
   const {
     text: {
       ElderProfile,
@@ -70,15 +69,15 @@ export default function MedicalProfile() {
         >
           <Text style={{ fontWeight: "600", fontSize: 16 }}>{MedicalProfile?.generalIndex}</Text>
           <View style={styles?.content}>
-             <ComMedical image={weight} title={"Cân nặng"} value={medicalData?.weight} unit={"Kg"} ></ComMedical>
-             <ComMedical image={height} title={"Chiều cao"} value={medicalData?.height} unit={"Cm"} ></ComMedical>
-             <ComMedical image={blood} title={"Nhóm máu"} value={medicalData?.bloodType} unit={""} ></ComMedical>
-             <ComMedical image={move} title={"Khả năng di chuyển"} value={medicalData?.move} unit={""} ></ComMedical>
+            <ComMedical image={weight} title={"Cân nặng"} value={medicalData?.weight} unit={"Kg"} ></ComMedical>
+            <ComMedical image={height} title={"Chiều cao"} value={medicalData?.height} unit={"Cm"} ></ComMedical>
+            <ComMedical image={blood} title={"Nhóm máu"} value={medicalData?.bloodType} unit={""} ></ComMedical>
+            <ComMedical image={move} title={"Khả năng di chuyển"} value={medicalData?.move} unit={""} ></ComMedical>
           </View>
 
           <Text style={{ fontWeight: "600", fontSize: 16 }}>{MedicalProfile?.underlyingMedical}</Text>
           <View>
-              <ComUnderlyingMedical data={medicalData?.underlyingDisease}></ComUnderlyingMedical>
+            <ComUnderlyingMedical data={medicalData?.underlyingDisease}></ComUnderlyingMedical>
           </View>
 
           <Text style={{ fontWeight: "600", fontSize: 16, marginTop: 5 }}>{MedicalProfile?.note}</Text>

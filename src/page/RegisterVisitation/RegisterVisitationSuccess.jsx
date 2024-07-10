@@ -1,12 +1,14 @@
-import React, { useContext } from "react";
+import React, { useContext, useCallback } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import ComTitlePage from "../../Components/ComTitlePage/ComTitlePage";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import Vector from "../../../assets/Vector.png";
 import ComTitle from "../../Components/ComTitle/ComTitle";
 import ComButton from "../../Components/ComButton/ComButton";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute, useFocusEffect } from "@react-navigation/native";
 import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter";
+import { useAuth } from "../../../auth/useAuth";
+
 export default function RegisterVisitationSuccess() {
   const navigation = useNavigation();
   const {
@@ -17,7 +19,10 @@ export default function RegisterVisitationSuccess() {
     setLanguage,
   } = useContext(LanguageContext);
   const route = useRoute();
-  const { date } = route.params;
+  const { formData } = route.params;
+  const { user } = useAuth();
+  console.log("date:RegisterVisitationSuccess", formData);
+
   const toHomes = () => {
     navigation.navigate("Homes");
   };
@@ -32,7 +37,7 @@ export default function RegisterVisitationSuccess() {
               <Text style={{ fontWeight: "bold", fontSize: 18 }}>
                 {visitationText?.subscribers}
               </Text>
-              <Text>: Thảo my</Text>
+              <Text>: {user?.fullName}</Text>
               {/* <Text>: {data?.name}</Text> */}
             </Text>
           </View>
@@ -41,7 +46,7 @@ export default function RegisterVisitationSuccess() {
               <Text style={{ fontWeight: "bold", fontSize: 18 }}>
                 {visitationText?.phone}
               </Text>
-              <Text>:0123231232</Text>
+              <Text>: {user?.phoneNumber}</Text>
             </Text>
           </View>
           <View style={styles?.container2}>
@@ -50,7 +55,7 @@ export default function RegisterVisitationSuccess() {
                 {visitationText?.day}
               </Text>
               <Text>
-                : <ComDateConverter>{date}</ComDateConverter>
+                : <ComDateConverter>{formData?.date}</ComDateConverter>
               </Text>
             </Text>
           </View>

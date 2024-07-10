@@ -22,6 +22,7 @@ const ComInput = (
 ) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const errorMessage = errors[name]?.message;
+  const [numberOfLines, setNumberOfLines] = useState(2);
   return (
     <View>
       {label && (
@@ -53,15 +54,15 @@ const ComInput = (
                 secureTextEntry={password && secureTextEntry}
                 {...props}
               />
-                <TouchableOpacity
-                  style={styles.iconContainer}
-                  onPress={() => setSecureTextEntry(!secureTextEntry)}
-                >
-                  <Image
-                    source={secureTextEntry ? Eye : EyeInvisible} // Update the path to your image
-                    style={styles.icon}
-                  />
-                </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.iconContainer}
+                onPress={() => setSecureTextEntry(!secureTextEntry)}
+              >
+                <Image
+                  source={secureTextEntry ? Eye : EyeInvisible} // Update the path to your image
+                  style={styles.icon}
+                />
+              </TouchableOpacity>
               {errorMessage && <Text style={styles.error}>{errorMessage}</Text>}
             </View>
           )}
@@ -89,6 +90,9 @@ const ComInput = (
                     borderColor: errorMessage ? "red" : "#33B39C",
                   },
                 ]}
+                onContentSizeChange={(e) => {
+                  setNumberOfLines(e.nativeEvent.contentSize.height / 20); // Adjust numberOfLines based on content height
+                }}
                 {...props}
               />
               {errorMessage && <Text style={styles.error}>{errorMessage}</Text>}

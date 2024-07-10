@@ -5,12 +5,49 @@ import ComHeader from "../../Components/ComHeader/ComHeader";
 import { useNavigation } from "@react-navigation/native";
 import roomIcon from "../../../assets/images/Nurse/NurseHomeIcon/Room.png"
 
-export default function ComRoom({ data, color, onPress }) {
+export default function ComRoom({ data, onPress }) {
     const {
         text: { CareSchedule },
         setLanguage,
     } = useContext(LanguageContext);
     const navigation = useNavigation();
+    const [color, setColor] = useState("#64CCC5"); // Default color
+
+    useEffect(() => {
+        if (data?.nursingPackage?.id) {
+            const newColor = getColorForPackage(data.nursingPackage.id);
+            setColor(newColor);
+        }
+    }, [data?.nursingPackage?.id]);
+
+    const getColorForPackage = (packageId) => {
+        // Generate a new color or return existing color for the packageId
+        // Example logic to generate or fetch color from a list
+        const packageColors = {
+            // Example of predefined colors
+            1: "#FF5733",
+            2: "#33FF7E",
+            3: "#337BFF",
+            // Add more colors as needed
+        };
+
+        if (packageColors[packageId]) {
+            return packageColors[packageId];
+        } else {
+            // Generate a new random color for the packageId
+            return getRandomColor();
+        }
+    };
+
+    const getRandomColor = () => {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    };
+
     return (
         <>
             <TouchableOpacity
@@ -26,7 +63,6 @@ export default function ComRoom({ data, color, onPress }) {
                         {data?.type}
                     </Text>
                     <View style={[styles?.iconContain, { backgroundColor: color }]}>
-
                         <Image
                             source={roomIcon}
                             style={styles?.image}
@@ -41,22 +77,26 @@ export default function ComRoom({ data, color, onPress }) {
                         </Text>
                         <Text style={{ flex: 2 }} numberOfLines={1} ellipsizeMode="tail">: {data?.name}</Text>
                     </View>
+                    <View style={{ flexDirection: "row" }} numberOfLines={1} >
+                        <Text style={{ fontWeight: "bold", fontSize: 14 }}>Gói dưỡng lão: </Text>
+                        <Text style={{ flex: 2 }} numberOfLines={1} ellipsizeMode="tail">{data?.nursingPackage?.name}</Text>
+                    </View>
 
                     <View style={{ flexDirection: "row" }} numberOfLines={1} >
                         <Text style={{ fontWeight: "bold", fontSize: 14 }}>
                             {CareSchedule?.capacity}
                         </Text>
-                        <Text style={{ flex: 2 }}>: {data?.capacity}</Text>
+                        <Text style={{ flex: 2 }}>: {data?.userBed}</Text>
                     </View>
 
                     <View style={{ flexDirection: "row" }} numberOfLines={1} >
                         <Text style={{ fontWeight: "bold", fontSize: 14 }}>
                             {CareSchedule?.area}
                         </Text>
-                        <Text style={{ flex: 2 }} numberOfLines={1} ellipsizeMode="tail">: {data?.area}</Text>
+                        <Text style={{ flex: 2 }} numberOfLines={1} ellipsizeMode="tail">: {data?.block?.name}</Text>
                     </View>
-                </View>
 
+                </View>
             </TouchableOpacity>
         </>
     )

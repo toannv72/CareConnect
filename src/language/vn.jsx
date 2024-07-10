@@ -179,22 +179,27 @@ export const vn = {
       month: "tháng",
       people: "người",
       time: "lần",
+      dayBetweenServices: "ngày/lần",
       registrationLimit: "Giới hạn người đăng ký",
-      timeBetweenServices: "Tần suất thực hiện"
+      timeBetweenServices: "Tần suất thực hiện",
+      eventDate: "Ngày diễn ra",
+      endRegistrationStartDate: "Hạn cuối đăng ký"
     },
     register: {
       registerElder: "Bạn muốn đăng ký dịch vụ cho",
       registerTime: "Thời gian thực hiện",
       registerTitle: "Đăng ký dịch vụ",
+      addToCart: "Lưu dịch vụ",
+      cart: "Giỏ hàng"
     },
     payment: {
       title: "Thanh toán",
       billId: "Mã hóa đơn",
       serviceName: "Tên dịch vụ",
       registerName: "Người đăng ký",
-      elderName: "Người thụ hưởng",
+      elderName: "Người cao tuổi",
       time: "Thời gian",
-      totalMoney: "Tổng chi phí",
+      totalMoney: "Tổng tiền",
     },
     history: {
       title: "Lịch sử dịch vụ",
@@ -243,7 +248,7 @@ export const vn = {
   bill: {
     title: "Hóa đơn",
     billId: "Mã hóa đơn",
-    elder: "Người thụ hưởng",
+    elder: "Người cao tuổi",
     dueDate: "Hạn thanh toán",
     total: "Tổng tiền",
     status: "Trạng thái",
@@ -286,7 +291,7 @@ export const vn = {
       gender: "Giới tính",
       dateOfBirth: "Ngày sinh",
       phoneNumber: "Số điện thoại",
-      email: "Địa chỉ gmail",
+      email: "Email",
       idNumber: "Số CCCD hoặc CMND",
       address: "Địa chỉ thường trú",
     },
@@ -424,7 +429,7 @@ export const vn = {
     takeRest: "Bạn có thể nghỉ ngơi rồi",
     room: "Phòng",
     area: "Khu",
-    capacity: "Số người",
+    capacity: "Số người cao tuổi",
     type: "Loại",
   },
   NurseHealthMonitor:{

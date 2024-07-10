@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useCallback } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import ComVisitationSchedule from "./ComVisitationSchedule";
 import { LanguageContext } from "./../../contexts/LanguageContext";
@@ -13,76 +13,15 @@ import Visitation from "../../../assets/images/VisitationSchedule/VisitationSche
 import plusIcon from "../../../assets/profile_icons/plus.png";
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import ComButton from "../../Components/ComButton/ComButton";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { postData, getData } from "../../api/api";
+import { useAuth } from "../../../auth/useAuth";
+import ComNoData from "../../Components/ComNoData/ComNoData";
 
 export default function VisitationSchedule() {
-  const [data, setData] = useState([
-    {
-      img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
-      color: "#F7E863",
-      text: "Gói cơ bản",
-      context: "Cung cấp tất cả các dịch vụ cần thiết cho người thân của bạn",
-      people: 2,
-      money: 1000000000,
-    },
-    {
-      img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
-      color: "#8DF7AB",
-      text: "Gói cơ bản",
-      context: "Cung cấp tất cả các dịch vụ cần thiết cho người thân của bạn",
-      people: 2,
-      money: 100000000,
-    },
-    {
-      img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
-      color: "#F7E863",
-      text: "Gói cơ bản",
-      context: "Cung cấp tất cả các dịch vụ cần thiết cho người thân của bạn",
-      people: 2,
-      money: 1000000000,
-    },
-    {
-      img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
-      color: "#8DF7AB",
-      text: "Gói cơ bản",
-      context: "Cung cấp tất cả các dịch vụ cần thiết cho người thân của bạn",
-      people: 2,
-      money: 100000000,
-    },
-    {
-      img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
-      color: "#F7E863",
-      text: "Gói cơ bản",
-      context: "Cung cấp tất cả các dịch vụ cần thiết cho người thân của bạn",
-      people: 2,
-      money: 1000000000,
-    },
-    {
-      img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
-      color: "#8DF7AB",
-      text: "Gói cơ bản",
-      context: "Cung cấp tất cả các dịch vụ cần thiết cho người thân của bạn",
-      people: 2,
-      money: 100000000,
-    },
-    {
-      img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
-      color: "#F7E863",
-      text: "Gói cơ bản",
-      context: "Cung cấp tất cả các dịch vụ cần thiết cho người thân của bạn",
-      people: 2,
-      money: 1000000000,
-    },
-    {
-      img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
-      color: "#8DF7AB",
-      text: "Gói cơ bản",
-      context: "Cung cấp tất cả các dịch vụ cần thiết cho người thân của bạn",
-      people: 2,
-      money: 100000000,
-    },
-  ]);
+  const [data, setData] = useState([])
   const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
   const searchSchema = yup.object().shape({
     search: yup.string(),
   });
@@ -111,6 +50,21 @@ export default function VisitationSchedule() {
     navigation.navigate("RegisterVisitation");
 
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      setLoading(true);
+      getData(`/appointments?UserId=${user?.id}&SortColumn=date&SortDir=Desc`, {})
+        .then((appointments) => {
+          setData(appointments?.data?.contends);
+          setLoading(false);
+        })
+        .catch((error) => {
+          setLoading(false);
+          console.error("Error fetching service-package:", error);
+        });
+    }, [user?.id])
+  );
   return (
     <>
       <ComHeader
@@ -150,7 +104,7 @@ export default function VisitationSchedule() {
             {visitationText?.textHistory}
           </Text>
           <TouchableOpacity style={styles.register} onPress={register}>
-            <View style={{flexDirection: "row", alignItems: "center", gap: 3}}>
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 3 }}>
               <Image
                 source={plusIcon}
                 style={{
@@ -176,11 +130,13 @@ export default function VisitationSchedule() {
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
           >
-            <View>
-              {data?.map((value, index) => (
-                <ComVisitationSchedule key={index} data={value} />
-              ))}
-            </View>
+            {data?.length > 0 ? (
+              <View>
+                {data?.map((value, index) => (
+                  <ComVisitationSchedule key={index} data={value} />
+                ))}
+              </View>
+            ) : (<ComNoData>Không có lịch thăm nuôi nào</ComNoData>)}
             <View style={{ height: 320 }}></View>
           </ScrollView>
         </ComLoading>
