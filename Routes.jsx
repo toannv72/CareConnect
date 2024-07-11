@@ -72,7 +72,7 @@ import ListHealthIndex from "./src/nursePage/HealthMonitor/CreateHealthMonitor/L
 import RegisterService from "./src/nursePage/RegisterService/RegisterService";
 import RegisterServiceDetail from "./src/nursePage/RegisterService/RegisterServiceDetail";
 import NotificationPage from "./src/page/Notification/Notification copy";
-import NotificationApi from "./src/page/Notification/NotificationApi";
+// import NotificationApi from "./src/page/Notification/NotificationApi";
 import Notification2 from "./src/page/Notification/Notification2";
 
 const Stack = createStackNavigator();
