@@ -71,8 +71,8 @@ import CreateHealthMonitor from "./src/nursePage/HealthMonitor/CreateHealthMonit
 import ListHealthIndex from "./src/nursePage/HealthMonitor/CreateHealthMonitor/ListHealthIndex";
 import RegisterService from "./src/nursePage/RegisterService/RegisterService";
 import RegisterServiceDetail from "./src/nursePage/RegisterService/RegisterServiceDetail";
-import NotificationPage from "./src/page/Notification/Notification copy";
-import NotificationApi from "./src/page/Notification/NotificationApi";
+// import NotificationPage from "./src/page/Notification/Notification copy";
+// import NotificationApi from "./src/page/Notification/NotificationApi";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -378,11 +378,11 @@ const Routes = () => {
           name="RegisterServiceDetail"
           component={RegisterServiceDetail}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="NotificationApi"
           component={NotificationApi}
-        />
+        /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -478,11 +478,11 @@ function MyBottomNavigationBar() {
         options={{ headerShown: false }}
         component={Notification}
       /> */}
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Notification"
         options={{ headerShown: false }}
         component={NotificationApi}
-      />
+      /> */}
       {/* <Tab.Screen
         name="Account"
         options={{ headerShown: false }}
