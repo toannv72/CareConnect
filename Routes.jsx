@@ -473,16 +473,16 @@ function MyBottomNavigationBar() {
         options={{ headerShown: false }}
         component={HealthMonitor}
       />
-      <Tab.Screen
-        name="Notification"
-        options={{ headerShown: false }}
-        component={Notification}
-      />
       {/* <Tab.Screen
         name="Notification"
         options={{ headerShown: false }}
-        component={NotificationApi}
+        component={Notification}
       /> */}
+      <Tab.Screen
+        name="Notification"
+        options={{ headerShown: false }}
+        component={NotificationApi}
+      />
       {/* <Tab.Screen
         name="Account"
         options={{ headerShown: false }}
