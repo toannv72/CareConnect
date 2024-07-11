@@ -50,7 +50,7 @@ export default function NotificationPage({ }) {
         Notifications.removeNotificationSubscription(responseListener.current);
     };
   }, []);
-
+  
   return (
     <View
       style={{
@@ -64,7 +64,6 @@ export default function NotificationPage({ }) {
         title="Press to schedule a notification"
         onPress={() => {
           schedulePushNotification();
-          //  navigation.navigate('Details')
         }}
       />
     </View>

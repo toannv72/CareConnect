@@ -16,12 +16,13 @@ export default function NotificationApi() {
     if (enabled) {
       console.log("Authorization status:", authStatus);
     }
+      console.log("Authorization status:", authStatus);
+
   };
 
   useEffect(() => {
     const handleNotificationSetup = async () => {
       await requestUserPermission();
-
       messaging()
         .getToken()
         .then((token) => {
