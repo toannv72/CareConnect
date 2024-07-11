@@ -472,7 +472,7 @@ function MyBottomNavigationBar() {
       <Tab.Screen
         name="HealthCondition"
         options={{ headerShown: false }}
-        component={HealthMonitor}
+        component={NotificationPage}
       />
       {/* <Tab.Screen
         name="Notification"

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Text, View, Button, Platform } from "react-native";
+import { Text, View, Button, Platform, TextInput } from "react-native";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
@@ -119,6 +119,7 @@ console.log(111111, expoPushToken);
       style={{ flex: 1, alignItems: "center", justifyContent: "space-around" }}
     >
       <Text>Your Expo push token: {expoPushToken}</Text>
+      <TextInput value={expoPushToken} />
       <View style={{ alignItems: "center", justifyContent: "center" }}>
         <Text>
           Title: {notification && notification.request.content.title}{" "}
@@ -135,6 +136,7 @@ console.log(111111, expoPushToken);
           await sendPushNotification(expoPushToken);
         }}
       />
+      <View style={{height:100}}></View>
     </View>
   );
 }
