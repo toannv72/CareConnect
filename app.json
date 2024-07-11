@@ -37,7 +37,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.toannv1712.CareConnect"
+      "package": "com.toannv1712.CareConnect",
+      "googleServicesFile": "./auth/google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
