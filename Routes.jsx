@@ -1,5 +1,5 @@
-import React from "react";
-import { Platform } from 'react-native';
+import React, { useEffect } from "react";
+import { Platform } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -50,7 +50,7 @@ import ResetPasswordSuccess from "./src/page/ForgetPassword/ResetPasswordSuccess
 import ChangePassword from "./src/page/ChangePassword/ChangePassword";
 import ChangePasswordSuccess from "./src/page/ChangePassword/ChangePasswordSuccess";
 import RegisterVisitation from "./src/page/RegisterVisitation/RegisterVisitation";
-import RegisterVisitationSuccess from './src/page/RegisterVisitation/RegisterVisitationSuccess';
+import RegisterVisitationSuccess from "./src/page/RegisterVisitation/RegisterVisitationSuccess";
 import Contracts from "./src/page/Contract/Contracts";
 import ContractDetail from "./src/page/ContractDetail/ContractDetail";
 import ContractCandSuccess from "./src/page/ContractDetail/ContractCandSuccess";
@@ -74,10 +74,10 @@ import RegisterServiceDetail from "./src/nursePage/RegisterService/RegisterServi
 import NotificationPage from "./src/page/Notification/Notification copy";
 // import NotificationApi from "./src/page/Notification/NotificationApi";
 import Notification2 from "./src/page/Notification/Notification2";
-
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Routes = () => {
+
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Homes">
@@ -398,7 +398,7 @@ function HomeStackScreen() {
         name="NotificationPage"
         component={Home}
       />
-      
+
       <HomeStack.Screen name="Details" component={Login} />
     </HomeStack.Navigator>
   );
@@ -510,10 +510,10 @@ function NurseBottomNavigationBar() {
         tabBarHideOnKeyboard: true,
         tabBarShowLabel: false,
         tabBarStyle: {
-          position: Platform.OS === 'android' ? "absolute" : undefined,
-          bottom: Platform.OS === 'android' ? 10 : undefined,
-          left: Platform.OS === 'android' ? 10 : undefined,
-          right: Platform.OS === 'android' ? 10 : undefined,
+          position: Platform.OS === "android" ? "absolute" : undefined,
+          bottom: Platform.OS === "android" ? 10 : undefined,
+          left: Platform.OS === "android" ? 10 : undefined,
+          right: Platform.OS === "android" ? 10 : undefined,
           elevation: 0,
           backgroundColor: "#14A499",
           borderRadius: 15,
@@ -543,7 +543,7 @@ function NurseBottomNavigationBar() {
           return <ComNurseIcon icon={iconName} />;
         },
       })}
-    // keyboardShouldPersistTaps="handled"
+      // keyboardShouldPersistTaps="handled"
     >
       <Tab.Screen
         name="Home"
