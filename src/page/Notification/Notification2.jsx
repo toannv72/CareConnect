@@ -129,11 +129,13 @@ export default function Notification2() {
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
         setNotification(notification);
+         console.log(111111111,notification);
       });
 
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log(response);
+        // khi người dùng bấm vô
+        console.log(22222,response);
       });
 
     return () => {
@@ -158,7 +160,7 @@ export default function Notification2() {
         </Text>
         <Text>Body: {notification && notification.request.content.body}</Text>
         <Text>
-          Data:{" "}
+          Data nè:{" "}
           {notification && JSON.stringify(notification.request.content.data)}
         </Text>
       </View>
