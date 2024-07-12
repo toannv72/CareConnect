@@ -194,7 +194,7 @@ export const vn = {
     },
     payment: {
       title: "Thanh toán",
-      billId: "Mã hóa đơn",
+      billId: "Mã thanh toán",
       serviceName: "Tên dịch vụ",
       registerName: "Người đăng ký",
       elderName: "Người cao tuổi",
@@ -209,7 +209,7 @@ export const vn = {
       repeat: "Lặp lại",
       bill: "Các hóa đơn liên quan",
       serviceHistory: "Lịch sử thực hiện dịch vụ",
-      billId: "Mã hóa đơn",
+      billId: "Mã thanh toán",
       totalMoney: "Tổng thanh toán",
       nurse: "Người thực hiện",
       time: "Thời gian",
@@ -246,14 +246,14 @@ export const vn = {
     }
   },
   bill: {
-    title: "Hóa đơn",
-    billId: "Mã hóa đơn",
+    title: "Lịch sử thanh toán",
+    billId: "Mã thanh toán",
     elder: "Người cao tuổi",
     dueDate: "Hạn thanh toán",
     total: "Tổng tiền",
     status: "Trạng thái",
     detail:{
-      title: "Chi tiết hóa đơn",
+      title: "Chi tiết thanh toán",
       customerInfo: "Thông tin khách hàng",
       paymentInfo: "Thông tin thanh toán",
       contractId: "Mã hợp đồng",
@@ -358,7 +358,7 @@ export const vn = {
         "Thông tin số điẹn thoại không hợp lệ. Vui lòng thử lại.",
       loginError: "Đã có lỗi xảy ra. Vui lòng thử lại sau.",
       passwordInvalid: "Mật khẩu phải có ít nhất 8 ký tự, chứa ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt",
-      passwordNotMatch: "Mật khẩu xác nhận không trùng khớp",
+      passwordNotMatch: "Xác nhận mật khẩu không trùng khớp",
     },
     link: {
       textLogin: "Bạn đã có tài khoản?",
@@ -405,12 +405,12 @@ export const vn = {
       nursingHomeAdd: "Nơi sinh hoạt",
       address: "Địa chỉ thường trú",
       medicalProfile: "Hồ sơ bệnh án",
-      representative: "Người đại diện",
+      representative: "Thông tin người đại diện",
       urgentContact: "Liên hệ khẩn cấp"
     },
   },
   MedicalProfile:{
-    name: "Ông/Bà",
+    name: "Người cao tuổi",
     dateOfBirth: "Ngày sinh",
     age: "Tuổi",
     generalIndex: "Chỉ số tổng quát",

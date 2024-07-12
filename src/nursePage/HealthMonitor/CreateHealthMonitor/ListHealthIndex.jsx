@@ -10,12 +10,14 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm } from "react-hook-form";
 import { postData, getData } from "../../../api/api";
+import { useRoute } from "@react-navigation/native";
 
 export default function ListHealthIndex({ data }) {
     const [selectedHealthIndexItems, setSelectedHealthIndexItems] = useState([]);
     const [healthIndex, setHealthIndex] = useState([])
     const [loading, setLoading] = useState(false);
-
+    const route = useRoute();
+    const { elderId } = route.params;
     const {
         text: { NurseHealthMonitor },
     } = useContext(LanguageContext);
@@ -129,7 +131,7 @@ export default function ListHealthIndex({ data }) {
                 <ComSelectButton
                     disable={selectedHealthIndexItems.length == 0 ? true : false}
                     style={{ borderRadius: 50, marginBottom: 30, height: 50 }}
-                    onPress={() => navigation.navigate("CreateHealthMonitor", { selectedIndexs: selectedHealthIndexItems })}>
+                    onPress={() => navigation.navigate("CreateHealthMonitor", { selectedIndexs: selectedHealthIndexItems, elderId })}>
                     Tiếp tục
                 </ComSelectButton>
             </View>

@@ -77,10 +77,11 @@ export default function ComRoom({ data, onPress }) {
                         </Text>
                         <Text style={{ flex: 2 }} numberOfLines={1} ellipsizeMode="tail">: {data?.name}</Text>
                     </View>
-                    <View style={{ flexDirection: "row" }} numberOfLines={1} >
+                    
+                    {/* <View style={{ flexDirection: "row" }} numberOfLines={1} >
                         <Text style={{ fontWeight: "bold", fontSize: 14 }}>Gói dưỡng lão: </Text>
                         <Text style={{ flex: 2 }} numberOfLines={1} ellipsizeMode="tail">{data?.nursingPackage?.name}</Text>
-                    </View>
+                    </View> */}
 
                     <View style={{ flexDirection: "row" }} numberOfLines={1} >
                         <Text style={{ fontWeight: "bold", fontSize: 14 }}>

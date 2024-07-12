@@ -43,7 +43,7 @@ export default function AddingServiceDetail() {
                     const currentDate = new Date();
                     const endRegistrationDate = new Date(packageData?.data?.endRegistrationStartDate);
                     if (currentDate > endRegistrationDate) {
-                        setIsRegistrationClosed(true);
+                        setIsRegistrationClosed(true); //kiểm tra hạn đăng ký
                     }
                 }
                 setLoading(false)
@@ -104,15 +104,6 @@ export default function AddingServiceDetail() {
                                 /{addingPackages?.package?.time}
                             </Text>
 
-                            <Text style={{ flexDirection: "row" }}>
-                                <Text style={styles.contentBold}>
-                                    Type
-                                </Text>
-                                <Text style={{ fontSize: 16 }}>
-                                    : {data?.type}
-                                </Text>
-                            </Text>
-
                             {data?.registrationLimit !== 0 && (
                                 <Text style={{ flexDirection: "row" }}>
                                     <Text style={styles.contentBold}>
@@ -124,21 +115,9 @@ export default function AddingServiceDetail() {
                                 </Text>
                             )}
 
-                            {/* {data?.timeBetweenServices !== 0 && (
-                                <Text style={{ flexDirection: "row" }}>
-                                    <Text style={styles.contentBold}>
-                                        {addingPackages?.package?.timeBetweenServices}
-                                    </Text>
-                                    <Text style={{ fontSize: 16 }}>
-                                        : {data?.timeBetweenServices}
-                                    </Text>
-                                    {" " + addingPackages?.package?.dayBetweenServices}
-                                </Text>
-                            )} */}
-
                             {
                                 data?.type == "OneDay" && (
-                                    <>
+                                    <View>
                                         <Text style={{ flexDirection: "row" }}>
                                             <Text style={{ fontWeight: "bold", fontSize: 16 }}>
                                                 {addingPackages?.package?.endRegistrationStartDate}
@@ -155,7 +134,7 @@ export default function AddingServiceDetail() {
                                                 : <ComDateConverter>{data?.eventDate}</ComDateConverter>
                                             </Text>
                                         </Text>
-                                    </>
+                                    </View>
                                 )
                             }
                             {/* mô tả */}

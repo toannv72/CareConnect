@@ -24,13 +24,14 @@ export default function Catalogue() {
     <View style={styles?.body}>
       <TopicContent>{Home?.catalogue}</TopicContent>
       <View style={styles.comCatalogue}>
-        <TouchableOpacity onPress={() => goto("ScheduledService")}>
+        <TouchableOpacity onPress={() => goto("ElderProfile")}>
+        {/* <TouchableOpacity onPress={() => goto("ScheduledService")}> */}
           <ComCatalogue
             url={
               elderProfile
             }
           >
-           Hồ sơ người thân
+            Hồ sơ người thân
           </ComCatalogue>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => goto("Service")}>
@@ -39,7 +40,7 @@ export default function Catalogue() {
               servicePackage
             }
           >
-           Gói dưỡng lão
+            Gói dưỡng lão
           </ComCatalogue>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => goto("VisitationSchedule")}>
@@ -48,7 +49,7 @@ export default function Catalogue() {
               visitSchedule
             }
           >
-          Lịch thăm nuôi
+            Lịch thăm nuôi
           </ComCatalogue>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => goto("Contracts")}>
@@ -57,7 +58,7 @@ export default function Catalogue() {
               contract
             }
           >
-          Hợp đồng
+            Hợp đồng
           </ComCatalogue>
         </TouchableOpacity>
       </View>

@@ -3,18 +3,22 @@ import { Text, View, StyleSheet, ScrollView, Image, TouchableOpacity } from "rea
 import { LanguageContext } from "../../../contexts/LanguageContext";
 import ComHeader from "../../../Components/ComHeader/ComHeader";
 import ComElder from "../../../Components/ComElder/ComElder";
+import ComButton from "../../../Components/ComButton/ComButton";
 import ComMedical from "./ComMedical";
 import { useNavigation } from "@react-navigation/native";
 import underlyingMedical from "./underlyingMedical.png"
 import { postData, getData } from "../../../api/api";
 import { useRoute } from "@react-navigation/native";
+import { useAuth } from "../../../../auth/useAuth";
 import blood from "../../../../assets/images/ElderMedicalRecord/blood.png"
 import height from "../../../../assets/images/ElderMedicalRecord/height.png"
 import weight from "../../../../assets/images/ElderMedicalRecord/weight.jpg"
 import move from "../../../../assets/images/ElderMedicalRecord/move.jpg"
+import { stylesApp } from "../../../styles/Styles";
 
 export default function MedicalProfile() {
   const route = useRoute();
+  const { role } = useAuth();
   const { elderData } = route.params;
   const [medicalData, setMedicalData] = useState([])
   const {
@@ -45,7 +49,7 @@ export default function MedicalProfile() {
 
   const ComUnderlyingMedical = ({ data }) => {
     return (
-      <View style={styles?.underlyingMedical}>
+      <View style={[styles?.underlyingMedical, stylesApp.shadow]}>
         <Image
           source={underlyingMedical}
           style={{ width: 60, height: 60, objectFit: "fill" }}
@@ -81,7 +85,7 @@ export default function MedicalProfile() {
           </View>
 
           <Text style={{ fontWeight: "600", fontSize: 16, marginTop: 5 }}>{MedicalProfile?.note}</Text>
-          <View style={[styles?.underlyingMedical, { marginBottom: 30 }]}>
+          <View style={[styles?.underlyingMedical, stylesApp.shadow, { marginBottom: 30 }]}>
             <Image
               source={underlyingMedical}
               style={{ width: 60, height: 60, objectFit: "fill" }}
@@ -89,6 +93,10 @@ export default function MedicalProfile() {
             <Text>{medicalData?.note}</Text>
           </View>
         </ScrollView>
+        <ComButton onPress={() => { navigation.navigate(role?.name == "Nurse" ? "ListHealthMonitor" : "HealthMonitorList", { id: elderData?.id }) }}
+          style={{ marginBottom: 30 , borderRadius: 50 }}>
+          Báo cáo sức khỏe
+        </ComButton>
       </View>
     </>
   )
@@ -97,7 +105,6 @@ export default function MedicalProfile() {
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    paddingTop: 20,
     backgroundColor: "#fff",
     paddingHorizontal: 15,
   },

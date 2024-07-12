@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity, FlatList  } from 'react-native';
+import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity, FlatList } from 'react-native';
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { useRoute } from "@react-navigation/native";
 import { useNavigation } from '@react-navigation/native';
@@ -55,7 +55,8 @@ export default function RegisterService({ }) {
                 id: 2,
             },
             service: [
-                { img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkuFGRcwQzPr-khFu8hXL9M1Zj884q_SFgRw&s",
+                {
+                    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkuFGRcwQzPr-khFu8hXL9M1Zj884q_SFgRw&s",
                     title: "Châm cứu",
                     time: null,
                     status: "Chưa thực hiện",
@@ -64,7 +65,7 @@ export default function RegisterService({ }) {
                 }
 
             ]
-               
+
         },
     ])
 
@@ -76,21 +77,21 @@ export default function RegisterService({ }) {
                 title={"Dịch vụ"}
             />
             <View style={styles.body}>
-                        <Image
-                            source={RegisterServiceImg}
-                            style={{
-                                height: 200,
-                                objectFit: "contain",
+                <Image
+                    source={RegisterServiceImg}
+                    style={{
+                        height: 200,
+                        width: "100%",
+                        objectFit: "contain",
+                    }}
+                />
 
-                            }}
-                        />
-
-                    <FlatList
-                        data={data}
-                        renderItem={ ({ item }) => <ComElder data={item} />}
-                        keyExtractor={(item, index) => index.toString()}
-                        style={{margin: 10}}
-                    />
+                <FlatList
+                    data={data}
+                    renderItem={({ item }) => <ComElder data={item} />}
+                    keyExtractor={(item, index) => index.toString()}
+                    style={{ margin: 10 }}
+                />
             </View >
 
         </>

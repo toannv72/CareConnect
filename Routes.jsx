@@ -56,6 +56,7 @@ import ContractDetail from "./src/page/ContractDetail/ContractDetail";
 import ContractCandSuccess from "./src/page/ContractDetail/ContractCandSuccess";
 import ContractRenewSuccess from "./src/page/ContractDetail/ContractRenewSuccess";
 import ScheduledService from "./src/page/ScheduledService/ScheduledService";
+import ScheduledServicePayment from "./src/page/ScheduledService/ScheduledServicePayment";
 // -------Role: Nurse--------
 import NurseHome from "./src/nursePage/Home/NurseHome";
 import NurseProfile from "./src/nursePage/NurseProfile/NurseProfile";
@@ -80,7 +81,7 @@ const Tab = createBottomTabNavigator();
 const Routes = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Homes">
+      <Stack.Navigator initialRouteName="Login">
         <Stack.Screen
           name="Homes"
           options={{ headerLeft: null, headerShown: false }}
@@ -317,6 +318,11 @@ const Routes = () => {
           options={{ headerLeft: null, headerShown: false }}
           name="ScheduledService"
           component={ScheduledService}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ScheduledServicePayment"
+          component={ScheduledServicePayment}
         />
         {/* =======nurse====== */}
         <Stack.Screen

@@ -13,6 +13,8 @@ import ComLoading from "../../Components/ComLoading/ComLoading";
 export default function ListHealthMonitor({ data }) {
     const [healthMonitor, setHealthMonitor] = useState([])
     const [loading, setLoading] = useState(false);
+    const route = useRoute();
+    const { id } = route.params;
 
     const {
         text: { NurseHealthMonitor },
@@ -23,7 +25,7 @@ export default function ListHealthMonitor({ data }) {
     useFocusEffect(
         useCallback(() => {
             setLoading(!loading);
-            getData(`/health-report?ElderId=2&SortColumn=createdAt&SortDir=Desc`, {})
+            getData(`/health-report?ElderId=${id}&SortColumn=createdAt&SortDir=Desc&PageSize=50`, {})
                 .then((healthMonitor) => {
                     setHealthMonitor(healthMonitor?.data?.contends);
                     setLoading(loading);
@@ -96,7 +98,7 @@ export default function ListHealthMonitor({ data }) {
                 </ComLoading>
                 <TouchableOpacity
                     style={styles.imageContainer}
-                    onPress={() => navigation.navigate("ListHealthIndex")} // Chuyển đến trang mới
+                    onPress={() => navigation.navigate("ListHealthIndex", {elderId:id} )} // Chuyển đến trang mới
                 >
                     <Image
                         source={plusIcon} // Đường dẫn tới ảnh của bạn

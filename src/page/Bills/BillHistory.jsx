@@ -155,25 +155,27 @@ export default function BillHistory() {
                         onChange={handleStatusChange}
                     />
                 </View>
-
-                <ComLoading show={loading}>
-                    {filteredData.length == 0 ? (
-                        <ComNoData />
-                    ) : (
-                        <ScrollView
-                            showsVerticalScrollIndicator={false}
-                            showsHorizontalScrollIndicator={false}
-                            style={{ marginBottom: 20 }}
-                        >
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
+                    style={{ marginBottom: 50 }}
+                >
+                    <ComLoading show={loading}>
+                        {filteredData.length == 0 ? (
+                            <ComNoData />
+                        ) : (
                             <View>
-                                {filteredData?.map((value, index) => (
-                                    <ComBill key={index} data={value} />
-                                ))}
+                                <View>
+                                    {filteredData?.map((value, index) => (
+                                        <ComBill key={index} data={value} />
+                                    ))}
+                                </View>
+                                <View style={{ height: 120 }}></View>
                             </View>
-                            <View style={{ height: 120 }}></View>
-                        </ScrollView>
-                    )}
-                </ComLoading>
+                        )}
+                    </ComLoading>
+                </ScrollView>
+
             </View>
         </>
     );

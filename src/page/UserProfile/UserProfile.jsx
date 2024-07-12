@@ -19,7 +19,7 @@ export default function UserProfile() {
       icon: contract,
     },
     {
-      name: "Hóa đơn",
+      name: "Lịch sử thanh toán",
       link: "BillHistory",
       icon: bill,
     },

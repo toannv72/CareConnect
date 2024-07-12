@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
 import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity } from 'react-native';
-import ComNoData from "../../Components/ComNoData/ComNoData";
 import ComSelectButton from "../../Components/ComButton/ComSelectButton";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { useRoute } from "@react-navigation/native";
@@ -31,7 +30,6 @@ export default function ServicePayment() {
     const handleMethodPress = (methodName) => {
         setSelectedMethod(methodName);
     };
-    console.log(" orderDates: ", orderDates)
     useEffect(() => {
         const sortedDates = [...orderDates].sort((a, b) => moment(a).diff(moment(b)));
         // Kiểm tra xem tất cả các ngày trong orderDates có phải là ngày quá khứ không
@@ -42,7 +40,6 @@ export default function ServicePayment() {
                 const nextMonthDate = moment(date).add(1, 'months');
                 return nextMonthDate.isValid() ? nextMonthDate.format('YYYY-MM-DD') : date;
             });
-            console.log(" nextMonthDates: ", nextMonthDates)
             setAdjustedOrderDates(nextMonthDates);
         }else{
             setAdjustedOrderDates(sortedDates);
@@ -89,17 +86,15 @@ export default function ServicePayment() {
         postData("/orders/service-package?returnUrl=a", formattedData)
             .then((response) => {
                 console.log("API Response: ", response.message);
-                // showToast("success", "Tạo báo cáo thành công", "", "bottom")
-                // navigation.navigate("AddingServiceDetail", {id : servicePackage?.id});
                 const url = response.message; // Assuming response.message contains the URL
                 // Open the URL in the default browser
-                // Linking.openURL(url)
-                //     .then(() => {
-                //         console.log("Opened successfully");
-                //     })
-                //     .catch((err) => {
-                //         console.error("Failed to open URL: ", err);
-                //     });
+                Linking.openURL(url)
+                    .then(() => {
+                        console.log("Opened successfully");
+                    })
+                    .catch((err) => {
+                        console.error("Failed to open URL: ", err);
+                    });
             })
             .catch((error) => {
                 console.error("API Error: ", error);
@@ -189,7 +184,6 @@ export default function ServicePayment() {
                         onPress={() => handleMethodPress('VnPay')}
                     />
                 </View>
-
             </ScrollView>
             <View style={{ backgroundColor: "#fff", paddingHorizontal: 15 }}>
                 <Text style={{ flexDirection: "row", marginTop: 5 }}>
@@ -223,7 +217,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         paddingHorizontal: 15,
     },
-
     header: {
         paddingTop: 50,
         backgroundColor: "#fff",

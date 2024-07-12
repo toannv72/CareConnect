@@ -9,11 +9,14 @@ import moment from "moment";
 import noTask from "../../../assets/images/Nurse/CareSchedule/noTask.png"
 import { useNavigation } from '@react-navigation/native';
 import LocaleConfig from "../../configs/LocalizationConfig";
+import { useAuth } from "../../../auth/useAuth";
 
 export default function CareSchedule({ }) {
     const today = moment().format("YYYY-MM-DD");
     const navigation = useNavigation();
     const [selectedDate, setSelectedDate] = useState(moment().format("YYYY-MM-DD"));
+    const { nurseSchedules } = useAuth();
+
     const {
         text: {
             CareSchedule,
@@ -22,121 +25,19 @@ export default function CareSchedule({ }) {
         setLanguage,
     } = useContext(LanguageContext);
 
-    const [data, setData] = useState([
-        {
-            id: 1,
-            staffId: 123,
-            nurseID: 234,
-            roomId: 101,
-            areaId: "A",
-            time: "06/:00 - 14:00",
-            date: "2024-06-20"
-        },
-        {
-            id: 1,
-            staffId: 123,
-            nurseID: 234,
-            roomId: 101,
-            areaId: "A",
-            time: "06/:00 - 14:00",
-            date: "2024-06-21"
-        },
-        {
-            id: 1,
-            staffId: 123,
-            nurseID: 234,
-            roomId: 101,
-            areaId: "A",
-            time: "06/:00 - 14:00",
-            date: "2024-06-22"
-        },
-        {
-            id: 1,
-            staffId: 123,
-            nurseID: 234,
-            roomId: 102,
-            areaId: "A",
-            time: "06/:00 - 14:00",
-            date: "2024-06-22"
-        },
-        {
-            id: 1,
-            staffId: 123,
-            nurseID: 234,
-            roomId: 103,
-            areaId: "A",
-            time: "06/:00 - 14:00",
-            date: "2024-06-22"
-        },
-        {
-            id: 1,
-            staffId: 123,
-            nurseID: 234,
-            roomId: 104,
-            areaId: "A",
-            time: "06:00 - 14:00",
-            date: "2024-06-22"
-        },
-        {
-            id: 1,
-            staffId: 123,
-            nurseID: 234,
-            roomId: 404,
-            areaId: "D",
-            time: "06:00 - 14:00",
-            date: "2024-06-22"
-        },
-        {
-            id: 1,
-            staffId: 123,
-            nurseID: 234,
-            roomId: 102,
-            areaId: "A last",
-            time: "06/:00 - 14:00",
-            date: "2024-06-22"
-        },
-        {
-            id: 1,
-            staffId: 123,
-            nurseID: 234,
-            roomId: 102,
-            areaId: "A last",
-            time: "06/:00 - 14:00",
-            date: "2024-06-22"
-        },
-        {
-            id: 1,
-            staffId: 123,
-            nurseID: 234,
-            roomId: 102,
-            areaId: "A",
-            time: "06/:00 - 14:00",
-            date: "2024-06-30"
-        },
-        {
-            id: 1,
-            staffId: 123,
-            nurseID: 234,
-            roomId: 102,
-            areaId: "A",
-            time: "06/:00 - 14:00",
-            date: "2024-07-20"
-        },
-    ])
-
     const [markedDates, setMarkedDates] = useState({
         [today]: { selected: true }
     });
 
     useEffect(() => {
         // Cập nhật markedDates mỗi khi selectedDate thay đổi
-        setMarkedDates(data.reduce((acc, item) => {
-            acc[item.date] = { dots: [{ key: 'task', color: 'red' }], selected: item.date === selectedDate };
+        setMarkedDates(nurseSchedules?.reduce((acc, item) => {
+            acc[item?.careSchedule?.date] = { dots: [{ key: 'task', color: 'red' }], selected: item?.careSchedule?.date === selectedDate };
             return acc;
         }, { [selectedDate]: { selected: true } }));
-    }, [selectedDate, data]);
+    }, [selectedDate, nurseSchedules]);
 
-    const filteredData = data.filter(item => item.date === selectedDate);//get list of object has date = selectedDate
+    const filteredData = nurseSchedules?.filter(item => item?.careSchedule?.date === selectedDate);//get list of object has date = selectedDate
 
     const onDayPress = (day) => {
         setSelectedDate(day.dateString);
@@ -156,7 +57,7 @@ export default function CareSchedule({ }) {
                     onDayPress={onDayPress}
                     {...LocaleConfig}
                 />
-                {filteredData.length > 0 ? (//if has data => display list òf task
+                {filteredData?.length > 0 ? (//if has data => display list òf task
                     <View style={styles.taskContainer}>
                         <Text style={[styles.dateTitle]}>
                             {moment(selectedDate).format('DD/MM/YYYY')}
@@ -165,22 +66,20 @@ export default function CareSchedule({ }) {
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
                         >
-                            {/* <View style={{paddingBottom: 250}}> */}
-                                {filteredData.map((item, index) => (
+                                {filteredData?.map((item, index) => (
                                     <ComSchedule
                                         key={index}
                                         data={item}
-                                        onPress={() => navigation.navigate("NurseHealthMonitor", { roomData: item })}
+                                        onPress={() => navigation.navigate("RoomDetail", { roomData: item?.careSchedule?.room })}
                                     />
                                 ))}
-                            {/* </View> */}
                             <View style={{ height: 500}} />
                         </ScrollView>
                     </View>
-                ) : ( //ìf no data => display no task component
+                ) : ( //if no data => display no task component
                     <View style={[styles.taskContainer, { alignItems: "center" }]}>
                         <Text style={styles.dateTitle}>
-                            {moment(selectedDate).format('DD-MM-YYYY')}
+                            {moment(selectedDate).format('DD/MM/YYYY')}
                         </Text>
                         <Image
                             source={noTask}
@@ -191,8 +90,8 @@ export default function CareSchedule({ }) {
                                 marginVertical: 10
                             }}
                         />
-                        <Text style={{ fontWeight: "bold", marginBottom: 10, fontSize: 16 }}>{CareSchedule.noTask}</Text>
-                        <Text style={{ color: "#7C7C7C" }}>{CareSchedule.takeRest}</Text>
+                        <Text style={{ fontWeight: "bold", marginBottom: 10, fontSize: 16 }}>{CareSchedule?.noTask}</Text>
+                        <Text style={{ color: "#7C7C7C" }}>{CareSchedule?.takeRest}</Text>
                     </View>
                 )}
             </View>

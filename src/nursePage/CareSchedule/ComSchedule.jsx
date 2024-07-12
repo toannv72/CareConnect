@@ -27,14 +27,14 @@ export default function ComSchedule({ data, onPress, isSelected }) {
                     <Text style={styles?.taskTitle}
                         numberOfLines={2}
                         ellipsizeMode='tail'>
-                        {CareSchedule?.room} {data?.roomId} -  {CareSchedule?.area} {data?.areaId}
+                        {CareSchedule?.room} {data?.careSchedule?.room?.name} -  {CareSchedule?.area} {data?.careSchedule?.room?.block?.name}
                     </Text>
                     <View style={{ flexDirection: "row", alignItems: "center" }}>
                         <Image
                             source={timeIcon}
                             style={styles?.clockImage}
                         />
-                        <Text style={{ fontSize: 14 }}>{data?.time}</Text>
+                        <Text style={{ fontSize: 14 }}>{data?.shift?.startTime} - {data?.shift?.endTime}</Text>
                     </View>
                 </View>
             </TouchableOpacity>
