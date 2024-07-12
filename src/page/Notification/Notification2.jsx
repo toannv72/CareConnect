@@ -54,6 +54,10 @@ async function registerForPushNotificationsAsync() {
     if (existingStatus !== "granted") {
       const { status } = await Notifications.requestPermissionsAsync();
       finalStatus = status;
+      if (status !== "granted") {
+        alert("Không nhận được mã thông báo đẩy cho thông báo đẩy!");
+        return;
+      }
     }
     if (finalStatus !== "granted") {
       handleRegistrationError(
