@@ -5,14 +5,11 @@ import { LanguageContext } from "./../../contexts/LanguageContext";
 import { Controller, Form, FormProvider, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import ComInputSearch from "../../Components/ComInput/ComInputSearch";
 import { ScrollView } from "react-native";
-import { ActivityIndicator } from "react-native";
 import ComLoading from "../../Components/ComLoading/ComLoading";
 import Visitation from "../../../assets/images/VisitationSchedule/VisitationSchedule.png";
 import plusIcon from "../../../assets/profile_icons/plus.png";
 import ComHeader from "../../Components/ComHeader/ComHeader";
-import ComButton from "../../Components/ComButton/ComButton";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { postData, getData } from "../../api/api";
 import { useAuth } from "../../../auth/useAuth";
@@ -68,7 +65,7 @@ export default function VisitationSchedule() {
   return (
     <>
       <ComHeader
-        title={visitationText?.titleHeader}
+        title={"Lịch thăm nuôi"}
         showTitle
         showBackIcon
       />
@@ -132,7 +129,7 @@ export default function VisitationSchedule() {
           >
             {data?.length > 0 ? (
               <View>
-                {data?.map((value, index) => (
+                {data?.filter(value => value?.elders && value?.elders?.length > 0).map((value, index) => (
                   <ComVisitationSchedule key={index} data={value} />
                 ))}
               </View>

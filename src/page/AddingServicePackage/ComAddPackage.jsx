@@ -42,7 +42,7 @@ export default function ComAddPackage({ data }) {
         }}
       />
       <View style={styles?.container}>
-        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems:"center", gap: 10, marginBottom: 5}}>
+        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems:"flex-end", gap: 10}}>
           <Text style={{ fontWeight: "600", fontSize: 16, width: "80%" }} numberOfLines={2}>{data?.name}</Text>
           <TouchableOpacity
             onPress={() => toggleFavorite(data)}

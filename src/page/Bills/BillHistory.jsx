@@ -1,5 +1,5 @@
-import React, { useContext, useState, useEffect } from "react";
-import { View, StyleSheet, ScrollView } from 'react-native';
+import React, { useContext, useState, useEffect, useCallback } from "react";
+import { View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { FormProvider, useForm } from "react-hook-form";
 import ComHeader from '../../Components/ComHeader/ComHeader';
 import ComInputSearch from "../../Components/ComInput/ComInputSearch";
@@ -12,6 +12,8 @@ import { LanguageContext } from "../../contexts/LanguageContext";
 import ComSelect from "./ComSelect";
 import { getData } from "../../api/api";
 import { useAuth } from "../../../auth/useAuth";
+import { useFocusEffect } from '@react-navigation/native';
+import ComSelectButton from "../../Components/ComButton/ComSelectButton";
 
 export default function BillHistory() {
     const {
@@ -24,22 +26,33 @@ export default function BillHistory() {
     const [data, setData] = useState([]);
     const [selectedStatus, setSelectedStatus] = useState("all");
     const [selectedDate, setSelectedDate] = useState(""); // Initialize with empty string
+    const [displayedItems, setDisplayedItems] = useState(10);
 
-    useEffect(() => {
-        setLoading(true);
-        getData(`/orders?UserId=${user?.id}&SortColumn=createdAt&SortDir=Desc`, {})
+    const fetchNextPage = async () => {
+        let url = `/orders?UserId=${user?.id}&SortColumn=createdAt&SortDir=Desc`;
+        if (selectedStatus && selectedStatus != "all") { url += `&Status=${selectedStatus}` }
+
+        getData(url, {})
             .then((orders) => {
                 setData(orders?.data?.contends);
+                setLoading(false);
                 setLoading(false);
             })
             .catch((error) => {
                 setLoading(false);
                 console.error("Error fetching order items:", error);
             });
-    }, []);
+    }
+
+    useFocusEffect(
+        useCallback(() => {
+            setData([]);
+            setLoading(!loading);
+            fetchNextPage();
+        }, [selectedStatus])
+    );
 
     useEffect(() => {
-        // Tạo một Set để lưu trữ các tháng và năm duy nhất từ danh sách hóa đơn (data)
         const monthsSet = new Set();
         // Lặp qua từng hóa đơn và thêm tháng và năm vào monthsSet
         data.forEach(bill => {
@@ -92,7 +105,6 @@ export default function BillHistory() {
     const onSubmit = (data) => {
         console.log("Search data:", data);
         setLoading(true);
-        // Implement search logic here
         setLoading(false);
     };
 
@@ -110,10 +122,16 @@ export default function BillHistory() {
 
     const handleStatusChange = (selectedValue) => {
         setSelectedStatus(selectedValue);
+        setDisplayedItems(10);
     };
 
     const handleDateChange = (selectedValue) => {
         setSelectedDate(selectedValue);
+        setDisplayedItems(10);
+    };
+
+    const handleLoadMore = () => {
+        setDisplayedItems(prevCount => prevCount + 10);
     };
 
     return (
@@ -124,7 +142,7 @@ export default function BillHistory() {
                 title={bill?.title}
             />
             <View style={styles.container}>
-                <FormProvider {...methods}>
+                {/* <FormProvider {...methods}>
                     <ComInputSearch
                         placeholder="Tìm kiếm"
                         keyboardType="default"
@@ -133,14 +151,13 @@ export default function BillHistory() {
                         onSubmitEditing={handleSubmit(onSubmit)}
                         errors={errors}
                     />
-                </FormProvider>
+                </FormProvider> */}
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <ComSelect
                         name="date"
                         options={uniqueMonths}
                         control={control}
                         errors={errors}
-                        required
                         style={{ width: '40%' }}
                         onChange={handleDateChange}
                         defaultValue={selectedDate} // Set default value to selectedDate
@@ -150,7 +167,6 @@ export default function BillHistory() {
                         options={categoryData}
                         control={control}
                         errors={errors}
-                        required
                         style={{ width: '55%' }}
                         onChange={handleStatusChange}
                     />
@@ -158,7 +174,6 @@ export default function BillHistory() {
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
-                    style={{ marginBottom: 50 }}
                 >
                     <ComLoading show={loading}>
                         {filteredData.length == 0 ? (
@@ -166,16 +181,20 @@ export default function BillHistory() {
                         ) : (
                             <View>
                                 <View>
-                                    {filteredData?.map((value, index) => (
+                                    {filteredData.slice(0, displayedItems).map((value, index) => (
                                         <ComBill key={index} data={value} />
                                     ))}
                                 </View>
-                                <View style={{ height: 120 }}></View>
+                                <View style={{ justifyContent: "center", alignItems: "center" }}>
+                                    <View style={{ width: "35%" }}>
+                                        <ComSelectButton onPress={handleLoadMore} disable={displayedItems >= filteredData.length}>Xem thêm</ComSelectButton>
+                                    </View>
+                                </View>
+                                <View style={{ height: 20 }}></View>
                             </View>
                         )}
                     </ComLoading>
                 </ScrollView>
-
             </View>
         </>
     );

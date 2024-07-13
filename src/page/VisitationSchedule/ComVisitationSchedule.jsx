@@ -8,13 +8,6 @@ export default function ComVisitationSchedule({ data }) {
     text: { servicePackages },
     setLanguage,
   } = useContext(LanguageContext);
-  const formatCurrency = (number) => {
-    // Sử dụng hàm toLocaleString() để định dạng số
-    return number.toLocaleString("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    });
-  };
 
 const [date] = data?.date?.split("T");
 const [year, month, day] = date.split("-");

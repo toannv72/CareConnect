@@ -6,6 +6,7 @@ import Vector from "../../../../assets/Vector.png";
 import ComButton from "../../../Components/ComButton/ComButton";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import ComDateConverter from "../../../Components/ComDateConverter/ComDateConverter";
+import { useAuth } from "../../../../auth/useAuth";
 import moment from 'moment';
 
 export default function ServicePackageRegisterSuccess() {
@@ -19,8 +20,9 @@ export default function ServicePackageRegisterSuccess() {
     setLanguage,
   } = useContext(LanguageContext);
   const route = useRoute();
+  const { user } = useAuth();
   const { data } = route.params;
-  const formattedDate = moment(data?.date).format('DD/MM/YYYY');
+
   const toHomes = () => {
     navigation.navigate("Homes");
   };
@@ -35,8 +37,7 @@ export default function ServicePackageRegisterSuccess() {
               <Text style={{ fontWeight: "bold", fontSize: 18 }}>
                 {visitationText?.subscribers}
               </Text>
-              <Text>: {data?.name}</Text>
-              {/* <Text>: {data?.name}</Text> */}
+              <Text>: {user?.fullName}</Text>
             </Text>
           </View>
           <View >
@@ -53,11 +54,10 @@ export default function ServicePackageRegisterSuccess() {
                 {visitationText?.day}
               </Text>
               <Text>
-                : {formattedDate}
+                : <ComDateConverter>{data?.date}</ComDateConverter>
               </Text>
             </Text>
           </View>
-        
         </View>
       </View>
       <View style={{ width: "90%", marginBottom: 90 }}>
@@ -90,5 +90,6 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "center",
     flexWrap: "wrap",
+    gap: 10
   },
 });

@@ -117,9 +117,9 @@ export default function AddingServiceDetail() {
 
                             {
                                 data?.type == "OneDay" && (
-                                    <View>
+                                    <View style={{gap: 10}}>
                                         <Text style={{ flexDirection: "row" }}>
-                                            <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                                            <Text style={{ fontWeight: "600", fontSize: 16 }}>
                                                 {addingPackages?.package?.endRegistrationStartDate}
                                             </Text>
                                             <Text>
@@ -127,7 +127,7 @@ export default function AddingServiceDetail() {
                                             </Text>
                                         </Text>
                                         <Text style={{ flexDirection: "row" }}>
-                                            <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                                            <Text style={{ fontWeight: "600", fontSize: 16 }}>
                                                 {addingPackages?.package?.eventDate}
                                             </Text>
                                             <Text>
@@ -138,7 +138,7 @@ export default function AddingServiceDetail() {
                                 )
                             }
                             {/* mô tả */}
-                            <Text style={styles.contentBold}>
+                            <Text  style={{ fontWeight: "600", fontSize: 16 }}>
                                 {addingPackages?.package?.description}
                             </Text>
                             <Text style={{ fontSize: 16 }}>{data?.description}</Text>

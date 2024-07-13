@@ -12,7 +12,7 @@ import ComNoData from "../../Components/ComNoData/ComNoData";
 import Heart from "../../../assets/heart.png";
 import { postData, getData } from "../../api/api";
 import { stylesApp } from "../../styles/Styles";
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import CategoryButtons from '../../Components/ComCategories/ComCategories';
 import ComInputSearch from '../../Components/ComInput/ComInputSearch';
 
@@ -29,6 +29,8 @@ export default function AddingServicePackages() {
     const [page, setPage] = useState(1); // Track pagination page
     const [hasMore, setHasMore] = useState(true); // Track if there are more items to load
     const [searchQuery, setSearchQuery] = useState("");
+    const route = useRoute();
+    const { skipFetchData } = route.params || {};
     const searchSchema = yup.object().shape({
         search: yup.string(),
     });
@@ -58,22 +60,22 @@ export default function AddingServicePackages() {
                 setData(prevData => [...prevData, ...newItems]);
                 setPage(prevPage => prevPage + 1);
                 setLoadMoreLoading(false);
-                setLoading(loading);
+                setLoading(false);
                 setHasMore(page < packageData?.data?.totalPages);
             })
             .catch((error) => {
-                setLoading(loading);
-                console.error("Error fetching service-package:", error);
+                setLoading(false);
+                console.log("Error fetching service-package:", error);
             });
 
         getData('/service-package-categories', {})
             .then((categoryData) => {
                 setCategoryData(categoryData?.data?.contends);
-                setLoading(loading);
+                setLoading(false);
             })
             .catch((error) => {
-                setLoading(loading);
-                console.error("Error fetching service-package-categories:", error);
+                setLoading(false);
+                console.log("Error fetching service-package-categories:", error);
             });
     };
 
@@ -83,13 +85,13 @@ export default function AddingServicePackages() {
 
     useFocusEffect(
         useCallback(() => {
-            reset();
-            setData([]);
-            setPage(1);
-            setLoading(!loading);
-            setSearchQuery("");
-            fetchNextPage();
-            if (!selectedCategory) { setSelectedCategory(null) }
+                reset();
+                setData([]);
+                setPage(1);
+                setLoading(!loading);
+                setSearchQuery("");
+                fetchNextPage();
+                if (!selectedCategory) { setSelectedCategory(null) }
         }, [])
     );
 
@@ -99,14 +101,8 @@ export default function AddingServicePackages() {
         setData([])
     };
 
-    const handleClearSelection = () => {
-        setSelectedCategory(0);
-        setPage(1);
-        setData([]);
-    };
-
     const handleClearSearch = () => {
-        handleClearSelection();
+        handleCategorySelect(0);
         setSearchQuery("");
     };
 
@@ -135,15 +131,14 @@ export default function AddingServicePackages() {
                     <TouchableOpacity
                         onPress={() => navigation.navigate("Favorite")}
                         style={[styles.cart, stylesApp.shadow]}>
-                        <Image source={Heart}
-                            style={{ width: 30, height: 30, tintColor: "#fff" }} />
+                        <Image source={Heart} style={{ width: 30, height: 30, tintColor: "#fff" }} />
                     </TouchableOpacity>
                 </View>
                 <CategoryButtons
                     categoryData={categoryData}
                     selectedCategory={selectedCategory}
                     onSelectCategory={handleCategorySelect}
-                    onClearSelection={handleClearSelection} // Pass handleClearSelection as prop
+                    onClearSelection={() => { handleCategorySelect(0) }} // Pass handleClearSelection as prop
                 />
                 {loading ? (
                     <ComLoading show={true} />
@@ -151,8 +146,8 @@ export default function AddingServicePackages() {
                     filteredData.length == 0 ? (<ComNoData>Không có dịch vụ nào</ComNoData>
                     ) : (
                         <ScrollView
-                        showsVerticalScrollIndicator={false}
-                        showsHorizontalScrollIndicator={false}>
+                            showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={false}>
                             {
                                 filteredData?.map((item, index) => (
                                     <ComAddPackage key={index} data={item} />

@@ -122,7 +122,6 @@ export default function AddingServiceCalendarRegister() {
         for (let i = 1; i <= daysInMonth; i++) {
             const date = moment().date(i).month(currentMonth).format("YYYY-MM-DD");
             const dayOfWeek = moment(date).isoWeekday();
-
             if (!selectedDays.includes(moment.weekdays(dayOfWeek))) {
                 dates.push(date);
             }
@@ -145,10 +144,7 @@ export default function AddingServiceCalendarRegister() {
         <>
             <View style={styles.header}>
                 <TouchableOpacity onPress={handleBackPress} style={styles.backIconContainer}>
-                    <Image
-                        source={backArrowWhite}
-                        style={styles.backIcon}
-                    />
+                    <Image source={backArrowWhite} style={styles.backIcon} />
                 </TouchableOpacity>
                 <Image
                     source={{ uri: data?.imageUrl }}
@@ -201,7 +197,7 @@ export default function AddingServiceCalendarRegister() {
                 )}
                 {(selectedId === '2' || data?.type == "WeeklyDays") && (
                     <>
-                        <Text style={{color: "gray"}}>Dịch vụ sẽ được gia hạn vào tháng sau với những thứ trong tuần bạn chọn dưới đây</Text>
+                        <Text style={{ color: "gray" }}>Dịch vụ sẽ được gia hạn vào tháng sau với những thứ trong tuần bạn chọn dưới đây</Text>
                         <View style={{ flex: 1, flexDirection: 'row', justifyContent: "space-between" }}>
                             {
                                 loading ? (
@@ -225,8 +221,8 @@ export default function AddingServiceCalendarRegister() {
                         <View style={{ marginVertical: 10, gap: 5 }}>
                             <Text style={{ fontWeight: "600" }}>Danh sách những ngày sẽ thực hiện dịch vụ trong tháng này:</Text>
                             {
-                                calculateSelectedDates()?.map((date, index) => (
-                                    <Text  key={index}> • <ComDateConverter>{date}</ComDateConverter></Text>
+                                calculateSelectedDates()?.filter(date => moment(date).isAfter(moment(), 'day'))?.map((date, index) => (
+                                    <Text key={index}> • <ComDateConverter>{date}</ComDateConverter></Text>
                                 ))
                             }
 
@@ -237,7 +233,7 @@ export default function AddingServiceCalendarRegister() {
             </ScrollView>
             <View style={{ paddingHorizontal: 20, backgroundColor: "#fff" }}>
                 <ComSelectButton
-                    disable={calculateSelectedDates()?.length === 0} 
+                    disable={calculateSelectedDates()?.length === 0}
                     onPress={() => {
                         const selectedDates = calculateSelectedDates();
                         navigation.navigate("ServicePayment", { servicePackage: data, elder: elder, orderDates: selectedDates, type: 'RecurringWeeks' });

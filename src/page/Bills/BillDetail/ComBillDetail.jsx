@@ -23,18 +23,18 @@ const styles = StyleSheet.create({
         gap: 20,
         justifyContent: 'space-between',
         flexWrap: "wrap",
-        borderBottomWidth: 1,
+        borderTopWidth: 1,
         borderColor: '#ddd',
         paddingVertical: 10,
         alignItems: 'center'
     },
     labelText: {
         fontWeight: '600',
-        flex: 0.40
+        flex: 0.45,
     },
     contentText: {
         textAlign: "right",
-        flex: 0.60,
+        flex: 0.55,
         flexWrap: "wrap",
     }
 })

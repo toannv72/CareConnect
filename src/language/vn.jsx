@@ -368,7 +368,7 @@ export const vn = {
   },
   visitationText: {
     button: {
-      toHomes: "Về trang chủ",
+      toHomes: "Quay lại",
     },
     titleHeader: "Đăng ký thăm nuôi",
     visitationContent:

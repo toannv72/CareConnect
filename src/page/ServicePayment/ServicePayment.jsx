@@ -31,13 +31,13 @@ export default function ServicePayment() {
         setSelectedMethod(methodName);
     };
     useEffect(() => {
-        const sortedDates = [...orderDates].sort((a, b) => moment(a).diff(moment(b)));
+        const sortedDates = [...orderDates].sort((a, b) => moment(a, 'YYYY-MM-DD').diff(moment(b, 'YYYY-MM-DD')));
         // Kiểm tra xem tất cả các ngày trong orderDates có phải là ngày quá khứ không
-        const allPastDates = sortedDates.every(date => moment(date).isSameOrBefore(moment(), 'day'));
+        const allPastDates = sortedDates.every(date => moment(date, 'YYYY-MM-DD').isSameOrBefore(moment(), 'day'));
         if (allPastDates) {
             // Lấy ngày tháng sau tương ứng nếu có
             const nextMonthDates = sortedDates.map(date => {
-                const nextMonthDate = moment(date).add(1, 'months');
+                const nextMonthDate = moment(date, 'YYYY-MM-DD').add(1, 'months');
                 return nextMonthDate.isValid() ? nextMonthDate.format('YYYY-MM-DD') : date;
             });
             setAdjustedOrderDates(nextMonthDates);
@@ -91,6 +91,7 @@ export default function ServicePayment() {
                 Linking.openURL(url)
                     .then(() => {
                         console.log("Opened successfully");
+                        navigation.navigate("Homes");
                     })
                     .catch((err) => {
                         console.error("Failed to open URL: ", err);

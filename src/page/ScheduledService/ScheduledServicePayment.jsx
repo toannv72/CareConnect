@@ -10,6 +10,7 @@ import momo from "../../../assets/momo.png";
 import vnpay from "../../../assets/vnpay.png";
 import ComPaymentMethod from "../Bills/BillDetail/ComPaymentMethod";
 import Toast from 'react-native-toast-message';
+import { Linking } from 'react-native';
 
 export default function ScheduledServicePayment({ }) {
     const navigation = useNavigation();
@@ -52,10 +53,12 @@ export default function ScheduledServicePayment({ }) {
         postData("/orders/service-package?returnUrl=a", formattedData)
             .then((response) => {
                 console.log("API Response: ", response.message);
+                const url = response.message;
                 if (payment === "Now") {
                     Linking.openURL(url)
                         .then(() => {
                             console.log("Opened successfully");
+                            navigation.navigate("Homes");
                         })
                         .catch((err) => {
                             console.log("Failed to open URL: ", err);
@@ -64,7 +67,7 @@ export default function ScheduledServicePayment({ }) {
                 } else if (payment === "Later") {
                     showToast("success", "Đăng ký thành công", `Bạn vui lòng thanh toán dịch vụ trước ngày ${lastDayOfMonth}`, "top");
                     console.log("Payment will be made later");
-                    navigation.navigate("Homes");
+                    navigation.navigate("BillHistory");
                 }
             })
             .catch((error) => {
