@@ -41,7 +41,7 @@ export default function ServicePayment() {
                 return nextMonthDate.isValid() ? nextMonthDate.format('YYYY-MM-DD') : date;
             });
             setAdjustedOrderDates(nextMonthDates);
-        }else{
+        } else {
             setAdjustedOrderDates(sortedDates);
         }
     }, [orderDates]);
@@ -83,7 +83,7 @@ export default function ServicePayment() {
                 }
             ]
         }
-        postData("/orders/service-package?returnUrl=a", formattedData)
+        postData("/orders/service-package?returnUrl=exp://rnnstoi-thaomy-8081.exp.direct/--/BillHistory", formattedData)
             .then((response) => {
                 console.log("API Response: ", response.message);
                 const url = response.message; // Assuming response.message contains the URL
@@ -91,15 +91,27 @@ export default function ServicePayment() {
                 Linking.openURL(url)
                     .then(() => {
                         console.log("Opened successfully");
-                        navigation.navigate("Homes");
                     })
                     .catch((err) => {
                         console.error("Failed to open URL: ", err);
                     });
             })
             .catch((error) => {
-                console.error("API Error: ", error);
-                // showToast("error", "Có lỗi xảy ra, vui lòng thử lại!", "", "bottom")
+                console.error("API Error: ", error.response.data.detail);
+                switch (error.response.status) {
+                    case 609:
+                        showToast("error", "Đăng ký thất bại", "Dịch vụ đã được đăng ký", "bottom");
+                        break;
+                    case 610:
+                        showToast("error", "Đăng ký thất bại", "Dịch vụ đã được đăng ký", "bottom");
+                        break;
+                    case 611:
+                        showToast("error", "Đăng ký thất bại", "Dịch vụ đã được đăng ký", "bottom");
+                        break;
+                    default:
+                        showToast("error", "Đăng ký thất bại", "Dịch vụ đã được đăng ký", "bottom");
+                        break;
+                };
             });
     }
 

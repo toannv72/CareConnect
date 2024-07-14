@@ -36,7 +36,6 @@ export default function BillHistory() {
             .then((orders) => {
                 setData(orders?.data?.contends);
                 setLoading(false);
-                setLoading(false);
             })
             .catch((error) => {
                 setLoading(false);

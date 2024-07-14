@@ -77,7 +77,8 @@ export default function ComSelectedOneDate({
             <Calendar
               {...LocaleConfig}
               onDayPress={(day) => {
-                onChange(day.dateString);  // Gọi onChange để cập nhật giá trị của dateOfBirth
+                onChange(day.dateString);// Gọi onChange để cập nhật giá trị của dateOfBirth
+                // handleDayPress(day);  
               }}
               markedDates={{
                 [value]: {        // value: Giá trị hiện tại của trường dữ liệu.

@@ -1,11 +1,14 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useCallback } from "react";
 import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity, FlatList } from 'react-native';
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { useRoute } from "@react-navigation/native";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import ComElder from "./ComElder";
+import ComNoData from "../../Components/ComNoData/ComNoData";
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import RegisterServiceImg from "./RegisterServiceImg.png"
+import { postData, getData } from "../../api/api";
+import moment from "moment";
 
 export default function RegisterService({ }) {
     const {
@@ -13,68 +16,33 @@ export default function RegisterService({ }) {
         setLanguage,
     } = useContext(LanguageContext);
     const navigation = useNavigation();
+    const route = useRoute();
+    const roomData = route.params || {};
+    const [data, setData] = useState([])
+    const [loading, setLoading] = useState(false);
+    const today = moment().format("YYYY-MM-DD");
 
-    const [data, setData] = useState([
-        {
-            elder: {
-                img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
-                name: "Nguyễn Văn toàn",
-                age: "34",
-                sex: "Nam",
-                room: "107",
-                area: "A",
-                id: 1,
-            },
-            service: [
-                {
-                    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkuFGRcwQzPr-khFu8hXL9M1Zj884q_SFgRw&s",
-                    title: "Khám sức khỏe",
-                    time: "10:00",
-                    status: "Đã thực hiện",
-                    implementor: "Thảo My",
-                    description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s."
-                },
-                {
-                    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkuFGRcwQzPr-khFu8hXL9M1Zj884q_SFgRw&s",
-                    title: "Châm cứu",
-                    time: "10:00",
-                    status: "Đã thực hiện",
-                    implementor: "Thảo My",
-                    description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s."
-                }
-            ]
-        },
-        {
-            elder: {
-                img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
-                name: "Trần Văn B",
-                age: "70",
-                sex: "Nam",
-                room: "107",
-                area: "A",
-                id: 2,
-            },
-            service: [
-                {
-                    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkuFGRcwQzPr-khFu8hXL9M1Zj884q_SFgRw&s",
-                    title: "Châm cứu",
-                    time: null,
-                    status: "Chưa thực hiện",
-                    implementor: null,
-                    description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s."
-                }
-
-            ]
-
-        },
-    ])
+    useFocusEffect(
+        useCallback(() => {
+            setLoading(true);
+            getData(`/care-services?RoomId=${roomData?.roomData?.id}&Date=${today}`, {})
+                .then((careServices) => {
+                    setData(careServices?.data?.elders);
+                    setLoading(false);
+                })
+                .catch((error) => {
+                    setLoading(false);
+                    console.error("Error getData fetching items:", error);
+                });
+        }, [])
+    );
 
     return (
         <>
             <ComHeader
                 showBackIcon
                 showTitle
-                title={"Dịch vụ"}
+                title={"Phòng " + roomData?.roomData?.name + " - Khu " + roomData?.roomData?.block?.name}
             />
             <View style={styles.body}>
                 <Image
@@ -85,15 +53,19 @@ export default function RegisterService({ }) {
                         objectFit: "contain",
                     }}
                 />
-
-                <FlatList
-                    data={data}
-                    renderItem={({ item }) => <ComElder data={item} />}
-                    keyExtractor={(item, index) => index.toString()}
-                    style={{ margin: 10 }}
-                />
+                {/* nếu k có elder nào       nếu tất cả các elder đều không có order   =>  hiện ComNoData*/}
+                {data.length == 0 || data.every(item => item?.orderDetails.length === 0) ? (
+                    <ComNoData>Không có dữ liệu</ComNoData>
+                ) : (
+                    <FlatList
+                        data={data}
+                        showsVerticalScrollIndicator={false}
+                        renderItem={({ item }) => item?.orderDetails.length > 0 && <ComElder data={item} />}
+                        keyExtractor={(item, index) => index.toString()}
+                        style={{ margin: 10 }}
+                    />
+                )}
             </View >
-
         </>
     )
 }
@@ -102,6 +74,5 @@ const styles = StyleSheet.create({
     body: {
         backgroundColor: "#fff",
         flex: 1,
-        paddingTop: 15,
     },
 })

@@ -109,7 +109,7 @@ const BillDetail = () => {
 
                             {data?.status === "Paid" && (
                                 <>
-                                    <ComBillDetail title={bill?.detail?.paymentDate} content={data?.payDate} />
+                                    <ComBillDetail title={bill?.detail?.paymentDate} content={moment(data?.paymentDate, "YYYY-MM-DD").format("DD/MM/YYYY")} />
                                     <ComBillDetail title={bill?.detail?.paymentMethod} content={data?.method} />
                                 </>
                             )}

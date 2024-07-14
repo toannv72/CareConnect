@@ -389,7 +389,7 @@ export const vn = {
     id: "Mã",
     representative: "Người đại diện",
     elder: "Người cao tuổi",
-    duration: "Thời hạn ",
+    duration: "Thời hạn",
     status: "Trạng thái",
   },
   VisitationSchedule: {

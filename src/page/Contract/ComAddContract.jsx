@@ -48,7 +48,7 @@ export default function ComAddContract({ data }) {
         }}
       />
       <View style={styles?.container}>
-        <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+        <Text style={{ fontWeight: "bold", fontSize: 15 }}>
           {data?.name}
         </Text>
         {/* <Text style={{ flexDirection: "row" }}>
@@ -61,7 +61,7 @@ export default function ComAddContract({ data }) {
           <Text style={{ fontWeight: "bold", fontSize: 14 }}>
             {contractsPage?.elder}
           </Text>
-          <Text>: {data?.category}</Text>
+          <Text>: {data?.elder?.name}</Text>
         </Text>
         <Text style={{ flexDirection: "row" }}>
           <Text style={{ fontWeight: "bold", fontSize: 14 }}>

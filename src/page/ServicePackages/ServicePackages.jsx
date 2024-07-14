@@ -12,8 +12,12 @@ import ComLoading from "../../Components/ComLoading/ComLoading";
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import { postData, getData } from "../../api/api";
 import Nodata from "../../../assets/Nodata.png";
+import { useNavigation } from '@react-navigation/native';
+import * as Linking from 'expo-linking';
 
 export default function ServicePackages() {
+  const navigation = useNavigation(); // Add this line
+
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -88,7 +92,7 @@ export default function ServicePackages() {
             >
               <View>
                 {data?.map((value, index) => (
-                    <ComPackage key={index} data={value} />
+                  <ComPackage key={index} data={value} />
                 ))}
               </View>
               <View style={{ height: 120 }}></View>

@@ -23,7 +23,7 @@ export default function ServicePackageDetail({ }) {
   const [selectedDate, setSelectedDate] = useState({});//cho calendar một giá trị mặc định là ngày hiện tại
   const [popupDate, setPopupDate] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { user, elders } = useAuth();
+  const { user } = useAuth();
 
   const {
     text: { servicePackages },

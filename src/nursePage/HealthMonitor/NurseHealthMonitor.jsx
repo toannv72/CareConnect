@@ -43,7 +43,6 @@ export default function NurseHealthMonitor({ data }) {
         const uniqueRooms = [];
         const seenIds = {};
         schedules.forEach(schedule => {
-            console.log("schedule ", schedule?.room?.id)
             if (!seenIds[schedule?.room?.id]) {
                 seenIds[schedule?.room?.id] = true;
                 uniqueRooms.push(schedule?.room);
@@ -67,11 +66,11 @@ export default function NurseHealthMonitor({ data }) {
                         {nursingSchedules?.length == 0 ? (
                             <ComNoData>Không có dữ liệu</ComNoData>
                         ) : (
-                            nursingSchedules?.map((value, index) => (
+                            nursingSchedules?.map((value, index) => (//danh sách phòng có length > 0
                                 <View key={index}>
-                                    {value?.elders?.length > 0 ? (
+                                    {value?.elders?.length > 0 && //phòng có elder mới hiển thị
                                         <View key={value}>
-                                            <Text style={{fontSize: 16, fontWeight: "600", marginVertical: 10}}>Phòng {value?.name} - Khu {value?.block?.name}</Text>
+                                            <Text style={{ fontSize: 16, fontWeight: "600", marginVertical: 10 }}>Phòng {value?.name} - Khu {value?.block?.name}</Text>
                                             {value?.elders.map((elder, elderIndex) => (
                                                 <View key={elderIndex}>
                                                     <ComElder
@@ -84,10 +83,7 @@ export default function NurseHealthMonitor({ data }) {
                                                     />
                                                 </View>
                                             ))}
-                                        </View>
-                                    ) : (
-                                        <ComNoData key={scheduleIndex}>Không có dữ liệu</ComNoData>
-                                    )}
+                                        </View>}
                                 </View>
                             ))
                         )}

@@ -152,7 +152,7 @@ export default function LoginScreen() {
               {LoginState || LoginError ? errorMessage : ""}
             </FieldError>
 
-            <ComButton onPress={handleSubmit(handleLogin)}>
+            <ComButton onPress={handleSubmit(handleLogin)} style={{ justifyContent: "center", alignItems: "center" }}>
               {loading ? <ActivityIndicator color="#fff" /> : Login?.button?.login}
             </ComButton>
 

@@ -45,7 +45,7 @@ export default function AddingServicePackages() {
     const onSubmit = (data) => {
         setPage(1);
         setData([]);
-        setSearchQuery(encodeURIComponent(data.search.trim()));
+        setSearchQuery(encodeURIComponent(data?.search.trim()));
     };
 
     const fetchNextPage = async () => {
