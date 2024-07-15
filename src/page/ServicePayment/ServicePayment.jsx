@@ -13,6 +13,7 @@ import vnpay from "../../../assets/vnpay.png";
 import moment from "moment";
 import { postData } from "../../api/api"; // Import your API function
 import { Linking } from 'react-native';
+import Toast from 'react-native-toast-message';
 
 export default function ServicePayment() {
     const {
@@ -26,6 +27,16 @@ export default function ServicePayment() {
     const [selectedMethod, setSelectedMethod] = useState('momo');
     const [adjustedOrderDates, setAdjustedOrderDates] = useState(orderDates);
     const handleBackPress = () => { navigation.goBack() };
+
+    const showToast = (type, text1, text2, position) => {
+        Toast.show({
+          type: type,
+          text1: text1,
+          text2: text2,
+          position: position,
+          visibilityTime: 2000
+        });
+      }
 
     const handleMethodPress = (methodName) => {
         setSelectedMethod(methodName);
@@ -65,17 +76,17 @@ export default function ServicePayment() {
     }
 
     const payment = () => {
-        const dueDate = moment()?.format('YYYY-MM-DD');
+        const dueDate = moment().add(2, 'days').format('YYYY-MM-DD');
         const transformedDates = servicePackage?.type === "OneDay" ? [{ "date": servicePackage?.eventDate }] : adjustedOrderDates.map(date => ({ date }));
         const formattedData = {
             "method": selectedMethod,
             "dueDate": dueDate,
-            "description": "Thanh toán hóa đơn dịch vụ " + servicePackage?.name,
-            "content": "Thanh toán hóa đơn dịch vụ " + servicePackage?.name,
-            "notes": "Thanh toán hóa đơn dịch vụ " + servicePackage?.name,
+            "description": "Thanh toán dịch vụ " + servicePackage?.name,
+            "content": "Thanh toán dịch vụ " + servicePackage?.name,
+            "notes": "Thanh toán dịch vụ " + servicePackage?.name,
             "orderDetails": [
                 {
-                    "notes": "Thanh toán hóa đơn dịch vụ " + servicePackage?.name + " cho người cao tuổi " + elder?.name,
+                    "notes": "Thanh toán dịch vụ " + servicePackage?.name + " cho người cao tuổi " + elder?.name,
                     "servicePackageId": servicePackage?.id,
                     "elderId": elder?.id,
                     "type": type,
@@ -93,11 +104,12 @@ export default function ServicePayment() {
                         console.log("Opened successfully");
                     })
                     .catch((err) => {
-                        console.error("Failed to open URL: ", err);
+                        console.log("Failed to open URL: ", err);
                     });
             })
             .catch((error) => {
-                console.error("API Error: ", error.response.data.detail);
+                console.log("Opened successfully");
+                console.log("API Error: ", error.response);
                 switch (error.response.status) {
                     case 609:
                         showToast("error", "Đăng ký thất bại", "Dịch vụ đã được đăng ký", "bottom");
@@ -109,7 +121,7 @@ export default function ServicePayment() {
                         showToast("error", "Đăng ký thất bại", "Dịch vụ đã được đăng ký", "bottom");
                         break;
                     default:
-                        showToast("error", "Đăng ký thất bại", "Dịch vụ đã được đăng ký", "bottom");
+                        showToast("error", "Đăng ký thất bại", "Đã có lỗi xảy ra. Vui lòng thử lại.", "bottom");
                         break;
                 };
             });

@@ -20,9 +20,11 @@ const ComPaymentInfo = ({ data, createdAt }) => {
         const orderDate = new Date(detail?.date);
         const createdDate = new Date(createdAt);
         return orderDate > createdDate;
-      });
+    });
     return (
-        <View>
+        <TouchableOpacity
+            onPress={() => setIsExpanded(!isExpanded)}
+        >
             <View style={[styles.row]}>
                 {servicePackage && (
                     <>
@@ -109,7 +111,7 @@ const ComPaymentInfo = ({ data, createdAt }) => {
                     ))}
                 </View>
             )}
-        </View>
+        </TouchableOpacity>
     );
 }
 
@@ -143,7 +145,7 @@ const styles = StyleSheet.create({
         height: 20,
         borderWidth: 1,
         borderRadius: 50,
+        borderColor: '#33B39C',
         padding: 10,
-        backgroundColor: '#000',
     },
 });

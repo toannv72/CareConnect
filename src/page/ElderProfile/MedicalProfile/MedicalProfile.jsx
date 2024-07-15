@@ -95,7 +95,7 @@ export default function MedicalProfile() {
         </ScrollView>
         <ComButton onPress={() => { navigation.navigate(role?.name == "Nurse" ? "ListHealthMonitor" : "HealthMonitorList", { id: elderData?.id }) }}
           style={{ marginBottom: 30 , borderRadius: 50 }}>
-          Báo cáo sức khỏe
+          Theo dõi sức khỏe
         </ComButton>
       </View>
     </>

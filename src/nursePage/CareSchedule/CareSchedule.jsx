@@ -103,7 +103,6 @@ const styles = StyleSheet.create({
     body: {
         flex: 1,
         backgroundColor: "#fff",
-        marginBottom: 10
     },
     taskContainer: {
         borderColor: "#33B39C",
@@ -111,7 +110,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 0,
         borderTopRightRadius: 20,
         borderTopLeftRadius: 20,
-        backgroundColor: 'white',
+        backgroundColor: "#fff",
         paddingTop: 10
     },
     dateTitle: {

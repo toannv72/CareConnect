@@ -19,6 +19,7 @@ export default function ComSelectedOneDate({
   placeholder,
   enabled,
   minDate,
+  maxDate,
   ...props }) {
   const today = moment().format("YYYY-MM-DD");
 

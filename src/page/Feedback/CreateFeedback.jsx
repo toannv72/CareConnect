@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { StyleSheet, View, Text, KeyboardAvoidingView, Keyboard, Image } from "react-native";
+import { StyleSheet, View, Text, KeyboardAvoidingView, Platform, Keyboard, Image } from "react-native";
 import * as yup from "yup";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -18,7 +18,8 @@ export default function CreateFeedback() {
     const navigation = useNavigation();
     const [value, setValue] = useState("1");
     const route = useRoute();
-    const { data } = route.params;
+    const { data, serviceData } = route.params;
+    console.log("CreateFeedback ", data)
 
     // const [data, setData] = useState({})
 
@@ -84,14 +85,14 @@ export default function CreateFeedback() {
                 showTitle={true}
                 title={feedback?.title}
             />
-            <KeyboardAvoidingView style={styles.container} >
+            <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                 <View style={styles.body}>
                     <Image
                         source={feedbackImg}
                     />
-                    {/* <Text style={{ fontSize: 16, fontWeight: 'bold', textAlign: "center", paddingVertical: 20 }}>
-                        {data.text}
-                    </Text> */}
+                    <Text style={{ fontSize: 16, fontWeight: 'bold', textAlign: "center", paddingVertical: 20 }}>
+                       {serviceData?.name}
+                    </Text>
                     <FormProvider {...methods}>
                         <View style={{ width: "90%", gap: 10 }}>
                             <ComInput
@@ -119,7 +120,6 @@ export default function CreateFeedback() {
                                 errors={errors}
                                 required
                             ></ComSelect>
-                            {/* Chờ bổ sung ComUpdate */}
                             <ComButton onPress={handleSubmit(handleSend)}>
                                 {feedback?.label?.send}
                             </ComButton>

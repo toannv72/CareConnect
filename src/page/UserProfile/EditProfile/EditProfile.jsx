@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useContext, useState, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { Image, StyleSheet, Text, ActivityIndicator, View, Keyboard, KeyboardAvoidingView } from "react-native";
+import { Image, StyleSheet, Text, ActivityIndicator, View, Keyboard, KeyboardAvoidingView, Platform } from "react-native";
 import * as yup from "yup";
 import { LanguageContext } from "../../../contexts/LanguageContext";
 import ComInput from "../../../Components/ComInput/ComInput";
@@ -159,7 +159,7 @@ export default function EditProfile({ }) {
         showTitle
         showBackIcon
       />
-      <KeyboardAvoidingView style={styles.body} >
+      <KeyboardAvoidingView style={styles.body} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <View style={styles.container}>
           <FormProvider {...methods}>
             <View style={{ width: "100%", gap: 10, flex: 1 }}>

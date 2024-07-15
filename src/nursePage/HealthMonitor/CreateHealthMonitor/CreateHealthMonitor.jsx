@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef } from "react";
-import { View, StyleSheet, ScrollView, Image, Text, KeyboardAvoidingView } from 'react-native';
+import { View, StyleSheet, ScrollView, Image, Text, KeyboardAvoidingView, Platform } from 'react-native';
 import { LanguageContext } from "../../../contexts/LanguageContext";
 import { useRoute } from "@react-navigation/native";
 import HealthMonitor from "../../../../assets/images/HealthMonitor/HealthMonitor.png";
@@ -92,7 +92,6 @@ export default function CreateHealthMonitor() {
             healthReportDetails,
             date: `${year}-${month}-${day}`
         };
-        console.log("CreateHealthMonitor ", formattedData?.date)
 
         postData("/health-report", formattedData)
             .then((response) => {
@@ -119,7 +118,7 @@ export default function CreateHealthMonitor() {
     return (
         <>
             <ComHeader showBackIcon showTitle title={NurseHealthMonitor?.createHealthMonitor} />
-            <KeyboardAvoidingView style={styles.body}>
+            <KeyboardAvoidingView style={styles.body} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                 <View style={styles.container}>
                     <FormProvider {...methods}>
                         <View style={{ width: "100%", gap: 10, flex: 1 }}>

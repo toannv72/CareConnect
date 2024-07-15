@@ -5,6 +5,7 @@ import { LanguageContext } from "../../../contexts/LanguageContext";
 import { getData, postData } from "../../../api/api";
 import ComHeader from "../../../Components/ComHeader/ComHeader";
 import ComButton from "../../../Components/ComButton/ComButton";
+import ComDateTimeConverter from "../../../Components/ComDateConverter/ComDateTimeConverter";
 import ComTag from "../ComTag";
 import ComPaymentMethod from "./ComPaymentMethod";
 import ComPaymentInfo from "./ComPaymentInfo";
@@ -53,7 +54,7 @@ const BillDetail = () => {
     const payment = () => {
         const formattedData = {
             "orderId": id,
-            "returnUrl": "string",
+            "returnUrl": "exp://rnnstoi-thaomy-8081.exp.direct/--/BillHistory",
             "method": selectedMethod
         }
         postData("/orders/service-package-payment", formattedData)
@@ -63,7 +64,7 @@ const BillDetail = () => {
                 // Open the URL in the default browser
                 Linking.openURL(url)
                     .then(() => {
-                        navigation.navigate("BillHistory");
+                        // navigation.navigate("BillHistory");
                         console.log("Opened successfully");
                     })
                     .catch((err) => {
@@ -109,7 +110,7 @@ const BillDetail = () => {
 
                             {data?.status === "Paid" && (
                                 <>
-                                    <ComBillDetail title={bill?.detail?.paymentDate} content={moment(data?.paymentDate, "YYYY-MM-DD").format("DD/MM/YYYY")} />
+                                    <ComBillDetail title={bill?.detail?.paymentDate} content={ComDateTimeConverter(data?.paymentDate)} />
                                     <ComBillDetail title={bill?.detail?.paymentMethod} content={data?.method} />
                                 </>
                             )}

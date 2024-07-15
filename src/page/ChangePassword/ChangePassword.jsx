@@ -1,5 +1,5 @@
 import React, { useContext, useState, useCallback } from "react";
-import { StyleSheet, View, ActivityIndicator, Keyboard, Image, KeyboardAvoidingView } from "react-native";
+import { StyleSheet, View, ActivityIndicator, Keyboard, Image, KeyboardAvoidingView, Platform } from "react-native";
 import * as yup from "yup";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -128,7 +128,7 @@ export default function ChangePassword() {
         showTitle
         title={ChangePassword?.pageTitle}
       />
-      <KeyboardAvoidingView style={styles.container}>
+      <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <View style={styles.container1}>
           <View style={styles.body}>
             <Image

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useCallback } from "react";
 import { StyleSheet, View, Image, Text } from "react-native";
 import ComPackage from "./ComPackage";
 import { LanguageContext } from "./../../contexts/LanguageContext";
@@ -11,15 +11,19 @@ import { ActivityIndicator } from "react-native";
 import ComLoading from "../../Components/ComLoading/ComLoading";
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import { postData, getData } from "../../api/api";
-import Nodata from "../../../assets/Nodata.png";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import ComSelectButton from "../../Components/ComButton/ComSelectButton";
 import * as Linking from 'expo-linking';
+import ComNoData from "../../Components/ComNoData/ComNoData";
 
 export default function ServicePackages() {
   const navigation = useNavigation(); // Add this line
-
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [loadMoreLoading, setLoadMoreLoading] = useState(false);
+  const [page, setPage] = useState(1); // Track pagination page
+  const [hasMore, setHasMore] = useState(true); // Track if there are more items to load
+  const [searchQuery, setSearchQuery] = useState("");
 
   const searchSchema = yup.object().shape({
     search: yup.string(),
@@ -39,34 +43,63 @@ export default function ServicePackages() {
     },
   });
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = methods;
+  const { control, handleSubmit, reset, formState: { errors } } = methods;
 
   const onSubmit = (data) => {
-    console.log("====================================");
-    console.log(data);
-    console.log("====================================");
-    setLoading(!loading);
+    if (data?.search != "") {
+      setPage(1);
+      setData([]);
+      setSearchQuery(encodeURIComponent(data?.search.trim()));
+    }
   };
 
-  useEffect(() => {
-    // Lấy danh sách sản phẩm
-    setLoading(!loading);
-    getData('/nursing-package', {})
+  const fetchNextPage = async () => {
+    setLoadMoreLoading(!loadMoreLoading);
+    let url = '/nursing-package';
+
+    if (searchQuery) {
+      url += `?Search=${searchQuery}`;
+    } else {
+      url += `?PageIndex=${page}&PageSize=10`;
+    }
+    getData(url, {})
       .then((nursingData) => {
-        setData(nursingData?.data?.contends);
-        setLoading(loading);
+        const newItems = nursingData?.data?.contends || [];
+        setData(prevData => [...prevData, ...newItems]);
+        setPage(prevPage => prevPage + 1);
+        setLoadMoreLoading(false);
+        setLoading(false);
+        setHasMore(page < nursingData?.data?.totalPages);
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching nursing-package:", error);
       });
-  }, [])
+  }
+
+  useEffect(() => {
+    if (searchQuery != "")
+      fetchNextPage();
+  }, [searchQuery]);
+
+  useFocusEffect(
+    useCallback(() => {
+      reset();
+      setData([]);
+      setPage(1);
+      // setLoading(true);
+      setSearchQuery("");
+      fetchNextPage();
+    }, [])
+  );
+
+  const handleClearSearch = () => {
+    setPage(1);
+    setData([])
+    setSearchQuery(" ");
+  };
 
   return (
-
     <>
       <ComHeader
         title={servicePackages?.title}
@@ -82,10 +115,14 @@ export default function ServicePackages() {
             control={control}
             onSubmitEditing={handleSubmit(onSubmit)}
             errors={errors}
+            handleClearSelection={handleClearSearch}
           />
         </FormProvider>
-        <ComLoading show={loading}>
-          {data.length > 0 ? (
+        {loading ? (
+          <ComLoading show={true} />
+        ) : (
+          data?.length == 0 ? (<ComNoData>Không có gói dưỡng lão nào</ComNoData>
+          ) : (
             <ScrollView
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
@@ -95,18 +132,15 @@ export default function ServicePackages() {
                   <ComPackage key={index} data={value} />
                 ))}
               </View>
-              <View style={{ height: 120 }}></View>
+              <View style={{ justifyContent: "center", alignItems: "center" }}>
+                <View style={{ width: "35%" }}>
+                  {loadMoreLoading ? (<ActivityIndicator />) :
+                    (<ComSelectButton onPress={fetchNextPage} disable={!hasMore}>Xem thêm</ComSelectButton>)}
+                </View>
+              </View>
+              <View style={{ height: 30 }}></View>
             </ScrollView>
-          ) : (
-            <View style={styles?.noDataContainer}>
-              <Image
-                source={Nodata}
-                style={styles?.noDataImage}
-              />
-              <Text style={{ fontSize: 16 }}>Không có dữ liệu</Text>
-            </View>
-          )}
-        </ComLoading>
+          ))}
       </View>
     </>
   );

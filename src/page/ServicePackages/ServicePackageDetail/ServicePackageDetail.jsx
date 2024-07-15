@@ -160,6 +160,7 @@ export default function ServicePackageDetail({ }) {
               errors={errors}
               enabled={true}
               minDate={moment().add(1, 'day').toString()}
+              maxDate={moment().add(14, 'days').toString()}
             />
             <View
               style={{

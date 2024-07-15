@@ -19,7 +19,6 @@ export default function ServiceHistoryDetail() {
     const [loading, setLoading] = useState(false);
     const [serviceData, setServiceData] = useState({});
     const [elderData, setElderData] = useState({});
-
     const handleOpenPopup = () => {
         setPopupVisible(true);
     };
@@ -34,23 +33,23 @@ export default function ServiceHistoryDetail() {
         navigation.goBack();
     };
     const formatCurrency = (number) => {
-        return number.toLocaleString("vi-VN", {
-            style: "currency",
-            currency: "VND",
-        });
+        if (typeof number !== 'undefined') {
+            return number.toLocaleString("vi-VN", {
+                style: "currency",
+                currency: "VND",
+            });
+        }
+        return '';
     };
     // servise history 
     const historyColumnLabels = {
-        id: addingPackages?.history?.nurse,
-        time: addingPackages?.history?.time,
+        userId: addingPackages?.history?.nurse,
+        completedAt: addingPackages?.history?.time,
     };
-    const historyColumns = ["id", "time"];
-    const historyDataSource = [
-        { id: '1234321', time: "10:00 - 08/05/2024" },
-        { id: '6789987', time: "10:00 - 08/05/2024" },
-        { id: '5703126', time: "10:00 - 08/05/2024" },
-        { id: '0033775', time: "10:00 - 08/05/2024" },
-    ];
+    const historyColumns = ["userId", "completedAt"];
+    const historyDataSource = data?.orderDetails?.length > 0
+        ? data?.orderDetails[0]?.orderDates?.filter((day) => new Date(day?.date) > new Date(data?.createdAt))
+        : [];
 
     useFocusEffect(
         useCallback(() => {
@@ -131,14 +130,14 @@ export default function ServiceHistoryDetail() {
                     <Text style={styles.contentBold}>
                         {addingPackages?.history?.serviceDates}
                     </Text>
-
                     {
                         data?.orderDetails?.length > 0 &&
-                        data?.orderDetails[0]?.orderDates?.map((day, index) => (
-                            <Text style={{ fontSize: 16 }} key={index}>
-                                • {formattedDate(day?.date)}
-                            </Text>
-                        ))
+                        data?.orderDetails[0]?.orderDates?.filter((day) => new Date(day?.date) > new Date(data?.createdAt))
+                            ?.map((day, index) => (
+                                <Text style={{ fontSize: 16 }} key={index}>
+                                    • {formattedDate(day?.date)}
+                                </Text>
+                            ))
                     }
                 </View>
                 <Text style={{ flexDirection: "row", fontSize: 16, marginBottom: 10 }}>
@@ -171,25 +170,21 @@ export default function ServiceHistoryDetail() {
                     </Text>
                     <Text style={{ fontSize: 16 }}>{serviceData?.context}</Text>
                 </View> */}
-                <View style={{marginBottom:10}}>
+                <View style={{ marginBottom: 10 }}>
                     <Text style={{ marginVertical: 10, fontSize: 16, fontWeight: 'bold' }}>
                         {addingPackages?.history?.serviceHistory}
                     </Text>
                     <ComTable columns={historyColumns} dataSource={historyDataSource} columnLabels={historyColumnLabels} />
                 </View>
                 <View style={{ marginBottom: 40 }}>
-                    <ComSelectButton
-                        onPress={() => {
-                            navigation.navigate("CreateFeedback", { data: data });
-                        }}>
-                        {addingPackages?.history?.feedback}
-                    </ComSelectButton>
-                    <ComSelectButton
-                        onPress={() => {
-                            handleOpenPopup()
-                        }}>
-                        {addingPackages?.history?.cancelRenewal}
-                    </ComSelectButton>
+                    {(new Date().getDate() >= 25 && new Date().getDate() <= 30) && (//chỉ hiển thị ngày 25 - 30 hàng tháng
+                        <ComSelectButton
+                            onPress={() => {
+                                navigation.navigate("CreateFeedback", { data: data, serviceData });
+                            }}>
+                            {addingPackages?.history?.feedback}
+                        </ComSelectButton>
+                    )}
                 </View>
             </ScrollView>
         </>

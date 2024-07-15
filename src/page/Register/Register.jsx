@@ -1,5 +1,5 @@
 import React, { useContext, useState, useCallback, useRef } from "react";
-import { StyleSheet, View, ActivityIndicator, Keyboard } from "react-native";
+import { StyleSheet, View, ActivityIndicator, Keyboard, Platform, KeyboardAvoidingView } from "react-native";
 import * as yup from "yup";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -62,10 +62,10 @@ export default function Register() {
       .string()
       .trim()
       .required(Register?.message?.password),
-      // .matches(
-      //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-      //   Register?.message?.passwordInvalid
-      // ),
+    // .matches(
+    //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+    //   Register?.message?.passwordInvalid
+    // ),
 
     confirmPassword: yup
       .string()
@@ -85,7 +85,7 @@ export default function Register() {
       .required(Register?.message?.cccd),
   });
   const formattedDate = (dateValue) => {
-    
+
     console.log("dateValue", new Date(dateValue))
     // if (!dateValue || !(dateValue instanceof Date)) {
     //   return ""; // Return empty string for invalid dates
@@ -188,108 +188,112 @@ export default function Register() {
 
   return (
     <View style={styles.container}>
-      <ScrollView
-        ref={scrollViewRef}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}>
-        <FormProvider {...methods}>
-          <ComTitlePage>{Register?.pageTitle}</ComTitlePage>
-          <View style={{ gap: 10, }}>
-            <ComInput
-              label={Register?.placeholder?.fullName}
-              placeholder={Register?.placeholder?.fullName}
-              name="fullName"
-              control={control}
-              errors={errors} // Pass errors object
-              required
-            />
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                gap: 10,
-              }}
-            >
-              <View style={{ flex: 1 }}>
-                <ComSelect
-                  label={EditProfile?.label?.gender}
-                  name="gender"
-                  control={control}
-                  errors={errors}
-                  options={genderOptions}
-                  required
-                />
+      <KeyboardAvoidingView style={styles.body} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+
+        <ScrollView
+          ref={scrollViewRef}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}>
+
+          <FormProvider {...methods}>
+            <ComTitlePage>{Register?.pageTitle}</ComTitlePage>
+            <View style={{ gap: 10, }}>
+              <ComInput
+                label={Register?.placeholder?.fullName}
+                placeholder={Register?.placeholder?.fullName}
+                name="fullName"
+                control={control}
+                errors={errors} // Pass errors object
+                required
+              />
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  gap: 10,
+                }}
+              >
+                <View style={{ flex: 1 }}>
+                  <ComSelect
+                    label={EditProfile?.label?.gender}
+                    name="gender"
+                    control={control}
+                    errors={errors}
+                    options={genderOptions}
+                    required
+                  />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <ComDatePicker
+                    label={EditProfile?.label?.dateOfBirth}
+                    placeholder={EditProfile?.placeholder?.dateOfBirth}
+                    name="dateOfBirth"
+                    control={control}
+                    errors={errors} // Pass errors object
+                    enabled={true}
+                    mode={"date"}
+                    required
+                  />
+                </View>
               </View>
-              <View style={{ flex: 1 }}>
-                <ComDatePicker
-                  label={EditProfile?.label?.dateOfBirth}
-                  placeholder={EditProfile?.placeholder?.dateOfBirth}
-                  name="dateOfBirth"
-                  control={control}
-                  errors={errors} // Pass errors object
-                  enabled={true}
-                  mode={"date"}
-                  required
-                />
+              <ComInput
+                label={Register?.label?.email}
+                placeholder={Register?.placeholder?.email}
+                name="email"
+                control={control}
+                keyboardType="default" // Set keyboardType for First Name input
+                errors={errors} // Pass errors object
+                required
+              />
+              <ComInput
+                label={Register?.label?.phone}
+                placeholder={Register?.placeholder?.phone}
+                name="phoneNumber"
+                control={control}
+                keyboardType="phone-pad" // Set keyboardType for First Name input
+                errors={errors} // Pass errors object
+                required
+              />
+              <ComInput
+                label={Register?.label?.cccd}
+                placeholder={Register?.label?.cccd}
+                name="cccd"
+                control={control}
+                keyboardType="numeric" // Set keyboardType for First Name input
+                errors={errors} // Pass errors object
+                required
+              />
+              <ComInput
+                label={Register?.label?.password}
+                placeholder={Register?.placeholder?.password}
+                name="password"
+                control={control}
+                errors={errors} // Pass errors object
+                password
+                required
+              />
+              <ComInput
+                label={Register?.label?.confirmPassword}
+                placeholder={Register?.placeholder?.confirmPassword}
+                name="confirmPassword"
+                control={control}
+                errors={errors} // Pass errors object
+                password
+                required
+              />
+              <ComButton onPress={handleSubmit(handleRegister)}>
+                {loading ? <ActivityIndicator color="#fff" /> : Register?.button?.register}
+              </ComButton>
+              <View style={styles?.link}>
+                <ComTitle> {Register?.labelRegister}</ComTitle>
+                <ComTitleLink style={{ color: "#33B39C" }} to={"Login"}>
+                  {Register?.link?.login}
+                </ComTitleLink>
               </View>
             </View>
-            <ComInput
-              label={Register?.label?.email}
-              placeholder={Register?.placeholder?.email}
-              name="email"
-              control={control}
-              keyboardType="default" // Set keyboardType for First Name input
-              errors={errors} // Pass errors object
-              required
-            />
-            <ComInput
-              label={Register?.label?.phone}
-              placeholder={Register?.placeholder?.phone}
-              name="phoneNumber"
-              control={control}
-              keyboardType="phone-pad" // Set keyboardType for First Name input
-              errors={errors} // Pass errors object
-              required
-            />
-            <ComInput
-              label={Register?.label?.cccd}
-              placeholder={Register?.label?.cccd}
-              name="cccd"
-              control={control}
-              keyboardType="numeric" // Set keyboardType for First Name input
-              errors={errors} // Pass errors object
-              required
-            />
-            <ComInput
-              label={Register?.label?.password}
-              placeholder={Register?.placeholder?.password}
-              name="password"
-              control={control}
-              errors={errors} // Pass errors object
-              password
-              required
-            />
-            <ComInput
-              label={Register?.label?.confirmPassword}
-              placeholder={Register?.placeholder?.confirmPassword}
-              name="confirmPassword"
-              control={control}
-              errors={errors} // Pass errors object
-              password
-              required
-            />
-            <ComButton onPress={handleSubmit(handleRegister)}>
-              {loading ? <ActivityIndicator color="#fff" /> : Register?.button?.register}
-            </ComButton>
-            <View style={styles?.link}>
-              <ComTitle> {Register?.labelRegister}</ComTitle>
-              <ComTitleLink style={{ color: "#33B39C" }} to={"Login"}>
-                {Register?.link?.login}
-              </ComTitleLink>
-            </View>
-          </View>
-        </FormProvider>
-      </ScrollView>
+          </FormProvider>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   );
 }

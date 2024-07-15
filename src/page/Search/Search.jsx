@@ -12,7 +12,7 @@ export default function Search() {
     const [services, setServices] = useState([]);
     const [nursingPackage, setNursingPackage] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [initialLoad, setInitialLoad] = useState(true); 
+    const [initialLoad, setInitialLoad] = useState(true);
     const navigation = useNavigation();
     const searchSchema = yup.object().shape({ search: yup.string(), });
     const methods = useForm({
@@ -23,33 +23,35 @@ export default function Search() {
     const { control, handleSubmit, reset, formState: { errors } } = methods;
 
     const onSubmit = (data) => {
-        setLoading(true);
-        getData(`/service-package?Search=${encodeURIComponent(data?.search.trim())}`, {})
-            .then((packageData) => {
-                setServices(packageData?.data?.contends)
-                setInitialLoad(false);
-            })
-            .catch((error) => {
-                setLoading(false);
-                console.error("Error fetching service-package:", error);
-            });
+        if (data?.search.trim() != "") {
+            setLoading(true);
+            getData(`/service-package?Search=${encodeURIComponent(data?.search.trim())}`, {})
+                .then((packageData) => {
+                    setServices(packageData?.data?.contends)
+                    setInitialLoad(false);
+                })
+                .catch((error) => {
+                    setLoading(false);
+                    console.error("Error fetching service-package:", error);
+                });
 
-        getData(`/nursing-package?Search=${data?.search.trim()}`, {})
-            .then((nursingPackage) => {
-                setNursingPackage(nursingPackage?.data?.contends);
-                setLoading(false);
-                setInitialLoad(false);
-            })
-            .catch((error) => {
-                setLoading(false);
-                console.error("Error fetching service-package-categories:", error);
-            });
+            getData(`/nursing-package?Search=${encodeURIComponent(data?.search.trim())}`, {})
+                .then((nursingPackage) => {
+                    setNursingPackage(nursingPackage?.data?.contends);
+                    setLoading(false);
+                    setInitialLoad(false);
+                })
+                .catch((error) => {
+                    setLoading(false);
+                    console.error("Error fetching service-package-categories:", error);
+                });
+        }
     };
 
     const handleClearSearch = () => {
         setServices([]);
         setNursingPackage([]);
-        setInitialLoad(true); 
+        setInitialLoad(true);
     };
 
     const DATA = [
@@ -114,24 +116,24 @@ export default function Search() {
                         <Text style={{ textAlign: "center", fontWeight: "bold", fontSize: 16, color: "#33B39C" }}>Hủy</Text>
                     </TouchableOpacity>
                 </View>
-                { loading ? (<ActivityIndicator style={{ marginTop: 30 }} />) : (
-                        DATA.length > 0 ? (
-                                <SectionList
-                                    style={{ paddingVertical: 20 }}
-                                    sections={DATA}
-                                    keyExtractor={(item, index) => item + index}
-                                    showsVerticalScrollIndicator={false}
-                                    renderItem={renderItem}
-                                    renderSectionHeader={({ section: { title } }) => (
-                                        <Text style={[styles.header, {marginVertical: 5}]}>{title}</Text>
-                                    )}
-                                    ListFooterComponent={<View style={{ height: 50 }}></View>}
-                                />
-                        ) : (
+                {loading ? (<ActivityIndicator style={{ marginTop: 30 }} />) : (
+                    DATA.length > 0 ? (
+                        <SectionList
+                            style={{ paddingBottom: 20 }}
+                            sections={DATA}
+                            keyExtractor={(item, index) => item + index}
+                            showsVerticalScrollIndicator={false}
+                            renderItem={renderItem}
+                            renderSectionHeader={({ section: { title } }) => (
+                                <Text style={[styles.header, { paddingBottom: 5, paddingTop: 20 }]}>{title}</Text>
+                            )}
+                            ListFooterComponent={<View style={{ height: 50 }}></View>}
+                        />
+                    ) : (
                         <ComNoData>
                             {initialLoad ? "Bạn muốn tìm từ khóa gì" : "Không có kết quả bạn cần tìm. Hãy vui lòng thử một từ khóa khác"}
                         </ComNoData>)
-                    )}
+                )}
             </View>
         </>
     )
@@ -146,7 +148,8 @@ const styles = StyleSheet.create({
     },
     header: {
         fontSize: 16,
-        fontWeight: "bold"
+        fontWeight: "bold",
+        backgroundColor: "#fff",
     },
     item: {
         borderColor: "#33B39C",

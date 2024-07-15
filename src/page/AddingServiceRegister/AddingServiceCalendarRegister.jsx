@@ -165,7 +165,7 @@ export default function AddingServiceCalendarRegister() {
                     <Text style={{ fontWeight: "bold" }}>
                         {formatCurrency(data?.price)}
                     </Text>
-                    /{addingPackages?.package?.month}
+                    /{addingPackages?.package?.time}
                 </Text>
                 {/* category */}
                 <Text style={{ flexDirection: "row", marginBottom: 10 }}>

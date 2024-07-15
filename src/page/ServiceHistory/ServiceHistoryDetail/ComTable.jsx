@@ -1,15 +1,20 @@
 import React, { useContext, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { View } from "react-native";
+import ComDateTimeConverter from "../../../Components/ComDateConverter/ComDateTimeConverter";
+import ComDateConverter from "../../../Components/ComDateConverter/ComDateConverter";
 
 export default function ComTable({ columns, dataSource, columnLabels, linkColumns = [] }) {
 
   const formatCurrency = (number) => {
     // Sử dụng hàm toLocaleString() để định dạng số
-    return number.toLocaleString("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    });
+    if (typeof number !== 'undefined') {
+      return number.toLocaleString("vi-VN", {
+        style: "currency",
+        currency: "VND",
+      });
+    }
+    return '';
   };
 
   return (
@@ -17,22 +22,26 @@ export default function ComTable({ columns, dataSource, columnLabels, linkColumn
     <View style={styles.tableContainer}>
       {/* Header Row */}
       <View style={styles.row}>
-        {columns.map((column, index) => (
-          <View key={index} style={styles.headerCell}>
-            <Text style={styles.headerText}>
-              {columnLabels ? columnLabels[column] || column : column}
-            </Text>
-          </View>
-        ))}
+        <View style={styles.headerCell}>
+          <Text style={styles.headerText}>
+            Người thực hiện
+          </Text>
+        </View>
+        <View style={styles.headerCell}>
+          <Text style={styles.headerText}>
+            Thời gian
+          </Text>
+        </View>
       </View>
       {/* Data Rows */}
       {dataSource.map((rowData, rowIndex) => (
         <View key={rowIndex} style={styles.row}>
-          {columns.map((column, colIndex) => (
-            <View key={colIndex} style={styles.dataCell}>
-              <Text style={[styles.dataText, typeof rowData[column] === 'number' && styles.numberText]}>{formatCurrency(rowData[column])}</Text>
-            </View>
-          ))}
+          <View style={styles.dataCell}>
+            <Text style={[styles.dataText]}>{rowData?.user?.fullName ? rowData?.user?.fullName : "Chưa có"}</Text>
+          </View>
+          <View style={styles.dataCell}>
+            <Text style={[styles.dataText]}>{rowData?.completedAt ? ComDateTimeConverter(rowData?.completedAt) : <ComDateConverter>{rowData?.date}</ComDateConverter>}</Text>
+          </View>
         </View>
       ))}
     </View>
