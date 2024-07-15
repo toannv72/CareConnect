@@ -110,7 +110,9 @@ export default function Notification2() {
 
     const fetchExpoPushToken = async () => {
       try {
-        const projectId = Constants.manifest.extra.eas.projectId;
+        console.log(222222,Constants);
+
+        const projectId = Constants.manifest2.extra.eas.projectId;
         const pushTokenData = await Notifications.getExpoPushTokenAsync({
           projectId,
         });
