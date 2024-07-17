@@ -60,7 +60,7 @@ const ComScheduledService = ({ data, hideCheck, onCheck, isSelected }) => {
                             fillColor="#33B39C"
                             unFillColor="#FFFFFF"
                             iconStyle={hideCheck ? { width: 0, height: 0, opacity: 0 } : {}}
-                            onPress={(isChecked) => onCheck(data, isChecked)}
+                            onPress={hideCheck ? () => setIsExpanded(!isExpanded) : (isChecked) => onCheck(data, isChecked)}
                             textComponent={
                                 <>
                                     <Image

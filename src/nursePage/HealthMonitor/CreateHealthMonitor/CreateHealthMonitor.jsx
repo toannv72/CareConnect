@@ -12,7 +12,7 @@ import ComInput from "../../../Components/ComInput/ComInput";
 import ComButton from "../../../Components/ComButton/ComButton";
 import { postData } from "../../../api/api";
 import Toast from 'react-native-toast-message';
-import moment from "moment";
+import { healthRegex } from "../../../Components/ComRegexPatterns/regexPatterns";
 
 export default function CreateHealthMonitor() {
     const { text: { NurseHealthMonitor } } = useContext(LanguageContext);
@@ -28,7 +28,7 @@ export default function CreateHealthMonitor() {
             category?.measureUnitsActive.forEach(unit => {
                 acc[`value_${unit.id}`] = yup.string()
                     .required('Vui lòng nhập kết quả')
-                    .matches(/^\d+(\.\d{1,2})?$/, 'Kết quả phải là số dương và không quá hai chữ số thập phân')
+                    .matches(healthRegex, 'Kết quả phải là số dương, chỉ chứa số và dấu .')
                     .test('is-positive', 'Kết quả phải là số dương', value => parseFloat(value) > 0 || value === "")
             });
             return acc;
@@ -76,7 +76,7 @@ export default function CreateHealthMonitor() {
         const day = new Date().getDate().toString().padStart(2, "0");
         const month = (new Date().getMonth() + 1).toString().padStart(2, "0");
         const year = new Date().getFullYear();
-       
+
         const healthReportDetails = selectedIndexs.map((category) => ({
             healthCategoryId: category.id,
             healthReportDetailMeasures: category?.measureUnitsActive.map((unit) => ({
@@ -96,10 +96,10 @@ export default function CreateHealthMonitor() {
         postData("/health-report", formattedData)
             .then((response) => {
                 showToast("success", "Tạo báo cáo thành công", "", "bottom");
-                navigation.navigate("ListHealthMonitor", {id: elderId});
+                navigation.navigate("ListHealthMonitor", { id: elderId });
             })
             .catch((error) => {
-                console.error("API Error: ", error);
+                console.error("API Error: ", error?.message);
                 showToast("error", "Có lỗi xảy ra, vui lòng thử lại!", "", "bottom");
             });
     };

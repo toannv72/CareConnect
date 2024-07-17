@@ -28,7 +28,8 @@ export default function ScheduledService() {
     useFocusEffect(
         useCallback(() => {
             setLoading(true);
-            getData(`/scheduled-service?UserId=${user?.id}`, {})
+            // getData(`/scheduled-service?UserId=08dca44f-6b05-454a-8e9f-944208a72666`, {})
+                getData(`/scheduled-service?UserId=${user?.id}`, {})
                 .then((scheduledService) => {
                     setData(scheduledService?.data?.contends[0]);
                     setLoading(false);
@@ -63,7 +64,18 @@ export default function ScheduledService() {
         }
     };
 
-    const totalPrice = selectedServices.reduce((total, service) => total + (service.servicePackage.price * service.scheduledTimes.length), 0);
+    const totalPrice = selectedServices.reduce((total, service) => total + (service?.servicePackage?.price * service?.scheduledTimes?.length), 0);
+    const groupedServices = (data?.scheduledServiceDetails || [])?.reduce((acc, service) => {
+        const elderId = service?.elder?.id;
+        if (!acc[elderId]) {
+            acc[elderId] = {
+                name: service?.elder?.name,
+                services: []
+            };
+        }
+        acc[elderId].services.push(service);
+        return acc;
+    }, {});
 
     return (
         <>
@@ -72,51 +84,62 @@ export default function ScheduledService() {
                 showTitle={true}
                 title={"Xác nhận đăng ký"}
             />
-            <View style={styles.container}>
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false}
-                >
-                    <Text style={{ marginBottom: 10 }}>Vui lòng chọn những dịch vụ mà bạn muốn tiếp tục đăng ký cho tháng sau. Nếu không muốn đăng ký, bạn vui lòng bỏ qua:</Text>
-                    <ComLoading show={loading}>
-                        {data?.scheduledServiceDetails == 0 ? (
-                            <ComNoData />
-                        ) : (
-                            <View>
-                                {data?.scheduledServiceDetails?.map((item, index) => (
-                                    <ComScheduledService
-                                        key={index}
-                                        data={item}
-                                        onCheck={handleSelectService}
-                                        isSelected={selectedServices.some(service => service.id === item.id)}
-                                    />
-                                ))}
-                            </View>
-                        )}
-                    </ComLoading>
-                </ScrollView>
-                <View style={{ marginTop: 10, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                    <BouncyCheckbox
-                        isChecked={selectAll}
-                        onPress={handleSelectAll}
-                        fillColor="#33B39C"
-                        textComponent={<Text>  Chọn tất cả</Text>}
-                    />
+            {data == undefined ? (
+                <View style={styles.container}>
+                    <ComNoData>Hiện tại không có dịch vụ cần xác nhận</ComNoData>
                 </View>
-                <View style={[{ flexDirection: "row", justifyContent: "space-between", marginVertical: 10 }]}>
-                    <Text style={{ fontWeight: "600", fontSize: 16 }}>
-                        Tổng tiền
-                    </Text>
-                    <Text style={{ fontWeight: "600", fontSize: 16 }}>
-                        {formatCurrency(totalPrice)}
-                    </Text>
+            ) : (
+                <View style={styles.container}>
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        showsHorizontalScrollIndicator={false}
+                    >
+                        <Text style={{ marginBottom: 10 }}>Vui lòng chọn những dịch vụ mà bạn muốn tiếp tục đăng ký cho tháng sau. Nếu không muốn đăng ký, bạn vui lòng bỏ qua:</Text>
+                        <ComLoading show={loading}>
+                            {data?.scheduledServiceDetails == 0 ? (
+                                <ComNoData />
+                            ) : (
+                                <View>
+                                    {Object.keys(groupedServices).map(elderId => (
+                                        <View key={elderId}>
+                                            <Text style={{ fontSize: 16, fontWeight: "600", marginVertical: 10 }}>Người cao tuổi: {groupedServices[elderId].name}</Text>
+                                            {groupedServices[elderId].services.map((item, index) => (
+                                                <ComScheduledService
+                                                    key={index}
+                                                    data={item}
+                                                    onCheck={handleSelectService}
+                                                    isSelected={selectedServices.some(service => service.id === item.id)}
+                                                />
+                                            ))}
+                                        </View>
+                                    ))}
+                                </View>
+                            )}
+                        </ComLoading>
+                    </ScrollView>
+                    <View style={{ marginTop: 10, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                        <BouncyCheckbox
+                            isChecked={selectAll}
+                            onPress={handleSelectAll}
+                            fillColor="#33B39C"
+                            textComponent={<Text>  Chọn tất cả</Text>}
+                        />
+                    </View>
+                    <View style={[{ flexDirection: "row", justifyContent: "space-between", marginVertical: 10 }]}>
+                        <Text style={{ fontWeight: "600", fontSize: 16 }}>
+                            Tổng tiền
+                        </Text>
+                        <Text style={{ fontWeight: "600", fontSize: 16 }}>
+                            {formatCurrency(totalPrice)}
+                        </Text>
+                    </View>
+                    <ComSelectButton
+                        disable={selectedServices?.length == 0}
+                        onPress={() => { navigation.navigate("ScheduledServicePayment", { selectedServices, data }) }}>
+                        Xác nhận
+                    </ComSelectButton>
                 </View>
-                <ComSelectButton
-                    disable={selectedServices?.length == 0}
-                    onPress={() => { navigation.navigate("ScheduledServicePayment", { selectedServices, data }) }}>
-                    Xác nhận
-                </ComSelectButton>
-            </View>
+            )}
         </>
     )
 }
