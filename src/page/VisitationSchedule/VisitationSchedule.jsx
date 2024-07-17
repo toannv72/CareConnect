@@ -14,11 +14,17 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { postData, getData } from "../../api/api";
 import { useAuth } from "../../../auth/useAuth";
 import ComNoData from "../../Components/ComNoData/ComNoData";
+import CategoryButtons from '../../Components/ComCategories/ComCategories';
+import ComSelectButton from "../../Components/ComButton/ComSelectButton";
 
 export default function VisitationSchedule() {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [select, setSelect] = useState(false);
   const { user } = useAuth();
+  const categories = ["FollowUpVisit", "Consultation", "ProcedureCompletion"];
+
   const searchSchema = yup.object().shape({
     search: yup.string(),
   });
@@ -37,6 +43,7 @@ export default function VisitationSchedule() {
     },
   });
 
+
   const {
     control,
     handleSubmit,
@@ -48,10 +55,35 @@ export default function VisitationSchedule() {
 
   };
 
+  const check = () => {
+    setSelectedCategory(null)
+    setSelect(false);
+  };
+
+  const handleCategorySelect = (value) => {
+    setSelectedCategory(value);
+    setSelect(true);
+  };
+
+  const getStatusText = (status) => {
+    switch (status) {
+      case 'FollowUpVisit':
+        return { text: 'Thăm nuôi', color: 'green' };
+      case 'ProcedureCompletion':
+        return { text: 'Gia hạn hợp đồng', color: 'red' };
+      case 'Consultation':
+        return { text: 'Thủ tục', color: 'red' };
+      default:
+        return status;
+    }
+  };
+
   useFocusEffect(
     useCallback(() => {
-      setLoading(true);
-      getData(`/appointments?UserId=${user?.id}&SortColumn=date&SortDir=Desc`, {})
+      setLoading(true)
+      let url = `/appointments?UserId=${user?.id}&SortColumn=date&SortDir=Desc`;
+      if (selectedCategory) { url += `&Type=${selectedCategory}` }
+      getData(url, {})
         .then((appointments) => {
           setData(appointments?.data?.contends);
           setLoading(false);
@@ -60,17 +92,17 @@ export default function VisitationSchedule() {
           setLoading(false);
           console.error("Error fetching service-package:", error);
         });
-    }, [user?.id])
+    }, [user?.id, selectedCategory])
   );
   return (
     <>
       <ComHeader
-        title={"Lịch thăm nuôi"}
+        title={"Lịch hẹn"}
         showTitle
         showBackIcon
       />
       <View style={styles.body}>
-        <View style={{ gap: 10 }}>
+        <View style={{ gap: 10, marginBottom: 15 }}>
           <View style={styles.imageBody}>
             <Image source={Visitation} style={styles.image} />
           </View>
@@ -117,11 +149,30 @@ export default function VisitationSchedule() {
                   fontSize: 18,
                 }}
               >
-                {visitationText?.register}
+                Đăng ký thăm nuôi
               </Text>
             </View>
           </TouchableOpacity>
         </View>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          horizontal={true}
+          style={styles?.scrollView}
+        >
+          <View style={styles?.buttonContainer}>
+            <ComSelectButton onPress={check} check={select}>
+              Tất cả
+            </ComSelectButton>
+            {categories.map((category) => (
+              <ComSelectButton
+                key={category}
+                onPress={() => handleCategorySelect(category)}
+                check={selectedCategory === category ? false : true}
+              > {getStatusText(category).text} </ComSelectButton>
+            ))}
+          </View>
+        </ScrollView>
         <ComLoading show={loading}>
           <ScrollView
             showsVerticalScrollIndicator={false}
@@ -129,11 +180,11 @@ export default function VisitationSchedule() {
           >
             {data?.length > 0 ? (
               <View>
-                {data?.filter(value => value?.elders && value?.elders?.length > 0).map((value, index) => (
+                {data?.map((value, index) => (
                   <ComVisitationSchedule key={index} data={value} />
                 ))}
               </View>
-            ) : (<ComNoData>Không có lịch thăm nuôi nào</ComNoData>)}
+            ) : (<ComNoData>Không có dữ liệu</ComNoData>)}
             <View style={{ height: 320 }}></View>
           </ScrollView>
         </ComLoading>
@@ -180,5 +231,15 @@ const styles = StyleSheet.create({
     height: "180%",
     resizeMode: "cover",
     bottom: -50,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    gap: 15,
+    // flexWrap: "wrap",
+    marginBottom: 10,
+  },
+  scrollView: {
+    flexGrow: 0,
+    flexShrink: 0,
   },
 });

@@ -79,6 +79,7 @@ export default function ServicePackageDetail({ }) {
       userId: user?.id,
       nursingPackageId: serviceData?.id,
       date: moment(data?.date).format("YYYY-MM-DD").toString(),
+      type: "Consultation"
     };
     postData("/appointments", formData, {})
       .then((appointments) => {

@@ -43,7 +43,7 @@ export default function ServicePayment() {
     };
     useEffect(() => {
         const sortedDates = [...orderDates].sort((a, b) => moment(a, 'YYYY-MM-DD').diff(moment(b, 'YYYY-MM-DD')));
-        // Kiểm tra xem tất cả các ngày trong orderDates có phải là ngày quá khứ không
+        // Kiểm tra xem tất cả các ngày trong orderDates có phải là ngày quá khứ or hiện tại không
         const allPastDates = sortedDates.every(date => moment(date, 'YYYY-MM-DD').isSameOrBefore(moment(), 'day'));
         if (allPastDates) {
             // Lấy ngày tháng sau tương ứng nếu có

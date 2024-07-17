@@ -31,7 +31,6 @@ export default function ServiceHistory() {
             .then((orders) => {//lọc những order ko có service
                 const filteredOrders = orders?.data?.contends.filter(order => order.orderDetails[0]?.servicePackage !== null);
                 const newItems = filteredOrders || [];
-
                 setData(prevData => [...prevData, ...newItems]);
                 setPage(prevPage => prevPage + 1);
                 setLoadMoreLoading(false);
@@ -97,7 +96,6 @@ export default function ServiceHistory() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 10,
         backgroundColor: "#fff",
         paddingHorizontal: 15
     },

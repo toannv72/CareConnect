@@ -160,7 +160,7 @@ export const vn = {
     },
     popup:{
       signContractTitle: "Đăng ký lịch hẹn hoàn thành thủ tục",
-      limitDays: "Bạn chỉ có thể hẹn trước 14 ngày tính từ hôm nay",
+      limitDays: "Bạn chỉ có thể hẹn trước 14 ngày tính từ ngày mai",
       signContractSubTitle: "Bạn và người thân sẽ trực tiếp đến Viện để được hỗ trợ hoàn thành hồ sơ bệnh án và hợp đồng để trải nghiệm dịch vụ của viện",
       successTitle: "Đăng ký hoàn thành thủ tục thành công",
       successRenewContractTitle: "Đăng ký gia hạn hợp đồng thành công",
@@ -393,7 +393,7 @@ export const vn = {
     status: "Trạng thái",
   },
   VisitationSchedule: {
-    title: "Lịch thăm nuôi",
+    title: "Lịch hẹn",
   },
   ElderProfile:{
     title: "Hồ sơ người thân",

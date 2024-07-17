@@ -20,7 +20,7 @@ export default function ComAddContract({ data }) {
         return { text: 'Còn hạn', color: 'green' };
       case 'Cancelled':
         return { text: 'Đã hủy', color: 'red' };
-      case 'Invalid':
+      case 'Expired':
         return { text: 'Hết hạn', color: 'red' };
       case 'Pending':
         return { text: 'Đang chờ' };
@@ -71,9 +71,9 @@ export default function ComAddContract({ data }) {
         </Text>
         <Text style={{ flexDirection: "row" }}>
           <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-            {contractsPage?.status}
+            {contractsPage?.status}:
           </Text>
-          <Text style={{ color: status.color }}>: {status.text}</Text>
+          <Text style={{ color: status.color }}> {status.text}</Text>
         </Text>
       </View>
     </TouchableOpacity>

@@ -21,12 +21,10 @@ export default function FeedbackDetail() {
     const { id } = route.params;
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState({});
-
     useEffect(() => {
         setLoading(!loading);
         getData(`/feedback/${id}`, {})
             .then((feedback) => {
-                console.log("FeedbackDetail", feedback?.data)
                 setData(feedback?.data);
                 setLoading(loading);
             })
@@ -83,11 +81,13 @@ export default function FeedbackDetail() {
                     showsHorizontalScrollIndicator={false}>
                     <Image source={feedbackImg}
                         style={{
-                            height: 200,
+                            height: 160,
                             objectFit: "fill",
                             marginBottom: 30
                         }} />
-
+                    <Text style={{ fontSize: 16, fontWeight: 'bold', textAlign: "center", paddingBottom: 20 }}>
+                        {data?.orderDetail?.servicePackage?.name}
+                    </Text>
                     <View style={{ marginBottom: 10 }}>
                         <Text style={styles.contentBold}>
                             {feedback?.history?.title}
@@ -111,12 +111,24 @@ export default function FeedbackDetail() {
                     </View>
                     <View style={{ marginBottom: 10 }}>
                         <Text style={styles.contentBold}>
+                           Người lớn tuổi
+                        </Text>
+                        <Text style={styles.textbox}>{data?.orderDetail?.elder?.name}</Text>
+                    </View>
+                    <View style={{ marginBottom: 10 }}>
+                        <Text style={styles.contentBold}>
+                           Người lớn tuổi
+                        </Text>
+                        <Text style={styles.textbox}>{data?.orderDetail?.elder?.name}</Text>
+                    </View>
+                    <View style={{ marginBottom: 10 }}>
+                        <Text style={styles.contentBold}>
                             {feedback?.history?.date}
                         </Text>
                         <Text style={styles.textbox}>{formattedDate(data?.createdAt)}</Text>
                     </View>
                     <FormProvider {...methods}>
-                        <View style={{ marginVertical: 5 }}>
+                        <View style={{ marginBottom: 35 }}>
                             <Text style={styles.contentBold}>
                                 {feedback?.label?.pleasure}
                             </Text>
@@ -131,7 +143,6 @@ export default function FeedbackDetail() {
                             />
                         </View>
                     </FormProvider>
-
                 </ScrollView>
             </View>
         </>
@@ -141,7 +152,6 @@ export default function FeedbackDetail() {
 const styles = StyleSheet.create({
     body: {
         flex: 1,
-        paddingTop: 20,
         backgroundColor: "#fff",
         paddingHorizontal: 15,
     },

@@ -23,8 +23,8 @@ const getStatus = data?.orderDates.every(item => item.status === "Complete");
   return (
     <TouchableOpacity
       style={styles.body}
-      onPress={() => {
-        navigation.navigate("ServiceHistoryDetail", { id: orderData.id, status: getStatus });
+      onPress={() => {                               //orderId                                    orderDetailId
+        navigation.navigate("ServiceHistoryDetail", { id: orderData?.id, status: getStatus, orderDetailId: data?.id });
       }}
     >
       <Image

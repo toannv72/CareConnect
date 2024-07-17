@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { StyleSheet, View, Text, KeyboardAvoidingView, Platform, Keyboard, Image } from "react-native";
+import { StyleSheet, View, Text, KeyboardAvoidingView, Platform, Keyboard, Image, ActivityIndicator } from "react-native";
 import * as yup from "yup";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -13,15 +13,15 @@ import ComHeader from '../../Components/ComHeader/ComHeader';
 import feedbackImg from "../../../assets/images/feedback/feedback.png";
 import { postData } from "../../api/api";
 import { useRoute } from "@react-navigation/native";
+import Toast from 'react-native-toast-message';
 
 export default function CreateFeedback() {
     const navigation = useNavigation();
     const [value, setValue] = useState("1");
+    const [loading, setLoading] = useState(false);
     const route = useRoute();
-    const { data, serviceData } = route.params;
-    console.log("CreateFeedback ", data)
-
-    // const [data, setData] = useState({})
+    const { data, serviceData, orderDetailId } = route.params;
+    const showToast = (type, text1, text2, position) => { Toast.show({ type: type, text1: text1, text2: text2, position: position }) }
 
     const {
         text: {
@@ -51,20 +51,22 @@ export default function CreateFeedback() {
 
     const handleSend = (formData) => {
         // Xử lý đăng nhập với dữ liệu từ data
+        setLoading(true)
         const updatedData = {
             ...formData,
-            orderDetailId: data?.orderDetails[0]?.id, // Thêm id với giá trị cụ thể. Bạn có thể thay thế "unique-id" bằng giá trị thực tế.
+            orderDetailId: orderDetailId, // Thêm id với giá trị cụ thể. Bạn có thể thay thế "unique-id" bằng giá trị thực tế.
         };
         Keyboard.dismiss();
         postData("/feedback", updatedData)
             .then((response) => {
-                console.log("Thành công");
-                // showToast("success", "Tạo báo cáo thành công", "", "bottom");
-                navigation.navigate("ServiceHistory");
+                setLoading(false)
+                showToast("success", "Đánh giá thành công", "", "bottom");
+                navigation.goBack();
             })
             .catch((error) => {
+                setLoading(false)
                 console.error("API Error: ", error);
-                // showToast("error", "Có lỗi xảy ra, vui lòng thử lại!", "", "bottom");
+                showToast("error", "Có lỗi xảy ra, vui lòng thử lại!", "", "bottom");
             });
     };
 
@@ -73,10 +75,6 @@ export default function CreateFeedback() {
         { label: 'Bình thường', value: 'Neutral' },
         { label: 'Không hài lòng', value: 'Unsatisfied' },
     ];
-
-    const handleSelect = (selectedItems, index) => {
-        console.log('Selected Items:', selectedItems);
-    };
 
     return (
         <>
@@ -91,7 +89,7 @@ export default function CreateFeedback() {
                         source={feedbackImg}
                     />
                     <Text style={{ fontSize: 16, fontWeight: 'bold', textAlign: "center", paddingVertical: 20 }}>
-                       {serviceData?.name}
+                        {serviceData?.name}
                     </Text>
                     <FormProvider {...methods}>
                         <View style={{ width: "90%", gap: 10 }}>
@@ -121,7 +119,7 @@ export default function CreateFeedback() {
                                 required
                             ></ComSelect>
                             <ComButton onPress={handleSubmit(handleSend)}>
-                                {feedback?.label?.send}
+                                {loading ? <ActivityIndicator color="#fff" /> : feedback?.label?.send}
                             </ComButton>
                         </View>
                     </FormProvider>

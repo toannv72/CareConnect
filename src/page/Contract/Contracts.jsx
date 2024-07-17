@@ -22,7 +22,6 @@ export default function Contracts() {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const categories = ["Valid", "Expired", "Cancelled", "Pending"];
-
   const fetchNextPage = async () => {
     setLoading(true)
     let url = `/contract?UserId=${user?.id}&SortColumn=createdAt&SortDir=Desc`;

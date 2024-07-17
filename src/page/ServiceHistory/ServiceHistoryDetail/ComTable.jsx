@@ -34,7 +34,7 @@ export default function ComTable({ columns, dataSource, columnLabels, linkColumn
         </View>
       </View>
       {/* Data Rows */}
-      {dataSource.map((rowData, rowIndex) => (
+      {dataSource?.map((rowData, rowIndex) => (
         <View key={rowIndex} style={styles.row}>
           <View style={styles.dataCell}>
             <Text style={[styles.dataText]}>{rowData?.user?.fullName ? rowData?.user?.fullName : "Chưa có"}</Text>

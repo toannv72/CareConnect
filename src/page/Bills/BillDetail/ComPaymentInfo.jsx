@@ -14,13 +14,15 @@ const formatCurrency = (number) => {
 const ComPaymentInfo = ({ data, createdAt }) => {
     if (!data) return null; // Early return if data is undefined or null
 
-    const { servicePackage, contract, quantity, elder, orderDates } = data;
+    const { servicePackage, contract, price, elder, orderDates } = data;
     const [isExpanded, setIsExpanded] = useState(false);
     const filteredOrderDates = orderDates?.filter(detail => {
         const orderDate = new Date(detail?.date);
         const createdDate = new Date(createdAt);
         return orderDate > createdDate;
     });
+    const currentPrice = price/filteredOrderDates?.length // giá lúc mua
+            // tổng tiền mỗi dv    /   tổng số ngày > createAt 
     return (
         <TouchableOpacity
             onPress={() => setIsExpanded(!isExpanded)}
@@ -37,11 +39,11 @@ const ComPaymentInfo = ({ data, createdAt }) => {
                                 resizeMode: "cover",
                             }}
                         />
-                        <View style={{ gap: 3, flex: 1 }}>
-                            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                <Text style={styles.labelText}>{servicePackage.name}</Text>
+                        <View style={{ gap: 6, flex: 1 }}>
+                            <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 3 }}>
+                                <Text style={[styles.labelText, {flex: 8, lineHeight: 20}]}>{servicePackage.name}</Text>
                                 <TouchableOpacity
-                                    style={styles.expandButton}
+                                    style={[styles.expandButton, {flex: 1}]}
                                     onPress={() => setIsExpanded(!isExpanded)}
                                 >
                                     <Image
@@ -50,21 +52,21 @@ const ComPaymentInfo = ({ data, createdAt }) => {
                                 </TouchableOpacity>
                             </View>
                             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                                <View>
-                                    <Text style={{ flexDirection: "row" }}>
+                                <View style={{flex: 0.7}}>
+                                    {/* <Text style={{ flexDirection: "row" }}>
                                         <Text style={styles.labelText}>Phân loại</Text>
                                         <Text style={styles.contentText}>: Gói dịch vụ</Text>
-                                    </Text>
-                                    <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
-                                        <Text style={styles.labelText}>Người cao tuổi</Text>
-                                        <Text>: {elder?.name ?? 'Unknown'}</Text>
+                                    </Text> */}
+                                    <View style={{ flexDirection: "row", alignItems: "center", gap: 5, flexWrap: "wrap" }}>
+                                        <Text style={styles.labelText}>Người cao tuổi:</Text>
+                                        <Text>{elder?.name ?? 'Unknown'}</Text>
                                     </View>
                                     <Text style={styles.labelText} >
-                                        {formatCurrency(servicePackage?.price) + " x " + filteredOrderDates?.length}
+                                        {formatCurrency(currentPrice) + " x " + filteredOrderDates?.length}
                                     </Text>
                                 </View>
-                                <Text style={styles.contentText}>
-                                    {formatCurrency(servicePackage?.price * filteredOrderDates?.length)}
+                                <Text style={[styles.contentText, {flex: 0.3}]}>
+                                    {formatCurrency(currentPrice * filteredOrderDates?.length)}
                                 </Text>
                             </View>
                         </View>
@@ -136,9 +138,10 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 0,
         borderTopRightRadius: 0,
         backgroundColor: '#fff',
-        borderColor: '#33B39C',
         gap: 3,
-        paddingVertical: 10
+        paddingVertical: 10,
+        borderBottomWidth: 1,
+        borderColor: '#ddd',
     },
     icon: {
         width: 20,

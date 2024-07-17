@@ -120,7 +120,7 @@ export default function RegisterServiceDetail({ }) {
                                 {NurseRegisterService?.implementor}
                             </Text>
                             <Text>
-                                : {orderdate?.userId ? orderdate?.userId : "Chưa có"}
+                                : {orderdate?.user?.fullName ? orderdate?.user?.fullName : "Chưa có"}
                             </Text>
                         </View>
                         <View style={{ flexDirection: "row" }}>

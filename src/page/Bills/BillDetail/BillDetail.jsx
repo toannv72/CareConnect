@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     body: {
         flex: 1,
         backgroundColor: "#fff",
-        paddingHorizontal: 20,
+        paddingHorizontal: 10,
     },
     contentBold: {
         fontSize: 16,

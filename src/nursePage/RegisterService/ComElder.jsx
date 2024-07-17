@@ -41,7 +41,6 @@ export default function ComElder({ data }) {
     const todayOrderDate = item?.orderDates?.find(orderDate =>
       moment(orderDate?.date).format("YYYY-MM-DD") === today
     )
-
     return (
       <TouchableOpacity
         key={index}
@@ -71,7 +70,7 @@ export default function ComElder({ data }) {
                 tintColor: "#33B39C"
               }}
             />
-            <Text>{todayOrderDate?.implementor ? todayOrderDate?.implementor : "Chưa có"}</Text>
+            <Text>{todayOrderDate?.user?.fullName ? todayOrderDate?.user?.fullName : "Chưa có"}</Text>
           </View>
           <View style={{ flexDirection: "row", gap: 5 }}>
             <Image
@@ -94,7 +93,7 @@ export default function ComElder({ data }) {
                 marginLeft: 2
               }}
             />
-            <Text style={{fontWeight: "bold"}}>{getStatusText(todayOrderDate?.status)?.text}</Text>
+            <Text style={{ fontWeight: "bold" }}>{getStatusText(todayOrderDate?.status)?.text}</Text>
           </View>
         </View>
       </TouchableOpacity>

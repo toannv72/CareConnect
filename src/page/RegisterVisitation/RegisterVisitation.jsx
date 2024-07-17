@@ -26,7 +26,7 @@ export default function RegisterVisitation() {
   const [selectedElderIds, setSelectedElderIds] = useState([]);
 
   const {
-    text: { visitationText },
+    text: { visitationText, servicePackages },
   } = useContext(LanguageContext);
 
   const navigation = useNavigation();
@@ -66,7 +66,7 @@ export default function RegisterVisitation() {
       notes: "Đăng ký lịch thăm nuôi",
       userId: user?.id,
       date: moment(data?.date).format("YYYY-MM-DD"),
-      type: "None",
+      type: "FollowUpVisit",
       elders: selectedElderIds.map((id) => ({ id })),
     };
 
@@ -103,6 +103,7 @@ export default function RegisterVisitation() {
               }}
             >
               <View style={{ width: "90%" }}>
+                <Text style={{ color: "#A3A3A3", textAlign: "center", marginVertical: 10 }}>{servicePackages?.popup?.limitDays}</Text>
                 <ComSelectedOneDate
                   date={changeSelectedDate}
                   name="date"
@@ -110,6 +111,7 @@ export default function RegisterVisitation() {
                   errors={errors}
                   enabled={true}
                   minDate={moment().add(1, 'day').toString()}
+                  maxDate={moment().add(14, 'days').toString()}
                 />
               </View>
             </View>

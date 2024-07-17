@@ -88,6 +88,7 @@ export default function ComSelectedOneDate({
                 }
               }}
               minDate={minDate ? minDate : today}
+              maxDate={maxDate ? maxDate : today}
             />
             {errorMessage && <Text style={styles.error}>{errorMessage}</Text>}
           </View>

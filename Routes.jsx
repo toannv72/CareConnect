@@ -540,10 +540,15 @@ function MyBottomNavigationBar() {
         options={{ headerShown: false }}
         component={AddingServicePackages}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="HealthCondition"
         options={{ headerShown: false }}
         component={NotificationPage}
+      /> */}
+        <Tab.Screen
+        name="HealthCondition"
+        options={{ headerShown: false }}
+        component={HealthMonitor}
       />
       {/* <Tab.Screen
         name="Notification"
