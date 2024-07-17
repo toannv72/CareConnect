@@ -7,6 +7,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigation, useRoute, useFocusEffect } from "@react-navigation/native";
 import { postData, getData } from "../../api/api";
 import ComNoData from "../../Components/ComNoData/ComNoData";
+import ComHeader from "../../Components/ComHeader/ComHeader";
 
 export default function Search() {
     const [services, setServices] = useState([]);
@@ -95,6 +96,11 @@ export default function Search() {
 
     return (
         <>
+            <ComHeader
+                showBackIcon={true}
+                showTitle={true}
+                title={"Tìm kiếm"}
+            />
             <View style={styles.container}>
                 <View style={{ flexDirection: "row", gap: 10, justifyContent: "center", alignItems: "center" }}>
                     <View style={{ flex: 7 }}>
@@ -110,11 +116,11 @@ export default function Search() {
                         </FormProvider>
                     </View>
 
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                         style={{ flex: 1 }}
                         onPress={() => { navigation.goBack(); }}>
                         <Text style={{ textAlign: "center", fontWeight: "bold", fontSize: 16, color: "#33B39C" }}>Hủy</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
                 {loading ? (<ActivityIndicator style={{ marginTop: 30 }} />) : (
                     DATA.length > 0 ? (
@@ -142,7 +148,7 @@ export default function Search() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 40,
+        paddingTop: 20,
         backgroundColor: "#fff",
         paddingHorizontal: 15,
     },
