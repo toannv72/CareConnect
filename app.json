@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "CareConnect",
-    "slug": "CareConnect",
+    "slug": "careconnect-fjti0vfykgk9qpovwv3vb",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -39,15 +39,19 @@
       },
       "package": "com.toannv1712.CareConnect",
       "googleServicesFile": "./google-services.json",
-      "permissions": ["NOTIFICATIONS", "RECEIVE_BOOT_COMPLETED"]
+      "permissions": [
+        "NOTIFICATIONS",
+        "RECEIVE_BOOT_COMPLETED"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "21660a24-e18c-46e0-9378-842a47a38d1d"
+        "projectId": "872b251d-49e5-4bd1-be4a-f2177b86823f"
       }
-    }
+    },
+    "owner": "thaomy"
   }
 }
