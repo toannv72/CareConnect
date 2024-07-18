@@ -43,8 +43,6 @@ export default function HealthMonitor() {
   useFocusEffect(
     useCallback(() => {
       setLoading(true);
-      console.log("fullName ", user?.fullName);
-
       getData(`/elders?UserId=${user?.id}`, {})
         .then((elders) => {
           setData(elders?.data?.contends);

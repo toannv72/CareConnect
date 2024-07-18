@@ -30,13 +30,13 @@ export default function ServicePayment() {
 
     const showToast = (type, text1, text2, position) => {
         Toast.show({
-          type: type,
-          text1: text1,
-          text2: text2,
-          position: position,
-          visibilityTime: 2000
+            type: type,
+            text1: text1,
+            text2: text2,
+            position: position,
+            visibilityTime: 2000
         });
-      }
+    }
 
     const handleMethodPress = (methodName) => {
         setSelectedMethod(methodName);
@@ -76,11 +76,10 @@ export default function ServicePayment() {
     }
 
     const payment = () => {
-        const dueDate = moment().add(2, 'days').format('YYYY-MM-DD');
         const transformedDates = servicePackage?.type === "OneDay" ? [{ "date": servicePackage?.eventDate }] : adjustedOrderDates.map(date => ({ date }));
         const formattedData = {
             "method": selectedMethod,
-            "dueDate": dueDate,
+            "dueDate": moment().format('YYYY-MM-DD'),
             "description": "Thanh toán dịch vụ " + servicePackage?.name,
             "content": "Thanh toán dịch vụ " + servicePackage?.name,
             "notes": "Thanh toán dịch vụ " + servicePackage?.name,
@@ -94,6 +93,7 @@ export default function ServicePayment() {
                 }
             ]
         }
+
         postData("/orders/service-package?returnUrl=exp://rnnstoi-thaomy-8081.exp.direct/--/BillHistory", formattedData)
             .then((response) => {
                 console.log("API Response: ", response.message);
@@ -108,7 +108,6 @@ export default function ServicePayment() {
                     });
             })
             .catch((error) => {
-                console.log("Opened successfully");
                 console.log("API Error: ", error.response);
                 switch (error.response.status) {
                     case 609:

@@ -9,9 +9,9 @@ import { useNavigation } from '@react-navigation/native';
 import { postData, getData } from "../../api/api";
 import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter";
 import Heart from "../../../assets/heart.png";
+import moment from "moment";
 
 export default function AddingServiceDetail() {
-
     const {
         text: { addingPackages },
         setLanguage,
@@ -21,11 +21,9 @@ export default function AddingServiceDetail() {
     const { id } = route.params;
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState({});
-    const [isRegistrationClosed, setIsRegistrationClosed] = useState(false);
+    const [registerError, setRegisterError] = useState("");//kiểm tra ngày htai sau enddate
     const navigation = useNavigation();
-    const handleBackPress = () => {
-        navigation.goBack();
-    };
+    const handleBackPress = () => { navigation.goBack() };
 
     const formatCurrency = (number) => {
         return number?.toLocaleString("vi-VN", {
@@ -39,18 +37,23 @@ export default function AddingServiceDetail() {
         getData(`/service-package/${id}`, {})
             .then((packageData) => {
                 setData(packageData?.data);
-                if (packageData?.data?.type === "OneDay") {
-                    const currentDate = new Date();
-                    const endRegistrationDate = new Date(packageData?.data?.endRegistrationStartDate);
-                    if (currentDate > endRegistrationDate) {
-                        setIsRegistrationClosed(true); //kiểm tra hạn đăng ký
-                    }
+                // check tổng lượt đăng ký
+                if (packageData?.data?.registrationLimit > 0 && (packageData?.data?.totalOrder >= packageData?.data?.registrationLimit))
+                    setRegisterError("Rất tiếc đã hết lượt đăng ký dịch vụ"); //kiểm tra hạn đăng ký
+                // check hạn đăng ký
+                const currentDate = new Date();
+                const startRegistrationDate = new Date(packageData?.data?.startRegistrationDate);
+                const endRegistrationDate = new Date(packageData?.data?.endRegistrationStartDate);
+                if (currentDate > endRegistrationDate) {
+                    setRegisterError("Rất tiếc đã hết hạn đăng ký dịch vụ"); //kiểm tra hạn đăng ký
+                } else if (currentDate < startRegistrationDate) {
+                    setRegisterError(`Chưa đến ngày đăng ký dịch vụ. Bạn vui lòng quay lại sau ngày ${moment(startRegistrationDate).format('DD/MM/YYYY')}`)
                 }
                 setLoading(false)
             })
             .catch((error) => {
                 setLoading(false)
-                console.error("Error fetching service-package:", error);
+                console.log("Error fetching service-package:", error);
             });
     }, [])
 
@@ -104,7 +107,7 @@ export default function AddingServiceDetail() {
                                 /{addingPackages?.package?.time}
                             </Text>
 
-                            {data?.registrationLimit !== 0 && (
+                            {data?.registrationLimit !== 0 && (//có giới hạn người đăng ký
                                 <Text style={{ flexDirection: "row" }}>
                                     <Text style={styles.contentBold}>
                                         {addingPackages?.package?.registrationLimit}
@@ -115,52 +118,52 @@ export default function AddingServiceDetail() {
                                 </Text>
                             )}
 
-                            {
-                                data?.type == "OneDay" && (
-                                    <View style={{gap: 10}}>
-                                        <Text style={{ flexDirection: "row" }}>
-                                            <Text style={{ fontWeight: "600", fontSize: 16 }}>
-                                                {addingPackages?.package?.endRegistrationStartDate}
-                                            </Text>
-                                            <Text>
-                                                : <ComDateConverter>{data?.endRegistrationStartDate}</ComDateConverter>
-                                            </Text>
-                                        </Text>
-                                        <Text style={{ flexDirection: "row" }}>
-                                            <Text style={{ fontWeight: "600", fontSize: 16 }}>
-                                                {addingPackages?.package?.eventDate}
-                                            </Text>
-                                            <Text>
-                                                : <ComDateConverter>{data?.eventDate}</ComDateConverter>
-                                            </Text>
-                                        </Text>
-                                    </View>
-                                )
-                            }
+                            <View style={{ gap: 10 }}>
+                                <Text style={{ flexDirection: "row" }}>
+                                    <Text style={{ fontWeight: "600", fontSize: 16 }}>
+                                        Bắt đầu đăng ký
+                                    </Text>
+                                    <Text>
+                                        : <ComDateConverter>{data?.startRegistrationDate}</ComDateConverter>
+                                    </Text>
+                                </Text>
+                                <Text style={{ flexDirection: "row" }}>
+                                    <Text style={{ fontWeight: "600", fontSize: 16 }}>
+                                        {addingPackages?.package?.endRegistrationStartDate}
+                                    </Text>
+                                    <Text>
+                                        : <ComDateConverter>{data?.endRegistrationStartDate}</ComDateConverter>
+                                    </Text>
+                                </Text>
+                                <Text style={{ flexDirection: "row" }}>
+                                    <Text style={{ fontWeight: "600", fontSize: 16 }}>
+                                        {addingPackages?.package?.eventDate}
+                                    </Text>
+                                    <Text>
+                                        : <ComDateConverter>{data?.eventDate}</ComDateConverter>
+                                    </Text>
+                                </Text>
+                            </View>
                             {/* mô tả */}
-                            <Text  style={{ fontWeight: "600", fontSize: 16 }}>
+                            <Text style={{ fontWeight: "600", fontSize: 16 }}>
                                 {addingPackages?.package?.description}
                             </Text>
                             <Text style={{ fontSize: 16 }}>{data?.description}</Text>
                         </View>
                     </View>
                 </ScrollView>
-                <View style={{ marginVertical: 20 }}>
+                <View style={{ marginVertical: 10 }}>
                     {
-                        isRegistrationClosed &&
-                        <View style={{}}>
-                            <Text style={{ color: "red", textAlign: "center" }}>Đã hết hạn đăng ký dịch vụ</Text>
-                        </View>
+                        registerError != "" && //hết lượt đăng ký
+                        <Text style={{ color: "red", textAlign: "center" }}>{registerError}</Text>
                     }
                     <ComSelectButton
                         onPress={() => {
-                            if (!isRegistrationClosed) {
-                                navigation.navigate("AddingServiceRegister", { data: data });
-                            }
+                            if (registerError == "") { navigation.navigate("AddingServiceRegister", { data: data })}
                         }}
-                        disable={isRegistrationClosed}
+                        disable={registerError != ""}
                     >
-                        {isRegistrationClosed ? "Đã hết hạn đăng ký dịch vụ" : addingPackages?.register?.registerTitle}
+                        {addingPackages?.register?.registerTitle}
                     </ComSelectButton>
                 </View>
             </View>

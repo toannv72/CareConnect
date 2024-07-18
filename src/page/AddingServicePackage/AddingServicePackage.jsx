@@ -30,7 +30,6 @@ export default function AddingServicePackages() {
     const [hasMore, setHasMore] = useState(true); // Track if there are more items to load
     const [searchQuery, setSearchQuery] = useState("");
     const route = useRoute();
-    const { skipFetchData } = route.params || {};
     const searchSchema = yup.object().shape({
         search: yup.string(),
     });

@@ -1,7 +1,7 @@
 import React, { useContext, useState, useCallback, useEffect } from "react";
 import { View, StyleSheet, Image, TouchableOpacity, ScrollView, ActivityIndicator, Text, SectionList } from 'react-native';
 import { useNavigation, useRoute, useFocusEffect } from "@react-navigation/native";
-import { postData, getData } from "../../api/api";
+import { postData, deleteData } from "../../api/api";
 import ComHeader from '../../Components/ComHeader/ComHeader';
 import ComScheduledService from './ComScheduledService';
 import ComSelectButton from "../../Components/ComButton/ComSelectButton";
@@ -49,12 +49,13 @@ export default function ScheduledServicePayment({ }) {
             "notes": data?.name,
             "orderDetails": orderDetailsList
         }
-        console.log(" formattedData", formattedData)
+
         postData("/orders/service-package?returnUrl=a", formattedData)
             .then((response) => {
-                console.log("API Response: ", response.message);
-                const url = response.message;
+                console.log("API Response: ", response);
+                deleteSchedule()
                 if (payment === "Now") {
+                    const url = response.message;
                     Linking.openURL(url)
                         .then(() => {
                             console.log("Opened successfully");
@@ -66,13 +67,36 @@ export default function ScheduledServicePayment({ }) {
                     showToast("success", "Xác nhận đăng ký thành công", "", "top");
                 } else if (payment === "Later") {
                     showToast("success", "Đăng ký thành công", `Bạn vui lòng thanh toán dịch vụ trước ngày ${lastDayOfMonth}`, "top");
-                    console.log("Payment will be made later");
                     navigation.navigate("BillHistory");
                 }
             })
             .catch((error) => {
                 console.log("API Error: ", error);
-                // showToast("error", "Có lỗi xảy ra, vui lòng thử lại!", "", "bottom")
+                switch (error.response.status) {
+                    case 609:
+                        showToast("error", "Đăng ký thất bại", "Dịch vụ đã được đăng ký", "top");
+                        break;
+                    case 610:
+                        showToast("error", "Đăng ký thất bại", "Dịch vụ đã được đăng ký", "top");
+                        break;
+                    case 611:
+                        showToast("error", "Đăng ký thất bại", "Dịch vụ đã được đăng ký", "top");
+                        break;
+                    default:
+                        showToast("error", "Đăng ký thất bại", "Đã có lỗi xảy ra. Vui lòng thử lại.", "top");
+                        break;
+                };
+            });
+
+    }
+
+    const deleteSchedule = () => {
+        deleteData(`/scheduled-service`, data?.id)
+            .then((response) => {
+                console.log("Delete scheduled-service successfully");
+            })
+            .catch((error) => {
+                console.log("API Delete scheduled-service Error: ", error);
             });
     }
 

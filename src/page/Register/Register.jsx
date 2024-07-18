@@ -16,7 +16,7 @@ import { postData, getData } from "../../api/api";
 import { ScrollView } from "react-native-gesture-handler";
 import moment from "moment";
 import Toast from 'react-native-toast-message';
-import { cccdRegex, nameRegex, phoneNumberRegex, passwordRegex} from "../../Components/ComRegexPatterns/regexPatterns";
+import { cccdRegex, nameRegex, phoneNumberRegex, passwordRegex } from "../../Components/ComRegexPatterns/regexPatterns";
 
 export default function Register() {
   const navigation = useNavigation();
@@ -27,7 +27,7 @@ export default function Register() {
   }
 
   const {
-    text: { Register, EditProfile, common: { button }},
+    text: { Register, EditProfile, common: { button } },
     setLanguage,
   } = useContext(LanguageContext);
 
@@ -198,9 +198,10 @@ export default function Register() {
                     enabled={true}
                     mode={"date"}
                     maximumDate={moment().subtract(18, "years").toDate()}
-                    mininumDate={new Date(1960, 0, 1)}
+                    minimumDate={moment().subtract(100, "years").toDate()}
                     required
                   />
+
                 </View>
               </View>
               <ComInput

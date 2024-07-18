@@ -20,12 +20,9 @@ const formatCurrency = (number) => {
 
 const ComScheduledService = ({ data, hideCheck, onCheck, isSelected }) => {
     if (!data) return null; // Early return if data is undefined or null
-
     const servicePackage = data?.servicePackage;
     const elder = data?.elder;
     const scheduledTimes = data?.scheduledTimes;
-    // const { dispatch } = useCart(); // Get dispatch function from CartContext
-    const [popup, setPopup] = useState(false);
     const [internalSelected, setInternalSelected] = useState(isSelected); // State to manage checkbox state
     const [isExpanded, setIsExpanded] = useState(false);
 
@@ -40,14 +37,6 @@ const ComScheduledService = ({ data, hideCheck, onCheck, isSelected }) => {
             text2: text2,
             position: position
         });
-    };
-
-    const handleClosePopup = () => {
-        setPopup(false);
-    };
-
-    const handleOpenPopup = () => {
-        setPopup(true);
     };
 
     return (
@@ -88,28 +77,28 @@ const ComScheduledService = ({ data, hideCheck, onCheck, isSelected }) => {
                                         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                                             <View style={{ gap: 3, flex: 0.9 }}>
 
-                                                <Text style={{ flexDirection: "row" }} numberOfLines={1}>
+                                                <View style={{ flexDirection: "row", alignItems: "center" }} numberOfLines={1}>
                                                     <Image
                                                         source={User}
                                                         style={[{
                                                             width: 20,
                                                             height: 20,
-                                                             tintColor: "#33B39C"
+                                                            tintColor: "#33B39C"
                                                         }]} />
                                                     <Text> {elder?.name ?? 'Unknown'}</Text>
-                                                </Text>
-                                                <Text style={{ flexDirection: "row"}} numberOfLines={1}>
+                                                </View>
+                                                <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }} numberOfLines={1}>
                                                     <Image
                                                         source={Order}
                                                         style={[{
                                                             width: 20,
                                                             height: 20,
-                                                            tintColor: "#33B39C"
+                                                            tintColor: "#33B39C",
                                                         }]} />
                                                     <Text style={[styles.labelText]} >
                                                         {formatCurrency(servicePackage.price) + " x " + scheduledTimes.length}
                                                     </Text>
-                                                </Text>
+                                                </View>
                                             </View>
                                             <Text style={styles.labelText}>
                                                 {formatCurrency(servicePackage.price * scheduledTimes.length)}
