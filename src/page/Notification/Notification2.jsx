@@ -54,10 +54,6 @@ async function registerForPushNotificationsAsync() {
     if (existingStatus !== "granted") {
       const { status } = await Notifications.requestPermissionsAsync();
       finalStatus = status;
-      if (status !== "granted") {
-        alert("Không nhận được mã thông báo đẩy cho thông báo đẩy!");
-        return;
-      }
     }
     if (finalStatus !== "granted") {
       handleRegistrationError(
@@ -110,9 +106,7 @@ export default function Notification2() {
 
     const fetchExpoPushToken = async () => {
       try {
-        console.log(222222,Constants);
-
-        const projectId = Constants.manifest2.extra.eas.projectId;
+        const projectId = Constants.manifest.extra.eas.projectId;
         const pushTokenData = await Notifications.getExpoPushTokenAsync({
           projectId,
         });
