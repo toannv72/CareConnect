@@ -185,7 +185,7 @@ export const vn = {
       registrationLimit: "Giới hạn người đăng ký",
       timeBetweenServices: "Tần suất thực hiện",
       eventDate: "Ngày diễn ra",
-      endRegistrationStartDate: "Hạn cuối đăng ký"
+      endRegistrationStartDate: "Kết thúc đăng ký"
     },
     register: {
       registerElder: "Bạn muốn đăng ký dịch vụ cho",

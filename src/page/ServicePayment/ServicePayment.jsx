@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import ComSelectButton from "../../Components/ComButton/ComSelectButton";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { useRoute } from "@react-navigation/native";
@@ -25,22 +25,18 @@ export default function ServicePayment() {
     const route = useRoute();
     const { servicePackage, elder, orderDates, type } = route?.params;
     const [selectedMethod, setSelectedMethod] = useState('momo');
+    const [loading, setLoading] = useState(false);
     const [adjustedOrderDates, setAdjustedOrderDates] = useState(orderDates);
     const handleBackPress = () => { navigation.goBack() };
 
     const showToast = (type, text1, text2, position) => {
-        Toast.show({
-            type: type,
-            text1: text1,
-            text2: text2,
-            position: position,
-            visibilityTime: 2000
-        });
+        Toast.show({ type: type, text1: text1, text2: text2, position: position, visibilityTime: 2000});
     }
 
     const handleMethodPress = (methodName) => {
         setSelectedMethod(methodName);
     };
+
     useEffect(() => {
         const sortedDates = [...orderDates].sort((a, b) => moment(a, 'YYYY-MM-DD').diff(moment(b, 'YYYY-MM-DD')));
         // Kiểm tra xem tất cả các ngày trong orderDates có phải là ngày quá khứ or hiện tại không
@@ -49,7 +45,7 @@ export default function ServicePayment() {
             // Lấy ngày tháng sau tương ứng nếu có
             const nextMonthDates = sortedDates.map(date => {
                 const nextMonthDate = moment(date, 'YYYY-MM-DD').add(1, 'months');
-                return nextMonthDate.isValid() ? nextMonthDate.format('YYYY-MM-DD') : date;
+                return nextMonthDate.isValid() ? nextMonthDate.format('YYYY-MM-DD') : null;
             });
             setAdjustedOrderDates(nextMonthDates);
         } else {
@@ -93,15 +89,17 @@ export default function ServicePayment() {
                 }
             ]
         }
-
+        setLoading(true)
         postData("/orders/service-package?returnUrl=exp://rnnstoi-thaomy-8081.exp.direct/--/BillHistory", formattedData)
             .then((response) => {
                 console.log("API Response: ", response.message);
                 const url = response.message; // Assuming response.message contains the URL
                 // Open the URL in the default browser
+                setLoading(false)
                 Linking.openURL(url)
                     .then(() => {
                         console.log("Opened successfully");
+                        navigation.navigate("BillHistory")
                     })
                     .catch((err) => {
                         console.log("Failed to open URL: ", err);
@@ -109,6 +107,7 @@ export default function ServicePayment() {
             })
             .catch((error) => {
                 console.log("API Error: ", error.response);
+                setLoading(false)
                 switch (error.response.status) {
                     case 609:
                         showToast("error", "Đăng ký thất bại", "Dịch vụ đã được đăng ký", "bottom");
@@ -227,7 +226,7 @@ export default function ServicePayment() {
                     </Text>
                 </Text>
                 <ComSelectButton onPress={() => payment()} >
-                    {addingPackages?.payment?.title}
+                    {loading ? <ActivityIndicator /> : addingPackages?.payment?.title}
                 </ComSelectButton>
             </View>
         </>

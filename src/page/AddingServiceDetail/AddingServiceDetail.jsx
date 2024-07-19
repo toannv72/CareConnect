@@ -9,7 +9,6 @@ import { useNavigation } from '@react-navigation/native';
 import { postData, getData } from "../../api/api";
 import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter";
 import Heart from "../../../assets/heart.png";
-import moment from "moment";
 
 export default function AddingServiceDetail() {
     const {
@@ -21,7 +20,6 @@ export default function AddingServiceDetail() {
     const { id } = route.params;
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState({});
-    const [registerError, setRegisterError] = useState("");//kiểm tra ngày htai sau enddate
     const navigation = useNavigation();
     const handleBackPress = () => { navigation.goBack() };
 
@@ -38,17 +36,6 @@ export default function AddingServiceDetail() {
             .then((packageData) => {
                 setData(packageData?.data);
                 // check tổng lượt đăng ký
-                if (packageData?.data?.registrationLimit > 0 && (packageData?.data?.totalOrder >= packageData?.data?.registrationLimit))
-                    setRegisterError("Rất tiếc đã hết lượt đăng ký dịch vụ"); //kiểm tra hạn đăng ký
-                // check hạn đăng ký
-                const currentDate = new Date();
-                const startRegistrationDate = new Date(packageData?.data?.startRegistrationDate);
-                const endRegistrationDate = new Date(packageData?.data?.endRegistrationStartDate);
-                if (currentDate > endRegistrationDate) {
-                    setRegisterError("Rất tiếc đã hết hạn đăng ký dịch vụ"); //kiểm tra hạn đăng ký
-                } else if (currentDate < startRegistrationDate) {
-                    setRegisterError(`Chưa đến ngày đăng ký dịch vụ. Bạn vui lòng quay lại sau ngày ${moment(startRegistrationDate).format('DD/MM/YYYY')}`)
-                }
                 setLoading(false)
             })
             .catch((error) => {
@@ -78,23 +65,23 @@ export default function AddingServiceDetail() {
             </View>
 
             <View style={styles.body}>
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false}>
-                    <View style={{ flex: 1, gap: 10, backgroundColor: "#f2f1eb", borderRadius: 20 }}>
-                        <View style={{ flexDirection: "row", marginTop: 20, justifyContent: "space-between" }}>
-                            <View style={{ padding: 10, backgroundColor: "#33B39C", justifyContent: "center", borderTopRightRadius: 50, borderBottomRightRadius: 50, width: "45%" }}>
-                                <Text style={{ fontSize: 16, color: "#fff", fontWeight: "600", paddingLeft: 5 }} numberOfLines={1}>
-                                    {data?.servicePackageCategory?.name}
-                                </Text>
-                            </View>
-                            <TouchableOpacity
-                                onPress={() => toggleFavorite(data)}
-                                style={[{ backgroundColor: isFavorite ? "#fac8d2" : "#bdbbbb", justifyContent: "center", padding: 10, borderRadius: 50, marginRight: 25 }]}>
-                                <Image source={Heart}
-                                    style={{ width: 25, height: 25, tintColor: isFavorite ? "red" : "#636360" }} />
-                            </TouchableOpacity>
+                <View style={{ flex: 1, gap: 10, backgroundColor: "#f2f1eb", borderRadius: 20 }}>
+                    <View style={{ flexDirection: "row", marginTop: 20, justifyContent: "space-between" }}>
+                        <View style={{ padding: 10, backgroundColor: "#33B39C", justifyContent: "center", borderTopRightRadius: 50, borderBottomRightRadius: 50, width: "45%" }}>
+                            <Text style={{ fontSize: 16, color: "#fff", fontWeight: "600", paddingLeft: 5 }} numberOfLines={1}>
+                                {data?.servicePackageCategory?.name}
+                            </Text>
                         </View>
+                        <TouchableOpacity
+                            onPress={() => toggleFavorite(data)}
+                            style={[{ backgroundColor: isFavorite ? "#fac8d2" : "#bdbbbb", justifyContent: "center", padding: 10, borderRadius: 50, marginRight: 25 }]}>
+                            <Image source={Heart}
+                                style={{ width: 25, height: 25, tintColor: isFavorite ? "red" : "#636360" }} />
+                        </TouchableOpacity>
+                    </View>
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        showsHorizontalScrollIndicator={false}>
                         <View style={{ padding: 20, gap: 10 }}>
                             <Text style={{ fontWeight: "bold", fontSize: 20, textAlign: "center" }}>
                                 {data?.name}
@@ -121,28 +108,32 @@ export default function AddingServiceDetail() {
                             <View style={{ gap: 10 }}>
                                 <Text style={{ flexDirection: "row" }}>
                                     <Text style={{ fontWeight: "600", fontSize: 16 }}>
-                                        Bắt đầu đăng ký
+                                        đã đăng ký:
                                     </Text>
                                     <Text>
-                                        : <ComDateConverter>{data?.startRegistrationDate}</ComDateConverter>
+                                        : {data?.totalOrder}
                                     </Text>
                                 </Text>
-                                <Text style={{ flexDirection: "row" }}>
-                                    <Text style={{ fontWeight: "600", fontSize: 16 }}>
-                                        {addingPackages?.package?.endRegistrationStartDate}
-                                    </Text>
-                                    <Text>
-                                        : <ComDateConverter>{data?.endRegistrationStartDate}</ComDateConverter>
-                                    </Text>
-                                </Text>
-                                <Text style={{ flexDirection: "row" }}>
-                                    <Text style={{ fontWeight: "600", fontSize: 16 }}>
-                                        {addingPackages?.package?.eventDate}
-                                    </Text>
-                                    <Text>
-                                        : <ComDateConverter>{data?.eventDate}</ComDateConverter>
-                                    </Text>
-                                </Text>
+                                {data?.endRegistrationStartDate && (
+                                    <Text style={{ flexDirection: "row" }}>
+                                        <Text style={{ fontWeight: "600", fontSize: 16 }}>
+                                            {addingPackages?.package?.endRegistrationStartDate}
+                                        </Text>
+                                        <Text>
+                                            : <ComDateConverter>{data?.endRegistrationStartDate}</ComDateConverter>
+                                        </Text>
+                                    </Text>)
+                                }
+                                {data?.eventDate && (
+                                    <Text style={{ flexDirection: "row" }}>
+                                        <Text style={{ fontWeight: "600", fontSize: 16 }}>
+                                            {addingPackages?.package?.eventDate}
+                                        </Text>
+                                        <Text>
+                                            : <ComDateConverter>{data?.eventDate}</ComDateConverter>
+                                        </Text>
+                                    </Text>)
+                                }
                             </View>
                             {/* mô tả */}
                             <Text style={{ fontWeight: "600", fontSize: 16 }}>
@@ -150,23 +141,14 @@ export default function AddingServiceDetail() {
                             </Text>
                             <Text style={{ fontSize: 16 }}>{data?.description}</Text>
                         </View>
-                    </View>
-                </ScrollView>
+                    </ScrollView>
+                </View>
                 <View style={{ marginVertical: 10 }}>
-                    {
-                        registerError != "" && //hết lượt đăng ký
-                        <Text style={{ color: "red", textAlign: "center" }}>{registerError}</Text>
-                    }
-                    <ComSelectButton
-                        onPress={() => {
-                            if (registerError == "") { navigation.navigate("AddingServiceRegister", { data: data })}
-                        }}
-                        disable={registerError != ""}
-                    >
+                    <ComSelectButton onPress={() => { navigation.navigate("AddingServiceRegister", { data: data }) }}>
                         {addingPackages?.register?.registerTitle}
                     </ComSelectButton>
                 </View>
-            </View>
+            </View >
         </>
     );
 }

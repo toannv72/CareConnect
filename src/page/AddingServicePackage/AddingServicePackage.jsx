@@ -15,6 +15,7 @@ import { stylesApp } from "../../styles/Styles";
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import CategoryButtons from '../../Components/ComCategories/ComCategories';
 import ComInputSearch from '../../Components/ComInput/ComInputSearch';
+import moment from "moment";
 
 export default function AddingServicePackages() {
     const {
@@ -25,9 +26,7 @@ export default function AddingServicePackages() {
     const [categoryData, setCategoryData] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [loadMoreLoading, setLoadMoreLoading] = useState(false);
-    const [page, setPage] = useState(1); // Track pagination page
-    const [hasMore, setHasMore] = useState(true); // Track if there are more items to load
+    const [displayedItems, setDisplayedItems] = useState(10);
     const [searchQuery, setSearchQuery] = useState("");
     const route = useRoute();
     const searchSchema = yup.object().shape({
@@ -42,25 +41,18 @@ export default function AddingServicePackages() {
     const { control, handleSubmit, reset, formState: { errors } } = methods;
 
     const onSubmit = (data) => {
-        setPage(1);
-        setData([]);
-        setSearchQuery(encodeURIComponent(data?.search.trim()));
+        fetchNextPage(encodeURIComponent(data?.search.trim()))
     };
 
-    const fetchNextPage = async () => {
-        setLoadMoreLoading(!loadMoreLoading);
-        let url = `/service-package?PageIndex=${page}&PageSize=10`;
+    const fetchNextPage = async (search) => {
+        let url = `/service-package?`;
         if (selectedCategory) { url += `&PackageCategoryId=${selectedCategory}` }
-        if (searchQuery) { url += `&Search=${searchQuery}` }
-
+        if (search) { url += `&Search=${search}` }
+        setLoading(true);
         getData(url, {})
             .then((packageData) => {
-                const newItems = packageData?.data?.contends || [];
-                setData(prevData => [...prevData, ...newItems]);
-                setPage(prevPage => prevPage + 1);
-                setLoadMoreLoading(false);
+                setData(packageData?.data?.contends || []);
                 setLoading(false);
-                setHasMore(page < packageData?.data?.totalPages);
             })
             .catch((error) => {
                 setLoading(false);
@@ -84,28 +76,36 @@ export default function AddingServicePackages() {
 
     useFocusEffect(
         useCallback(() => {
-                reset();
-                setData([]);
-                setPage(1);
-                setLoading(!loading);
-                setSearchQuery("");
-                fetchNextPage();
-                if (!selectedCategory) { setSelectedCategory(null) }
+            reset();
+            setLoading(!loading);
+            setSearchQuery("");
+            fetchNextPage();
+            setSelectedCategory(null)
         }, [])
     );
 
     const handleCategorySelect = (id) => {
         setSelectedCategory(id);
-        setPage(1);
-        setData([])
+        setDisplayedItems(10);
     };
 
     const handleClearSearch = () => {
-        handleCategorySelect(0);
-        setSearchQuery("");
+        setDisplayedItems(10);
+        fetchNextPage("");
     };
 
-    const filteredData = !selectedCategory ? data : data.filter(item => item?.servicePackageCategory?.id === selectedCategory);
+    const currentDate = moment();
+    const filteredData = data?.filter((service) => {
+        const endRegistrationDate = moment(service?.endRegistrationStartDate);
+        const hasNotExpired = currentDate.isSameOrBefore(endRegistrationDate, "day");//chua het han dang ky
+        const hasSlotsLeft = service?.registrationLimit !== 0 ? service?.totalOrder < service?.registrationLimit : service?.totalOrder >= service?.registrationLimit;//chua het luot dang ky
+        //nếu có giới hạn người                 tổng lượt dky < giới hạn                             tổng lượt dky >= 0
+        return hasNotExpired && hasSlotsLeft;
+    });
+
+    const handleLoadMore = () => {
+        setDisplayedItems(prevCount => prevCount + 10);
+    };
 
     return (
         <>
@@ -148,14 +148,13 @@ export default function AddingServicePackages() {
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}>
                             {
-                                filteredData?.map((item, index) => (
+                                filteredData?.slice(0, displayedItems)?.map((item, index) => (
                                     <ComAddPackage key={index} data={item} />
                                 ))
                             }
                             <View style={{ justifyContent: "center", alignItems: "center" }}>
                                 <View style={{ width: "35%" }}>
-                                    {loadMoreLoading ? (<ActivityIndicator />) :
-                                        (<ComSelectButton onPress={fetchNextPage} disable={!hasMore}>Xem thêm</ComSelectButton>)}
+                                    <ComSelectButton onPress={handleLoadMore} disable={displayedItems >= data.length}>Xem thêm</ComSelectButton>
                                     <View style={{ height: 100 }} />
                                 </View>
                             </View>
