@@ -152,15 +152,15 @@ export const vn = {
   },
   servicePackages: {
     title: "Gói dưỡng lão",
-    detail: 
+    detail:
     {
-    title: "Chi tiết gói dưỡng lão",
-    description: "Mô tả",
-    service: "Dịch vụ của gói",
-    registerForm: "Điền form đăng ký",
-    signContract: "Đăng ký lịch hẹn hoàn thành thủ tục",
+      title: "Chi tiết gói dưỡng lão",
+      description: "Mô tả",
+      service: "Dịch vụ của gói",
+      registerForm: "Điền form đăng ký",
+      signContract: "Đăng ký lịch hẹn hoàn thành thủ tục",
     },
-    popup:{
+    popup: {
       signContractTitle: "Đăng ký lịch hẹn hoàn thành thủ tục",
       limitDays: "Bạn chỉ có thể hẹn trước 14 ngày tính từ ngày mai",
       signContractSubTitle: "Bạn và người thân sẽ trực tiếp đến Viện để được hỗ trợ hoàn thành hồ sơ bệnh án và hợp đồng để trải nghiệm dịch vụ của viện",
@@ -200,7 +200,9 @@ export const vn = {
       serviceName: "Tên dịch vụ",
       registerName: "Người đăng ký",
       elderName: "Người cao tuổi",
-      time: "Thời gian",
+      serviceTime: "Thời gian thực hiện",
+      weekRegisterTime: "Thời gian đã đăng ký theo tuần",
+      dayRegisterTime: "Thời gian đã đăng ký theo tháng",
       totalMoney: "Tổng tiền",
     },
     history: {
@@ -239,7 +241,7 @@ export const vn = {
       title: "Mô tả ngắn gọn đánh giá của bạn",
       content: "Mô tả chi tiết nội dung đánh giá của bạn, vấn đề bạn gặp phải,..."
     },
-    history:{
+    history: {
       title: "Tiêu đề",
       date: "Ngày gửi",
       content: "Nội dung",
@@ -254,7 +256,7 @@ export const vn = {
     dueDate: "Hạn thanh toán",
     total: "Tổng tiền",
     status: "Trạng thái",
-    detail:{
+    detail: {
       title: "Chi tiết thanh toán",
       customerInfo: "Thông tin khách hàng",
       paymentInfo: "Thông tin thanh toán",
@@ -322,7 +324,7 @@ export const vn = {
       EditProfile: "Chỉnh sửa thông tin",
     },
   },
-  UserProfile:{
+  UserProfile: {
     title: "Thông tin cá nhân",
   },
   ChangePassword: {
@@ -383,7 +385,7 @@ export const vn = {
     phone: "Số điện thoại",
     day: "Ngày",
     hour: "Giờ",
-    subscribers:"Người đăng ký"
+    subscribers: "Người đăng ký"
   },
   contractsPage: {
     title: "Hợp đồng",
@@ -397,9 +399,9 @@ export const vn = {
   VisitationSchedule: {
     title: "Lịch hẹn",
   },
-  ElderProfile:{
+  ElderProfile: {
     title: "Hồ sơ người thân",
-    detail:{
+    detail: {
       title: "Thông tin người cao tuổi",
       name: "Họ và tên người cao tuổi",
       contractID: "Mã hợp đồng",
@@ -411,7 +413,7 @@ export const vn = {
       urgentContact: "Liên hệ khẩn cấp"
     },
   },
-  MedicalProfile:{
+  MedicalProfile: {
     name: "Người cao tuổi",
     dateOfBirth: "Ngày sinh",
     age: "Tuổi",
@@ -419,7 +421,7 @@ export const vn = {
     underlyingMedical: "Bệnh nền",
     note: "Ghi chú"
   },
-  Notification:{
+  Notification: {
     title: "Thông báo",
   },
   NurseHome: {
@@ -434,14 +436,14 @@ export const vn = {
     capacity: "Số người cao tuổi",
     type: "Loại",
   },
-  NurseHealthMonitor:{
+  NurseHealthMonitor: {
     title: "Theo dõi sức khỏe",
     createHealthMonitor: "Tạo báo cáo sức khỏe",
     healthIndex: "Chỉ số sức khỏe",
     generalNote: "Chỉ số tổng quát",
     chooseHealthIndex: "Chọn các chỉ số bạn muốn kiểm tra"
   },
-  NurseRegisterService:{
+  NurseRegisterService: {
     status: "Trạng thái",
     description: "Mô tả",
     time: "Thời gian thực hiện",

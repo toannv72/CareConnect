@@ -106,14 +106,6 @@ export default function AddingServiceDetail() {
                             )}
 
                             <View style={{ gap: 10 }}>
-                                <Text style={{ flexDirection: "row" }}>
-                                    <Text style={{ fontWeight: "600", fontSize: 16 }}>
-                                        đã đăng ký:
-                                    </Text>
-                                    <Text>
-                                        : {data?.totalOrder}
-                                    </Text>
-                                </Text>
                                 {data?.endRegistrationStartDate && (
                                     <Text style={{ flexDirection: "row" }}>
                                         <Text style={{ fontWeight: "600", fontSize: 16 }}>

@@ -28,9 +28,13 @@ export default function ServicePayment() {
     const [loading, setLoading] = useState(false);
     const [adjustedOrderDates, setAdjustedOrderDates] = useState(orderDates);
     const handleBackPress = () => { navigation.goBack() };
+    //hiển toàn bộ thị list ngay đã chọn (quakhu + tuong lai)
+    const registerDates = servicePackage?.type == "MultipleDays" || (servicePackage?.type == "AnyDay" && type == 'RecurringDay') ?
+        orderDates?.map(dateString => moment(dateString, "YYYY-MM-DD", true).format("DD"))
+        : [];
 
     const showToast = (type, text1, text2, position) => {
-        Toast.show({ type: type, text1: text1, text2: text2, position: position, visibilityTime: 2000});
+        Toast.show({ type: type, text1: text1, text2: text2, position: position, visibilityTime: 2000 });
     }
 
     const handleMethodPress = (methodName) => {
@@ -54,7 +58,6 @@ export default function ServicePayment() {
     }, [orderDates]);
 
     const formatCurrency = (number) => {
-        // Sử dụng hàm toLocaleString() để định dạng số
         return number?.toLocaleString("vi-VN", {
             style: "currency",
             currency: "VND",
@@ -90,7 +93,7 @@ export default function ServicePayment() {
             ]
         }
         setLoading(true)
-        postData("/orders/service-package?returnUrl=exp://rnnstoi-thaomy-8081.exp.direct/--/BillHistory", formattedData)
+        postData("/orders/service-package?returnUrl=s", formattedData)
             .then((response) => {
                 console.log("API Response: ", response.message);
                 const url = response.message; // Assuming response.message contains the URL
@@ -99,7 +102,7 @@ export default function ServicePayment() {
                 Linking.openURL(url)
                     .then(() => {
                         console.log("Opened successfully");
-                        navigation.navigate("BillHistory")
+                        // navigation.navigate("BillHistory")
                     })
                     .catch((err) => {
                         console.log("Failed to open URL: ", err);
@@ -144,7 +147,6 @@ export default function ServicePayment() {
                 <Text style={{ fontWeight: "bold", fontSize: 20, marginBottom: 10, textAlign: 'center' }} numberOfLines={2}>
                     {addingPackages?.payment?.title}
                 </Text>
-
                 <Text style={{ flexDirection: "row", marginBottom: 10 }}>
                     <Text style={styles.contentBold}>
                         {addingPackages?.payment?.serviceName}
@@ -171,7 +173,7 @@ export default function ServicePayment() {
                     </Text>
                 </Text>
                 <Text style={styles.contentBold}>
-                    {addingPackages?.payment?.time}:
+                    {addingPackages?.payment?.serviceTime}:
                 </Text>
                 {servicePackage?.type === "OneDay" ? (
                     <Text style={{ fontSize: 16, marginBottom: 5 }}>
@@ -183,7 +185,7 @@ export default function ServicePayment() {
                         if (isFutureDate) {
                             return (
                                 <Text style={{ fontSize: 16, marginBottom: 5 }} key={index}>
-                                    - <ComDateConverter>{day}</ComDateConverter>
+                                    • <ComDateConverter>{day}</ComDateConverter>
                                 </Text>
                             );
                         } else {
@@ -192,6 +194,20 @@ export default function ServicePayment() {
                     })
                 )}
 
+                {(servicePackage?.type == "MultipleDays" || (servicePackage?.type == "AnyDay" && type == 'RecurringDay')) && (
+                    <>
+                        <Text style={styles.contentBold}>
+                            {addingPackages?.payment?.dayRegisterTime}:
+                        </Text>
+                        {registerDates?.map((day, index) => {
+                            return (
+                                <Text style={{ fontSize: 16, marginBottom: 5 }} key={index}>
+                                    • {day}
+                                </Text>
+                            )
+                        })}
+                    </>
+                )}
                 <Text style={styles.contentBold}>Phương thức thanh toán</Text>
                 <View style={styles.tableContainer}>
                     <ComPaymentMethod

@@ -40,6 +40,10 @@ const Calendar31Days = ({ selectedDates, setSelectedDates, disableDates, enableD
     const isDisabled = (day) => {
         if (day === '') return false;
         const dayOfMonth = day;
+        // Nếu cả enableDates và disableDates đều rỗng hoặc undefined, disable tất cả các ngày
+        if ((!enableDates || enableDates.length === 0) && (!disableDates || disableDates.length === 0)) {
+            return true;
+        }
         // Nếu có enableDates, ưu tiên kiểm tra trước
         if (enableDates?.length > 0) {
             return !enableDates.includes(dayOfMonth);
@@ -52,6 +56,10 @@ const Calendar31Days = ({ selectedDates, setSelectedDates, disableDates, enableD
     const isEnabled = (day) => {
         if (day === '') return true;
         const dayOfMonth = day;
+        // Nếu cả enableDates và disableDates đều rỗng hoặc undefined, disable tất cả các ngày
+        if ((!enableDates || enableDates.length === 0) && (!disableDates || disableDates.length === 0)) {
+            return false;
+        }
         // Nếu có enableDates, ưu tiên kiểm tra trước
         if (enableDates?.length > 0) {
             return enableDates.includes(dayOfMonth);
@@ -60,6 +68,7 @@ const Calendar31Days = ({ selectedDates, setSelectedDates, disableDates, enableD
         }
         return true; // Mặc định là enabled
     };
+
 
     return (
         <View style={styles.calendarContainer}>
@@ -71,7 +80,7 @@ const Calendar31Days = ({ selectedDates, setSelectedDates, disableDates, enableD
                             style={[
                                 styles.dayContainer,
                                 isSelected(day) && styles.selectedDayContainer,
-                                !isDisabled(day), 
+                                !isDisabled(day),
                                 isDisabled(day),]}
                             onPress={() => handleDayPress(day)}
                             disabled={!isEnabled(day) || isDisabled(day)} // Disable nếu không isEnabled hoặc là isDisabled

@@ -1,23 +1,17 @@
-import React, { useContext, useState, useMemo, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity } from 'react-native';
 import ComSelectButton from "../../Components/ComButton/ComSelectButton";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { useRoute } from "@react-navigation/native";
 import backArrowWhite from "../../../assets/icon/backArrowWhite.png";
 import { useNavigation } from '@react-navigation/native';
-import SelectedDates from "./ComSelectedDates";
-import ComSelectWeekDays from "./ComSelectWeekDays";
-import ComRadioGroup from "../../Components/ComRadioGroup/ComRadioGroup";
 import moment from "moment";
 import Toast from 'react-native-toast-message';
 import { getData } from "../../api/api"; // Import your API function
-import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter"
 import Calendar31Days from './Calendar31Days';
 
 export default function ServiceDayRegister() {
-    const [selectedId, setSelectedId] = useState('');
-    const [registeredDates, setRegisteredDates] = useState([]);
-    const [disabledDates, setDisabledDates] = useState([]);
+    const [enabledDates, setEnabledDates] = useState([]);
     const [selectedDates, setSelectedDates] = useState([]);
     const [orderDetail, setOrderDetail] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -40,41 +34,30 @@ export default function ServiceDayRegister() {
         });
     };
 
-    const handleSelectedDatesChange = (dates) => {
-        setSelectedDates(dates); // Update selectedDates state
-    };
-
     useEffect(() => {
-        setLoading(!loading);
+        setLoading(true);
         getData(`/order-detail?ElderId=${elder?.id}&ServicePackageId=${data?.id}`, {})
             .then((orderDetail) => {
                 setOrderDetail(orderDetail?.data);
-                setLoading(loading);
+                setLoading(false);
             })
             .catch((error) => {
-                setLoading(loading);
-                console.error("Error getData fetching items:", error);
+                setLoading(false);
+                console.error("Error fetching order details:", error);
             });
     }, []);
 
     useEffect(() => {
         if (data?.servicePackageDates) {
-            if (orderDetail.length === 0) {
-                // Nếu orderDetail rỗng, sử dụng các ngày từ servicePackageDates
-                const disabledDates = data?.servicePackageDates.map(date => date?.repetitionDay);
-                setDisabledDates(disabledDates);
-            } else {
-                // Extract dates from service package data
-                const serviceDates = data?.servicePackageDates.map(date => date?.repetitionDay);
-                // Filter order details to find disabled dates
-                const disabledDates = serviceDates.filter(date => 
+            let enabledDates = data?.servicePackageDates.map(date => date?.repetitionDay);
+            if (orderDetail.length > 0) {
+                enabledDates = enabledDates.filter(date => 
                     !orderDetail.some(item => item?.dayOfMonth === date || new Date(item?.date).getDate() === date)
-                );//               Check ngày calendar trùng dayOfMonth        Check ngày calendar trùng date
-                setDisabledDates(disabledDates);
+                );
             }
+            setEnabledDates(enabledDates);
         }
     }, [data?.servicePackageDates, orderDetail]);
-
 
     return (
         <>
@@ -122,17 +105,16 @@ export default function ServiceDayRegister() {
                 <Text style={{ color: "gray" }}>Dịch vụ sẽ được gia hạn vào tháng sau với những ngày bạn chọn dưới đây</Text>
 
                 <View>
-                    {/* <SelectedDates
-                        servicePackageDates={data?.servicePackageDates}
-                        onDatesChange={handleSelectedDatesChange} // Callback to receive selected dates
-                        disableHeader={true}
-                    /> */}
-                        <Calendar31Days selectedDates={selectedDates} setSelectedDates={setSelectedDates} enableDates={disabledDates}/>
+                    <Calendar31Days 
+                        selectedDates={selectedDates} 
+                        setSelectedDates={setSelectedDates} 
+                        enableDates={enabledDates} 
+                    />
                 </View>
             </ScrollView>
             <View style={{ paddingHorizontal: 20, backgroundColor: "#fff", paddingVertical: 30 }}>
                 <ComSelectButton
-                    disable={selectedDates?.length == 0}
+                    disable={selectedDates?.length === 0}
                     onPress={() => {
                         navigation.navigate("ServicePayment", { servicePackage: data, elder: elder, orderDates: selectedDates, type: "RecurringDay" });
                     }}>
@@ -142,7 +124,6 @@ export default function ServiceDayRegister() {
         </>
     )
 }
-
 
 const styles = StyleSheet.create({
     body: {
