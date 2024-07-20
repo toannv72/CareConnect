@@ -99,7 +99,7 @@ export default function ServicePayment() {
                 Linking.openURL(url)
                     .then(() => {
                         console.log("Opened successfully");
-                        navigation.navigate("BillHistory")
+                        // navigation.navigate("BillHistory")
                     })
                     .catch((err) => {
                         console.log("Failed to open URL: ", err);

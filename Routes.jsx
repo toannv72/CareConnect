@@ -91,9 +91,6 @@ const Routes = () => {
         screens: {
           BillHistory: {
             path: 'BillHistory',
-            screens: {
-              BillHistory: '',
-            },
           },
         },
       },
@@ -108,16 +105,17 @@ const Routes = () => {
   };
 
   const handleDeepLink = (url) => {
-    const route = url.replace(/.*?:\/\//g, '');
     const { navigate } = navigationRef.current;
+    const parsedUrl = Linking.parse(url);
+    const routeName = parsedUrl.path;
 
-    if (navigate) {
-      navigate(route);
+    if (navigate && routeName) {
+      navigate(routeName);
     }
   };
 
   const linking = {
-    prefixes: [Linking.createURL('/')],
+    prefixes: ['CareConnect://'],
     config,
   };
 
@@ -139,7 +137,7 @@ const Routes = () => {
 
   return (
     <NavigationContainer linking={linking} ref={navigationRef}
-    // <NavigationContainer 
+      // <NavigationContainer 
       onUnhandledAction={() => navigationRef.current?.navigate('NotFound')}>
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen
