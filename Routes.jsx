@@ -51,7 +51,7 @@ import ResetPasswordSuccess from "./src/page/ForgetPassword/ResetPasswordSuccess
 import ChangePassword from "./src/page/ChangePassword/ChangePassword";
 import ChangePasswordSuccess from "./src/page/ChangePassword/ChangePasswordSuccess";
 import RegisterVisitation from "./src/page/RegisterVisitation/RegisterVisitation";
-import RegisterVisitationSuccess from "./src/page/RegisterVisitation/RegisterVisitationSuccess";
+import RegisterVisitationSuccess from './src/page/RegisterVisitation/RegisterVisitationSuccess';
 import Contracts from "./src/page/Contract/Contracts";
 import ContractDetail from "./src/page/ContractDetail/ContractDetail";
 import ContractCandSuccess from "./src/page/ContractDetail/ContractCandSuccess";
@@ -90,50 +90,48 @@ const Routes = () => {
       Homes: {
         screens: {
           BillHistory: {
-            path: 'BillHistory', // Đặt path cho Tab.Screen "Service"
+            path: 'BillHistory',
             screens: {
-              BillHistory: '', // Màn hình mặc định khi vào tab "Service"
+              BillHistory: '',
             },
           },
         },
       },
-      // NurseHomes: {
-      //   screens: {
-      //     NurseHealthMonitorDetail: 'nurse/healthmonitor/:elderId',
-      //   },
-      // },
     },
   };
 
+  const getInitialURL = async () => {
+    const initialUrl = await Linking.getInitialURL();
+    if (initialUrl) {
+      handleDeepLink(initialUrl);
+    }
+  };
+
+  const handleDeepLink = (url) => {
+    const route = url.replace(/.*?:\/\//g, '');
+    const { navigate } = navigationRef.current;
+
+    if (navigate) {
+      navigate(route);
+    }
+  };
+
   const linking = {
-    //   prefixes: ['CareConnect://', 'exp://192.168.1.11:8081'], // Thêm tiền tố exp://
-    prefixes: ['CareConnect://', 'exp://rnnstoi-thaomy-8081.exp.direct'], // Thêm tiền tố exp://
+    prefixes: [Linking.createURL('/')],
     config,
   };
 
+  // Gọi hàm getInitialURL khi ứng dụng khởi động để xử lý deep link ngay từ ban đầu
   useEffect(() => {
-    (async () => {
-      const initialUrl = await Linking.getInitialURL();
-      if (initialUrl) {
-        const { path } = Linking.parse(initialUrl);
-        if (path) {
-          navigationRef.current?.navigate(path);
-        }
-      }
-    })();
+    getInitialURL();
+  }, []);
 
-    // Updated Deep Link Handling:
-    const handleDeepLink = ({ url }) => {
-      const { path } = Linking.parse(url);
-      if (path) {
-        navigationRef.current?.navigate(path);
-      }
-    };
+  // Thêm sự kiện lắng nghe sự kiện deep link
+  useEffect(() => {
+    const handleUrl = ({ url }) => handleDeepLink(url);
 
-    // Subscribe to URL events:
-    const subscription = Linking.addEventListener('url', handleDeepLink);
+    const subscription = Linking.addEventListener('url', handleUrl);
 
-    // Unsubscribe when the component unmounts:
     return () => {
       subscription.remove();
     };
@@ -141,6 +139,7 @@ const Routes = () => {
 
   return (
     <NavigationContainer linking={linking} ref={navigationRef}
+    // <NavigationContainer 
       onUnhandledAction={() => navigationRef.current?.navigate('NotFound')}>
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen
@@ -566,11 +565,11 @@ function MyBottomNavigationBar() {
         options={{ headerShown: false }}
         component={NotificationApi}
       /> */}
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Notification"
         options={{ headerShown: false }}
         component={Notification2}
-      />
+      /> */}
       {/* <Tab.Screen
         name="Account"
         options={{ headerShown: false }}
@@ -592,10 +591,10 @@ function NurseBottomNavigationBar() {
         tabBarHideOnKeyboard: true,
         tabBarShowLabel: false,
         tabBarStyle: {
-          position: Platform.OS === "android" ? "absolute" : undefined,
-          bottom: Platform.OS === "android" ? 10 : undefined,
-          left: Platform.OS === "android" ? 10 : undefined,
-          right: Platform.OS === "android" ? 10 : undefined,
+          position: Platform.OS === 'android' ? "absolute" : undefined,
+          bottom: Platform.OS === 'android' ? 10 : undefined,
+          left: Platform.OS === 'android' ? 10 : undefined,
+          right: Platform.OS === 'android' ? 10 : undefined,
           elevation: 0,
           backgroundColor: "#14A499",
           borderRadius: 15,
@@ -625,7 +624,7 @@ function NurseBottomNavigationBar() {
           return <ComNurseIcon icon={iconName} />;
         },
       })}
-      // keyboardShouldPersistTaps="handled"
+    // keyboardShouldPersistTaps="handled"
     >
       <Tab.Screen
         name="Home"
