@@ -90,7 +90,7 @@ export default function ServicePayment() {
             ]
         }
         setLoading(true)
-        postData("/orders/service-package?returnUrl=exp://rnnstoi-thaomy-8081.exp.direct/--/BillHistory", formattedData)
+        postData("/orders/service-package?returnUrl=CareConnect://BillHistory", formattedData)
             .then((response) => {
                 console.log("API Response: ", response.message);
                 const url = response.message; // Assuming response.message contains the URL

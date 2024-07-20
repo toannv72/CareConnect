@@ -97,371 +97,372 @@ const Routes = () => {
     },
   };
 
-  const getInitialURL = async () => {
-    const initialUrl = await Linking.getInitialURL();
-    if (initialUrl) {
-      handleDeepLink(initialUrl);
-    }
+const getInitialURL = async () => {
+  const initialUrl = await Linking.getInitialURL();
+  if (initialUrl) {
+    handleDeepLink(initialUrl);
+  }
+};
+
+const handleDeepLink = (url) => {
+  const { navigate } = navigationRef.current;
+  const parsedUrl = Linking.parse(url);
+  const routeName = parsedUrl.path;
+
+  if (navigate && routeName) {
+    navigate(routeName);
+  }
+};
+
+const linking = {
+  prefixes: ['CareConnect://'],
+  config,
+};
+
+// Gọi hàm getInitialURL khi ứng dụng khởi động để xử lý deep link ngay từ ban đầu
+useEffect(() => {
+  getInitialURL();
+}, []);
+
+// Thêm sự kiện lắng nghe sự kiện deep link
+useEffect(() => {
+  const handleUrl = ({ url }) => handleDeepLink(url);
+
+  const subscription = Linking.addEventListener('url', handleUrl);
+
+  return () => {
+    subscription.remove();
   };
+}, []);
 
-  const handleDeepLink = (url) => {
-    const { navigate } = navigationRef.current;
-    const parsedUrl = Linking.parse(url);
-    const routeName = parsedUrl.path;
+return (
+  <NavigationContainer linking={linking} ref={navigationRef}
+    // <NavigationContainer 
+    onUnhandledAction={() => navigationRef.current?.navigate('NotFound')}>
+    <Stack.Navigator initialRouteName="Login">
+      <Stack.Screen
+        name="Homes"
+        options={{ headerLeft: null, headerShown: false }}
+        component={MyBottomNavigationBar}
+      />
+      <Stack.Screen
+        name="NurseHomes"
+        options={{ headerLeft: null, headerShown: false }}
+        component={NurseBottomNavigationBar}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="Login"
+        component={Login}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="NotFound"
+        component={NotFound}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="Register"
+        component={Register}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="RegisterSuccess"
+        component={RegisterSuccess}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="Otp"
+        component={Otp}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="Search"
+        component={Search}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="Service"
+        component={ServicePackages}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="ServicePackageDetail"
+        component={ServicePackageDetail}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="ServicePackageRegisterSuccess"
+        component={ServicePackageRegisterSuccess}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="AddingService"
+        component={AddingServicePackages}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="AddingServiceDetail"
+        component={AddingServiceDetail}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="AddingServiceRegister"
+        component={AddingServiceElderRegister}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="AddingServiceCalendarRegister"
+        component={AddingServiceCalendarRegister}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="ServiceDayRegister"
+        component={ServiceDayRegister}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="ServiceAnydayRegister"
+        component={ServiceAnydayRegister}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="Favorite"
+        component={Favorite}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="ServicePayment"
+        component={ServicePayment}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="ServiceHistory"
+        component={ServiceHistory}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="ServiceHistoryDetail"
+        component={ServiceHistoryDetail}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="CancelRenewSuccess"
+        component={CancelRenewSuccess}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="CreateFeedback"
+        component={CreateFeedback}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="FeedbackHistory"
+        component={FeedbackHistory}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="FeedbackDetail"
+        component={FeedbackDetail}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="BillHistory"
+        component={BillHistory}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="BillDetail"
+        component={BillDetail}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="HealthMonitorDetail"
+        component={HealthMonitorDetail}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="HealthMonitorIndexList"
+        component={HealthMonitorIndexList}
+      />
+      {/* đăng ký thăm nuôi */}
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="VisitationSchedule"
+        component={VisitationSchedule}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="RegisterVisitation"
+        component={RegisterVisitation}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="RegisterVisitationSuccess"
+        component={RegisterVisitationSuccess}
+      />
 
-    if (navigate && routeName) {
-      navigate(routeName);
-    }
-  };
-
-  const linking = {
-    prefixes: ['CareConnect://'],
-    config,
-  };
-
-  // Gọi hàm getInitialURL khi ứng dụng khởi động để xử lý deep link ngay từ ban đầu
-  useEffect(() => {
-    getInitialURL();
-  }, []);
-
-  // Thêm sự kiện lắng nghe sự kiện deep link
-  useEffect(() => {
-    const handleUrl = ({ url }) => handleDeepLink(url);
-
-    const subscription = Linking.addEventListener('url', handleUrl);
-
-    return () => {
-      subscription.remove();
-    };
-  }, []);
-
-  return (
-    <NavigationContainer linking={linking} ref={navigationRef}
-      // <NavigationContainer 
-      onUnhandledAction={() => navigationRef.current?.navigate('NotFound')}>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen
-          name="Homes"
-          options={{ headerLeft: null, headerShown: false }}
-          component={MyBottomNavigationBar}
-        />
-        <Stack.Screen
-          name="NurseHomes"
-          options={{ headerLeft: null, headerShown: false }}
-          component={NurseBottomNavigationBar}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="Login"
-          component={Login}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="NotFound"
-          component={NotFound}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="Register"
-          component={Register}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="RegisterSuccess"
-          component={RegisterSuccess}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="Otp"
-          component={Otp}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="Search"
-          component={Search}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="Service"
-          component={ServicePackages}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="ServicePackageDetail"
-          component={ServicePackageDetail}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="ServicePackageRegisterSuccess"
-          component={ServicePackageRegisterSuccess}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="AddingService"
-          component={AddingServicePackages}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="AddingServiceDetail"
-          component={AddingServiceDetail}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="AddingServiceRegister"
-          component={AddingServiceElderRegister}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="AddingServiceCalendarRegister"
-          component={AddingServiceCalendarRegister}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="ServiceDayRegister"
-          component={ServiceDayRegister}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="ServiceAnydayRegister"
-          component={ServiceAnydayRegister}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="Favorite"
-          component={Favorite}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="ServicePayment"
-          component={ServicePayment}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="ServiceHistory"
-          component={ServiceHistory}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="ServiceHistoryDetail"
-          component={ServiceHistoryDetail}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="CancelRenewSuccess"
-          component={CancelRenewSuccess}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="CreateFeedback"
-          component={CreateFeedback}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="FeedbackHistory"
-          component={FeedbackHistory}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="FeedbackDetail"
-          component={FeedbackDetail}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="BillHistory"
-          component={BillHistory}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="BillDetail"
-          component={BillDetail}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="HealthMonitorDetail"
-          component={HealthMonitorDetail}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="HealthMonitorIndexList"
-          component={HealthMonitorIndexList}
-        />
-        {/* đăng ký thăm nuôi */}
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="VisitationSchedule"
-          component={VisitationSchedule}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="RegisterVisitation"
-          component={RegisterVisitation}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="RegisterVisitationSuccess"
-          component={RegisterVisitationSuccess}
-        />
-
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="EditProfile"
-          component={EditProfile}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="DetailProfile"
-          component={DetailProfile}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="ElderProfile"
-          component={ElderProfile}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="ElderDetailProfile"
-          component={ElderDetailProfile}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="MedicalProfile"
-          component={MedicalProfile}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="ChangePassword"
-          component={ChangePassword}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="ChangePasswordSuccess"
-          component={ChangePasswordSuccess}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="ForgetPassword"
-          component={ForgetPassword}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="OtpForgetPassword"
-          component={OtpForgetPassword}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="ResetPassword"
-          component={ResetPassword}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="ResetPasswordSuccess"
-          component={ResetPasswordSuccess}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="Contracts"
-          component={Contracts}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="ContractDetail"
-          component={ContractDetail}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="ContractCandSuccess"
-          component={ContractCandSuccess}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="ContractRenewSuccess"
-          component={ContractRenewSuccess}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="ScheduledService"
-          component={ScheduledService}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="ScheduledServicePayment"
-          component={ScheduledServicePayment}
-        />
-        {/* =======nurse====== */}
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="RoomList"
-          component={RoomList}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="RoomDetail"
-          component={RoomDetail}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="NurseElderDetailProfile"
-          component={NurseElderDetailProfile}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="CustomerProfile"
-          component={CustomerProfile}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="NurseHealthMonitor"
-          component={NurseHealthMonitor}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="HealthMonitorList"
-          component={HealthMonitorList}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="NurseHealthMonitorDetail"
-          component={NurseHealthMonitorDetail}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="ListHealthMonitor"
-          component={ListHealthMonitor}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="CreateHealthMonitor"
-          component={CreateHealthMonitor}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="ListHealthIndex"
-          component={ListHealthIndex}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="RegisterService"
-          component={RegisterService}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="RegisterServiceRoomList"
-          component={RegisterServiceRoomList}
-        />
-        <Stack.Screen
-          options={{ headerLeft: null, headerShown: false }}
-          name="RegisterServiceDetail"
-          component={RegisterServiceDetail}
-        />
-        {/* <Stack.Screen
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="EditProfile"
+        component={EditProfile}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="DetailProfile"
+        component={DetailProfile}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="ElderProfile"
+        component={ElderProfile}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="ElderDetailProfile"
+        component={ElderDetailProfile}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="MedicalProfile"
+        component={MedicalProfile}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="ChangePassword"
+        component={ChangePassword}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="ChangePasswordSuccess"
+        component={ChangePasswordSuccess}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="ForgetPassword"
+        component={ForgetPassword}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="OtpForgetPassword"
+        component={OtpForgetPassword}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="ResetPassword"
+        component={ResetPassword}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="ResetPasswordSuccess"
+        component={ResetPasswordSuccess}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="Contracts"
+        component={Contracts}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="ContractDetail"
+        component={ContractDetail}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="ContractCandSuccess"
+        component={ContractCandSuccess}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="ContractRenewSuccess"
+        component={ContractRenewSuccess}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="ScheduledService"
+        component={ScheduledService}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="ScheduledServicePayment"
+        component={ScheduledServicePayment}
+      />
+      {/* =======nurse====== */}
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="RoomList"
+        component={RoomList}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="RoomDetail"
+        component={RoomDetail}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="NurseElderDetailProfile"
+        component={NurseElderDetailProfile}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="CustomerProfile"
+        component={CustomerProfile}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="NurseHealthMonitor"
+        component={NurseHealthMonitor}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="HealthMonitorList"
+        component={HealthMonitorList}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="NurseHealthMonitorDetail"
+        component={NurseHealthMonitorDetail}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="ListHealthMonitor"
+        component={ListHealthMonitor}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="CreateHealthMonitor"
+        component={CreateHealthMonitor}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="ListHealthIndex"
+        component={ListHealthIndex}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="RegisterService"
+        component={RegisterService}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="RegisterServiceRoomList"
+        component={RegisterServiceRoomList}
+      />
+      <Stack.Screen
+        options={{ headerLeft: null, headerShown: false }}
+        name="RegisterServiceDetail"
+        component={RegisterServiceDetail}
+      />
+      {/* <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="NotificationApi"
           component={NotificationApi}
         /> */}
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+    </Stack.Navigator>
+  </NavigationContainer>
+);
 };
+
 const HomeStack = createNativeStackNavigator();
 const NurseStack = createNativeStackNavigator();
 function HomeStackScreen() {
@@ -543,16 +544,16 @@ function MyBottomNavigationBar() {
         options={{ headerShown: false }}
         component={AddingServicePackages}
       />
-      {/* <Tab.Screen
-        name="HealthCondition"
-        options={{ headerShown: false }}
-        component={NotificationPage}
-      /> */}
       <Tab.Screen
         name="HealthCondition"
         options={{ headerShown: false }}
-        component={HealthMonitor}
+        component={NotificationPage}
       />
+      {/* <Tab.Screen
+        name="HealthCondition"
+        options={{ headerShown: false }}
+        component={HealthMonitor}
+      /> */}
       {/* <Tab.Screen
         name="Notification"
         options={{ headerShown: false }}
