@@ -30,6 +30,7 @@ export default function NurseElderDetailProfile() {
       ElderProfile,
       EditProfile,
       CareSchedule,
+      contractsPage,
       common: { button },
     },
     setLanguage,
@@ -179,7 +180,7 @@ export default function NurseElderDetailProfile() {
                 {ElderProfile?.detail?.medicalProfile}
               </ComButton>
               <ComButton onPress={representative} style={{ flex: 1, borderRadius: 50 }}>
-                {ElderProfile?.detail?.representative}
+                {contractsPage?.representative}
               </ComButton>
             </View>
           </FormProvider>

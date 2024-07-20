@@ -8,9 +8,9 @@ const Styles = ({ children }) => {
 
 const colors = {
   primary: '#33B39C',
-  secondary: '#2ecc71',
-  accent: '#e74c3c',
-  background: '#ecf0f1',
+  cardBackground: '#F7FFFE',
+  cardBorder: '#ACDED3',
+  background: '#2ecc71',
   text: '#2c3e50',
   // Thêm các màu khác nếu cần
 };

@@ -13,6 +13,9 @@ export default function CategoryButtons({ categoryData, selectedCategory, onSele
     }, [selectedCategory]);
 
     const handleCategorySelect = (categoryId, index) => {
+        if (selectedCategory === categoryId) {//check nếu đang được chọn => ko có action gì
+            return;
+        }
         onSelectCategory(categoryId);
         if (categoryId === null) {
             // Scroll to the beginning when "Tất cả" is selected

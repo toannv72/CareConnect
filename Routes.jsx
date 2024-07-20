@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Platform } from "react-native";
+import React, { useRef, useEffect } from "react";
+import { Platform } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -7,6 +7,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./src/page/Login/Login";
 import Register from "./src/page/Register/Register";
 import Home from "./src/page/Home/Home";
+import NotFound from "./src/page/NotFound/NotFound";
 import RegisterSuccess from "./src/page/Register/RegisterSuccess";
 import Otp from "./src/page/Otp/Otp";
 import Search from "./src/page/Search/Search";
@@ -56,6 +57,7 @@ import ContractDetail from "./src/page/ContractDetail/ContractDetail";
 import ContractCandSuccess from "./src/page/ContractDetail/ContractCandSuccess";
 import ContractRenewSuccess from "./src/page/ContractDetail/ContractRenewSuccess";
 import ScheduledService from "./src/page/ScheduledService/ScheduledService";
+import ScheduledServicePayment from "./src/page/ScheduledService/ScheduledServicePayment";
 // -------Role: Nurse--------
 import NurseHome from "./src/nursePage/Home/NurseHome";
 import NurseProfile from "./src/nursePage/NurseProfile/NurseProfile";
@@ -70,17 +72,77 @@ import ListHealthMonitor from "./src/nursePage/HealthMonitor/ListHealthMonitor";
 import CreateHealthMonitor from "./src/nursePage/HealthMonitor/CreateHealthMonitor/CreateHealthMonitor";
 import ListHealthIndex from "./src/nursePage/HealthMonitor/CreateHealthMonitor/ListHealthIndex";
 import RegisterService from "./src/nursePage/RegisterService/RegisterService";
+import RegisterServiceRoomList from "./src/nursePage/RegisterService/RegisterServiceRoomList";
 import RegisterServiceDetail from "./src/nursePage/RegisterService/RegisterServiceDetail";
 import NotificationPage from "./src/page/Notification/Notification copy";
 // import NotificationApi from "./src/page/Notification/NotificationApi";
 import Notification2 from "./src/page/Notification/Notification2";
+import * as Linking from 'expo-linking';
+
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
 const Routes = () => {
+  const navigationRef = useRef(null);
+
+  const config = {
+    screens: {
+      Homes: {
+        screens: {
+          BillHistory: {
+            path: 'BillHistory', // Đặt path cho Tab.Screen "Service"
+            screens: {
+              BillHistory: '', // Màn hình mặc định khi vào tab "Service"
+            },
+          },
+        },
+      },
+      // NurseHomes: {
+      //   screens: {
+      //     NurseHealthMonitorDetail: 'nurse/healthmonitor/:elderId',
+      //   },
+      // },
+    },
+  };
+
+  const linking = {
+    //   prefixes: ['CareConnect://', 'exp://192.168.1.11:8081'], // Thêm tiền tố exp://
+    prefixes: ['CareConnect://', 'exp://rnnstoi-thaomy-8081.exp.direct'], // Thêm tiền tố exp://
+    config,
+  };
+
+  useEffect(() => {
+    (async () => {
+      const initialUrl = await Linking.getInitialURL();
+      if (initialUrl) {
+        const { path } = Linking.parse(initialUrl);
+        if (path) {
+          navigationRef.current?.navigate(path);
+        }
+      }
+    })();
+
+    // Updated Deep Link Handling:
+    const handleDeepLink = ({ url }) => {
+      const { path } = Linking.parse(url);
+      if (path) {
+        navigationRef.current?.navigate(path);
+      }
+    };
+
+    // Subscribe to URL events:
+    const subscription = Linking.addEventListener('url', handleDeepLink);
+
+    // Unsubscribe when the component unmounts:
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Homes">
+    <NavigationContainer linking={linking} ref={navigationRef}
+      onUnhandledAction={() => navigationRef.current?.navigate('NotFound')}>
+      <Stack.Navigator initialRouteName="Login">
         <Stack.Screen
           name="Homes"
           options={{ headerLeft: null, headerShown: false }}
@@ -95,6 +157,11 @@ const Routes = () => {
           options={{ headerLeft: null, headerShown: false }}
           name="Login"
           component={Login}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="NotFound"
+          component={NotFound}
         />
         <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
@@ -318,6 +385,11 @@ const Routes = () => {
           name="ScheduledService"
           component={ScheduledService}
         />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ScheduledServicePayment"
+          component={ScheduledServicePayment}
+        />
         {/* =======nurse====== */}
         <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
@@ -373,6 +445,11 @@ const Routes = () => {
           options={{ headerLeft: null, headerShown: false }}
           name="RegisterService"
           component={RegisterService}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="RegisterServiceRoomList"
+          component={RegisterServiceRoomList}
         />
         <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
@@ -457,7 +534,7 @@ function MyBottomNavigationBar() {
           return <ComIcon icon={iconName} />;
         },
       })}
-      // keyboardShouldPersistTaps="handled"
+    // keyboardShouldPersistTaps="handled"
     >
       <Tab.Screen
         name="Home"
@@ -469,10 +546,15 @@ function MyBottomNavigationBar() {
         options={{ headerShown: false }}
         component={AddingServicePackages}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="HealthCondition"
         options={{ headerShown: false }}
         component={NotificationPage}
+      /> */}
+      <Tab.Screen
+        name="HealthCondition"
+        options={{ headerShown: false }}
+        component={HealthMonitor}
       />
       {/* <Tab.Screen
         name="Notification"

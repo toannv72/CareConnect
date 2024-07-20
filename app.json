@@ -2,6 +2,8 @@
   "expo": {
     "name": "CareConnect",
     "slug": "careconnect-fjti0vfykgk9qpovwv3vb",
+    "scheme": "CareConnect",
+    "devClient": true, 
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -42,6 +44,21 @@
       "permissions": [
         "NOTIFICATIONS",
         "RECEIVE_BOOT_COMPLETED"
+      ],
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "CareConnect",
+              "host": "*"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
       ]
     },
     "web": {

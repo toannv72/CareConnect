@@ -27,7 +27,7 @@ export default function ContractCandSuccess() {
         <Image style={{}} source={Vector} />
         <View style={styles?.container1}>
           <View style={styles?.container2}>
-            <Text style={{  fontSize: 22,textAlign:"center" }}>
+            <Text style={{  fontSize: 16,textAlign:"center" }}>
               Đã gửi thành công yêu cầu hủy hợp đồng. Vui lòng chờ phản hồi từ
               phía Viện Dưỡng Lão.
             </Text>

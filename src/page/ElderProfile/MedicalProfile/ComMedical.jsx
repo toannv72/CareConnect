@@ -3,12 +3,13 @@ import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { Image, View } from "react-native";
 import { LanguageContext } from "../../../contexts/LanguageContext";
 import { useNavigation } from "@react-navigation/native";
+import { stylesApp } from "../../../styles/Styles";
 
 export default function ComMedical({ image, title, value, unit, onPress, isSelected, style }) {
 
     return (
         <>
-            <View style={styles?.body}>
+            <View style={[styles?.body, stylesApp.shadow]}>
                 <View style={styles?.title}>
                     <Image
                         source={image}
@@ -39,7 +40,7 @@ const styles = StyleSheet.create({
         borderColor: "#ACDED3",
         borderRadius: 10,
         width: "49%",
-        alignItems: "center"
+        alignItems: "center",
     },
     title:{
         flexDirection: "row", 

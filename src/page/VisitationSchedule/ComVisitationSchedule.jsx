@@ -8,23 +8,33 @@ export default function ComVisitationSchedule({ data }) {
     text: { servicePackages },
     setLanguage,
   } = useContext(LanguageContext);
-  const formatCurrency = (number) => {
-    // Sử dụng hàm toLocaleString() để định dạng số
-    return number.toLocaleString("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    });
-  };
 
-const [date] = data?.date?.split("T");
-const [year, month, day] = date.split("-");
+  const [date] = data?.date?.split("T");
+  const [year, month, day] = date.split("-");
+
+  const getStatusText = (status) => {
+    switch (status) {
+      case 'Pending':
+        return { text: 'Đang chờ', color: 'green' };
+      case 'Approved':
+        return { text: 'Đã chấp nhận', color: 'green' };
+      case 'Rejected':
+        return { text: 'Đã từ chối', color: 'green' };
+      case 'Completed':
+        return { text: 'Đã hoàn thành', color: 'red' };
+      case 'Cancelled':
+        return { text: 'Đã hủy', color: 'red' };
+      default:
+        return status;
+    }
+  };
 
   return (
     <TouchableOpacity style={[styles.body]}>
       <View style={styles.day}>
         <Text style={styles.textYear}>{year}</Text>
         <View
-          style={{ backgroundColor: "#33B39C", paddingHorizontal:10 ,paddingVertical:4, borderRadius: 10 }}
+          style={{ backgroundColor: "#33B39C", paddingHorizontal: 10, paddingVertical: 4, borderRadius: 10 }}
         >
           <Text style={styles.textDay}>{day}</Text>
           <Text style={styles.textDay}>- -</Text>
@@ -40,22 +50,54 @@ const [year, month, day] = date.split("-");
           </Text>
           <Text>: {data?.user?.fullName}</Text>
         </Text>
-        <Text style={{ flexDirection: "row" }}>
-          <Text style={{ fontWeight: "bold", fontSize: 16 }}>Người cao tuổi: </Text>
-         {
-          data?.elders?.length > 0 && (
-            data?.elders?.map((elder, index)=>(
-              <Text key={index}>{elder?.name}{index < data.elders.length - 1 && ", "}</Text>
-            )))
-         }
-        </Text>
+
         <Text style={{ flexDirection: "row" }}>
           <Text style={{ fontWeight: "bold", fontSize: 16 }}>
             Số điện thoại
           </Text>
           <Text>: {data?.user?.phoneNumber}</Text>
         </Text>
-        
+        {
+          data?.type == 'FollowUpVisit' && (<Text style={{ flexDirection: "row" }}>
+            <Text style={{ fontWeight: "bold", fontSize: 16 }}>Người cao tuổi: </Text>
+            {
+              data?.elders?.length > 0 && (
+                data?.elders?.map((elder, index) => (
+                  <Text key={index}>{elder?.name}{index < data.elders.length - 1 && ", "}</Text>
+                )))
+            }
+          </Text>)
+        }
+
+        {
+          data?.type == 'ProcedureCompletion' && (
+            <Text>
+              <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                Mã hợp đồng
+              </Text>
+              <Text>: {data?.contract?.id}</Text>
+            </Text>
+          )
+        }
+
+        {
+          data?.type == 'Consultation' && (
+            <Text>
+              <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                Gói dưỡng lão
+              </Text>
+              <Text>: {data?.nursingPackage?.name}</Text>
+            </Text>
+          )
+        }
+
+        <Text>
+          <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+            Trạng thái
+          </Text>
+          <Text>: {getStatusText(data?.status)?.text}</Text>
+        </Text>
+
       </View>
     </TouchableOpacity>
   );

@@ -7,15 +7,19 @@ const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser, removeUser] = useStorage("user", null);
+  const [role, setRole, removeRole] = useStorage("role", null);
   const [elders, setElders, removeElders] = useStorage("elders", []);
   const [contracts, setContracts, removeContracts] = useStorage("contracts", []);
+  const [nurseSchedules, setNurseSchedules, removeNurseSchedules] = useStorage("nurseSchedules", []);
   const [accessToken, setAccessToken, removeAccessToken] = useStorage("accessToken", null);
 
   const login = (userData) => {
     const ability = new Ability(defineRulesFor(userData));
-    setUser({ ...userData });
+    setUser({ ...userData })
     setElders(userData?.elders)
     setContracts(userData?.contracts)
+    setNurseSchedules(userData?.nurseSchedules)
+    setRole(userData?.roles[0])
   };
 
   const update = (userData) => {
@@ -30,10 +34,12 @@ export const AuthProvider = ({ children }) => {
     removeAccessToken();
     removeElders();
     removeContracts();
+    removeNurseSchedules();
+    removeRole();
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, login, logout, contracts, elders, accessToken }}>
+    <AuthContext.Provider value={{ user, setUser, login, logout, contracts, elders, accessToken, nurseSchedules, role }}>
       {children}
     </AuthContext.Provider>
   );

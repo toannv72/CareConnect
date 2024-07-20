@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity } from 'react-native';
-import ComNoData from "../../Components/ComNoData/ComNoData";
+import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import ComSelectButton from "../../Components/ComButton/ComSelectButton";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { useRoute } from "@react-navigation/native";
@@ -14,6 +13,7 @@ import vnpay from "../../../assets/vnpay.png";
 import moment from "moment";
 import { postData } from "../../api/api"; // Import your API function
 import { Linking } from 'react-native';
+import Toast from 'react-native-toast-message';
 
 export default function ServicePayment() {
     const {
@@ -25,26 +25,30 @@ export default function ServicePayment() {
     const route = useRoute();
     const { servicePackage, elder, orderDates, type } = route?.params;
     const [selectedMethod, setSelectedMethod] = useState('momo');
+    const [loading, setLoading] = useState(false);
     const [adjustedOrderDates, setAdjustedOrderDates] = useState(orderDates);
     const handleBackPress = () => { navigation.goBack() };
+
+    const showToast = (type, text1, text2, position) => {
+        Toast.show({ type: type, text1: text1, text2: text2, position: position, visibilityTime: 2000});
+    }
 
     const handleMethodPress = (methodName) => {
         setSelectedMethod(methodName);
     };
-    console.log(" orderDates: ", orderDates)
+
     useEffect(() => {
-        const sortedDates = [...orderDates].sort((a, b) => moment(a).diff(moment(b)));
-        // Kiểm tra xem tất cả các ngày trong orderDates có phải là ngày quá khứ không
-        const allPastDates = sortedDates.every(date => moment(date).isSameOrBefore(moment(), 'day'));
+        const sortedDates = [...orderDates].sort((a, b) => moment(a, 'YYYY-MM-DD').diff(moment(b, 'YYYY-MM-DD')));
+        // Kiểm tra xem tất cả các ngày trong orderDates có phải là ngày quá khứ or hiện tại không
+        const allPastDates = sortedDates.every(date => moment(date, 'YYYY-MM-DD').isSameOrBefore(moment(), 'day'));
         if (allPastDates) {
             // Lấy ngày tháng sau tương ứng nếu có
             const nextMonthDates = sortedDates.map(date => {
-                const nextMonthDate = moment(date).add(1, 'months');
-                return nextMonthDate.isValid() ? nextMonthDate.format('YYYY-MM-DD') : date;
+                const nextMonthDate = moment(date, 'YYYY-MM-DD').add(1, 'months');
+                return nextMonthDate.isValid() ? nextMonthDate.format('YYYY-MM-DD') : null;
             });
-            console.log(" nextMonthDates: ", nextMonthDates)
             setAdjustedOrderDates(nextMonthDates);
-        }else{
+        } else {
             setAdjustedOrderDates(sortedDates);
         }
     }, [orderDates]);
@@ -68,17 +72,16 @@ export default function ServicePayment() {
     }
 
     const payment = () => {
-        const dueDate = moment()?.format('YYYY-MM-DD');
         const transformedDates = servicePackage?.type === "OneDay" ? [{ "date": servicePackage?.eventDate }] : adjustedOrderDates.map(date => ({ date }));
         const formattedData = {
             "method": selectedMethod,
-            "dueDate": dueDate,
-            "description": "Thanh toán hóa đơn dịch vụ " + servicePackage?.name,
-            "content": "Thanh toán hóa đơn dịch vụ " + servicePackage?.name,
-            "notes": "Thanh toán hóa đơn dịch vụ " + servicePackage?.name,
+            "dueDate": moment().format('YYYY-MM-DD'),
+            "description": "Thanh toán dịch vụ " + servicePackage?.name,
+            "content": "Thanh toán dịch vụ " + servicePackage?.name,
+            "notes": "Thanh toán dịch vụ " + servicePackage?.name,
             "orderDetails": [
                 {
-                    "notes": "Thanh toán hóa đơn dịch vụ " + servicePackage?.name + " cho người cao tuổi " + elder?.name,
+                    "notes": "Thanh toán dịch vụ " + servicePackage?.name + " cho người cao tuổi " + elder?.name,
                     "servicePackageId": servicePackage?.id,
                     "elderId": elder?.id,
                     "type": type,
@@ -86,24 +89,39 @@ export default function ServicePayment() {
                 }
             ]
         }
-        postData("/orders/service-package?returnUrl=a", formattedData)
+        setLoading(true)
+        postData("/orders/service-package?returnUrl=exp://rnnstoi-thaomy-8081.exp.direct/--/BillHistory", formattedData)
             .then((response) => {
                 console.log("API Response: ", response.message);
-                // showToast("success", "Tạo báo cáo thành công", "", "bottom")
-                // navigation.navigate("AddingServiceDetail", {id : servicePackage?.id});
                 const url = response.message; // Assuming response.message contains the URL
                 // Open the URL in the default browser
-                // Linking.openURL(url)
-                //     .then(() => {
-                //         console.log("Opened successfully");
-                //     })
-                //     .catch((err) => {
-                //         console.error("Failed to open URL: ", err);
-                //     });
+                setLoading(false)
+                Linking.openURL(url)
+                    .then(() => {
+                        console.log("Opened successfully");
+                        navigation.navigate("BillHistory")
+                    })
+                    .catch((err) => {
+                        console.log("Failed to open URL: ", err);
+                    });
             })
             .catch((error) => {
-                console.error("API Error: ", error);
-                // showToast("error", "Có lỗi xảy ra, vui lòng thử lại!", "", "bottom")
+                console.log("API Error: ", error.response);
+                setLoading(false)
+                switch (error.response.status) {
+                    case 609:
+                        showToast("error", "Đăng ký thất bại", "Dịch vụ đã được đăng ký", "bottom");
+                        break;
+                    case 610:
+                        showToast("error", "Đăng ký thất bại", "Dịch vụ đã được đăng ký", "bottom");
+                        break;
+                    case 611:
+                        showToast("error", "Đăng ký thất bại", "Dịch vụ đã được đăng ký", "bottom");
+                        break;
+                    default:
+                        showToast("error", "Đăng ký thất bại", "Đã có lỗi xảy ra. Vui lòng thử lại.", "bottom");
+                        break;
+                };
             });
     }
 
@@ -189,7 +207,6 @@ export default function ServicePayment() {
                         onPress={() => handleMethodPress('VnPay')}
                     />
                 </View>
-
             </ScrollView>
             <View style={{ backgroundColor: "#fff", paddingHorizontal: 15 }}>
                 <Text style={{ flexDirection: "row", marginTop: 5 }}>
@@ -209,7 +226,7 @@ export default function ServicePayment() {
                     </Text>
                 </Text>
                 <ComSelectButton onPress={() => payment()} >
-                    {addingPackages?.payment?.title}
+                    {loading ? <ActivityIndicator /> : addingPackages?.payment?.title}
                 </ComSelectButton>
             </View>
         </>
@@ -223,7 +240,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         paddingHorizontal: 15,
     },
-
     header: {
         paddingTop: 50,
         backgroundColor: "#fff",

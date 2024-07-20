@@ -1,7 +1,7 @@
-import React, { useContext, useState, useEffect } from "react";
-import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity } from 'react-native';
+import React, { useContext, useState, useEffect, useCallback } from "react";
+import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { LanguageContext } from "../../../contexts/LanguageContext";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import ComHeader from "../../../Components/ComHeader/ComHeader";
 import ComSelectButton from "../../../Components/ComButton/ComSelectButton";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
@@ -10,12 +10,20 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm } from "react-hook-form";
 import { postData, getData } from "../../../api/api";
+import { useRoute } from "@react-navigation/native";
+import ComNoData from "../../../Components/ComNoData/ComNoData";
+import ComLoading from "../../../Components/ComLoading/ComLoading";
 
 export default function ListHealthIndex({ data }) {
     const [selectedHealthIndexItems, setSelectedHealthIndexItems] = useState([]);
     const [healthIndex, setHealthIndex] = useState([])
     const [loading, setLoading] = useState(false);
-
+    const [loadMoreLoading, setLoadMoreLoading] = useState(false);
+    const [page, setPage] = useState(1); // Track pagination page
+    const [hasMore, setHasMore] = useState(true); // Track if there are more items to load
+    const [searchQuery, setSearchQuery] = useState("");
+    const route = useRoute();
+    const { elderId } = route.params;
     const {
         text: { NurseHealthMonitor },
     } = useContext(LanguageContext);
@@ -44,31 +52,64 @@ export default function ListHealthIndex({ data }) {
         },
     });
 
-    const {
-        control,
-        handleSubmit,
-        formState: { errors },
-    } = methods;
+    const { control, handleSubmit, reset, formState: { errors } } = methods;
 
     const onSubmit = (data) => {
-        console.log("====================================");
-        console.log(data);
-        console.log("====================================");
-        setLoading(!loading);
+        if (data?.search.trim() != "") {
+            setPage(1);
+            setHealthIndex([]);
+            setSearchQuery(encodeURIComponent(data?.search.trim()));
+        }
     };
 
-    useEffect(() => {
-        setLoading(true);
-        getData(`/health-category`, {})
+    const fetchNextPage = async () => {
+        setLoadMoreLoading(!loadMoreLoading);
+        let url = '/health-category';
+
+        if (searchQuery) {
+            url += `?Search=${searchQuery}`;
+        } else {
+            url += `?PageIndex=${page}&PageSize=10`;
+        }
+        getData(url, {})
             .then((categories) => {
-                setHealthIndex(categories?.data?.contends);
+                const newItems = categories?.data?.contends || [];
+                setHealthIndex(prevData => [...prevData, ...newItems]);
+                setPage(prevPage => prevPage + 1);
+                setLoadMoreLoading(false);
+                setLoading(false);
+                setHasMore(page < categories?.data?.totalPages);
                 setLoading(false);
             })
             .catch((error) => {
                 setLoading(false);
                 console.error("Error fetching order items:", error);
             });
-    }, []);
+    }
+
+    useEffect(() => {
+        if (searchQuery != "")
+            fetchNextPage();
+    }, [searchQuery]);
+
+    useFocusEffect(
+        useCallback(() => {
+            reset();
+            setHealthIndex([]);
+            setPage(1);
+            setLoading(!loading);
+            setSearchQuery("");
+            fetchNextPage();
+        }, [])
+    );
+
+    const handleClearSearch = () => {
+        if (searchQuery != "") {
+            setPage(1);
+            setHealthIndex([])
+        }
+        setSearchQuery(" ");
+    };
 
     return (
         <>
@@ -86,50 +127,61 @@ export default function ListHealthIndex({ data }) {
                         control={control}
                         onSubmitEditing={handleSubmit(onSubmit)}
                         errors={errors}
+                        handleClearSelection={handleClearSearch}
                     />
                 </FormProvider>
 
                 <Text style={styles?.chooseText}>{NurseHealthMonitor?.chooseHealthIndex}</Text>
-
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
-                >
-                    {healthIndex.map((item, index) => (
-                        <BouncyCheckbox
-                            key={index}
-                            fillColor="#33B39C"
-                            style={{
-                                marginVertical: 5,
-                                borderWidth: 1,
-                                borderColor: "#33B39C",
-                                padding: 10,
-                                borderRadius: 10,
-                            }}
-                            textComponent={
-                                    <View style={styles.textComponentContainer}>
-                                        <Image source={{ uri: item?.imageUrl }}
-                                            style={
-                                                {
-                                                    width: 50,
-                                                    height: 50,
-                                                    marginHorizontal: 10,
-                                                    flex: 1
-                                                }
-                                            } />
-                                        <Text style={styles.paragraph}>{item?.name}</Text>
-                                    </View>
-                            }
-                            innerIconStyle={{ borderWidth: 2 }}
-                            onPress={(isChecked) => { handleCheckboxClick(item) }}
-                            isChecked={selectedHealthIndexItems.some(i => i.id === item.id)}
-                        />
+                {loading ? (
+                    <ComLoading show={true} />
+                ) : (
+                    healthIndex.length == 0 ? (<ComNoData>Không có chỉ số sức khỏe nào</ComNoData>
+                    ) : (
+                        <ScrollView
+                            showsVerticalScrollIndicator={false}
+                        >
+                            {healthIndex.map((item, index) => (
+                                <BouncyCheckbox
+                                    key={index}
+                                    fillColor="#33B39C"
+                                    style={{
+                                        marginVertical: 5,
+                                        borderWidth: 1,
+                                        borderColor: "#33B39C",
+                                        padding: 10,
+                                        borderRadius: 10,
+                                    }}
+                                    textComponent={
+                                        <View style={styles.textComponentContainer}>
+                                            <Image source={{ uri: item?.imageUrl }}
+                                                style={
+                                                    {
+                                                        width: 50,
+                                                        height: 50,
+                                                        marginHorizontal: 10,
+                                                        flex: 1
+                                                    }
+                                                } />
+                                            <Text style={styles.paragraph}>{item?.name}</Text>
+                                        </View>
+                                    }
+                                    innerIconStyle={{ borderWidth: 2 }}
+                                    onPress={(isChecked) => { handleCheckboxClick(item) }}
+                                    isChecked={selectedHealthIndexItems.some(i => i.id === item.id)}
+                                />
+                            ))}
+                            <View style={{ justifyContent: "center", alignItems: "center" }}>
+                                <View style={{ width: "35%" }}>
+                                    {loadMoreLoading ? (<ActivityIndicator />) :
+                                        (<ComSelectButton onPress={fetchNextPage} disable={!hasMore}>Xem thêm</ComSelectButton>)}
+                                </View>
+                            </View>
+                        </ScrollView>
                     ))}
-                </ScrollView>
-
                 <ComSelectButton
                     disable={selectedHealthIndexItems.length == 0 ? true : false}
                     style={{ borderRadius: 50, marginBottom: 30, height: 50 }}
-                    onPress={() => navigation.navigate("CreateHealthMonitor", { selectedIndexs: selectedHealthIndexItems })}>
+                    onPress={() => navigation.navigate("CreateHealthMonitor", { selectedIndexs: selectedHealthIndexItems, elderId })}>
                     Tiếp tục
                 </ComSelectButton>
             </View>

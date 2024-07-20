@@ -23,7 +23,6 @@ export default function ServiceDayRegister() {
     const [loading, setLoading] = useState(false);
     const route = useRoute();
     const { elder, data } = route.params;
-    console.log(" selectedDates", selectedDates)
     const navigation = useNavigation();
     const {
         text: { addingPackages },
@@ -60,20 +59,17 @@ export default function ServiceDayRegister() {
 
     useEffect(() => {
         if (data?.servicePackageDates) {
-
             if (orderDetail.length === 0) {
                 // Nếu orderDetail rỗng, sử dụng các ngày từ servicePackageDates
                 const disabledDates = data?.servicePackageDates.map(date => date?.repetitionDay);
-
                 setDisabledDates(disabledDates);
             } else {
                 // Extract dates from service package data
                 const serviceDates = data?.servicePackageDates.map(date => date?.repetitionDay);
                 // Filter order details to find disabled dates
                 const disabledDates = serviceDates.filter(date => 
-                    !orderDetail.some(item => item?.dayOfMonth === date)
-                );
-                    console.log("serviceDates1", disabledDates)
+                    !orderDetail.some(item => item?.dayOfMonth === date || new Date(item?.date).getDate() === date)
+                );//               Check ngày calendar trùng dayOfMonth        Check ngày calendar trùng date
                 setDisabledDates(disabledDates);
             }
         }

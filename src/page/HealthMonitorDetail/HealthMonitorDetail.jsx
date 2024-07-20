@@ -20,6 +20,7 @@ export default function HealthMonitorDetail() {
   const { data } = route.params;
   const [loading, setLoading] = useState(false);
   const [healthMonitor, setHealthMonitor] = useState([]);
+  const [elderData, setElderData] = useState({});
   const {
     text: {
       HealthMonitorDetail,
@@ -59,14 +60,22 @@ export default function HealthMonitorDetail() {
     const month = (new Date(data?.createdAt).getMonth() + 1).toString().padStart(2, "0");
     const year = new Date(data?.createdAt).getFullYear();
     const date = `${year}-${month}-${day}`;
-    setLoading(!loading);
+    setLoading(true);
     getData(`/health-report?ElderId=${data?.elderId}&Date=${data?.date}`, {})
       .then((healthMonitor) => {
         setHealthMonitor(healthMonitor?.data?.contends);
-        setLoading(loading);
       })
       .catch((error) => {
-        setLoading(loading);
+        setLoading(false);
+        console.error("Error getData fetching items:", error);
+      });
+    getData(`/elders/${data?.elderId}`, {})
+      .then((elders) => {
+        setElderData(elders?.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
         console.error("Error getData fetching items:", error);
       });
   }, []);
@@ -93,7 +102,7 @@ export default function HealthMonitorDetail() {
         >
           <View style={styles.patient}>
             <View style={styles.patient60}>
-              <ComPatient data={data?.elder} />
+              <ComPatient data={elderData} />
             </View>
             <View style={styles.patient40}>
               <ComButtonDay><ComDateConverter>{data?.date}</ComDateConverter></ComButtonDay>

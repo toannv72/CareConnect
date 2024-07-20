@@ -6,26 +6,19 @@ import ComPopup from "../../../Components/ComPopup/ComPopup";
 import { LanguageContext } from "../../../contexts/LanguageContext";
 import { useRoute } from "@react-navigation/native";
 import backArrowWhite from "../../../../assets/icon/backArrowWhite.png";
-import sadIcon from "../../../../assets/Sad.png";
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { postData, getData } from "../../../api/api";
 
 export default function ServiceHistoryDetail() {
     const [data, setData] = useState({});
-    const [popupVisible, setPopupVisible] = useState(false);
+    const [orderDetailData, setOrderDetailData] = useState({});
+    const [feedbackData, setFeedbackData] = useState([]);
     const route = useRoute();
-    const { id, status } = route.params;
+    const { id, status, orderDetailId } = route.params;
     const navigation = useNavigation();
     const [loading, setLoading] = useState(false);
     const [serviceData, setServiceData] = useState({});
     const [elderData, setElderData] = useState({});
-
-    const handleOpenPopup = () => {
-        setPopupVisible(true);
-    };
-    const handleClosePopup = () => {
-        setPopupVisible(false);
-    };
     const {
         text: { addingPackages },
         setLanguage,
@@ -34,36 +27,64 @@ export default function ServiceHistoryDetail() {
         navigation.goBack();
     };
     const formatCurrency = (number) => {
-        return number.toLocaleString("vi-VN", {
-            style: "currency",
-            currency: "VND",
-        });
+        if (typeof number !== 'undefined') {
+            return number.toLocaleString("vi-VN", {
+                style: "currency",
+                currency: "VND",
+            });
+        }
+        return '';
     };
     // servise history 
     const historyColumnLabels = {
-        id: addingPackages?.history?.nurse,
-        time: addingPackages?.history?.time,
+        userId: addingPackages?.history?.nurse,
+        completedAt: addingPackages?.history?.time,
     };
-    const historyColumns = ["id", "time"];
-    const historyDataSource = [
-        { id: '1234321', time: "10:00 - 08/05/2024" },
-        { id: '6789987', time: "10:00 - 08/05/2024" },
-        { id: '5703126', time: "10:00 - 08/05/2024" },
-        { id: '0033775', time: "10:00 - 08/05/2024" },
-    ];
+    const historyColumns = ["userId", "completedAt"];
+    const historyDataSource = orderDetailData
+        ? orderDetailData?.orderDates?.filter((day) => new Date(day?.date) > new Date(data?.createdAt))
+        : [];
+
+    const filteredOrderDates = orderDetailData?.orderDates?.filter(detail => {
+        const orderDate = new Date(detail?.date);
+        const createdDate = new Date(data?.createdAt);
+        return orderDate > createdDate;
+    });
+    const currentPrice = orderDetailData?.price / filteredOrderDates?.length // giá lúc mua
+    // tổng tiền mỗi dv    /   tổng số ngày > createAt 
 
     useFocusEffect(
         useCallback(() => {
-            setLoading(!loading);
+            setLoading(true);
             getData(`/orders/${id}`, {})
                 .then((orders) => {
                     setData(orders?.data)
                     setServiceData(orders?.data?.orderDetails[0]?.servicePackage)
                     setElderData(orders?.data?.orderDetails[0]?.elder)
-                    setLoading(loading);
+                    setLoading(false);
                 })
                 .catch((error) => {
-                    setLoading(loading);
+                    setLoading(false);
+                    console.error("Error getData fetching items:", error);
+                });
+
+            getData(`/order-detail/${orderDetailId}`, {})
+                .then((ordersdetail) => {
+                    setOrderDetailData(ordersdetail?.data)
+                    setLoading(false);
+                })
+                .catch((error) => {
+                    setLoading(false);
+                    console.error("Error getData fetching items:", error);
+                });
+
+            getData(`/feedback?OrderDetailId=${orderDetailId}`, {})
+                .then((feedback) => {
+                    setFeedbackData(feedback?.data?.contends)
+                    setLoading(false);
+                })
+                .catch((error) => {
+                    setLoading(false);
                     console.error("Error getData fetching items:", error);
                 });
         }, [])
@@ -76,10 +97,9 @@ export default function ServiceHistoryDetail() {
         return `${day}/${month}/${year}`;
     };
 
-
     return (
         <>
-            <ComPopup
+            {/* <ComPopup
                 visible={popupVisible}
                 title="Bạn muốn hủy gian hạn Dịch vụ xoa bóp bấm huyệt theo tuần?"
                 image={sadIcon}
@@ -90,108 +110,84 @@ export default function ServiceHistoryDetail() {
                 onClose={handleClosePopup}
             >
                 <Text>Gói dịch vụ sẽ không tự động gia hạn lại</Text>
-
-            </ComPopup>
+            </ComPopup> */}
             <View style={styles.header}>
                 <TouchableOpacity onPress={handleBackPress} style={styles.backIconContainer}>
-                    <Image
-                        source={backArrowWhite}
-                        style={styles.backIcon}
-                    />
+                    <Image source={backArrowWhite} style={styles.backIcon} />
                 </TouchableOpacity>
                 <Image
-                    source={{ uri: serviceData?.imageUrl }}
-                    style={{
-                        height: 200,
-                        objectFit: "fill",
-                    }}
+                    source={{ uri: orderDetailData?.servicePackage?.imageUrl }}
+                    style={{ height: 220, objectFit: "fill" }}
                 />
             </View>
-            <ScrollView style={styles.body}>
-                <Text style={{ fontWeight: "bold", fontSize: 20, marginBottom: 10 }} numberOfLines={2}>
-                    {serviceData?.name}
-                </Text>
-                <View style={{ flexDirection: 'row' }}>
-                    <Text style={{ flex: 1, fontSize: 16, marginBottom: 10 }}>
-                        <Text style={{ fontWeight: "bold" }}>
-                            {formatCurrency(serviceData?.price || 0)}
-                        </Text>
-                        /{addingPackages?.package?.month}
+            <View style={styles.body}>
+                <ScrollView showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
+                    <Text style={{ fontWeight: "bold", fontSize: 20, marginBottom: 10 }} numberOfLines={2}>
+                        {orderDetailData?.servicePackage?.name}
                     </Text>
-                </View>
-                <Text style={{ flexDirection: "row", marginBottom: 10 }}>
-                    <Text style={styles.contentBold}>
-                        {addingPackages?.history?.dates}
-                    </Text>
-                    <Text style={{ fontSize: 16 }}>
-                        : {formattedDate(data?.createdAt)}
-                    </Text>
-                </Text>
-                <View style={{ marginBottom: 10 }}>
-                    <Text style={styles.contentBold}>
-                        {addingPackages?.history?.serviceDates}
-                    </Text>
-
-                    {
-                        data?.orderDetails?.length > 0 &&
-                        data?.orderDetails[0]?.orderDates?.map((day, index) => (
-                            <Text style={{ fontSize: 16 }} key={index}>
-                                • {formattedDate(day?.date)}
+                    <View style={{ flexDirection: 'row' }}>
+                        <Text style={{ flex: 1, fontSize: 16, marginBottom: 10 }}>
+                            <Text style={{ fontWeight: "bold" }}>
+                                {formatCurrency(currentPrice || 0)}
                             </Text>
-                        ))
-                    }
+                            /{addingPackages?.package?.time}
+                        </Text>
+                    </View>
+                    <Text style={{ flexDirection: "row", marginBottom: 10 }}>
+                        <Text style={styles.contentBold}>{addingPackages?.history?.dates}</Text>
+                        <Text style={{ fontSize: 16 }}>: {formattedDate(data?.createdAt)}</Text>
+                    </Text>
+                    <View style={{ marginBottom: 10 }}>
+                        <Text style={styles.contentBold}>
+                            {addingPackages?.history?.serviceDates}
+                        </Text>
+                        {orderDetailData?.orderDates &&
+                            orderDetailData?.orderDates?.filter((day) => new Date(day?.date) > new Date(data?.createdAt))
+                                ?.map((day, index) => (
+                                    <Text style={{ fontSize: 16 }} key={index}>
+                                        • {formattedDate(day?.date)}
+                                    </Text>
+                                ))
+                        }
+                    </View>
+                    <Text style={{ flexDirection: "row", fontSize: 16, marginBottom: 10 }}>
+                        <Text style={{ fontWeight: "bold" }}>
+                            {addingPackages?.payment?.elderName}
+                        </Text>
+                        <Text>: {elderData?.name}</Text>
+                    </Text>
+                    <Text style={{ flexDirection: "row", fontSize: 16, marginBottom: 10 }}>
+                        <Text style={{ fontWeight: "bold" }}>{addingPackages?.history?.status}</Text>
+                        <Text>:  {status ? "Đã kết thúc" : "Chưa kết thúc"}</Text>
+                    </Text>
+                    <View style={{ marginBottom: 10 }}>
+                        <Text style={{ marginVertical: 10, fontSize: 16, fontWeight: 'bold' }}>
+                            {addingPackages?.history?.serviceHistory}
+                        </Text>
+                        <ComTable columns={historyColumns} dataSource={historyDataSource} columnLabels={historyColumnLabels} />
+                    </View>
+                </ScrollView>
+                <View style={{ marginBottom: 10, flexDirection: "row", gap: 10 }}>
+                    {(new Date().getDate() >= 25 && new Date().getDate() <= 30) && (//chỉ hiển thị ngày 25 - 30 hàng tháng
+                        <View style={{ flex: 1 }}>
+                            {feedbackData?.length > 0 ? (//nếu đã từng feedback => view fb
+                                <ComSelectButton onPress={() => { navigation.navigate("FeedbackDetail", { id: feedbackData[0]?.id }) }}>
+                                    Xem đánh giá
+                                </ComSelectButton>
+                            ) : (
+                                <ComSelectButton onPress={() => { navigation.navigate("CreateFeedback", { data: data, serviceData, orderDetailId }) }}>
+                                    {addingPackages?.history?.feedback}
+                                </ComSelectButton>
+                            )}
+                        </View>
+                    )}
+                    <View style={{ flex: 1 }}>
+                        <ComSelectButton onPress={() => { navigation.navigate("BillDetail", { id }) }}>
+                            Chi tiết thanh toán
+                        </ComSelectButton>
+                    </View>
                 </View>
-                <Text style={{ flexDirection: "row", fontSize: 16, marginBottom: 10 }}>
-                    <Text style={{ fontWeight: "bold" }}>
-                        {addingPackages?.payment?.elderName}
-                    </Text>
-                    <Text>
-                        : {elderData?.name}
-                    </Text>
-                </Text>
-                <Text style={{ flexDirection: "row", fontSize: 16, marginBottom: 10 }}>
-                    <Text style={{ fontWeight: "bold" }}>
-                        {addingPackages?.history?.status}
-                    </Text>
-                    <Text>
-                        :  {status ? "Đã kết thúc" : "Chưa kết thúc"}
-                    </Text>
-                </Text>
-                {/* <Text style={{ flexDirection: "row", marginBottom: 10 }}>
-                    <Text style={styles.contentBold}>
-                        {addingPackages?.package?.category}
-                    </Text>
-                    <Text style={{ fontSize: 16 }}>
-                        : {serviceData?.category}
-                    </Text>
-                </Text>
-                <View style={{ marginBottom: 10 }}>
-                    <Text style={styles.contentBold}>
-                        {addingPackages?.package?.description}
-                    </Text>
-                    <Text style={{ fontSize: 16 }}>{serviceData?.context}</Text>
-                </View> */}
-                <View style={{marginBottom:10}}>
-                    <Text style={{ marginVertical: 10, fontSize: 16, fontWeight: 'bold' }}>
-                        {addingPackages?.history?.serviceHistory}
-                    </Text>
-                    <ComTable columns={historyColumns} dataSource={historyDataSource} columnLabels={historyColumnLabels} />
-                </View>
-                <View style={{ marginBottom: 40 }}>
-                    <ComSelectButton
-                        onPress={() => {
-                            navigation.navigate("CreateFeedback", { data: data });
-                        }}>
-                        {addingPackages?.history?.feedback}
-                    </ComSelectButton>
-                    <ComSelectButton
-                        onPress={() => {
-                            handleOpenPopup()
-                        }}>
-                        {addingPackages?.history?.cancelRenewal}
-                    </ComSelectButton>
-                </View>
-            </ScrollView>
+            </View>
         </>
     );
 }

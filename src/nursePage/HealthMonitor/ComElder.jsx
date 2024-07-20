@@ -3,26 +3,45 @@ import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { Image, View } from "react-native";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { useNavigation } from "@react-navigation/native";
+import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter"
 
-export default function ComPatient({ data }) {
+export default function ComElder({ data, onPress, isSelected, style }) {
   const {
-    text: { HealthMonitorDetail },
+    text: { healthMonitor },
     setLanguage,
   } = useContext(LanguageContext);
   const navigation = useNavigation();
 
+  const genderOptions = [
+    {
+      value: "Male",
+      label: "Nam",
+    },
+    {
+      value: "Female",
+      label: "Nữ",
+    },
+    {
+      value: "Other",
+      label: "Khác",
+    },
+  ];
+
+  const getGenderLabel = (value) => {
+    const genderOption = genderOptions.find((option) => option.value === value);
+    return genderOption ? genderOption.label : value;
+  };
+
   return (
     <TouchableOpacity
-      style={styles.body}
-      onPress={() => {
-        navigation.navigate("ElderDetailProfile", { data: data });
-      }}
+      style={[styles.body, isSelected && styles.selectedBody, style]}
+      onPress={onPress}
     >
       <Image
         source={{ uri: data?.imageUrl }}
         style={{
-          width: 65,
-          height: 65,
+          width: 60,
+          height: 60,
           borderRadius: 50,
           objectFit: "fill",
           borderWidth: 0.5,
@@ -33,25 +52,27 @@ export default function ComPatient({ data }) {
         <View style={styles?.container}>
           <Text style={{ flexDirection: "row" }}>
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-              {HealthMonitorDetail?.name}
+              {healthMonitor?.name}
             </Text>
-            <Text>: {data?.name}</Text>
+            <Text>
+              : {data?.name}
+            </Text>
           </Text>
         </View>
         <View style={styles?.container}>
           <Text style={{ flexDirection: "row" }}>
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-              {HealthMonitorDetail?.YearOfBirth}
+              {healthMonitor?.age}
             </Text>
-            <Text>: {data?.dateOfBirth}</Text>
+            <Text>: <ComDateConverter> {data?.dateOfBirth} </ComDateConverter> </Text>
           </Text>
         </View>
         <View style={styles?.container}>
           <Text style={{ flexDirection: "row" }}>
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-              {HealthMonitorDetail?.gender}
+              {healthMonitor?.sex}
             </Text>
-            <Text>: { data?.gender === 'Male' ? 'Nam' : data?.gender === 'Female' ? 'Nữ' : ''}</Text>
+            <Text>: {getGenderLabel(data?.gender)}</Text>
           </Text>
         </View>
       </View>
@@ -64,15 +85,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 10,
     marginBottom: 10,
-    paddingVertical: 10,
-    justifyContent: "center",
-    alignItems: "center",
+    padding: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#33B39C",
   },
   container: {
-    // flex: 1,
     alignItems: "flex-start",
     justifyContent: "center",
-
     flexWrap: "wrap",
   },
   container1: {
@@ -83,5 +103,8 @@ const styles = StyleSheet.create({
   },
   text: {
     flex: 1,
+  },
+  selectedBody: {
+    backgroundColor: "rgba(51, 179, 156, 0.26)",
   },
 });

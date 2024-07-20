@@ -22,7 +22,6 @@ export default function AddingServiceElderRegister() {
     const { data } = route.params;
     const navigation = useNavigation();
     const { text: { addingPackages } } = useContext(LanguageContext);
-    console.log("selectedElder ", selectedElder)
     const showToast = (type, text1, text2, position) => {
         Toast.show({
             type: type,
@@ -37,7 +36,7 @@ export default function AddingServiceElderRegister() {
         getData(`/elders?UserId=${user?.id}`, {})
             .then((elders) => {
                 const filteredElders = elders?.data?.contends.filter(elder => {
-                    // Kiểm tra nếu endDate là ngày trong tương lai
+                    // Kiểm tra nếu endDate cuar contract là ngày trong tương lai
                     return moment(elder?.contractsInUse?.endDate).isSameOrAfter(moment(), 'day');
                 });
                 setElderData(filteredElders); // Cập nhật danh sách elder đã lọc
