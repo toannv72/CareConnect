@@ -89,9 +89,7 @@ const Routes = () => {
     screens: {
       Homes: {
         screens: {
-          BillHistory: {
-            path: 'BillHistory',
-          },
+          BillHistory: 'billhistory',
         },
       },
     },
@@ -115,7 +113,7 @@ const handleDeepLink = (url) => {
 };
 
 const linking = {
-  prefixes: ['CareConnect://'],
+  prefixes: ['http://homenursingcatone.xyz:5000/api/payments/string?isSuccess=True'],
   config,
 };
 

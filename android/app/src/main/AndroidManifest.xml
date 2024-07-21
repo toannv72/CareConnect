@@ -62,7 +62,7 @@
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="com.toannv1712.CareConnect"/>
+                <data android:scheme="http://homenursingcatone.xyz:5000/api/payments/string?isSuccess=True"/>
                 <data android:scheme="exp+careconnect"/>
             </intent-filter>
         </activity>

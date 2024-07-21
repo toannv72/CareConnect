@@ -2,8 +2,13 @@
   "expo": {
     "name": "CareConnect",
     "slug": "careconnect-fjti0vfykgk9qpovwv3vb",
-    "scheme": "CareConnect",
-    "devClient": true, 
+    "scheme": "http://homenursingcatone.xyz:5000/api/payments/string?isSuccess=True",
+    "deeplinks": {
+      "prefixes": [
+        "com.toannv1712.CareConnect://"
+      ]
+    },
+    "devClient": true,
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -50,7 +55,7 @@
           "action": "VIEW",
           "data": [
             {
-              "scheme": "CareConnect",
+              "scheme": "http://homenursingcatone.xyz:5000/api/payments/string?isSuccess=True",
               "host": "*"
             }
           ],
