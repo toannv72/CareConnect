@@ -23,7 +23,7 @@ export default function VisitationSchedule() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [select, setSelect] = useState(false);
   const { user } = useAuth();
-  const categories = ["FollowUpVisit", "Consultation", "ProcedureCompletion"];
+  const categories = ["FollowUpVisit", "Consultation", "ProcedureCompletion", "Cancel"];
 
   const searchSchema = yup.object().shape({
     search: yup.string(),
@@ -72,7 +72,9 @@ export default function VisitationSchedule() {
       case 'ProcedureCompletion':
         return { text: 'Gia hạn hợp đồng', color: 'red' };
       case 'Consultation':
-        return { text: 'Thủ tục', color: 'red' };
+        return { text: 'Hoàn thành thủ tục', color: 'red' };
+      case 'Cancel':
+        return { text: 'Hủy hợp đồng', color: 'red' };
       default:
         return status;
     }
@@ -102,7 +104,7 @@ export default function VisitationSchedule() {
         showBackIcon
       />
       <View style={styles.body}>
-        <View style={{ gap: 10, marginBottom: 15 }}>
+        <View style={{ gap: 10, marginBottom: 5 }}>
           <View style={styles.imageBody}>
             <Image source={Visitation} style={styles.image} />
           </View>
@@ -185,12 +187,11 @@ export default function VisitationSchedule() {
                 ))}
               </View>
             ) : (<ComNoData>Không có dữ liệu</ComNoData>)}
-            <View style={{ height: 320 }}></View>
+            <View style={{ height: 370 }}></View>
           </ScrollView>
         </ComLoading>
       </View>
     </>
-
   );
 }
 
@@ -204,13 +205,11 @@ const styles = StyleSheet.create({
   },
   register: {
     flexDirection: "row",
-    marginBottom: 10,
     padding: 5,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "#33B39C",
     backgroundColor: "#caece6",
-
     elevation: 4, // Bóng đổ cho Android
     shadowColor: "#000", // Màu của bóng đổ cho iOS
     shadowOffset: { width: 0, height: 1 },
@@ -235,8 +234,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     gap: 15,
-    // flexWrap: "wrap",
-    marginBottom: 10,
   },
   scrollView: {
     flexGrow: 0,

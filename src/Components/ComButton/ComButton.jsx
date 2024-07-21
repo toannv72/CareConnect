@@ -2,9 +2,9 @@ import React from "react";
 import { Text, TouchableOpacity } from "react-native";
 import { StyleSheet, View } from "react-native";
 import { Button } from "react-native";
-import { colors  } from '../../styles/Styles';
+import { colors } from '../../styles/Styles';
 
-export default function ComButton({ children, onPress, check,  style  }) {
+export default function ComButton({ children, onPress, check, style, disable }) {
   return (
     <>
       {check ? (
@@ -12,9 +12,17 @@ export default function ComButton({ children, onPress, check,  style  }) {
           <Text style={styles.buttonText}>{children}</Text>
         </TouchableOpacity>
       ) : (
-        <TouchableOpacity style={[styles.buttonCheck, style]} onPress={onPress}>
-          <Text style={styles.buttonTextCheck}>{children}</Text>
-        </TouchableOpacity>
+        <>
+          {disable ? (
+            <TouchableOpacity style={[styles.buttonDisable, {}]}>
+              <Text style={styles.buttonTextCheck}>{children}</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity style={[styles.buttonCheck, style]} onPress={onPress}>
+              <Text style={styles.buttonTextCheck}>{children}</Text>
+            </TouchableOpacity>
+          )}
+        </>
       )}
     </>
   );
@@ -33,11 +41,11 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
-    borderColor:  colors.primary,
+    borderColor: colors.primary,
     borderWidth: 1,
   },
   buttonText: {
-    color:  colors.primary,
+    color: colors.primary,
     fontWeight: "bold",
     fontSize: 16,
     textAlign: "center",
@@ -61,5 +69,16 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
     textAlign: "center",
+  },
+  buttonDisable: {
+    marginTop: 10,
+    marginBottom: 10,
+    backgroundColor: "#33B39C",
+    paddingVertical: 15,
+    borderWidth: 1,
+    borderColor: "#33B39C",
+    borderRadius: 10,
+    opacity: 0.5,
+    paddingHorizontal: 20,
   },
 });

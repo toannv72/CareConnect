@@ -14,16 +14,14 @@ export default function ComVisitationSchedule({ data }) {
 
   const getStatusText = (status) => {
     switch (status) {
-      case 'Pending':
-        return { text: 'Đang chờ', color: 'green' };
-      case 'Approved':
-        return { text: 'Đã chấp nhận', color: 'green' };
-      case 'Rejected':
-        return { text: 'Đã từ chối', color: 'green' };
-      case 'Completed':
-        return { text: 'Đã hoàn thành', color: 'red' };
-      case 'Cancelled':
-        return { text: 'Đã hủy', color: 'red' };
+      case 'FollowUpVisit':
+        return { text: 'Thăm nuôi', color: 'green' };
+      case 'ProcedureCompletion':
+        return { text: 'Gia hạn hợp đồng', color: 'red' };
+      case 'Consultation':
+        return { text: 'Hoàn thành thủ tục', color: 'red' };
+      case 'Cancel':
+        return { text: 'Hủy hợp đồng', color: 'red' };
       default:
         return status;
     }
@@ -70,7 +68,7 @@ export default function ComVisitationSchedule({ data }) {
         }
 
         {
-          data?.type == 'ProcedureCompletion' && (
+          (data?.type == 'ProcedureCompletion' || data?.type == 'Cancel' ) && (
             <Text>
               <Text style={{ fontWeight: "bold", fontSize: 16 }}>
                 Mã hợp đồng
@@ -93,9 +91,9 @@ export default function ComVisitationSchedule({ data }) {
 
         <Text>
           <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-            Trạng thái
+            Loại lịch hẹn:
           </Text>
-          <Text>: {getStatusText(data?.status)?.text}</Text>
+          <Text> {getStatusText(data?.type)?.text}</Text>
         </Text>
 
       </View>

@@ -19,7 +19,6 @@ import { postData, getData } from "../../api/api";
 import ComLoading from "../../Components/ComLoading/ComLoading";
 
 export default ContractDetail = () => {
-  const today = moment().format("YYYY-MM-DD");
   const { user } = useAuth();
   const [popup, setPopup] = useState(false);
   const [data, setData] = useState(false);
@@ -47,6 +46,7 @@ export default ContractDetail = () => {
   };
   const handleOpenPopupDate = () => {
     setPopupDate(true);
+    setPopup(false);
   };
 
   const changeSelectedDate = (data) => {
@@ -62,32 +62,16 @@ export default ContractDetail = () => {
   } = useContext(LanguageContext);
 
   const loginSchema = yup.object().shape({
-    // reason: yup.string().trim().required("Vui lòng nhập lý do"),
     date: yup.string().trim()
   })
 
   const methods = useForm({
     resolver: yupResolver(loginSchema),
-    defaultValues: {
-      reason: "",
-      date: ""
-    },
+    defaultValues: { reason: "", date: "" },
   });
 
-  const {
-    control,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = methods;
-
-  const handleConfirm = (data) => {
-    console.log("====================================");
-    console.log(data);
-    console.log("====================================");
-    handleClosePopup()
-    navigation.navigate("ContractCandSuccess");
-  };
+  const { control, handleSubmit, reset, watch, formState: { errors }, } = methods;
+  const reason = watch("reason");
 
   const getStatusText = (status) => {
     switch (status) {
@@ -107,40 +91,39 @@ export default ContractDetail = () => {
   const status = getStatusText(data?.status);
 
   useEffect(() => {
-    // Lấy danh sách sản phẩm
-    setLoading(!loading);
+    setLoading(true);
     getData(`/contract/${id}`, {})
       .then((contract) => {
-        // setLoading(loading);
         setData(contract?.data);
       })
       .catch((error) => {
         console.log("Error fetching contract", error);
-        setLoading(loading);
+        setLoading(false);
       });
 
     getData(`/appointments?UserId=${user?.id}&ContractId=${id}`, {})
       .then((appointment) => {
-        setLoading(loading);
+        setLoading(false);
         setContractAppointment(appointment?.data?.contends);
       })
       .catch((error) => {
         console.log("Error fetching appointments?ContractId:", error);
-        setLoading(loading);
+        setLoading(false);
       });
   }, [])
 
   const handleCreateAppointment = (data) => {
     Keyboard.dismiss();
+    const text = data?.reason == "" ? "Lịch hẹn gia hạn hợp đồng" : "Lịch hẹn kết thúc hợp đồng";
     const formData = {
       ...data,
-      name: "Lịch hẹn gia hạn hợp đồng",
-      content: "Lịch hẹn gia hạn hợp đồng",
-      notes: "Lịch hẹn gia hạn hợp đồng",
+      name: text,
+      content: text,
+      notes: text,
       userId: user?.id,
       date: moment(data?.date).format("YYYY-MM-DD").toString(),
-      type: "ProcedureCompletion",
-      contractId: id
+      type: data?.reason == "" ? "ProcedureCompletion" : "Cancel",
+      contractId: id,
     };
     setSelectedDate("")
     postData("/appointments", formData, {})
@@ -164,7 +147,7 @@ export default ContractDetail = () => {
   //ngày hiện tại cách ngày kết thúc hợp đồng ít hơn hoặc = 1 tháng
   return (
     <>
-      {/* <ComPopup
+      <ComPopup
         visible={popup}
         title="Bạn muốn yêu cầu hủy hợp đồng ?"
         onClose={handleClosePopup}
@@ -191,13 +174,13 @@ export default ContractDetail = () => {
               <ComButton check onPress={handleClosePopup}>
                 Hủy
               </ComButton>
-              <ComButton onPress={handleSubmit(handleCreateAppointment)}>
+              <ComButton onPress={handleOpenPopupDate} disable={reason === ""}>
                 Xác nhận
               </ComButton>
             </View>
           </View>
         </FormProvider>
-      </ComPopup> */}
+      </ComPopup>
 
       <ComPopup
         visible={popupDate}
@@ -205,6 +188,7 @@ export default ContractDetail = () => {
         onClose={handleClosePopupDate}
       >
         <FormProvider {...methods}>
+          <Text style={{ color: "#A3A3A3", textAlign: "center" }}>{servicePackages?.popup?.limitDays}</Text>
           <View style={{ width: "100%", gap: 10 }}>
             <ComSelectedOneDate
               date={changeSelectedDate}
@@ -213,8 +197,13 @@ export default ContractDetail = () => {
               errors={errors}
               enabled={true}
               minDate={moment().add(1, 'day').toString()}
-              maxDate={moment(data?.endDate).isValid() ? moment(data?.endDate).toString() : moment().add(14, 'days').toString()}
-            //maxdate là hạn kết thúc hợp đồng
+              maxDate={
+                reason !== "" // người dùng hủy hợp đồng
+                  ? moment().add(14, 'days').toString() // Nếu đúng, thiết lập `maxDate` là 14 ngày từ hôm nay
+                  : moment(data?.endDate).diff(moment(), 'days') > 14 //người dùng gia hạn && enddate cách hientai > 14 ngay
+                    ? moment().add(14, 'days').toString() // maxdate là 14 ngày sau
+                    : moment(data?.endDate).toString() // enddate cách hientai < 14 ngay, `maxDate` là enddate
+              }
             />
             <View
               style={{
@@ -224,10 +213,7 @@ export default ContractDetail = () => {
                 gap: 25
               }}
             >
-              <ComButton
-                check
-                onPress={handleClosePopupDate}
-                style={{ flex: 1 }}>
+              <ComButton check onPress={handleClosePopupDate} style={{ flex: 1 }}>
                 Hủy
               </ComButton>
               <ComButton onPress={handleSubmit(handleCreateAppointment)} style={{ flex: 1 }}>
@@ -249,18 +235,18 @@ export default ContractDetail = () => {
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}>
             <View style={{ alignItems: 'center', marginVertical: 20 }}>
-              <Image
-                source={ContractImg}
-                style={{
-                  height: 100,
-                  width: 100,
-                  objectFit: "fill",
-                }} />
-            </View> 
+              <Image source={ContractImg} style={{ height: 100, width: 100, objectFit: "fill", }} />
+            </View>
             {(contractAppointment?.length > 0 && data?.status == "Valid") &&
-              <Text style={{color: "green", textAlign: "center", marginBottom: 10}}>
-                Bạn đã đặt lịch hẹn  gia hạn hợp đồng vào {<ComDateConverter>{contractAppointment[0]?.date}</ComDateConverter>}
-              </Text>}
+              (contractAppointment[0]?.type == "ProcedureCompletion" ?
+                <Text style={{ color: "green", textAlign: "center", marginBottom: 10 }}>
+                  Bạn đã đặt lịch hẹn gia hạn hợp đồng vào {<ComDateConverter>{contractAppointment[0]?.date}</ComDateConverter>}
+                </Text>
+                : <Text style={{ color: "red", textAlign: "center", marginBottom: 10 }}>
+                  Bạn đã đặt lịch hẹn hủy hợp đồng vào {<ComDateConverter>{contractAppointment[0]?.date}</ComDateConverter>}
+                </Text>
+              )
+            }
             <View style={styles.contex}>
               <View style={styles.bodySeparator}>
                 <Text style={styles.text}>Hợp đồng</Text>
@@ -300,21 +286,23 @@ export default ContractDetail = () => {
               </View>
             </View>
           </ScrollView>
-          {/* hopdong còn hạn           chưa tạo 1 appoimnet nào         hết hạn trong vòng 1 tháng tới */}
-          {(data?.status == "Valid" && contractAppointment?.length == 0 && isWithinOneMonth) && (
-            <View
-              style={{
-                backgroundColor: "#fff",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                paddingVertical: 20,
-                gap: 20
-              }}
-            >
+          <View
+            style={{
+              backgroundColor: "#fff",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              paddingVertical: 20,
+              gap: 20
+            }}
+          >
+            {/* hopdong còn hạn           chưa tạo 1 appoimnet nào         hết hạn trong vòng 1 tháng tới */}
+            {(data?.status == "Valid" && contractAppointment?.length == 0 && isWithinOneMonth) ? (
               <ComButton onPress={handleOpenPopupDate} style={{ flex: 1 }}>Yêu cầu gia hạn</ComButton>
-              {/* <ComButton onPress={handleOpenPopup} style={{ flex: 1 }}>Yêu cầu hủy</ComButton> */}
-            </View>
-          )}
+            ) : (
+              (data?.status == "Valid" && contractAppointment?.length == 0) &&
+              <ComButton onPress={handleOpenPopup} style={{ flex: 1 }}>Yêu cầu hủy</ComButton>
+            )}
+          </View>
         </ComLoading>
       </View>
     </>
@@ -329,7 +317,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     gap: 15,
   },
-
   bodySeparator: {
     flexDirection: "row",
     justifyContent: "space-between",
