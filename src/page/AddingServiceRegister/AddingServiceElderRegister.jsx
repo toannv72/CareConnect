@@ -6,10 +6,11 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import backArrowWhite from "../../../assets/icon/backArrowWhite.png";
 import ComElder from "../../Components/ComElder/ComElder";
 import ComLoading from "../../Components/ComLoading/ComLoading";
+import ComToast from "../../Components/ComToast/ComToast";
 import ComNoData from "../../Components/ComNoData/ComNoData";
 import { useStorage } from "../../hooks/useLocalStorage";
 import { postData, getData } from "../../api/api";
-import Toast from 'react-native-toast-message';
+import Toast from 'react-native-root-toast';
 import { useAuth } from "../../../auth/useAuth";
 import moment from "moment";
 
@@ -22,14 +23,6 @@ export default function AddingServiceElderRegister() {
     const { data } = route.params;
     const navigation = useNavigation();
     const { text: { addingPackages } } = useContext(LanguageContext);
-    const showToast = (type, text1, text2, position) => {
-        Toast.show({
-            type: type,
-            text1: text1,
-            text2: text2,
-            position: position
-        });
-    }
 
     useEffect(() => {
         setLoading(!loading);
@@ -66,7 +59,7 @@ export default function AddingServiceElderRegister() {
             .then((orderDetail) => {
                 setLoading(loading);
                 if (orderDetail?.data?.length > 0)
-                    showToast('error', 'Dịch vụ đã được đăng ký', 'Dịch vụ này đã được đăng ký cho người cao tuổi bạn chọn', 'top')
+                    ComToast({ text: `Dịch vụ này đã được đăng ký cho người cao tuổi ${selectedElder?.name}` });
                 else
                     navigation.navigate("ServicePayment", { servicePackage: data, elder: selectedElder, orderDates: data?.eventDate, type: 'One_Time' });
             })

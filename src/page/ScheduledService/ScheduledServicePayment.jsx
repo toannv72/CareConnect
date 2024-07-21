@@ -4,12 +4,13 @@ import { useNavigation, useRoute, useFocusEffect } from "@react-navigation/nativ
 import { postData, deleteData } from "../../api/api";
 import ComHeader from '../../Components/ComHeader/ComHeader';
 import ComScheduledService from './ComScheduledService';
+import ComToast from "../../Components/ComToast/ComToast";
 import ComSelectButton from "../../Components/ComButton/ComSelectButton";
 import moment from "moment";
 import momo from "../../../assets/momo.png";
 import vnpay from "../../../assets/vnpay.png";
 import ComPaymentMethod from "../Bills/BillDetail/ComPaymentMethod";
-import Toast from 'react-native-toast-message';
+import Toast from 'react-native-root-toast';
 import { Linking } from 'react-native';
 
 export default function ScheduledServicePayment({ }) {
@@ -17,7 +18,6 @@ export default function ScheduledServicePayment({ }) {
     const route = useRoute();
     const { selectedServices, data } = route?.params;
     const [selectedMethod, setSelectedMethod] = useState('momo');
-    const showToast = (type, text1, text2, position) => { Toast.show({ type: type, text1: text1, text2: text2, position: position }) }
 
     const formatCurrency = (number) => {
         return number?.toLocaleString("vi-VN", {
@@ -64,9 +64,9 @@ export default function ScheduledServicePayment({ }) {
                         .catch((err) => {
                             console.log("Failed to open URL: ", err);
                         });
-                    showToast("success", "Xác nhận đăng ký thành công", "", "top");
+                    ComToast({ text: 'Xác nhận đăng ký thành công' });
                 } else if (payment === "Later") {
-                    showToast("success", "Đăng ký thành công", `Bạn vui lòng thanh toán dịch vụ trước ngày ${lastDayOfMonth}`, "top");
+                    ComToast({ text: `Đăng ký thành công. Bạn vui lòng thanh toán dịch vụ trước ngày ${moment(lastDayOfMonth).format("DD/MM/YYYY")}` });
                     navigation.navigate("BillHistory");
                 }
             })
@@ -74,16 +74,16 @@ export default function ScheduledServicePayment({ }) {
                 console.log("API Error: ", error);
                 switch (error.response.status) {
                     case 609:
-                        showToast("error", "Đăng ký thất bại", "Dịch vụ đã được đăng ký", "top");
+                        ComToast({ text: 'Đăng ký thất bại. Dịch vụ đã được đăng ký 609' });
                         break;
                     case 610:
-                        showToast("error", "Đăng ký thất bại", "Dịch vụ đã được đăng ký", "top");
+                        ComToast({ text: 'Đăng ký thất bại. Dịch vụ đã được đăng ký 610' });
                         break;
                     case 611:
-                        showToast("error", "Đăng ký thất bại", "Dịch vụ đã được đăng ký", "top");
+                        ComToast({ text: 'Đăng ký thất bại. Dịch vụ đã được đăng ký 611' });
                         break;
                     default:
-                        showToast("error", "Đăng ký thất bại", "Đã có lỗi xảy ra. Vui lòng thử lại.", "top");
+                        ComToast({ text: 'Đăng ký thất bại. Đã có lỗi xảy ra. Vui lòng thử lại.' });
                         break;
                 };
             });

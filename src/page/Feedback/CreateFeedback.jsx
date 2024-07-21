@@ -6,22 +6,20 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import ComInput from "../../Components/ComInput/ComInput";
 import ComSelect from "../../Components/ComInput/ComSelect";
 import { LanguageContext } from "../../contexts/LanguageContext";
-import { Form } from "react-native-autofocus";
+import ComToast from "../../Components/ComToast/ComToast";
 import ComButton from "../../Components/ComButton/ComButton";
 import { useNavigation } from '@react-navigation/native';
 import ComHeader from '../../Components/ComHeader/ComHeader';
 import feedbackImg from "../../../assets/images/feedback/feedback.png";
 import { postData } from "../../api/api";
 import { useRoute } from "@react-navigation/native";
-import Toast from 'react-native-toast-message';
+import Toast from 'react-native-root-toast';
 
 export default function CreateFeedback() {
     const navigation = useNavigation();
-    const [value, setValue] = useState("1");
     const [loading, setLoading] = useState(false);
     const route = useRoute();
     const { data, serviceData, orderDetailId } = route.params;
-    const showToast = (type, text1, text2, position) => { Toast.show({ type: type, text1: text1, text2: text2, position: position }) }
 
     const {
         text: {
@@ -31,7 +29,16 @@ export default function CreateFeedback() {
         setLanguage,
     } = useContext(LanguageContext);
 
-    const feedbackSchema = yup.object().shape({});
+    const feedbackSchema = yup.object().shape({
+        content: yup
+            .string()
+            .trim()
+            .required(feedback?.message?.title),
+        title: yup
+            .string()
+            .trim()
+            .required(feedback?.message?.content),
+    });
 
     const methods = useForm({
         resolver: yupResolver(feedbackSchema),
@@ -60,13 +67,13 @@ export default function CreateFeedback() {
         postData("/feedback", updatedData)
             .then((response) => {
                 setLoading(false)
-                showToast("success", "Đánh giá thành công", "", "bottom");
+                ComToast({ text: 'Đánh giá thành công' });
                 navigation.goBack();
             })
             .catch((error) => {
                 setLoading(false)
-                console.error("API Error: ", error);
-                showToast("error", "Có lỗi xảy ra, vui lòng thử lại!", "", "bottom");
+                console.log("API Error: ", error);
+                ComToast({ text: 'Có lỗi xảy ra, vui lòng thử lại!' });
             });
     };
 

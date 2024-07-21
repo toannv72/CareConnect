@@ -7,13 +7,13 @@ import backArrowWhite from "../../../assets/icon/backArrowWhite.png";
 import servicePayment from "../../../assets/images/service/payment.png";
 import { useNavigation } from '@react-navigation/native';
 import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter"
+import ComToast from "../../Components/ComToast/ComToast";
 import ComPaymentMethod from "../Bills/BillDetail/ComPaymentMethod";
 import momo from "../../../assets/momo.png";
 import vnpay from "../../../assets/vnpay.png";
 import moment from "moment";
 import { postData } from "../../api/api"; // Import your API function
 import { Linking } from 'react-native';
-import Toast from 'react-native-toast-message';
 
 export default function ServicePayment() {
     const {
@@ -32,10 +32,6 @@ export default function ServicePayment() {
     const registerDates = servicePackage?.type == "MultipleDays" || (servicePackage?.type == "AnyDay" && type == 'RecurringDay') ?
         orderDates?.map(dateString => moment(dateString, "YYYY-MM-DD", true).format("DD"))
         : [];
-
-    const showToast = (type, text1, text2, position) => {
-        Toast.show({ type: type, text1: text1, text2: text2, position: position, visibilityTime: 2000 });
-    }
 
     const handleMethodPress = (methodName) => {
         setSelectedMethod(methodName);
@@ -113,16 +109,16 @@ export default function ServicePayment() {
                 setLoading(false)
                 switch (error.response.status) {
                     case 609:
-                        showToast("error", "Đăng ký thất bại", "Dịch vụ đã được đăng ký", "bottom");
+                        ComToast({ text: 'Dịch vụ đã được đăng ký' });
                         break;
                     case 610:
-                        showToast("error", "Đăng ký thất bại", "Dịch vụ đã được đăng ký", "bottom");
+                        ComToast({ text: 'Dịch vụ đã được đăng ký' });
                         break;
                     case 611:
-                        showToast("error", "Đăng ký thất bại", "Dịch vụ đã được đăng ký", "bottom");
+                        ComToast({ text: 'Dịch vụ đã được đăng ký' });
                         break;
                     default:
-                        showToast("error", "Đăng ký thất bại", "Đã có lỗi xảy ra. Vui lòng thử lại.", "bottom");
+                        ComToast({ text: 'Đã có lỗi xảy ra. Vui lòng thử lại.' });
                         break;
                 };
             });

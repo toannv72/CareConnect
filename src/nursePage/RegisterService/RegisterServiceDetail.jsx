@@ -5,9 +5,9 @@ import { useRoute } from "@react-navigation/native";
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import ComButton from "../../Components/ComButton/ComButton";
+import ComToast from "../../Components/ComToast/ComToast";
 import ComPopup from "../../Components/ComPopup/ComPopup";
 import { putData } from "../../api/api";
-import Toast from 'react-native-toast-message';
 import { postData, getData } from "../../api/api";
 import ComDateTimeConverter from "../../Components/ComDateConverter/ComDateTimeConverter"
 
@@ -24,7 +24,6 @@ export default function RegisterServiceDetail({ }) {
     const [orderdate, setOrderdate] = useState({});
     const { serviceData, todayOrderDate, elderData } = route.params || {};
     const [isComplete, setIsComplete] = useState(todayOrderDate?.status);
-    const showToast = (type, text1, text2, position) => { Toast.show({ type: type, text1: text1, text2: text2, position: position }) }
 
     useFocusEffect(
         useCallback(() => {
@@ -62,7 +61,7 @@ export default function RegisterServiceDetail({ }) {
         putData(`/order-date`, todayOrderDate?.id, formattedData, {})
             .then((response) => {
                 setLoading(false)
-                showToast("success", "Xác nhận thành công", "", "bottom");
+                ComToast({ text: 'Xác nhận thành công' });
                 setIsComplete("Complete")
                 handleClosePopup()
             })
@@ -70,7 +69,7 @@ export default function RegisterServiceDetail({ }) {
                 setLoading(false)
                 console.error("API Error: ", error);
                 handleClosePopup()
-                showToast("error", "Có lỗi xảy ra, vui lòng thử lại!", "", "bottom");
+                ComToast({ text: 'Có lỗi xảy ra, vui lòng thử lại!' });
             });
     }
 

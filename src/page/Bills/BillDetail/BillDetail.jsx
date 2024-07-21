@@ -9,6 +9,7 @@ import ComDateTimeConverter from "../../../Components/ComDateConverter/ComDateTi
 import ComTag from "../ComTag";
 import ComPaymentMethod from "./ComPaymentMethod";
 import ComPaymentInfo from "./ComPaymentInfo";
+import ComToast from "../../../Components/ComToast/ComToast";
 import ComBillDetail from "./ComBillDetail";
 import moment from 'moment';
 import billImg from "../../../../assets/bill.png";
@@ -73,7 +74,7 @@ const BillDetail = () => {
             })
             .catch((error) => {
                 console.log("API Error: ", error);
-                // showToast("error", "Có lỗi xảy ra, vui lòng thử lại!", "", "bottom")
+                ComToast({ text: 'Có lỗi xảy ra, vui lòng thử lại!' });
             });
     }
 

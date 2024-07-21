@@ -247,6 +247,10 @@ export const vn = {
       content: "Nội dung",
       service: "Dịch vụ",
       feedbackDetail: "Chi tiết đánh giá"
+    },
+    message: {
+      title: "Tiêu đề không được để trống",
+      content: "Nội dung không được để trống",
     }
   },
   bill: {
@@ -318,6 +322,8 @@ export const vn = {
       email: "Vui lòng Nhập địa chỉ email",
       idNumber: "Vui lòng Nhập số CCCD hoặc CMND",
       address: "Vui lòng Nhập địa chỉ",
+      addressInValid: "Địa chỉ hợp lệ chỉ chứa chữ cái và dấu cách",
+
     },
     button: {
       SaveProfile: "Lưu thông tin",

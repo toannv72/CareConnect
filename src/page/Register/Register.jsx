@@ -9,22 +9,20 @@ import { LanguageContext } from "../../contexts/LanguageContext";
 import ComTitlePage from "../../Components/ComTitlePage/ComTitlePage";
 import ComButton from "../../Components/ComButton/ComButton";
 import ComTitle from "../../Components/ComTitle/ComTitle";
+import ComToast from "../../Components/ComToast/ComToast";
 import ComTitleLink from "../../Components/ComTitleLink/ComTitleLink";
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import ComDatePicker from "../../Components/ComInput/ComDatePicker";
 import { postData, getData } from "../../api/api";
 import { ScrollView } from "react-native-gesture-handler";
 import moment from "moment";
-import Toast from 'react-native-toast-message';
+import Toast from 'react-native-root-toast';
 import { cccdRegex, nameRegex, phoneNumberRegex, passwordRegex } from "../../Components/ComRegexPatterns/regexPatterns";
 
 export default function Register() {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const scrollViewRef = useRef(null);
-  const showToast = (type, text1, text2, position) => {
-    Toast.show({ type: type, text1: text1, text2: text2, position: position });
-  }
 
   const {
     text: { Register, EditProfile, common: { button } },
@@ -116,7 +114,6 @@ export default function Register() {
       address: "",
       dateOfBirth: formattedDate(formData.dateOfBirth)
     };
-    console.log(" newData", newData)
     postData("/users/customer-register", newData, {})
       .then((data) => {
         setLoading(false);
@@ -132,19 +129,19 @@ export default function Register() {
         console.log("Error register:", error);
         switch (error.response.status) {
           case 600: //trùng số điện thoại
-            showToast("error", "Đăng ký thất bại", Register?.message?.phoneExisted, "bottom");
+            ComToast({ text: 'Đăng ký thất bại. ' + Register?.message?.phoneExisted });
             break;
           case 601: // trùng email
-            showToast("error", "Đăng ký thất bại", Register?.message?.emailExisted, "bottom");
+            ComToast({ text: 'Đăng ký thất bại. ' + Register?.message?.emailExisted });
             break;
           case 602: // trùng cccd
-            showToast("error", "Đăng ký thất bại", Register?.message?.cccdExisted, "bottom");
+            ComToast({ text: 'Đăng ký thất bại. ' + Register?.message?.cccdExisted });
             break;
           case 603: //trùng username
-            showToast("error", "Đăng ký thất bại", Register?.message?.userExisted, "bottom");
+            ComToast({ text: 'Đăng ký thất bại. ' + Register?.message?.userExisted });
             break;
           default:
-            showToast("error", "Đăng ký thất bại", Register?.message?.registerError, "bottom");
+            ComToast({ text: 'Đăng ký thất bại. ' + Register?.message?.registerError });
             break;
         };
       })

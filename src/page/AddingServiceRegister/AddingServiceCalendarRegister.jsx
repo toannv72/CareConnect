@@ -9,7 +9,7 @@ import SelectedDates from "../../Components/ComDate/ComSelectedDates";
 import ComSelectWeekDays from "./ComSelectWeekDays";
 import ComRadioGroup from "../../Components/ComRadioGroup/ComRadioGroup";
 import moment from "moment";
-import Toast from 'react-native-toast-message';
+import Toast from 'react-native-root-toast';
 import { getData } from "../../api/api"; // Import your API function
 import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter"
 
@@ -25,14 +25,6 @@ export default function AddingServiceCalendarRegister() {
         text: { addingPackages },
         setLanguage,
     } = useContext(LanguageContext);
-    const showToast = (type, text1, text2, position) => {
-        Toast.show({
-            type: type,
-            text1: text1,
-            text2: text2,
-            position: position
-        });
-    }
 
     useEffect(() => {
         const fetchData = async () => {

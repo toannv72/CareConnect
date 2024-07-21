@@ -7,6 +7,7 @@ import * as yup from "yup";
 import { LanguageContext } from "../../../contexts/LanguageContext";
 import ComInput from "../../../Components/ComInput/ComInput";
 import ComButton from "../../../Components/ComButton/ComButton";
+import ComToast from "../../../Components/ComToast/ComToast";
 import ComSelect from "../../../Components/ComInput/ComSelect";
 import Avatar from "./Avatar";
 import ComDatePicker from "../../../Components/ComInput/ComDatePicker";
@@ -16,25 +17,13 @@ import ComHeader from "../../../Components/ComHeader/ComHeader";
 import { useStorage } from "../../../hooks/useLocalStorage";
 import { postData, getData, putData } from "../../../api/api";
 import { useAuth } from "../../../../auth/useAuth";
-import Toast from 'react-native-toast-message';
 
 export default function EditProfile({ }) {
-  const route = useRoute();
-  // const { user } = route.params;
   const { user, login, setUser } = useAuth();
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(user?.avatarUrl);
   const [imageUrl, setImageUrl] = useState(null);
   const navigation = useNavigation();
-  const showToast = (type, text1, text2, position, topOffset) => {
-    Toast.show({
-      type: type,
-      text1: text1,
-      text2: text2,
-      position: position,
-      topOffset: topOffset
-    });
-  }
 
   const {
     text: {
@@ -45,11 +34,6 @@ export default function EditProfile({ }) {
   } = useContext(LanguageContext);
 
   const loginSchema = yup.object().shape({
-    phoneNumber: yup
-      .string()
-      .trim()
-      .required(EditProfile?.message?.phoneNumber)
-      .matches(/^0[0-9]{9,10}$/, EditProfile?.message?.phoneInvalid),
     email: yup
       .string()
       .email(EditProfile?.message?.emailInvalid)
@@ -101,7 +85,7 @@ export default function EditProfile({ }) {
             });
           return new Promise((resolve) => {
             setTimeout(() => {
-              showToast("success", "Chỉnh sửa thông tin thành công", "", "top", 50)
+              ComToast({ text: 'Chỉnh sửa thông tin thành công' });
               resolve(); // Báo hiệu Promise đã hoàn thành
             }, 0); // Thời gian chờ 0ms để đảm bảo setToken đã được thực hiện
           });
@@ -109,7 +93,7 @@ export default function EditProfile({ }) {
         .catch((error) => {
           console.error("Error register:", error);
           setLoading(false)
-          showToast("error", "Chỉnh sửa thông tin thất bại", "", "bottom")
+          ComToast({ text: 'Chỉnh sửa thông tin thất bại' });
         });
     };
 

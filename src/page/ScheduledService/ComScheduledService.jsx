@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 // import Delete from "../../../../assets/Delete.png";
 import { useCart } from '../../contexts/CartContext';
 import ComPopup from "../../Components/ComPopup/ComPopup";
-import Toast from 'react-native-toast-message';
+import Toast from 'react-native-root-toast';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import UpIcon from "../../../assets/images/Nurse/RegisterService/UpIcon.png"
 import DownIcon from "../../../assets/images/Nurse/RegisterService/DownIcon.png"
@@ -29,15 +29,6 @@ const ComScheduledService = ({ data, hideCheck, onCheck, isSelected }) => {
     useEffect(() => {
         setInternalSelected(isSelected);
     }, [isSelected]);
-
-    const showToast = (type, text1, text2, position) => {
-        Toast.show({
-            type: type,
-            text1: text1,
-            text2: text2,
-            position: position
-        });
-    };
 
     return (
         <View style={{ marginBottom: 10 }}>
