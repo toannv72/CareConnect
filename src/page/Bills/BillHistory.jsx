@@ -29,7 +29,7 @@ export default function BillHistory() {
     const [displayedItems, setDisplayedItems] = useState(10);
 
     const fetchNextPage = async () => {
-        let url = `/orders?UserId=${user?.id}&SortColumn=createdAt&SortDir=Desc`;
+        let url = `/orders?UserId=${user?.id}&SortColumn=dueDate&SortDir=Asc`;
         if (selectedStatus && selectedStatus != "all") { url += `&Status=${selectedStatus}` }
 
         getData(url, {})

@@ -117,6 +117,12 @@ export default function ServicePayment() {
                     case 611:
                         ComToast({ text: 'Dịch vụ đã được đăng ký' });
                         break;
+                    case 614:
+                        ComToast({ text: 'Dịch vụ đã hết lượt đăng ký. Bạn vui lòng chọn dịch vụ khác.' });
+                        break;
+                    case 615:
+                        ComToast({ text: 'Dịch vụ đã hết hạn đăng ký. Bạn vui lòng chọn dịch vụ khác.' });
+                        break;
                     default:
                         ComToast({ text: 'Đã có lỗi xảy ra. Vui lòng thử lại.' });
                         break;

@@ -106,13 +106,13 @@ export default function AddingServiceDetail() {
                             )}
 
                             <View style={{ gap: 10 }}>
-                                {data?.endRegistrationStartDate && (
+                                {data?.endRegistrationDate && (
                                     <Text style={{ flexDirection: "row" }}>
                                         <Text style={{ fontWeight: "600", fontSize: 16 }}>
                                             {addingPackages?.package?.endRegistrationStartDate}
                                         </Text>
                                         <Text>
-                                            : <ComDateConverter>{data?.endRegistrationStartDate}</ComDateConverter>
+                                            : <ComDateConverter>{data?.endRegistrationDate}</ComDateConverter>
                                         </Text>
                                     </Text>)
                                 }

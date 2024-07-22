@@ -27,6 +27,8 @@ const BillDetail = () => {
     const route = useRoute();
     const { id } = route.params;
     const [selectedMethod, setSelectedMethod] = useState('momo');
+    const [isOverDue, setIsOverDue] = useState(false);
+    console.log("Due date:", isOverDue); // Log due date riêng lẻ
 
     const handleMethodPress = (methodName) => {
         setSelectedMethod(methodName);
@@ -44,6 +46,11 @@ const BillDetail = () => {
         getData(`/orders/${id}`, {})
             .then((order) => {
                 setData(order?.data || {});
+                if (order?.data?.dueDate) {
+                    const dueDate = moment(order?.data.dueDate, "YYYY-MM-DD").startOf('day');
+                    const now = moment().startOf('day');
+                    setIsOverDue(now.isAfter(dueDate));
+                }
                 setLoading(false); // Stop loading on success
             })
             .catch((error) => {
@@ -53,6 +60,7 @@ const BillDetail = () => {
     }, [id]); // Include id in dependency array to fetch new data when id changes
 
     const payment = () => {
+        setLoading(true); // Start loading
         const formattedData = {
             "orderId": id,
             "returnUrl": "exp://rnnstoi-thaomy-8081.exp.direct/--/BillHistory",
@@ -65,16 +73,26 @@ const BillDetail = () => {
                 // Open the URL in the default browser
                 Linking.openURL(url)
                     .then(() => {
+                        setLoading(false); // Start loading
                         // navigation.navigate("BillHistory");
                         console.log("Opened successfully");
                     })
                     .catch((err) => {
+                        setLoading(false); // Start loading
                         console.log("Failed to open URL: ", err);
                     });
             })
             .catch((error) => {
+                setLoading(false); // Start loading
                 console.log("API Error: ", error);
-                ComToast({ text: 'Có lỗi xảy ra, vui lòng thử lại!' });
+                if (error.response.status == 400) {
+                    if (data?.status === "Paid")
+                        ComToast({ text: 'Thanh toán thất bại. Đơn hàng đã được thanh toán xong.' });
+                    else
+                        ComToast({ text: 'Thanh toán thất bại. Đơn hàng đã quá hạn thanh toán.' });
+                } else {
+                    ComToast({ text: 'Đã có lỗi xảy ra. Vui lòng thử lại.' });
+                }
             });
     }
 
@@ -87,12 +105,12 @@ const BillDetail = () => {
             />
             <View style={styles.body}>
                 {loading ? (
-                    <ComLoading/>
+                    <ComLoading />
                 ) : (
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                         showsHorizontalScrollIndicator={false}
-                        >
+                    >
                         <View style={{ flex: 1, alignItems: 'center' }}>
                             <Image
                                 source={billImg}
@@ -108,7 +126,6 @@ const BillDetail = () => {
                             <ComBillDetail title={bill?.title} content={data?.description}></ComBillDetail>
                             <ComBillDetail title={bill?.billId} content={data?.id}></ComBillDetail>
                             <ComBillDetail title={bill?.dueDate} content={moment(data?.dueDate, "YYYY-MM-DD").format("DD/MM/YYYY")}></ComBillDetail>
-
                             {data?.status === "Paid" && (
                                 <>
                                     <ComBillDetail title={bill?.detail?.paymentDate} content={ComDateTimeConverter(data?.paymentDate)} />
@@ -149,7 +166,11 @@ const BillDetail = () => {
                                         onPress={() => handleMethodPress('VnPay')}
                                     />
                                 </View>
-                                <ComButton onPress={() => { payment() }}>{bill?.detail?.pay}</ComButton>
+                                <ComButton
+                                    onPress={() => { payment() }}
+                                    disable={isOverDue}>
+                                    {bill?.detail?.pay}
+                                </ComButton>
                             </>
                         )}
                     </ScrollView>

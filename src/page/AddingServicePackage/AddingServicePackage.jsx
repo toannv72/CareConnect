@@ -97,12 +97,11 @@ export default function AddingServicePackages() {
 
     const currentDate = moment();
     const filteredData = data?.filter((service) => {
-        const endRegistrationDate = moment(service?.endRegistrationStartDate);
+        const endRegistrationDate = moment(service?.endRegistrationDate);
         const hasNotExpired = currentDate.isSameOrBefore(endRegistrationDate, "day");//chua het han dang ky
         const hasSlotsLeft = service?.registrationLimit !== 0 ? service?.totalOrder < service?.registrationLimit : service?.totalOrder >= service?.registrationLimit;//chua het luot dang ky
         //nếu có giới hạn người                 tổng lượt dky < giới hạn                             tổng lượt dky >= 0
-        // return hasNotExpired && hasSlotsLeft;
-        return hasNotExpired ;
+        return hasNotExpired && hasSlotsLeft;
     });
 
     const handleLoadMore = () => {
