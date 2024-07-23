@@ -94,6 +94,7 @@ export default function ScheduledService() {
                         showsVerticalScrollIndicator={false}
                         showsHorizontalScrollIndicator={false}
                     >
+                        <Text>{data?.id}</Text>
                         <Text style={{ marginBottom: 10 }}>Vui lòng chọn những dịch vụ mà bạn muốn tiếp tục đăng ký cho tháng sau. Nếu không muốn đăng ký, bạn vui lòng bỏ qua:</Text>
                         <ComLoading show={loading}>
                             {data?.scheduledServiceDetails == 0 ? (

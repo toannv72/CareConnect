@@ -9,6 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import ComHeader from "../../../Components/ComHeader/ComHeader";
 import ComButton from "../../../Components/ComButton/ComButton";
 import ComPopup from "../../../Components/ComPopup/ComPopup";
+import ComToast from "../../../Components/ComToast/ComToast";
 import ComSelectedOneDate from "../../../Components/ComDate/ComSelectedOneDate";
 import moment from "moment";
 import { postData, getData } from "../../../api/api";
@@ -47,15 +48,6 @@ export default function ServicePackageDetail({ }) {
     });
   };
 
-  const showToast = (type, text1, text2, position) => {
-    Toast.show({
-      type: type,
-      text1: text1,
-      text2: text2,
-      position: position
-    });
-  }
-
   const loginSchema = yup.object().shape({
     date: yup.date().required("Vui lòng chọn ngày đặt lịch"),
   });
@@ -82,15 +74,15 @@ export default function ServicePackageDetail({ }) {
       type: "Consultation"
     };
     postData("/appointments", formData, {})
-      .then((appointments) => {
-        handleClosePopupDate()
-        navigation.navigate("ServicePackageRegisterSuccess", { data: formData });
-      })
-      .catch((error) => {
-        handleClosePopupDate()
-        console.log("Error registering:", error);
-        showToast("error", "Đã có lỗi xảy ra, vui lòng thử lại", "", "bottom")
-      });
+    .then((appointments) => {
+      handleClosePopupDate()
+      navigation.navigate("ServicePackageRegisterSuccess", { data: formData });
+    })
+    .catch((error) => {
+      handleClosePopupDate()
+      ComToast({ text: 'Đã có lỗi xảy ra, vui lòng thử lại' });
+      console.log("Error appointments:", error);
+    });
   };
 
   return (

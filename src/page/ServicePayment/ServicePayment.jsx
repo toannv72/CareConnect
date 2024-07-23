@@ -7,13 +7,13 @@ import backArrowWhite from "../../../assets/icon/backArrowWhite.png";
 import servicePayment from "../../../assets/images/service/payment.png";
 import { useNavigation } from '@react-navigation/native';
 import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter"
+import ComToast from "../../Components/ComToast/ComToast";
 import ComPaymentMethod from "../Bills/BillDetail/ComPaymentMethod";
 import momo from "../../../assets/momo.png";
 import vnpay from "../../../assets/vnpay.png";
 import moment from "moment";
 import { postData } from "../../api/api"; // Import your API function
 import { Linking } from 'react-native';
-import Toast from 'react-native-toast-message';
 
 export default function ServicePayment() {
     const {
@@ -28,10 +28,10 @@ export default function ServicePayment() {
     const [loading, setLoading] = useState(false);
     const [adjustedOrderDates, setAdjustedOrderDates] = useState(orderDates);
     const handleBackPress = () => { navigation.goBack() };
-
-    const showToast = (type, text1, text2, position) => {
-        Toast.show({ type: type, text1: text1, text2: text2, position: position, visibilityTime: 2000});
-    }
+    //hiển toàn bộ thị list ngay đã chọn (quakhu + tuong lai)
+    const registerDates = servicePackage?.type == "MultipleDays" || (servicePackage?.type == "AnyDay" && type == 'RecurringDay') ?
+        orderDates?.map(dateString => moment(dateString, "YYYY-MM-DD", true).format("DD"))
+        : [];
 
     const handleMethodPress = (methodName) => {
         setSelectedMethod(methodName);
@@ -54,7 +54,6 @@ export default function ServicePayment() {
     }, [orderDates]);
 
     const formatCurrency = (number) => {
-        // Sử dụng hàm toLocaleString() để định dạng số
         return number?.toLocaleString("vi-VN", {
             style: "currency",
             currency: "VND",
@@ -90,16 +89,17 @@ export default function ServicePayment() {
             ]
         }
         setLoading(true)
-        postData("/orders/service-package?returnUrl=CareConnect://BillHistory", formattedData)
+        postData("/orders/service-package?returnUrl=https://careconnectadmin.vercel.app/paymentStatus", formattedData)
             .then((response) => {
                 console.log("API Response: ", response.message);
-                const url = response.message; // Assuming response.message contains the URL
+                const url = response.message;
+                const orderId = response.orderId;
                 // Open the URL in the default browser
                 setLoading(false)
                 Linking.openURL(url)
                     .then(() => {
                         console.log("Opened successfully");
-                        // navigation.navigate("BillHistory")
+                        navigation.navigate("ServicePaymentStatus", { orderId: orderId })
                     })
                     .catch((err) => {
                         console.log("Failed to open URL: ", err);
@@ -110,16 +110,22 @@ export default function ServicePayment() {
                 setLoading(false)
                 switch (error.response.status) {
                     case 609:
-                        showToast("error", "Đăng ký thất bại", "Dịch vụ đã được đăng ký", "bottom");
+                        ComToast({ text: 'Dịch vụ đã được đăng ký' });
                         break;
                     case 610:
-                        showToast("error", "Đăng ký thất bại", "Dịch vụ đã được đăng ký", "bottom");
+                        ComToast({ text: 'Dịch vụ đã được đăng ký' });
                         break;
                     case 611:
-                        showToast("error", "Đăng ký thất bại", "Dịch vụ đã được đăng ký", "bottom");
+                        ComToast({ text: 'Dịch vụ đã được đăng ký' });
+                        break;
+                    case 614:
+                        ComToast({ text: 'Dịch vụ đã hết lượt đăng ký. Bạn vui lòng chọn dịch vụ khác.' });
+                        break;
+                    case 615:
+                        ComToast({ text: 'Dịch vụ đã hết hạn đăng ký. Bạn vui lòng chọn dịch vụ khác.' });
                         break;
                     default:
-                        showToast("error", "Đăng ký thất bại", "Đã có lỗi xảy ra. Vui lòng thử lại.", "bottom");
+                        ComToast({ text: 'Đã có lỗi xảy ra. Vui lòng thử lại.' });
                         break;
                 };
             });
@@ -144,7 +150,6 @@ export default function ServicePayment() {
                 <Text style={{ fontWeight: "bold", fontSize: 20, marginBottom: 10, textAlign: 'center' }} numberOfLines={2}>
                     {addingPackages?.payment?.title}
                 </Text>
-
                 <Text style={{ flexDirection: "row", marginBottom: 10 }}>
                     <Text style={styles.contentBold}>
                         {addingPackages?.payment?.serviceName}
@@ -171,7 +176,7 @@ export default function ServicePayment() {
                     </Text>
                 </Text>
                 <Text style={styles.contentBold}>
-                    {addingPackages?.payment?.time}:
+                    {addingPackages?.payment?.serviceTime}:
                 </Text>
                 {servicePackage?.type === "OneDay" ? (
                     <Text style={{ fontSize: 16, marginBottom: 5 }}>
@@ -183,7 +188,7 @@ export default function ServicePayment() {
                         if (isFutureDate) {
                             return (
                                 <Text style={{ fontSize: 16, marginBottom: 5 }} key={index}>
-                                    - <ComDateConverter>{day}</ComDateConverter>
+                                    • <ComDateConverter>{day}</ComDateConverter>
                                 </Text>
                             );
                         } else {
@@ -192,6 +197,20 @@ export default function ServicePayment() {
                     })
                 )}
 
+                {(servicePackage?.type == "MultipleDays" || (servicePackage?.type == "AnyDay" && type == 'RecurringDay')) && (
+                    <>
+                        <Text style={styles.contentBold}>
+                            {addingPackages?.payment?.dayRegisterTime}:
+                        </Text>
+                        {registerDates?.map((day, index) => {
+                            return (
+                                <Text style={{ fontSize: 16, marginBottom: 5 }} key={index}>
+                                    • {day}
+                                </Text>
+                            )
+                        })}
+                    </>
+                )}
                 <Text style={styles.contentBold}>Phương thức thanh toán</Text>
                 <View style={styles.tableContainer}>
                     <ComPaymentMethod

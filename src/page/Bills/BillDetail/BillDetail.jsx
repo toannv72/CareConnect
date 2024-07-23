@@ -9,6 +9,7 @@ import ComDateTimeConverter from "../../../Components/ComDateConverter/ComDateTi
 import ComTag from "../ComTag";
 import ComPaymentMethod from "./ComPaymentMethod";
 import ComPaymentInfo from "./ComPaymentInfo";
+import ComToast from "../../../Components/ComToast/ComToast";
 import ComBillDetail from "./ComBillDetail";
 import moment from 'moment';
 import billImg from "../../../../assets/bill.png";
@@ -26,6 +27,7 @@ const BillDetail = () => {
     const route = useRoute();
     const { id } = route.params;
     const [selectedMethod, setSelectedMethod] = useState('momo');
+    const [isOverDue, setIsOverDue] = useState(false);
 
     const handleMethodPress = (methodName) => {
         setSelectedMethod(methodName);
@@ -43,6 +45,11 @@ const BillDetail = () => {
         getData(`/orders/${id}`, {})
             .then((order) => {
                 setData(order?.data || {});
+                if (order?.data?.dueDate) {
+                    const dueDate = moment(order?.data.dueDate, "YYYY-MM-DD").startOf('day');
+                    const now = moment().startOf('day');
+                    setIsOverDue(now.isAfter(dueDate));
+                }
                 setLoading(false); // Stop loading on success
             })
             .catch((error) => {
@@ -52,9 +59,10 @@ const BillDetail = () => {
     }, [id]); // Include id in dependency array to fetch new data when id changes
 
     const payment = () => {
+        setLoading(true); // Start loading
         const formattedData = {
             "orderId": id,
-            "returnUrl": "exp://rnnstoi-thaomy-8081.exp.direct/--/BillHistory",
+            "returnUrl": "https://careconnectadmin.vercel.app/paymentStatus",
             "method": selectedMethod
         }
         postData("/orders/service-package-payment", formattedData)
@@ -64,16 +72,25 @@ const BillDetail = () => {
                 // Open the URL in the default browser
                 Linking.openURL(url)
                     .then(() => {
-                        // navigation.navigate("BillHistory");
+                        navigation.navigate("ServicePaymentStatus", { orderId: id })
                         console.log("Opened successfully");
                     })
                     .catch((err) => {
+                        setLoading(false); // Start loading
                         console.log("Failed to open URL: ", err);
                     });
             })
             .catch((error) => {
+                setLoading(false); // Start loading
                 console.log("API Error: ", error);
-                // showToast("error", "Có lỗi xảy ra, vui lòng thử lại!", "", "bottom")
+                if (error.response.status == 400) {
+                    if (data?.status === "Paid")
+                        ComToast({ text: 'Thanh toán thất bại. Đơn hàng đã được thanh toán xong.' });
+                    else
+                        ComToast({ text: 'Thanh toán thất bại. Đơn hàng đã quá hạn thanh toán.' });
+                } else {
+                    ComToast({ text: 'Đã có lỗi xảy ra. Vui lòng thử lại.' });
+                }
             });
     }
 
@@ -86,12 +103,12 @@ const BillDetail = () => {
             />
             <View style={styles.body}>
                 {loading ? (
-                    <ComLoading/>
+                    <ComLoading />
                 ) : (
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                         showsHorizontalScrollIndicator={false}
-                        >
+                    >
                         <View style={{ flex: 1, alignItems: 'center' }}>
                             <Image
                                 source={billImg}
@@ -107,7 +124,6 @@ const BillDetail = () => {
                             <ComBillDetail title={bill?.title} content={data?.description}></ComBillDetail>
                             <ComBillDetail title={bill?.billId} content={data?.id}></ComBillDetail>
                             <ComBillDetail title={bill?.dueDate} content={moment(data?.dueDate, "YYYY-MM-DD").format("DD/MM/YYYY")}></ComBillDetail>
-
                             {data?.status === "Paid" && (
                                 <>
                                     <ComBillDetail title={bill?.detail?.paymentDate} content={ComDateTimeConverter(data?.paymentDate)} />
@@ -148,7 +164,11 @@ const BillDetail = () => {
                                         onPress={() => handleMethodPress('VnPay')}
                                     />
                                 </View>
-                                <ComButton onPress={() => { payment() }}>{bill?.detail?.pay}</ComButton>
+                                <ComButton
+                                    onPress={() => { payment() }}
+                                    disable={isOverDue}>
+                                    {bill?.detail?.pay}
+                                </ComButton>
                             </>
                         )}
                     </ScrollView>

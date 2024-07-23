@@ -11,6 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import ComElder from "../../Components/ComElder/ComElder";
 import ComSelectButton from "../../Components/ComButton/ComSelectButton";
 import ComSelectedOneDate from "./../../Components/ComDate/ComSelectedOneDate";
+import ComToast from "../../Components/ComToast/ComToast";
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import { useAuth } from "../../../auth/useAuth";
 import { FormProvider, useForm } from "react-hook-form";
@@ -76,7 +77,7 @@ export default function RegisterVisitation() {
       })
       .catch((error) => {
         console.log("Error registering:", error);
-        showToast("error", "Đã có lỗi xảy ra, vui lòng thử lại", "", "bottom");
+        ComToast({ text: 'Đã có lỗi xảy ra, vui lòng thử lại' });
       });
   };
 

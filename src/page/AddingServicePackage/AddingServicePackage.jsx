@@ -45,7 +45,7 @@ export default function AddingServicePackages() {
     };
 
     const fetchNextPage = async (search) => {
-        let url = `/service-package?`;
+        let url = `/service-package?SortColumn=id&SortDir=Desc`;
         if (selectedCategory) { url += `&PackageCategoryId=${selectedCategory}` }
         if (search) { url += `&Search=${search}` }
         setLoading(true);
@@ -81,6 +81,7 @@ export default function AddingServicePackages() {
             setSearchQuery("");
             fetchNextPage();
             setSelectedCategory(null)
+            setDisplayedItems(10)
         }, [])
     );
 
@@ -96,7 +97,7 @@ export default function AddingServicePackages() {
 
     const currentDate = moment();
     const filteredData = data?.filter((service) => {
-        const endRegistrationDate = moment(service?.endRegistrationStartDate);
+        const endRegistrationDate = moment(service?.endRegistrationDate);
         const hasNotExpired = currentDate.isSameOrBefore(endRegistrationDate, "day");//chua het han dang ky
         const hasSlotsLeft = service?.registrationLimit !== 0 ? service?.totalOrder < service?.registrationLimit : service?.totalOrder >= service?.registrationLimit;//chua het luot dang ky
         //nếu có giới hạn người                 tổng lượt dky < giới hạn                             tổng lượt dky >= 0

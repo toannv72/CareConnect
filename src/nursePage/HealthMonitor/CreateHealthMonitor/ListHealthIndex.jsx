@@ -18,9 +18,7 @@ export default function ListHealthIndex({ data }) {
     const [selectedHealthIndexItems, setSelectedHealthIndexItems] = useState([]);
     const [healthIndex, setHealthIndex] = useState([])
     const [loading, setLoading] = useState(false);
-    const [loadMoreLoading, setLoadMoreLoading] = useState(false);
-    const [page, setPage] = useState(1); // Track pagination page
-    const [hasMore, setHasMore] = useState(true); // Track if there are more items to load
+    const [displayedItems, setDisplayedItems] = useState(10);
     const [searchQuery, setSearchQuery] = useState("");
     const route = useRoute();
     const { elderId } = route.params;
@@ -56,29 +54,23 @@ export default function ListHealthIndex({ data }) {
 
     const onSubmit = (data) => {
         if (data?.search.trim() != "") {
-            setPage(1);
             setHealthIndex([]);
             setSearchQuery(encodeURIComponent(data?.search.trim()));
         }
     };
 
     const fetchNextPage = async () => {
-        setLoadMoreLoading(!loadMoreLoading);
         let url = '/health-category';
 
         if (searchQuery) {
             url += `?Search=${searchQuery}`;
-        } else {
-            url += `?PageIndex=${page}&PageSize=10`;
         }
+
         getData(url, {})
             .then((categories) => {
-                const newItems = categories?.data?.contends || [];
-                setHealthIndex(prevData => [...prevData, ...newItems]);
-                setPage(prevPage => prevPage + 1);
-                setLoadMoreLoading(false);
+                const filteredData = categories?.data?.contends?.filter((item) => (item?.state == "Active"))
+                setHealthIndex(filteredData);
                 setLoading(false);
-                setHasMore(page < categories?.data?.totalPages);
                 setLoading(false);
             })
             .catch((error) => {
@@ -96,19 +88,23 @@ export default function ListHealthIndex({ data }) {
         useCallback(() => {
             reset();
             setHealthIndex([]);
-            setPage(1);
             setLoading(!loading);
             setSearchQuery("");
             fetchNextPage();
+            setDisplayedItems(10)
+
         }, [])
     );
 
     const handleClearSearch = () => {
         if (searchQuery != "") {
-            setPage(1);
             setHealthIndex([])
         }
         setSearchQuery(" ");
+    };
+
+    const handleLoadMore = () => {
+        setDisplayedItems(prevCount => prevCount + 10);
     };
 
     return (
@@ -140,7 +136,7 @@ export default function ListHealthIndex({ data }) {
                         <ScrollView
                             showsVerticalScrollIndicator={false}
                         >
-                            {healthIndex.map((item, index) => (
+                            {healthIndex?.slice(0, displayedItems)?.map((item, index) => (
                                 <BouncyCheckbox
                                     key={index}
                                     fillColor="#33B39C"
@@ -171,10 +167,10 @@ export default function ListHealthIndex({ data }) {
                                 />
                             ))}
                             <View style={{ justifyContent: "center", alignItems: "center" }}>
-                                <View style={{ width: "35%" }}>
-                                    {loadMoreLoading ? (<ActivityIndicator />) :
-                                        (<ComSelectButton onPress={fetchNextPage} disable={!hasMore}>Xem thêm</ComSelectButton>)}
-                                </View>
+                                {displayedItems < healthIndex?.length &&
+                                    <View style={{ width: "35%" }}>
+                                        <ComSelectButton onPress={handleLoadMore} disable={displayedItems >= healthIndex?.length}>Xem thêm</ComSelectButton>
+                                    </View>}
                             </View>
                         </ScrollView>
                     ))}

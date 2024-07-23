@@ -152,15 +152,15 @@ export const vn = {
   },
   servicePackages: {
     title: "Gói dưỡng lão",
-    detail: 
+    detail:
     {
-    title: "Chi tiết gói dưỡng lão",
-    description: "Mô tả",
-    service: "Dịch vụ của gói",
-    registerForm: "Điền form đăng ký",
-    signContract: "Đăng ký lịch hẹn hoàn thành thủ tục",
+      title: "Chi tiết gói dưỡng lão",
+      description: "Mô tả",
+      service: "Dịch vụ của gói",
+      registerForm: "Điền form đăng ký",
+      signContract: "Đăng ký lịch hẹn hoàn thành thủ tục",
     },
-    popup:{
+    popup: {
       signContractTitle: "Đăng ký lịch hẹn hoàn thành thủ tục",
       limitDays: "Bạn chỉ có thể hẹn trước 14 ngày tính từ ngày mai",
       signContractSubTitle: "Bạn và người thân sẽ trực tiếp đến Viện để được hỗ trợ hoàn thành hồ sơ bệnh án và hợp đồng để trải nghiệm dịch vụ của viện",
@@ -200,7 +200,9 @@ export const vn = {
       serviceName: "Tên dịch vụ",
       registerName: "Người đăng ký",
       elderName: "Người cao tuổi",
-      time: "Thời gian",
+      serviceTime: "Thời gian thực hiện",
+      weekRegisterTime: "Thời gian đã đăng ký theo tuần",
+      dayRegisterTime: "Thời gian đã đăng ký theo tháng",
       totalMoney: "Tổng tiền",
     },
     history: {
@@ -225,6 +227,16 @@ export const vn = {
       backToHome: "Về trang lịch sử dịch vụ",
     },
   },
+  paymentStatus:{
+    paidTitle: "Thanh toán thành công",
+    failTitle: "Thanh toán thất bại",
+    unpaidTitle: "Đang chờ thanh toán",
+    overdueTitle: "Đã hết hạn thanh toán",
+    thankyou: "Cảm ơn bạn đã tin tưởng CareConnect",
+    overdueContent: "Đơn hàng đã hết hạn thanh toán",
+    backLater: "Bạn vui lòng đăng ký dịch vụ và thanh toán lại sau",
+    error: "Đã có lỗi xảy ra trong quá trình thanh toán"
+  },
   feedback: {
     title: "Đánh giá",
     label: {
@@ -239,12 +251,16 @@ export const vn = {
       title: "Mô tả ngắn gọn đánh giá của bạn",
       content: "Mô tả chi tiết nội dung đánh giá của bạn, vấn đề bạn gặp phải,..."
     },
-    history:{
+    history: {
       title: "Tiêu đề",
       date: "Ngày gửi",
       content: "Nội dung",
       service: "Dịch vụ",
       feedbackDetail: "Chi tiết đánh giá"
+    },
+    message: {
+      title: "Tiêu đề không được để trống",
+      content: "Nội dung không được để trống",
     }
   },
   bill: {
@@ -254,7 +270,7 @@ export const vn = {
     dueDate: "Hạn thanh toán",
     total: "Tổng tiền",
     status: "Trạng thái",
-    detail:{
+    detail: {
       title: "Chi tiết thanh toán",
       customerInfo: "Thông tin khách hàng",
       paymentInfo: "Thông tin thanh toán",
@@ -316,13 +332,15 @@ export const vn = {
       email: "Vui lòng Nhập địa chỉ email",
       idNumber: "Vui lòng Nhập số CCCD hoặc CMND",
       address: "Vui lòng Nhập địa chỉ",
+      addressInValid: "Địa chỉ hợp lệ chỉ chứa chữ cái và dấu cách",
+
     },
     button: {
       SaveProfile: "Lưu thông tin",
       EditProfile: "Chỉnh sửa thông tin",
     },
   },
-  UserProfile:{
+  UserProfile: {
     title: "Thông tin cá nhân",
   },
   ChangePassword: {
@@ -383,7 +401,7 @@ export const vn = {
     phone: "Số điện thoại",
     day: "Ngày",
     hour: "Giờ",
-    subscribers:"Người đăng ký"
+    subscribers: "Người đăng ký"
   },
   contractsPage: {
     title: "Hợp đồng",
@@ -397,9 +415,9 @@ export const vn = {
   VisitationSchedule: {
     title: "Lịch hẹn",
   },
-  ElderProfile:{
+  ElderProfile: {
     title: "Hồ sơ người thân",
-    detail:{
+    detail: {
       title: "Thông tin người cao tuổi",
       name: "Họ và tên người cao tuổi",
       contractID: "Mã hợp đồng",
@@ -411,7 +429,7 @@ export const vn = {
       urgentContact: "Liên hệ khẩn cấp"
     },
   },
-  MedicalProfile:{
+  MedicalProfile: {
     name: "Người cao tuổi",
     dateOfBirth: "Ngày sinh",
     age: "Tuổi",
@@ -419,7 +437,7 @@ export const vn = {
     underlyingMedical: "Bệnh nền",
     note: "Ghi chú"
   },
-  Notification:{
+  Notification: {
     title: "Thông báo",
   },
   NurseHome: {
@@ -434,14 +452,14 @@ export const vn = {
     capacity: "Số người cao tuổi",
     type: "Loại",
   },
-  NurseHealthMonitor:{
+  NurseHealthMonitor: {
     title: "Theo dõi sức khỏe",
     createHealthMonitor: "Tạo báo cáo sức khỏe",
     healthIndex: "Chỉ số sức khỏe",
     generalNote: "Chỉ số tổng quát",
     chooseHealthIndex: "Chọn các chỉ số bạn muốn kiểm tra"
   },
-  NurseRegisterService:{
+  NurseRegisterService: {
     status: "Trạng thái",
     description: "Mô tả",
     time: "Thời gian thực hiện",

@@ -9,9 +9,10 @@ import { FormProvider, useForm, useWatch } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ComInput from "../../../Components/ComInput/ComInput";
+import ComToast from "../../../Components/ComToast/ComToast";
 import ComButton from "../../../Components/ComButton/ComButton";
 import { postData } from "../../../api/api";
-import Toast from 'react-native-toast-message';
+import Toast from 'react-native-root-toast';
 import { healthRegex } from "../../../Components/ComRegexPatterns/regexPatterns";
 
 export default function CreateHealthMonitor() {
@@ -20,7 +21,6 @@ export default function CreateHealthMonitor() {
     const route = useRoute();
     const { selectedIndexs, elderId } = route.params || [];
     const previousValues = useRef({});
-    const showToast = (type, text1, text2, position) => { Toast.show({ type: type, text1: text1, text2: text2, position: position }) }
 
     const loginSchema = yup.object().shape({
         notes: yup.string().required('Vui lòng nhập ghi chú tổng quát'),
@@ -95,12 +95,12 @@ export default function CreateHealthMonitor() {
 
         postData("/health-report", formattedData)
             .then((response) => {
-                showToast("success", "Tạo báo cáo thành công", "", "bottom");
+                ComToast({ text: 'Tạo báo cáo thành công' });
                 navigation.navigate("ListHealthMonitor", { id: elderId });
             })
             .catch((error) => {
                 console.error("API Error: ", error?.message);
-                showToast("error", "Có lỗi xảy ra, vui lòng thử lại!", "", "bottom");
+                ComToast({ text: 'Có lỗi xảy ra, vui lòng thử lại!' });
             });
     };
 

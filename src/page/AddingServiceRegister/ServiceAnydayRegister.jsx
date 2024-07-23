@@ -169,13 +169,14 @@ export default function ServiceAnydayRegister() {
     }, [registeredDates]);
 
     const getDisabledDates = (orderDetail) => {
+        const currentMonth = new Date().getMonth();
         return orderDetail?.map(item => {
           if (item?.dayOfMonth !== null) {
             return item?.dayOfMonth;
           } else if (item?.date) {
             const date = new Date(item?.date);
-            if (!isNaN(date)) {
-              return date.getDate();
+            if (!isNaN(date) && date.getMonth() === currentMonth) {
+                return date.getDate();
             }
           }
           return null; // Hoặc giá trị mặc định nào đó nếu không hợp lệ
