@@ -30,6 +30,7 @@ import ServiceDayRegister from "./src/page/AddingServiceRegister/ServiceDayRegis
 import ServiceAnydayRegister from "./src/page/AddingServiceRegister/ServiceAnydayRegister";
 import Favorite from "./src/page/AddingServiceRegister/Favorite/Favorite";
 import ServicePayment from "./src/page/ServicePayment/ServicePayment";
+import ServicePaymentStatus from "./src/page/ServicePayment/ServicePaymentStatus";
 import ServiceHistory from "./src/page/ServiceHistory/ServiceHistory/ServiceHistory";
 import ServiceHistoryDetail from "./src/page/ServiceHistory/ServiceHistoryDetail/ServiceHistoryDetail";
 import CancelRenewSuccess from "./src/page/ServiceHistory/ServiceHistoryDetail/CancelRenewSuccess";
@@ -83,66 +84,11 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const Routes = () => {
-  const navigationRef = useRef(null);
-
-  const config = {
-    screens: {
-      Homes: {
-        screens: {
-          BillHistory: {
-            path: 'BillHistory', // Đặt path cho Tab.Screen "Service"
-            screens: {
-              BillHistory: '', // Màn hình mặc định khi vào tab "Service"
-            },
-          },
-        },
-      },
-      // NurseHomes: {
-      //   screens: {
-      //     NurseHealthMonitorDetail: 'nurse/healthmonitor/:elderId',
-      //   },
-      // },
-    },
-  };
-
-  const linking = {
-    //   prefixes: ['CareConnect://', 'exp://192.168.1.11:8081'], // Thêm tiền tố exp://
-    prefixes: ['CareConnect://', 'exp://rnnstoi-thaomy-8081.exp.direct'], // Thêm tiền tố exp://
-    config,
-  };
-
-  useEffect(() => {
-    (async () => {
-      const initialUrl = await Linking.getInitialURL();
-      if (initialUrl) {
-        const { path } = Linking.parse(initialUrl);
-        if (path) {
-          navigationRef.current?.navigate(path);
-        }
-      }
-    })();
-
-    // Updated Deep Link Handling:
-    const handleDeepLink = ({ url }) => {
-      const { path } = Linking.parse(url);
-      if (path) {
-        navigationRef.current?.navigate(path);
-      }
-    };
-
-    // Subscribe to URL events:
-    const subscription = Linking.addEventListener('url', handleDeepLink);
-
-    // Unsubscribe when the component unmounts:
-    return () => {
-      subscription.remove();
-    };
-  }, []);
 
   return (
-    <NavigationContainer linking={linking} ref={navigationRef}
+    <NavigationContainer
       onUnhandledAction={() => navigationRef.current?.navigate('NotFound')}>
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator initialRouteName="Homes">
         <Stack.Screen
           name="Homes"
           options={{ headerLeft: null, headerShown: false }}
@@ -237,6 +183,11 @@ const Routes = () => {
           options={{ headerLeft: null, headerShown: false }}
           name="ServicePayment"
           component={ServicePayment}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="ServicePaymentStatus"
+          component={ServicePaymentStatus}
         />
         <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}

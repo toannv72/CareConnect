@@ -89,16 +89,17 @@ export default function ServicePayment() {
             ]
         }
         setLoading(true)
-        postData("/orders/service-package?returnUrl=s", formattedData)
+        postData("/orders/service-package?returnUrl=https://careconnectadmin.vercel.app/paymentStatus", formattedData)
             .then((response) => {
                 console.log("API Response: ", response.message);
-                const url = response.message; // Assuming response.message contains the URL
+                const url = response.message;
+                const orderId = response.orderId;
                 // Open the URL in the default browser
                 setLoading(false)
                 Linking.openURL(url)
                     .then(() => {
                         console.log("Opened successfully");
-                        // navigation.navigate("BillHistory")
+                        navigation.navigate("ServicePaymentStatus", { orderId: orderId })
                     })
                     .catch((err) => {
                         console.log("Failed to open URL: ", err);

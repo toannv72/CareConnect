@@ -28,7 +28,6 @@ const BillDetail = () => {
     const { id } = route.params;
     const [selectedMethod, setSelectedMethod] = useState('momo');
     const [isOverDue, setIsOverDue] = useState(false);
-    console.log("Due date:", isOverDue); // Log due date riêng lẻ
 
     const handleMethodPress = (methodName) => {
         setSelectedMethod(methodName);
@@ -63,7 +62,7 @@ const BillDetail = () => {
         setLoading(true); // Start loading
         const formattedData = {
             "orderId": id,
-            "returnUrl": "exp://rnnstoi-thaomy-8081.exp.direct/--/BillHistory",
+            "returnUrl": "https://careconnectadmin.vercel.app/paymentStatus",
             "method": selectedMethod
         }
         postData("/orders/service-package-payment", formattedData)
@@ -73,8 +72,7 @@ const BillDetail = () => {
                 // Open the URL in the default browser
                 Linking.openURL(url)
                     .then(() => {
-                        setLoading(false); // Start loading
-                        // navigation.navigate("BillHistory");
+                        navigation.navigate("ServicePaymentStatus", { orderId: id })
                         console.log("Opened successfully");
                     })
                     .catch((err) => {

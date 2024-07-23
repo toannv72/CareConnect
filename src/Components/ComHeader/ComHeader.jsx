@@ -19,6 +19,9 @@ const ComHeader = ({
     else if (route.name === 'BillHistory' || !navigation.canGoBack()) {
       navigation.navigate("Account");
     }
+    else if (route.name === 'BillDetail' || !navigation.canGoBack()) {
+      navigation.navigate("BillHistory");
+    }
      else {
       navigation.goBack();
     }

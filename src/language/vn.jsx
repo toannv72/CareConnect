@@ -227,6 +227,16 @@ export const vn = {
       backToHome: "Về trang lịch sử dịch vụ",
     },
   },
+  paymentStatus:{
+    paidTitle: "Thanh toán thành công",
+    failTitle: "Thanh toán thất bại",
+    unpaidTitle: "Đang chờ thanh toán",
+    overdueTitle: "Đã hết hạn thanh toán",
+    thankyou: "Cảm ơn bạn đã tin tưởng CareConnect",
+    overdueContent: "Đơn hàng đã hết hạn thanh toán",
+    backLater: "Bạn vui lòng đăng ký dịch vụ và thanh toán lại sau",
+    error: "Đã có lỗi xảy ra trong quá trình thanh toán"
+  },
   feedback: {
     title: "Đánh giá",
     label: {
