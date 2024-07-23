@@ -84,11 +84,11 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const Routes = () => {
-
+  const navigationRef = useRef(null);
   return (
-    <NavigationContainer
+    <NavigationContainer ref={navigationRef}
       onUnhandledAction={() => navigationRef.current?.navigate('NotFound')}>
-      <Stack.Navigator initialRouteName="Homes">
+      <Stack.Navigator initialRouteName="NurseHomes">
         <Stack.Screen
           name="Homes"
           options={{ headerLeft: null, headerShown: false }}
