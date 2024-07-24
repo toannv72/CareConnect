@@ -2,11 +2,27 @@ import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import bill from "../../../assets/profile_icons/bill.png";
+import { useAuth } from "../../../auth/useAuth";
+import { postData, deleteData } from "../../api/api";
 
 const MenuItem = ({ iconName, text, link, colorRed }) => {
   const navigation = useNavigation();
-
-  const press = () => {
+  const { logout, expoPushToken } = useAuth();
+  const deleteToken = async () => {
+    try {
+      await deleteData(`/devices`, "", { token: expoPushToken });
+      console.log("Delete expoPushToken successfully");
+    } catch (error) {
+      console.error("API Delete expoPushToken Error: ", error);
+    }
+  };
+  const press = async () => {
+    if (colorRed) {
+      await deleteToken(); // Wait for deleteToken to complete
+      logout(); // Call logout after deleteToken is successful
+    } else {
+      logout(); // Call logout immediately if colorRed is not true
+    }
     navigation.navigate(link);
   };
   return (

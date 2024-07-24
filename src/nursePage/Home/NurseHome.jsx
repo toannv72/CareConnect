@@ -1,5 +1,5 @@
-import React, { useContext, useCallback } from "react";
-import { StyleSheet, View, Text, Image, ScrollView } from "react-native";
+import React, { useContext, useCallback, useState, useEffect } from "react";
+import { StyleSheet, View, Text, Image, ScrollView, Alert } from "react-native";
 import Header from "./Header";
 import ComButton from "../../Components/ComButton/ComButton";
 import Catalogue from "./Catalogue/Catalogue";
@@ -8,10 +8,45 @@ import { postData, getData } from "../../api/api";
 import nurseHome from "../../../assets/images/nurseHome/nurseHome.png"
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { useFocusEffect } from '@react-navigation/native';
+import Constants from "expo-constants";
+import * as Notifications from "expo-notifications";
+import * as Device from "expo-device";
+
+async function registerForPushNotificationsAsync() {
+
+  if (Device.isDevice) {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== "granted") {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== "granted") {
+      Alert.alert("Permission not granted", "Failed to get push token for push notification!");
+      return;
+    }
+    try {
+      const projectId =
+        Constants?.expoConfig?.extra?.eas?.projectId ??
+        Constants?.easConfig?.projectId;
+      if (!projectId) {
+        Alert.alert("Project ID not found", "Project ID not found in configuration.");
+        return;
+      }
+      const pushTokenData = await Notifications.getExpoPushTokenAsync({ projectId });
+      return pushTokenData.data;
+    } catch (error) {
+      Alert.alert("Failed to get push token", error.message);
+    }
+  } else {
+    Alert.alert("Physical device required", "Must use physical device for push notifications.");
+  }
+}
 
 export default function NurseHome({ navigation }) {
   const { user, setUser, login } = useAuth();
-
+  const [expoPushToken, setExpoPushToken] = useState("");
+  
   const {
     text: {
       NurseHome,
@@ -20,17 +55,39 @@ export default function NurseHome({ navigation }) {
     setLanguage,
   } = useContext(LanguageContext);
 
+  useEffect(() => {
+    const fetchPushToken = async () => {
+      try {
+        const token = await registerForPushNotificationsAsync();
+        setExpoPushToken(token ?? "");
+      } catch (error) {
+        Alert.alert("Error", `${error}`);
+      }
+    };
+
+    fetchPushToken();
+  }, []);
+
   useFocusEffect(
     useCallback(() => {
-      getData("/users/profile")
-        .then((userData) => {
-          login(userData?.data);
-          setUser(userData?.data)
-        })
-        .catch((error) => {
-          console.error("Error getData fetching items:", error);
-        });
-    }, [])
+      if (expoPushToken !== "") {
+        postData("/devices", { token: expoPushToken })
+          .then((response) => {
+            console.log(response);
+          })
+          .catch((error) => {
+            console.error("API devices Error: ", error?.message);
+          });
+        getData("/users/profile")
+          .then((userData) => {
+            login(userData?.data, expoPushToken);
+            setUser(userData?.data);
+          })
+          .catch((error) => {
+            console.error("Error fetching user profile:", error);
+          });
+      }
+    }, [expoPushToken])
   );
 
   return (

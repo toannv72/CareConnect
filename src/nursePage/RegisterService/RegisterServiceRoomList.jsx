@@ -38,7 +38,7 @@ export default function RegisterServiceRoomList() {
     useFocusEffect(
         useCallback(() => {
             setLoading(true);
-                getData(`/care-schedule?Date=${today}&UserId=${user?.id}`, {})
+            getData(`/care-schedule?CareMonth=${moment().month() + 1}&CareYear=${moment().year()}&UserId=${user?.id}`, {})
                 .then((careSchedule) => {
                     const filterData = getRoomList(careSchedule?.data?.contends)
                     setData(filterData);

@@ -50,16 +50,17 @@ export default function ScheduledServicePayment({ }) {
             "orderDetails": orderDetailsList
         }
 
-        postData("/orders/service-package?returnUrl=a", formattedData)
+        postData("/orders/service-package?returnUrl=https://careconnectadmin.vercel.app/paymentStatus", formattedData)
             .then((response) => {
                 console.log("API Response: ", response);
                 deleteSchedule()
                 if (payment === "Now") {
                     const url = response.message;
+                    const orderId = response.orderId;
                     Linking.openURL(url)
                         .then(() => {
                             console.log("Opened successfully");
-                            navigation.navigate("Homes");
+                            navigation.navigate("ServicePaymentStatus", { orderId: orderId })
                         })
                         .catch((err) => {
                             console.log("Failed to open URL: ", err);
