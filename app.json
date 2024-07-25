@@ -14,7 +14,7 @@
         {
           "icon": "./assets/splash.png",
           "color": "#ffffff",
-          "mode": "preview"
+          "mode": "production"
         }
       ],
       [

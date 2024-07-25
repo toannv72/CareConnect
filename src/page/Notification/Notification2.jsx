@@ -16,8 +16,8 @@ async function sendPushNotification(expoPushToken) {
   const message = {
     to: expoPushToken,
     sound: "default",
-    title: "Original Titless",
-    body: "And here is the body!s",
+    title: "Original Title",
+    body: "And here is the body!",
     data: { someData: "goes here" },
   };
 
@@ -54,10 +54,6 @@ async function registerForPushNotificationsAsync() {
     if (existingStatus !== "granted") {
       const { status } = await Notifications.requestPermissionsAsync();
       finalStatus = status;
-      if (status !== "granted") {
-        alert("Không nhận được mã thông báo đẩy cho thông báo đẩy!");
-        return;
-      }
     }
     if (finalStatus !== "granted") {
       handleRegistrationError(
@@ -93,6 +89,7 @@ export default function Notification2() {
   const notificationListener = useRef();
   const responseListener = useRef();
   console.log(111111, expoPushToken);
+
   useEffect(() => {
     const checkPermissions = async () => {
       const { status: existingStatus } =
@@ -110,8 +107,6 @@ export default function Notification2() {
 
     const fetchExpoPushToken = async () => {
       try {
-        console.log(222222,Constants);
-
         const projectId = Constants.manifest2.extra.eas.projectId;
         const pushTokenData = await Notifications.getExpoPushTokenAsync({
           projectId,
@@ -127,6 +122,7 @@ export default function Notification2() {
 
     // Existing notification listener code
   }, []);
+
   useEffect(() => {
     registerForPushNotificationsAsync()
       .then((token) => setExpoPushToken(token ?? ""))
@@ -135,13 +131,13 @@ export default function Notification2() {
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
         setNotification(notification);
-         console.log(111111111,notification);
+        console.log(111111111, notification);
       });
 
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
         // khi người dùng bấm vô
-        console.log(22222,response);
+        console.log(22222, response);
       });
 
     return () => {
@@ -176,7 +172,7 @@ export default function Notification2() {
           await sendPushNotification(expoPushToken);
         }}
       />
-      <View style={{height:100}}></View>
+      <View style={{ height: 100 }}></View>
     </View>
   );
 }
