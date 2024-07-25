@@ -4,7 +4,7 @@ import { Image, View } from "react-native";
 import { LanguageContext } from "../../../contexts/LanguageContext";
 import { useNavigation } from "@react-navigation/native";
 
-export default function ComServiceHistoryPackage({ data }) {
+export default function ComServiceHistoryPackage({ data, orderData }) {
   const {
     text: { addingPackages },
     setLanguage,
@@ -18,17 +18,17 @@ export default function ComServiceHistoryPackage({ data }) {
     return `${day}/${month}/${year}`;
 };
 
-const getStatus = data?.orderDetails[0]?.orderDates.every(item => item.status === "Complete");
+const getStatus = data?.orderDates.every(item => item.status === "Complete");
 
   return (
     <TouchableOpacity
       style={styles.body}
-      onPress={() => {
-        navigation.navigate("ServiceHistoryDetail", { id: data.id, status: getStatus });
+      onPress={() => {                               //orderId                                    orderDetailId
+        navigation.navigate("ServiceHistoryDetail", { id: orderData?.id, status: getStatus, orderDetailId: data?.id });
       }}
     >
       <Image
-        source={{ uri: data?.orderDetails[0]?.servicePackage?.imageUrl }}
+        source={{ uri: data?.servicePackage?.imageUrl }}
         style={{
           width: 100,
           height: 100,
@@ -37,14 +37,14 @@ const getStatus = data?.orderDetails[0]?.orderDates.every(item => item.status ==
         }}
       />
       <View style={styles?.container}>
-        <Text style={{ fontWeight: "bold", fontSize: 16 }} numberOfLines={1}>{data?.orderDetails[0]?.servicePackage?.name}</Text>
+        <Text style={{ fontWeight: "bold", fontSize: 16 }} numberOfLines={1}>{data?.servicePackage?.name}</Text>
 
         <Text style={{ flexDirection: "row" }}>
           <Text style={{ fontWeight: "bold", fontSize: 14 }}>
             {addingPackages?.history?.dates}
           </Text>
           <Text>
-            : {formattedDate(data?.createdAt)}
+            : {formattedDate(orderData?.createdAt)}
           </Text>
         </Text>
 
@@ -53,7 +53,7 @@ const getStatus = data?.orderDetails[0]?.orderDates.every(item => item.status ==
             {addingPackages?.payment?.elderName}
           </Text>
           <Text>
-            : {data?.orderDetails[0]?.elder?.name}
+            : {data?.elder?.name}
           </Text>
         </Text>
 

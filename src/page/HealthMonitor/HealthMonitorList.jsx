@@ -23,7 +23,7 @@ export default function HealthMonitorList({ }) {
 
     useEffect(() => {
         setLoading(!loading);
-        getData(`/health-report?ElderId=${id}&SortColumn=createdAt&SortDir=Desc`, {})
+        getData(`/health-report?ElderId=${id}&SortColumn=createdAt&SortDir=Desc&PageSize=50`, {})
             .then((healthMonitor) => {
                 setHealthMonitor(healthMonitor?.data?.contends);
                 setLoading(loading);
@@ -35,8 +35,7 @@ export default function HealthMonitorList({ }) {
     }, []);
 
     const groupedData = healthMonitor.reduce((acc, item) => {
-        const date = item?.createdAt;
-        console.log("groupedData ", date)
+        const date = item?.date;
         acc[date] = acc[date] || [];
         acc[date].push(item);
         return acc;

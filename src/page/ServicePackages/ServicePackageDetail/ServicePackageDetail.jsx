@@ -9,19 +9,22 @@ import { useNavigation } from '@react-navigation/native';
 import ComHeader from "../../../Components/ComHeader/ComHeader";
 import ComButton from "../../../Components/ComButton/ComButton";
 import ComPopup from "../../../Components/ComPopup/ComPopup";
+import ComToast from "../../../Components/ComToast/ComToast";
 import ComSelectedOneDate from "../../../Components/ComDate/ComSelectedOneDate";
 import moment from "moment";
 import { postData, getData } from "../../../api/api";
 import Toast from 'react-native-toast-message';
+import { useAuth } from "../../../../auth/useAuth";
 
 export default function ServicePackageDetail({ }) {
   const today = moment().format("YYYY-MM-DD");
   const navigation = useNavigation();
   const route = useRoute();
   const serviceData = route.params?.data || {};
-  const [selectedDate, setSelectedDate] = useState();//cho calendar một giá trị mặc định là ngày hiện tại
+  const [selectedDate, setSelectedDate] = useState({});//cho calendar một giá trị mặc định là ngày hiện tại
   const [popupDate, setPopupDate] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
 
   const {
     text: { servicePackages },
@@ -45,20 +48,12 @@ export default function ServicePackageDetail({ }) {
     });
   };
 
-  const showToast = (type, text1, text2, position) => {
-    Toast.show({
-      type: type,
-      text1: text1,
-      text2: text2,
-      position: position
-    });
-  }
-
   const loginSchema = yup.object().shape({
     date: yup.date().required("Vui lòng chọn ngày đặt lịch"),
   });
   const methods = useForm({
     resolver: yupResolver(loginSchema),
+    defaultValues: {},
   });
   const {
     control,
@@ -70,18 +65,24 @@ export default function ServicePackageDetail({ }) {
     Keyboard.dismiss();
     const formData = {
       ...data,
+      name: "Lịch hẹn hoàn thành thủ tục đăng ký",
+      content: "Lịch hẹn hoàn thành thủ tục đăng ký",
+      notes: "Lịch hẹn hoàn thành thủ tục đăng ký",
+      userId: user?.id,
       nursingPackageId: serviceData?.id,
-      date: moment(data?.date).format("YYYY-MM-DD"), // Đảm bảo chuyển đổi ngày về định dạng chuẩn
+      date: moment(data?.date).format("YYYY-MM-DD").toString(),
+      type: "Consultation"
     };
-    postData("/appointments/RegisterPackage", formData, {})
-      .then((data) => {
-        handleClosePopupDate()
-        navigation.navigate("ServicePackageRegisterSuccess", { data: data });
-      })
-      .catch((error) => {
-        console.log("Error registering:", error);
-        showToast("error", "Đã có lỗi xảy ra, vui lòng thử lại", "", "bottom")
-      });
+    postData("/appointments", formData, {})
+    .then((appointments) => {
+      handleClosePopupDate()
+      navigation.navigate("ServicePackageRegisterSuccess", { data: formData });
+    })
+    .catch((error) => {
+      handleClosePopupDate()
+      ComToast({ text: 'Đã có lỗi xảy ra, vui lòng thử lại' });
+      console.log("Error appointments:", error);
+    });
   };
 
   return (
@@ -149,7 +150,11 @@ export default function ServicePackageDetail({ }) {
               date={changeSelectedDate}
               name="date"
               control={control}
-              errors={errors} />
+              errors={errors}
+              enabled={true}
+              minDate={moment().add(1, 'day').toString()}
+              maxDate={moment().add(14, 'days').toString()}
+            />
             <View
               style={{
                 flexDirection: "row",

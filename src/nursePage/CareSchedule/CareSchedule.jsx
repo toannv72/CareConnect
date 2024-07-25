@@ -1,19 +1,28 @@
-import { useState, useEffect, useRef, useContext } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import { Text, View, StyleSheet, ScrollView, Image } from "react-native";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import ComSchedule from "./ComSchedule";
 import { Calendar } from "react-native-calendars";
-import { date } from "yup";
+import { useAuth } from "../../../auth/useAuth";
 import moment from "moment";
-import noTask from "../../../assets/images/Nurse/CareSchedule/noTask.png"
-import { useNavigation } from '@react-navigation/native';
+import noTask from "../../../assets/images/Nurse/CareSchedule/noTask.png";
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import LocaleConfig from "../../configs/LocalizationConfig";
+import { getData } from "../../api/api";
 
-export default function CareSchedule({ }) {
+export default function CareSchedule() {
     const today = moment().format("YYYY-MM-DD");
     const navigation = useNavigation();
-    const [selectedDate, setSelectedDate] = useState(moment().format("YYYY-MM-DD"));
+    const [selectedDate, setSelectedDate] = useState(today);
+    const [loading, setLoading] = useState(false);
+    const [nurseSchedules, setNurseSchedules] = useState([]); // List of dates for EmployeeType
+    const [careSchedule, setCareSchedule] = useState([]); // CareSchedule (which rooms)
+    const [currentMonth, setCurrentMonth] = useState(moment().month() + 1); // Current month
+    const [currentYear, setCurrentYear] = useState(moment().year()); // Current year
+    const [calendarKey, setCalendarKey] = useState(0); // Key to force re-render of Calendar
+    const { user } = useAuth();
+
     const {
         text: {
             CareSchedule,
@@ -22,124 +31,90 @@ export default function CareSchedule({ }) {
         setLanguage,
     } = useContext(LanguageContext);
 
-    const [data, setData] = useState([
-        {
-            id: 1,
-            staffId: 123,
-            nurseID: 234,
-            roomId: 101,
-            areaId: "A",
-            time: "06/:00 - 14:00",
-            date: "2024-06-20"
-        },
-        {
-            id: 1,
-            staffId: 123,
-            nurseID: 234,
-            roomId: 101,
-            areaId: "A",
-            time: "06/:00 - 14:00",
-            date: "2024-06-21"
-        },
-        {
-            id: 1,
-            staffId: 123,
-            nurseID: 234,
-            roomId: 101,
-            areaId: "A",
-            time: "06/:00 - 14:00",
-            date: "2024-06-22"
-        },
-        {
-            id: 1,
-            staffId: 123,
-            nurseID: 234,
-            roomId: 102,
-            areaId: "A",
-            time: "06/:00 - 14:00",
-            date: "2024-06-22"
-        },
-        {
-            id: 1,
-            staffId: 123,
-            nurseID: 234,
-            roomId: 103,
-            areaId: "A",
-            time: "06/:00 - 14:00",
-            date: "2024-06-22"
-        },
-        {
-            id: 1,
-            staffId: 123,
-            nurseID: 234,
-            roomId: 104,
-            areaId: "A",
-            time: "06:00 - 14:00",
-            date: "2024-06-22"
-        },
-        {
-            id: 1,
-            staffId: 123,
-            nurseID: 234,
-            roomId: 404,
-            areaId: "D",
-            time: "06:00 - 14:00",
-            date: "2024-06-22"
-        },
-        {
-            id: 1,
-            staffId: 123,
-            nurseID: 234,
-            roomId: 102,
-            areaId: "A last",
-            time: "06/:00 - 14:00",
-            date: "2024-06-22"
-        },
-        {
-            id: 1,
-            staffId: 123,
-            nurseID: 234,
-            roomId: 102,
-            areaId: "A last",
-            time: "06/:00 - 14:00",
-            date: "2024-06-22"
-        },
-        {
-            id: 1,
-            staffId: 123,
-            nurseID: 234,
-            roomId: 102,
-            areaId: "A",
-            time: "06/:00 - 14:00",
-            date: "2024-06-30"
-        },
-        {
-            id: 1,
-            staffId: 123,
-            nurseID: 234,
-            roomId: 102,
-            areaId: "A",
-            time: "06/:00 - 14:00",
-            date: "2024-07-20"
-        },
-    ])
-
     const [markedDates, setMarkedDates] = useState({
         [today]: { selected: true }
     });
 
-    useEffect(() => {
-        // Cập nhật markedDates mỗi khi selectedDate thay đổi
-        setMarkedDates(data.reduce((acc, item) => {
-            acc[item.date] = { dots: [{ key: 'task', color: 'red' }], selected: item.date === selectedDate };
-            return acc;
-        }, { [selectedDate]: { selected: true } }));
-    }, [selectedDate, data]);
-
-    const filteredData = data.filter(item => item.date === selectedDate);//get list of object has date = selectedDate
-
     const onDayPress = (day) => {
         setSelectedDate(day.dateString);
+    };
+
+    const onMonthChange = (month) => {
+        const newMonth = month.month < 10 ? `0${month.month}` : month.month;
+        const newYear = month.year;
+        setCurrentMonth(month.month); // Update current month to know the month being selected and compare
+        setCurrentYear(month.year); // Update current year to know the year being selected and compare
+        // Fetch data for the new month and year
+        const fetchData = async () => {
+            await getEmployeeSchedule(newMonth, newYear); // call the API with the new month and year
+        };
+        fetchData();
+    };
+
+    useFocusEffect(
+        useCallback(() => {
+            setSelectedDate(today);
+            setCurrentMonth(moment().month() + 1); // Reset current month to current month
+            setCurrentYear(moment().year()); // Reset current year to current year
+            setCalendarKey(prevKey => prevKey + 1); // Update calendar key to force re-render
+            const fetchData = async () => {
+                await getEmployeeSchedule(); // Fetch initial data
+            };
+            fetchData();
+        }, [])
+    );
+
+    useEffect(() => {
+        const newMarkedDates = nurseSchedules.reduce((acc, item) => {
+            const itemDate = item?.monthlyCalendar?.dateInMonth; // get date in month
+            const itemFullDate = moment(`${currentYear}-${currentMonth}-${itemDate}`, "YYYY-MM-DD").format("YYYY-MM-DD"); // create full date = itemDate, selected month and year (default is current)
+            acc[itemFullDate] = { // mark as a day with task
+                dots: [{ key: 'task', color: 'red' }],
+                selected: itemFullDate === selectedDate
+            };
+            return acc;
+        }, { [selectedDate]: { selected: true } });
+
+        setMarkedDates(newMarkedDates); // Update marked dates
+    }, [selectedDate, nurseSchedules, currentMonth, currentYear]);
+
+    // Check if selected date is in the list of dates for EmployeeType
+    const filteredData = nurseSchedules.filter(item => {
+        const itemDate = moment(`${currentYear}-${currentMonth}-${item?.monthlyCalendar?.dateInMonth}`, "YYYY-MM-DD").format("YYYY-MM-DD");
+        return itemDate === selectedDate;
+    });
+
+    const getEmployeeSchedule = async (month = moment().month() + 1, year = moment().year()) => {
+        setLoading(true);
+        try {
+            const schedule = await getData(`/employee-schedule?UserId=${user?.id}&CareMonth=${month}&CareYear=${year}`, {});
+            const contents = schedule?.data?.contends;
+
+            if (contents && contents.length > 0) { // If there are scheduled items
+                setCareSchedule(contents[0]?.careSchedule); // Set careSchedule (which rooms)
+                await getEmployeeType(contents[0]?.employeeType?.id); // Fetch dates for EmployeeType
+            } else {
+                // If no scheduled items, clear careSchedule and nurseSchedules
+                setCareSchedule([]);
+                setNurseSchedules([]);
+            }
+        } catch (error) {
+            console.error("Error fetching order items:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const getEmployeeType = async (employeeTypeId) => { // Fetch dates for EmployeeType
+        setLoading(true);
+        try {
+            const type = await getData(`/employee-type/${employeeTypeId}`, {});
+            setNurseSchedules(type?.data?.monthlyCalendarDetails);
+        } catch (error) {
+            console.error("Error fetching type items:", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -150,37 +125,43 @@ export default function CareSchedule({ }) {
             />
             <View style={styles.body}>
                 <Calendar
+                    key={calendarKey} // Use the calendar key to force re-render
                     markingType={'multi-dot'}
                     markedDates={markedDates}
                     style={{ marginHorizontal: 15, marginBottom: 5 }}
+                    current={moment().format("YYYY-MM-DD")} // Set current date to focus on
                     onDayPress={onDayPress}
+                    onMonthChange={onMonthChange}
                     {...LocaleConfig}
                 />
-                {filteredData.length > 0 ? (//if has data => display list òf task
+                {filteredData?.length > 0 ? (
                     <View style={styles.taskContainer}>
                         <Text style={[styles.dateTitle]}>
                             {moment(selectedDate).format('DD/MM/YYYY')}
                         </Text>
+
                         <ScrollView
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}
                         >
-                            {/* <View style={{paddingBottom: 250}}> */}
-                                {filteredData.map((item, index) => (
+                            {careSchedule?.rooms?.length > 0 && (
+                                careSchedule?.rooms.map((room, index) => (
                                     <ComSchedule
                                         key={index}
-                                        data={item}
-                                        onPress={() => navigation.navigate("NurseHealthMonitor", { roomData: item })}
+                                        data={room} // List of rooms in the schedule
+                                        shift={filteredData[0]?.shifts} // Shifts for the selected date
+                                        onPress={() => navigation.navigate("RoomDetail", { roomData: room })}
                                     />
-                                ))}
-                            {/* </View> */}
-                            <View style={{ height: 500}} />
+                                ))
+                            )}
+
+                            <View style={{ height: 500 }} />
                         </ScrollView>
                     </View>
-                ) : ( //ìf no data => display no task component
+                ) : (
                     <View style={[styles.taskContainer, { alignItems: "center" }]}>
                         <Text style={styles.dateTitle}>
-                            {moment(selectedDate).format('DD-MM-YYYY')}
+                            {moment(selectedDate).format('DD/MM/YYYY')}
                         </Text>
                         <Image
                             source={noTask}
@@ -191,20 +172,19 @@ export default function CareSchedule({ }) {
                                 marginVertical: 10
                             }}
                         />
-                        <Text style={{ fontWeight: "bold", marginBottom: 10, fontSize: 16 }}>{CareSchedule.noTask}</Text>
-                        <Text style={{ color: "#7C7C7C" }}>{CareSchedule.takeRest}</Text>
+                        <Text style={{ fontWeight: "bold", marginBottom: 10, fontSize: 16 }}>{CareSchedule?.noTask}</Text>
+                        <Text style={{ color: "#7C7C7C" }}>{CareSchedule?.takeRest}</Text>
                     </View>
                 )}
             </View>
         </>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
     body: {
         flex: 1,
         backgroundColor: "#fff",
-        marginBottom: 10
     },
     taskContainer: {
         borderColor: "#33B39C",
@@ -212,7 +192,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 0,
         borderTopRightRadius: 20,
         borderTopLeftRadius: 20,
-        backgroundColor: 'white',
+        backgroundColor: "#fff",
         paddingTop: 10
     },
     dateTitle: {
@@ -220,4 +200,4 @@ const styles = StyleSheet.create({
         fontSize: 16,
         textAlign: "center",
     }
-})
+});

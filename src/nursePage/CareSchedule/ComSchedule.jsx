@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import taskIcon from "../../../assets/images/Nurse/CareSchedule/task.png"
 import timeIcon from "../../../assets/images/Nurse/CareSchedule/time.png"
 
-export default function ComSchedule({ data, onPress, isSelected }) {
+export default function ComSchedule({ data, shift, onPress, isSelected }) {
     const {
         text: { CareSchedule },
         setLanguage,
@@ -27,15 +27,19 @@ export default function ComSchedule({ data, onPress, isSelected }) {
                     <Text style={styles?.taskTitle}
                         numberOfLines={2}
                         ellipsizeMode='tail'>
-                        {CareSchedule?.room} {data?.roomId} -  {CareSchedule?.area} {data?.areaId}
+                        {CareSchedule?.room} {data?.name} -  {CareSchedule?.area} {data?.block?.name}
                     </Text>
-                    <View style={{ flexDirection: "row", alignItems: "center" }}>
-                        <Image
-                            source={timeIcon}
-                            style={styles?.clockImage}
-                        />
-                        <Text style={{ fontSize: 14 }}>{data?.time}</Text>
-                    </View>
+                    {shift?.map((item, index) => (
+                        <View key={index} style={{ flexDirection: "row", alignItems: "center" }}>
+                            <Image
+                                source={timeIcon}
+                                style={styles?.clockImage}
+                            />
+                            <Text style={{ fontSize: 14 }}>Từ {item?.startTime} đến {item?.endTime}</Text>
+                        </View>
+
+                    ))}
+
                 </View>
             </TouchableOpacity>
         </>
@@ -57,8 +61,8 @@ const styles = StyleSheet.create({
         flex: 5
     },
     taskImage: {
-        width: 50,
-        height: 50,
+        width: 60,
+        height: 65,
         objectFit: "fill",
         backgroundColor: "#14A499",
         flex: 1
@@ -69,9 +73,9 @@ const styles = StyleSheet.create({
         objectFit: "fill",
         marginRight: 5
     },
-    taskTitle:{
-        fontWeight: "bold", 
-        fontSize: 16, 
+    taskTitle: {
+        fontWeight: "bold",
+        fontSize: 16,
         marginBottom: 7
     }
 })

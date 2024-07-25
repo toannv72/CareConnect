@@ -21,10 +21,9 @@ export default function RegisterVisitationSuccess() {
   const route = useRoute();
   const { formData } = route.params;
   const { user } = useAuth();
-  console.log("date:RegisterVisitationSuccess", formData);
 
   const toHomes = () => {
-    navigation.navigate("Homes");
+    navigation.navigate("VisitationSchedule");
   };
   return (
     <View style={styles?.body}>
@@ -32,7 +31,7 @@ export default function RegisterVisitationSuccess() {
         <ComTitlePage>{visitationText?.titleRegisterSuccess}</ComTitlePage>
         <Image style={{}} source={Vector} />
         <View style={styles?.container1}>
-          <View style={styles?.container2}>
+          <View >
             <Text style={{ flexDirection: "row", fontSize: 16 }}>
               <Text style={{ fontWeight: "bold", fontSize: 18 }}>
                 {visitationText?.subscribers}
@@ -41,7 +40,7 @@ export default function RegisterVisitationSuccess() {
               {/* <Text>: {data?.name}</Text> */}
             </Text>
           </View>
-          <View style={styles?.container2}>
+          <View >
             <Text style={{ flexDirection: "row", fontSize: 16 }}>
               <Text style={{ fontWeight: "bold", fontSize: 18 }}>
                 {visitationText?.phone}
@@ -49,7 +48,7 @@ export default function RegisterVisitationSuccess() {
               <Text>: {user?.phoneNumber}</Text>
             </Text>
           </View>
-          <View style={styles?.container2}>
+          <View >
             <Text style={{ flexDirection: "row", fontSize: 16 }}>
               <Text style={{ fontWeight: "bold", fontSize: 18 }}>
                 {visitationText?.day}
@@ -85,12 +84,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 30,
     width: "90%",
-  },
-  container2: {
-    // flex: 1,
-    // alignItems: "flex-start",
-    // justifyContent: "center",
-    // flexWrap: "wrap",
   },
   container1: {
     width: "100%",

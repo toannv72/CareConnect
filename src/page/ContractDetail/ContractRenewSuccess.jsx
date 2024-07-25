@@ -5,6 +5,7 @@ import { LanguageContext } from "../../contexts/LanguageContext";
 import Vector from "../../../assets/Vector.png";
 import ComButton from "../../Components/ComButton/ComButton";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { useAuth } from "../../../auth/useAuth";
 import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter";
 export default function ContractRenewSuccess() {
   const navigation = useNavigation();
@@ -17,8 +18,9 @@ export default function ContractRenewSuccess() {
     setLanguage,
   } = useContext(LanguageContext);
   const route = useRoute();
-  const { date } = route.params;
-  console.log("date ", date)
+  const { data } = route.params;
+  const { user } = useAuth();
+
   const toHomes = () => {
     navigation.navigate("Homes");
   };
@@ -33,8 +35,7 @@ export default function ContractRenewSuccess() {
               <Text style={{ fontWeight: "bold", fontSize: 18 }}>
                 {visitationText?.subscribers}
               </Text>
-              <Text>: Thảo my</Text>
-              {/* <Text>: {data?.name}</Text> */}
+              <Text>: {user?.fullName}</Text>
             </Text>
           </View>
           <View >
@@ -42,7 +43,7 @@ export default function ContractRenewSuccess() {
               <Text style={{ fontWeight: "bold", fontSize: 18 }}>
                 {visitationText?.phone}
               </Text>
-              <Text>: 0123231232</Text>
+              <Text>: {user?.phoneNumber}</Text>
             </Text>
           </View>
           <View >
@@ -51,7 +52,7 @@ export default function ContractRenewSuccess() {
                 {visitationText?.day}
               </Text>
               <Text>
-                : <ComDateConverter>{date}</ComDateConverter>
+                : <ComDateConverter>{data?.date}</ComDateConverter>
               </Text>
             </Text>
           </View>

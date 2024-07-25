@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity } from 'react-native';
-import ComNoData from "../../Components/ComNoData/ComNoData";
+import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import ComSelectButton from "../../Components/ComButton/ComSelectButton";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { useRoute } from "@react-navigation/native";
@@ -8,6 +7,7 @@ import backArrowWhite from "../../../assets/icon/backArrowWhite.png";
 import servicePayment from "../../../assets/images/service/payment.png";
 import { useNavigation } from '@react-navigation/native';
 import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter"
+import ComToast from "../../Components/ComToast/ComToast";
 import ComPaymentMethod from "../Bills/BillDetail/ComPaymentMethod";
 import momo from "../../../assets/momo.png";
 import vnpay from "../../../assets/vnpay.png";
@@ -25,32 +25,35 @@ export default function ServicePayment() {
     const route = useRoute();
     const { servicePackage, elder, orderDates, type } = route?.params;
     const [selectedMethod, setSelectedMethod] = useState('momo');
+    const [loading, setLoading] = useState(false);
     const [adjustedOrderDates, setAdjustedOrderDates] = useState(orderDates);
     const handleBackPress = () => { navigation.goBack() };
+    //hiển toàn bộ thị list ngay đã chọn (quakhu + tuong lai)
+    const registerDates = servicePackage?.type == "MultipleDays" || (servicePackage?.type == "AnyDay" && type == 'RecurringDay') ?
+        orderDates?.map(dateString => moment(dateString, "YYYY-MM-DD", true).format("DD"))
+        : [];
 
     const handleMethodPress = (methodName) => {
         setSelectedMethod(methodName);
     };
-    console.log(" orderDates: ", orderDates)
+
     useEffect(() => {
-        const sortedDates = [...orderDates].sort((a, b) => moment(a).diff(moment(b)));
-        // Kiểm tra xem tất cả các ngày trong orderDates có phải là ngày quá khứ không
-        const allPastDates = sortedDates.every(date => moment(date).isSameOrBefore(moment(), 'day'));
+        const sortedDates = [...orderDates].sort((a, b) => moment(a, 'YYYY-MM-DD').diff(moment(b, 'YYYY-MM-DD')));
+        // Kiểm tra xem tất cả các ngày trong orderDates có phải là ngày quá khứ or hiện tại không
+        const allPastDates = sortedDates.every(date => moment(date, 'YYYY-MM-DD').isSameOrBefore(moment(), 'day'));
         if (allPastDates) {
             // Lấy ngày tháng sau tương ứng nếu có
             const nextMonthDates = sortedDates.map(date => {
-                const nextMonthDate = moment(date).add(1, 'months');
-                return nextMonthDate.isValid() ? nextMonthDate.format('YYYY-MM-DD') : date;
+                const nextMonthDate = moment(date, 'YYYY-MM-DD').add(1, 'months');
+                return nextMonthDate.isValid() ? nextMonthDate.format('YYYY-MM-DD') : null;
             });
-            console.log(" nextMonthDates: ", nextMonthDates)
             setAdjustedOrderDates(nextMonthDates);
-        }else{
+        } else {
             setAdjustedOrderDates(sortedDates);
         }
     }, [orderDates]);
 
     const formatCurrency = (number) => {
-        // Sử dụng hàm toLocaleString() để định dạng số
         return number?.toLocaleString("vi-VN", {
             style: "currency",
             currency: "VND",
@@ -68,17 +71,16 @@ export default function ServicePayment() {
     }
 
     const payment = () => {
-        const dueDate = moment()?.format('YYYY-MM-DD');
         const transformedDates = servicePackage?.type === "OneDay" ? [{ "date": servicePackage?.eventDate }] : adjustedOrderDates.map(date => ({ date }));
         const formattedData = {
             "method": selectedMethod,
-            "dueDate": dueDate,
-            "description": "Thanh toán hóa đơn dịch vụ " + servicePackage?.name,
-            "content": "Thanh toán hóa đơn dịch vụ " + servicePackage?.name,
-            "notes": "Thanh toán hóa đơn dịch vụ " + servicePackage?.name,
+            "dueDate": moment().format('YYYY-MM-DD'),
+            "description": "Thanh toán dịch vụ " + servicePackage?.name,
+            "content": "Thanh toán dịch vụ " + servicePackage?.name,
+            "notes": "Thanh toán dịch vụ " + servicePackage?.name,
             "orderDetails": [
                 {
-                    "notes": "Thanh toán hóa đơn dịch vụ " + servicePackage?.name + " cho người cao tuổi " + elder?.name,
+                    "notes": "Thanh toán dịch vụ " + servicePackage?.name + " cho người cao tuổi " + elder?.name,
                     "servicePackageId": servicePackage?.id,
                     "elderId": elder?.id,
                     "type": type,
@@ -86,24 +88,46 @@ export default function ServicePayment() {
                 }
             ]
         }
-        postData("/orders/service-package?returnUrl=a", formattedData)
+        setLoading(true)
+        postData("/orders/service-package?returnUrl=https://careconnectadmin.vercel.app/paymentStatus", formattedData)
             .then((response) => {
                 console.log("API Response: ", response.message);
-                // showToast("success", "Tạo báo cáo thành công", "", "bottom")
-                // navigation.navigate("AddingServiceDetail", {id : servicePackage?.id});
-                const url = response.message; // Assuming response.message contains the URL
+                const url = response.message;
+                const orderId = response.orderId;
                 // Open the URL in the default browser
-                // Linking.openURL(url)
-                //     .then(() => {
-                //         console.log("Opened successfully");
-                //     })
-                //     .catch((err) => {
-                //         console.error("Failed to open URL: ", err);
-                //     });
+                setLoading(false)
+                Linking.openURL(url)
+                    .then(() => {
+                        console.log("Opened successfully");
+                        navigation.navigate("ServicePaymentStatus", { orderId: orderId })
+                    })
+                    .catch((err) => {
+                        console.log("Failed to open URL: ", err);
+                    });
             })
             .catch((error) => {
-                console.error("API Error: ", error);
-                // showToast("error", "Có lỗi xảy ra, vui lòng thử lại!", "", "bottom")
+                console.log("API Error: ", error.response);
+                setLoading(false)
+                switch (error.response.status) {
+                    case 609:
+                        ComToast({ text: 'Dịch vụ đã được đăng ký' });
+                        break;
+                    case 610:
+                        ComToast({ text: 'Dịch vụ đã được đăng ký' });
+                        break;
+                    case 611:
+                        ComToast({ text: 'Dịch vụ đã được đăng ký' });
+                        break;
+                    case 614:
+                        ComToast({ text: 'Dịch vụ đã hết lượt đăng ký. Bạn vui lòng chọn dịch vụ khác.' });
+                        break;
+                    case 615:
+                        ComToast({ text: 'Dịch vụ đã hết hạn đăng ký. Bạn vui lòng chọn dịch vụ khác.' });
+                        break;
+                    default:
+                        ComToast({ text: 'Đã có lỗi xảy ra. Vui lòng thử lại.' });
+                        break;
+                };
             });
     }
 
@@ -126,7 +150,6 @@ export default function ServicePayment() {
                 <Text style={{ fontWeight: "bold", fontSize: 20, marginBottom: 10, textAlign: 'center' }} numberOfLines={2}>
                     {addingPackages?.payment?.title}
                 </Text>
-
                 <Text style={{ flexDirection: "row", marginBottom: 10 }}>
                     <Text style={styles.contentBold}>
                         {addingPackages?.payment?.serviceName}
@@ -153,7 +176,7 @@ export default function ServicePayment() {
                     </Text>
                 </Text>
                 <Text style={styles.contentBold}>
-                    {addingPackages?.payment?.time}:
+                    {addingPackages?.payment?.serviceTime}:
                 </Text>
                 {servicePackage?.type === "OneDay" ? (
                     <Text style={{ fontSize: 16, marginBottom: 5 }}>
@@ -165,7 +188,7 @@ export default function ServicePayment() {
                         if (isFutureDate) {
                             return (
                                 <Text style={{ fontSize: 16, marginBottom: 5 }} key={index}>
-                                    - <ComDateConverter>{day}</ComDateConverter>
+                                    • <ComDateConverter>{day}</ComDateConverter>
                                 </Text>
                             );
                         } else {
@@ -174,6 +197,20 @@ export default function ServicePayment() {
                     })
                 )}
 
+                {(servicePackage?.type == "MultipleDays" || (servicePackage?.type == "AnyDay" && type == 'RecurringDay')) && (
+                    <>
+                        <Text style={styles.contentBold}>
+                            {addingPackages?.payment?.dayRegisterTime}:
+                        </Text>
+                        {registerDates?.map((day, index) => {
+                            return (
+                                <Text style={{ fontSize: 16, marginBottom: 5 }} key={index}>
+                                    • {day}
+                                </Text>
+                            )
+                        })}
+                    </>
+                )}
                 <Text style={styles.contentBold}>Phương thức thanh toán</Text>
                 <View style={styles.tableContainer}>
                     <ComPaymentMethod
@@ -189,7 +226,6 @@ export default function ServicePayment() {
                         onPress={() => handleMethodPress('VnPay')}
                     />
                 </View>
-
             </ScrollView>
             <View style={{ backgroundColor: "#fff", paddingHorizontal: 15 }}>
                 <Text style={{ flexDirection: "row", marginTop: 5 }}>
@@ -209,7 +245,7 @@ export default function ServicePayment() {
                     </Text>
                 </Text>
                 <ComSelectButton onPress={() => payment()} >
-                    {addingPackages?.payment?.title}
+                    {loading ? <ActivityIndicator /> : addingPackages?.payment?.title}
                 </ComSelectButton>
             </View>
         </>
@@ -223,7 +259,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         paddingHorizontal: 15,
     },
-
     header: {
         paddingTop: 50,
         backgroundColor: "#fff",

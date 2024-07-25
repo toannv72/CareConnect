@@ -1,30 +1,37 @@
 import React, { useContext, useState, useCallback, useEffect } from "react";
 import { View, StyleSheet, Image, TouchableOpacity, ScrollView, ActivityIndicator, Text, SectionList } from 'react-native';
-import { useForm, FormProvider } from "react-hook-form";
-import ComInputSearch from '../../Components/ComInput/ComInputSearch';
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigation, useRoute, useFocusEffect } from "@react-navigation/native";
 import { useAuth } from "../../../auth/useAuth";
 import { postData, getData } from "../../api/api";
 import ComNoData from "../../Components/ComNoData/ComNoData";
 import ComHeader from '../../Components/ComHeader/ComHeader';
 import ComScheduledService from './ComScheduledService';
+import ComSelectButton from "../../Components/ComButton/ComSelectButton";
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import ComLoading from "../../Components/ComLoading/ComLoading";
 
 export default function ScheduledService() {
     const { user } = useAuth();
     const [data, setData] = useState({});
     const [loading, setLoading] = useState(false);
     const [selectedServices, setSelectedServices] = useState([]);
-    console.log(" selectedServices", selectedServices)
+    const [selectAll, setSelectAll] = useState(false);
+    const navigation = useNavigation();
+
+    const formatCurrency = (number) => {
+        return number?.toLocaleString("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }) ?? '';
+    };
 
     useFocusEffect(
         useCallback(() => {
             setLoading(true);
-            getData(`/scheduled-service?UserId=${user?.id}`, {})
+            // getData(`/scheduled-service?UserId=08dca44f-6b05-454a-8e9f-944208a72666`, {})
+                getData(`/scheduled-service?UserId=${user?.id}`, {})
                 .then((scheduledService) => {
                     setData(scheduledService?.data?.contends[0]);
-
                     setLoading(false);
                 })
                 .catch((error) => {
@@ -36,101 +43,113 @@ export default function ScheduledService() {
 
     const handleSelectService = (service, isChecked) => {
         setSelectedServices((prevSelected) => {
+            let updatedSelected;
             if (isChecked) {
-                return [...prevSelected, service];
+                updatedSelected = [...prevSelected, service];
             } else {
-                return prevSelected.filter(selected => selected.id !== service.id);
+                updatedSelected = prevSelected.filter(selected => selected.id !== service.id);
             }
+            // Update selectAll state => nếu tất cả item đã được chọn thì check, ngượic ngược lại thì uncheck
+            setSelectAll(updatedSelected.length === data?.scheduledServiceDetails?.length);
+            return updatedSelected;
         });
     };
 
-    // const onConfirm = () => {
-    //     const formattedData = {
-    //         "method": "",
-    //         "dueDate": dueDate,
-    //         "description": "Thanh toán hóa đơn dịch vụ " + servicePackage?.name,
-    //         "content": "Thanh toán hóa đơn dịch vụ " + servicePackage?.name,
-    //         "notes": "Thanh toán hóa đơn dịch vụ " + servicePackage?.name,
-    //         "orderDetails": [
-    //             {
-    //                 "notes": "Thanh toán hóa đơn dịch vụ " + servicePackage?.name + " cho người cao tuổi " + elder?.name,
-    //                 "servicePackageId": servicePackage?.id,
-    //                 "elderId": elder?.id,
-    //                 "type": type,
-    //                 "orderDates": transformedDates
-    //             }
-    //         ]
-    //     }
-    //     postData("/orders/service-package?returnUrl=a", formattedData)
-    //     .then((response) => {
-    //         console.log("API Response: ", response.message);
-    //         // showToast("success", "Tạo báo cáo thành công", "", "bottom")
-    //         // navigation.navigate("AddingServiceDetail", {id : servicePackage?.id});
-    //         const url = response.message; // Assuming response.message contains the URL
-          
-    //     })
-    //     .catch((error) => {
-    //         console.error("API Error: ", error);
-    //         // showToast("error", "Có lỗi xảy ra, vui lòng thử lại!", "", "bottom")
-    //     });
-    // }
+    const handleSelectAll = (isChecked) => {
+        setSelectAll(isChecked);
+        if (isChecked) {
+            setSelectedServices(data?.scheduledServiceDetails);
+        } else {
+            setSelectedServices([]);
+        }
+    };
+
+    const totalPrice = selectedServices.reduce((total, service) => total + (service?.servicePackage?.price * service?.scheduledTimes?.length), 0);
+    const groupedServices = (data?.scheduledServiceDetails || [])?.reduce((acc, service) => {
+        const elderId = service?.elder?.id;
+        if (!acc[elderId]) {
+            acc[elderId] = {
+                name: service?.elder?.name,
+                services: []
+            };
+        }
+        acc[elderId].services.push(service);
+        return acc;
+    }, {});
 
     return (
         <>
             <ComHeader
                 showBackIcon={true}
                 showTitle={true}
-                title={"Xác nhận thanh toán"}
+                title={"Xác nhận đăng ký"}
             />
-            <View style={styles.container}>
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false}
-                >
-                    {
-                        data?.scheduledServiceDetails?.map((item, index) => (
-
-                            <>
-                                {/* {console.log(" scheduledService", item?.servicePackage)} */}
-                                <ComScheduledService
-                                    key={index}
-                                    data={item}
-                                    onCheck={handleSelectService}
-                                    isSelected={selectedServices.some(service => service.id === item.id)}
-                                />
-                            </>))
-                    }
-                    {/* <ComScheduledService data={data?.scheduledServiceDetails[0]?.servicePackage}></ComScheduledService> */}
-                </ScrollView>
-            </View>
+            {data == undefined ? (
+                <View style={styles.container}>
+                    <ComNoData>Hiện tại không có dịch vụ cần xác nhận</ComNoData>
+                </View>
+            ) : (
+                <View style={styles.container}>
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        showsHorizontalScrollIndicator={false}
+                    >
+                        <Text>{data?.id}</Text>
+                        <Text style={{ marginBottom: 10 }}>Vui lòng chọn những dịch vụ mà bạn muốn tiếp tục đăng ký cho tháng sau. Nếu không muốn đăng ký, bạn vui lòng bỏ qua:</Text>
+                        <ComLoading show={loading}>
+                            {data?.scheduledServiceDetails == 0 ? (
+                                <ComNoData />
+                            ) : (
+                                <View>
+                                    {Object.keys(groupedServices).map(elderId => (
+                                        <View key={elderId}>
+                                            <Text style={{ fontSize: 16, fontWeight: "600", marginVertical: 10 }}>Người cao tuổi: {groupedServices[elderId].name}</Text>
+                                            {groupedServices[elderId].services.map((item, index) => (
+                                                <ComScheduledService
+                                                    key={index}
+                                                    data={item}
+                                                    onCheck={handleSelectService}
+                                                    isSelected={selectedServices.some(service => service.id === item.id)}
+                                                />
+                                            ))}
+                                        </View>
+                                    ))}
+                                </View>
+                            )}
+                        </ComLoading>
+                    </ScrollView>
+                    <View style={{ marginTop: 10, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                        <BouncyCheckbox
+                            isChecked={selectAll}
+                            onPress={handleSelectAll}
+                            fillColor="#33B39C"
+                            textComponent={<Text>  Chọn tất cả</Text>}
+                        />
+                    </View>
+                    <View style={[{ flexDirection: "row", justifyContent: "space-between", marginVertical: 10 }]}>
+                        <Text style={{ fontWeight: "600", fontSize: 16 }}>
+                            Tổng tiền
+                        </Text>
+                        <Text style={{ fontWeight: "600", fontSize: 16 }}>
+                            {formatCurrency(totalPrice)}
+                        </Text>
+                    </View>
+                    <ComSelectButton
+                        disable={selectedServices?.length == 0}
+                        onPress={() => { navigation.navigate("ScheduledServicePayment", { selectedServices, data }) }}>
+                        Xác nhận
+                    </ComSelectButton>
+                </View>
+            )}
         </>
     )
 }
 
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 40,
+        paddingTop: 10,
         backgroundColor: "#fff",
         paddingHorizontal: 15,
-    },
-    header: {
-        fontSize: 16,
-        fontWeight: "bold"
-    },
-    item: {
-        borderColor: "#33B39C",
-        borderWidth: 1,
-        padding: 10,
-        borderRadius: 15,
-        marginVertical: 5,
-        flexDirection: "row",
-        gap: 10,
-        alignItems: "center",
-        flexWrap: "wrap"
-    },
-    title: {
-        fontSize: 16
     }
 });

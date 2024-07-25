@@ -82,8 +82,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "#33B39C",
-    backgroundColor: "#fff",
-
+    backgroundColor: "#F7FFFE",
     elevation: 4, // Bóng đổ cho Android
     shadowColor: "#000", // Màu của bóng đổ cho iOS
     shadowOffset: { width: 0, height: 1 },

@@ -5,23 +5,26 @@ import { LanguageContext } from "./../../contexts/LanguageContext";
 import { Controller, Form, FormProvider, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import ComInputSearch from "../../Components/ComInput/ComInputSearch";
 import { ScrollView } from "react-native";
-import { ActivityIndicator } from "react-native";
 import ComLoading from "../../Components/ComLoading/ComLoading";
 import Visitation from "../../../assets/images/VisitationSchedule/VisitationSchedule.png";
 import plusIcon from "../../../assets/profile_icons/plus.png";
 import ComHeader from "../../Components/ComHeader/ComHeader";
-import ComButton from "../../Components/ComButton/ComButton";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { postData, getData } from "../../api/api";
 import { useAuth } from "../../../auth/useAuth";
 import ComNoData from "../../Components/ComNoData/ComNoData";
+import CategoryButtons from '../../Components/ComCategories/ComCategories';
+import ComSelectButton from "../../Components/ComButton/ComSelectButton";
 
 export default function VisitationSchedule() {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [select, setSelect] = useState(false);
   const { user } = useAuth();
+  const categories = ["FollowUpVisit", "Consultation", "ProcedureCompletion", "Cancel"];
+
   const searchSchema = yup.object().shape({
     search: yup.string(),
   });
@@ -40,6 +43,7 @@ export default function VisitationSchedule() {
     },
   });
 
+
   const {
     control,
     handleSubmit,
@@ -51,10 +55,37 @@ export default function VisitationSchedule() {
 
   };
 
+  const check = () => {
+    setSelectedCategory(null)
+    setSelect(false);
+  };
+
+  const handleCategorySelect = (value) => {
+    setSelectedCategory(value);
+    setSelect(true);
+  };
+
+  const getStatusText = (status) => {
+    switch (status) {
+      case 'FollowUpVisit':
+        return { text: 'Thăm nuôi', color: 'green' };
+      case 'ProcedureCompletion':
+        return { text: 'Gia hạn hợp đồng', color: 'red' };
+      case 'Consultation':
+        return { text: 'Hoàn thành thủ tục', color: 'red' };
+      case 'Cancel':
+        return { text: 'Hủy hợp đồng', color: 'red' };
+      default:
+        return status;
+    }
+  };
+
   useFocusEffect(
     useCallback(() => {
-      setLoading(true);
-      getData(`/appointments?UserId=${user?.id}&SortColumn=date&SortDir=Desc`, {})
+      setLoading(true)
+      let url = `/appointments?UserId=${user?.id}&SortColumn=date&SortDir=Desc`;
+      if (selectedCategory) { url += `&Type=${selectedCategory}` }
+      getData(url, {})
         .then((appointments) => {
           setData(appointments?.data?.contends);
           setLoading(false);
@@ -63,17 +94,17 @@ export default function VisitationSchedule() {
           setLoading(false);
           console.error("Error fetching service-package:", error);
         });
-    }, [user?.id])
+    }, [user?.id, selectedCategory])
   );
   return (
     <>
       <ComHeader
-        title={visitationText?.titleHeader}
+        title={"Lịch hẹn"}
         showTitle
         showBackIcon
       />
       <View style={styles.body}>
-        <View style={{ gap: 10 }}>
+        <View style={{ gap: 10, marginBottom: 5 }}>
           <View style={styles.imageBody}>
             <Image source={Visitation} style={styles.image} />
           </View>
@@ -120,11 +151,30 @@ export default function VisitationSchedule() {
                   fontSize: 18,
                 }}
               >
-                {visitationText?.register}
+                Đăng ký thăm nuôi
               </Text>
             </View>
           </TouchableOpacity>
         </View>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          horizontal={true}
+          style={styles?.scrollView}
+        >
+          <View style={styles?.buttonContainer}>
+            <ComSelectButton onPress={check} check={select}>
+              Tất cả
+            </ComSelectButton>
+            {categories.map((category) => (
+              <ComSelectButton
+                key={category}
+                onPress={() => handleCategorySelect(category)}
+                check={selectedCategory === category ? false : true}
+              > {getStatusText(category).text} </ComSelectButton>
+            ))}
+          </View>
+        </ScrollView>
         <ComLoading show={loading}>
           <ScrollView
             showsVerticalScrollIndicator={false}
@@ -136,13 +186,12 @@ export default function VisitationSchedule() {
                   <ComVisitationSchedule key={index} data={value} />
                 ))}
               </View>
-            ) : (<ComNoData>Không có lịch thăm nuôi nào</ComNoData>)}
-            <View style={{ height: 320 }}></View>
+            ) : (<ComNoData>Không có dữ liệu</ComNoData>)}
+            <View style={{ height: 370 }}></View>
           </ScrollView>
         </ComLoading>
       </View>
     </>
-
   );
 }
 
@@ -156,13 +205,11 @@ const styles = StyleSheet.create({
   },
   register: {
     flexDirection: "row",
-    marginBottom: 10,
     padding: 5,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "#33B39C",
     backgroundColor: "#caece6",
-
     elevation: 4, // Bóng đổ cho Android
     shadowColor: "#000", // Màu của bóng đổ cho iOS
     shadowOffset: { width: 0, height: 1 },
@@ -183,5 +230,13 @@ const styles = StyleSheet.create({
     height: "180%",
     resizeMode: "cover",
     bottom: -50,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    gap: 15,
+  },
+  scrollView: {
+    flexGrow: 0,
+    flexShrink: 0,
   },
 });

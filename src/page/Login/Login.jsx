@@ -1,5 +1,5 @@
 import React, { useContext, useState, useCallback } from "react";
-import { StyleSheet, View, ActivityIndicator, Keyboard } from "react-native";
+import { StyleSheet, View, ActivityIndicator, Keyboard, Image } from "react-native";
 import * as yup from "yup";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -10,11 +10,11 @@ import ComTitlePage from "../../Components/ComTitlePage/ComTitlePage";
 import ComButton from "../../Components/ComButton/ComButton";
 import ComTitleLink from "../../Components/ComTitleLink/ComTitleLink";
 import ComTitle from "../../Components/ComTitle/ComTitle";
+import ComToast from "../../Components/ComToast/ComToast";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { postData, getData } from "../../api/api";
 import { useAuth } from "../../../auth/useAuth";
 import { FieldError } from "../../Components/FieldError/FieldError";
-import Toast from 'react-native-toast-message';
 
 export default function LoginScreen() {
   const [token, setToken] = useStorage("accessToken", null);
@@ -24,16 +24,6 @@ export default function LoginScreen() {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const { login } = useAuth();
-
-  const showToast = (type, text1, text2, position) => {
-    Toast.show({
-      type: type,
-      text1: text1,
-      text2: text2,
-      position: position,
-      visibilityTime: 2000
-    });
-  }
 
   const {
     text: {
@@ -69,9 +59,6 @@ export default function LoginScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      // This code will run when the screen comes into focus
-      // Perform any re-render or data fetching logic here if needed
-      // For example, you might want to reset the form state
       setLoginState(false);
       setLoginError(false);
       setErrorMessage("");
@@ -93,6 +80,7 @@ export default function LoginScreen() {
       .then((data) => {
         setToken(data?.accessToken);
         setLoading(false)
+        ComToast({ text: 'Đăng nhập thành công' });
         // Chờ setToken hoàn thành trước khi navigate
         return new Promise((resolve) => {
           setTimeout(() => {
@@ -113,13 +101,13 @@ export default function LoginScreen() {
       })
       .catch((error) => {
         if (error?.response?.status === 401) {
+          ComToast({ text: 'Thông tin đăng nhập không chính xác', position: 190 });
           console.log("Error login :", error);
           setLoading(false)
-          showToast("error", "Đăng nhập thất bại", Login?.message?.invalidCredential, "bottom")
         } else {
+          ComToast({ text: 'Đã có lỗi xảy ra. Vui lòng thử lại.', position: 190 });
           console.log("Error login:", error);
           setLoading(false)
-          showToast("error", "Đăng nhập thất bại", Login?.message?.loginError, "bottom")
         }
       });
   };
@@ -152,7 +140,7 @@ export default function LoginScreen() {
               {LoginState || LoginError ? errorMessage : ""}
             </FieldError>
 
-            <ComButton onPress={handleSubmit(handleLogin)}>
+            <ComButton onPress={handleSubmit(handleLogin)} style={{ justifyContent: "center", alignItems: "center" }}>
               {loading ? <ActivityIndicator color="#fff" /> : Login?.button?.login}
             </ComButton>
 

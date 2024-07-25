@@ -60,7 +60,7 @@ export default function Catalogue() {
             </TouchableOpacity>
             <TouchableOpacity
              style={styles?.comCatalogue}
-             onPress={() => goto("RegisterService")}
+             onPress={() => goto("RegisterServiceRoomList")}
              >
                 <ComCatalogue
                     url={
@@ -68,7 +68,7 @@ export default function Catalogue() {
                     }
                     color={"#B35500"}
                     backgroundColor={"#FCCA9B"}
-                    title={"Các dịch vụ cần thực hiện"}
+                    title={"Các dịch vụ được đăng ký"}
                     content={"Xem chi tiết"}
                 > </ComCatalogue>
             </TouchableOpacity>

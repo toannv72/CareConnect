@@ -107,6 +107,7 @@ export const vn = {
       emailInvalid: "Định dạng email không hợp lệ",
       emailExisted: "Email đã được đăng ký",
       name: "Họ và Tên không được để trống",
+      nameInValid: "Tên hợp lệ chỉ chứa chữ cái và dấu cách",
       nameTooShort: "Họ và Tên phải có ít nhất 2 ký tự",
       gender: "Giới tính không được để trống",
       dateOfBirth: "Ngày sinh không được để trống",
@@ -114,6 +115,7 @@ export const vn = {
       phoneInvalid: "Định dạng số điện thoại không hợp lệ",
       phoneExisted: "Số điện thoại đã được đăng ký",
       cccd: "Số căn cước công dân không được để trống",
+      cccdInValid: "Số CMND hoặc CCCD phải có (9 hoặc 12 chữ số)",
       cccdExisted: "Số căn cước công dân đã tồn tại",
       password: "Mật khẩu không được để trống",
       passwordInvalid: "Mật khẩu phải có ít nhất 8 ký tự, chứa ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt",
@@ -150,17 +152,17 @@ export const vn = {
   },
   servicePackages: {
     title: "Gói dưỡng lão",
-    detail: 
+    detail:
     {
-    title: "Chi tiết gói dưỡng lão",
-    description: "Mô tả",
-    service: "Dịch vụ của gói",
-    registerForm: "Điền form đăng ký",
-    signContract: "Đăng ký lịch hẹn hoàn thành thủ tục",
+      title: "Chi tiết gói dưỡng lão",
+      description: "Mô tả",
+      service: "Dịch vụ của gói",
+      registerForm: "Điền form đăng ký",
+      signContract: "Đăng ký lịch hẹn hoàn thành thủ tục",
     },
-    popup:{
+    popup: {
       signContractTitle: "Đăng ký lịch hẹn hoàn thành thủ tục",
-      limitDays: "Bạn chỉ có thể hẹn trước 14 ngày tính từ hôm nay",
+      limitDays: "Bạn chỉ có thể hẹn trước 14 ngày tính từ ngày mai",
       signContractSubTitle: "Bạn và người thân sẽ trực tiếp đến Viện để được hỗ trợ hoàn thành hồ sơ bệnh án và hợp đồng để trải nghiệm dịch vụ của viện",
       successTitle: "Đăng ký hoàn thành thủ tục thành công",
       successRenewContractTitle: "Đăng ký gia hạn hợp đồng thành công",
@@ -183,7 +185,7 @@ export const vn = {
       registrationLimit: "Giới hạn người đăng ký",
       timeBetweenServices: "Tần suất thực hiện",
       eventDate: "Ngày diễn ra",
-      endRegistrationStartDate: "Hạn cuối đăng ký"
+      endRegistrationStartDate: "Kết thúc đăng ký"
     },
     register: {
       registerElder: "Bạn muốn đăng ký dịch vụ cho",
@@ -194,11 +196,13 @@ export const vn = {
     },
     payment: {
       title: "Thanh toán",
-      billId: "Mã hóa đơn",
+      billId: "Mã thanh toán",
       serviceName: "Tên dịch vụ",
       registerName: "Người đăng ký",
       elderName: "Người cao tuổi",
-      time: "Thời gian",
+      serviceTime: "Thời gian thực hiện",
+      weekRegisterTime: "Thời gian đã đăng ký theo tuần",
+      dayRegisterTime: "Thời gian đã đăng ký theo tháng",
       totalMoney: "Tổng tiền",
     },
     history: {
@@ -209,7 +213,7 @@ export const vn = {
       repeat: "Lặp lại",
       bill: "Các hóa đơn liên quan",
       serviceHistory: "Lịch sử thực hiện dịch vụ",
-      billId: "Mã hóa đơn",
+      billId: "Mã thanh toán",
       totalMoney: "Tổng thanh toán",
       nurse: "Người thực hiện",
       time: "Thời gian",
@@ -222,6 +226,16 @@ export const vn = {
         "Bạn đã hủy gia hạn gói Dịch vụ xoa bóp bấm huyệt theo tuần thành công",
       backToHome: "Về trang lịch sử dịch vụ",
     },
+  },
+  paymentStatus:{
+    paidTitle: "Thanh toán thành công",
+    failTitle: "Thanh toán thất bại",
+    unpaidTitle: "Đang chờ thanh toán",
+    overdueTitle: "Đã hết hạn thanh toán",
+    thankyou: "Cảm ơn bạn đã tin tưởng CareConnect",
+    overdueContent: "Đơn hàng đã hết hạn thanh toán",
+    backLater: "Bạn vui lòng đăng ký dịch vụ và thanh toán lại sau",
+    error: "Đã có lỗi xảy ra trong quá trình thanh toán"
   },
   feedback: {
     title: "Đánh giá",
@@ -237,23 +251,27 @@ export const vn = {
       title: "Mô tả ngắn gọn đánh giá của bạn",
       content: "Mô tả chi tiết nội dung đánh giá của bạn, vấn đề bạn gặp phải,..."
     },
-    history:{
+    history: {
       title: "Tiêu đề",
       date: "Ngày gửi",
       content: "Nội dung",
       service: "Dịch vụ",
       feedbackDetail: "Chi tiết đánh giá"
+    },
+    message: {
+      title: "Tiêu đề không được để trống",
+      content: "Nội dung không được để trống",
     }
   },
   bill: {
-    title: "Hóa đơn",
-    billId: "Mã hóa đơn",
+    title: "Lịch sử thanh toán",
+    billId: "Mã thanh toán",
     elder: "Người cao tuổi",
     dueDate: "Hạn thanh toán",
     total: "Tổng tiền",
     status: "Trạng thái",
-    detail:{
-      title: "Chi tiết hóa đơn",
+    detail: {
+      title: "Chi tiết thanh toán",
       customerInfo: "Thông tin khách hàng",
       paymentInfo: "Thông tin thanh toán",
       contractId: "Mã hợp đồng",
@@ -314,13 +332,15 @@ export const vn = {
       email: "Vui lòng Nhập địa chỉ email",
       idNumber: "Vui lòng Nhập số CCCD hoặc CMND",
       address: "Vui lòng Nhập địa chỉ",
+      addressInValid: "Địa chỉ hợp lệ chỉ chứa chữ cái và dấu cách",
+
     },
     button: {
       SaveProfile: "Lưu thông tin",
       EditProfile: "Chỉnh sửa thông tin",
     },
   },
-  UserProfile:{
+  UserProfile: {
     title: "Thông tin cá nhân",
   },
   ChangePassword: {
@@ -358,7 +378,7 @@ export const vn = {
         "Thông tin số điẹn thoại không hợp lệ. Vui lòng thử lại.",
       loginError: "Đã có lỗi xảy ra. Vui lòng thử lại sau.",
       passwordInvalid: "Mật khẩu phải có ít nhất 8 ký tự, chứa ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt",
-      passwordNotMatch: "Mật khẩu xác nhận không trùng khớp",
+      passwordNotMatch: "Xác nhận mật khẩu không trùng khớp",
     },
     link: {
       textLogin: "Bạn đã có tài khoản?",
@@ -368,7 +388,7 @@ export const vn = {
   },
   visitationText: {
     button: {
-      toHomes: "Về trang chủ",
+      toHomes: "Quay lại",
     },
     titleHeader: "Đăng ký thăm nuôi",
     visitationContent:
@@ -381,7 +401,7 @@ export const vn = {
     phone: "Số điện thoại",
     day: "Ngày",
     hour: "Giờ",
-    subscribers:"Người đăng ký"
+    subscribers: "Người đăng ký"
   },
   contractsPage: {
     title: "Hợp đồng",
@@ -389,15 +409,15 @@ export const vn = {
     id: "Mã",
     representative: "Người đại diện",
     elder: "Người cao tuổi",
-    duration: "Thời hạn ",
+    duration: "Thời hạn",
     status: "Trạng thái",
   },
   VisitationSchedule: {
-    title: "Lịch thăm nuôi",
+    title: "Lịch hẹn",
   },
-  ElderProfile:{
+  ElderProfile: {
     title: "Hồ sơ người thân",
-    detail:{
+    detail: {
       title: "Thông tin người cao tuổi",
       name: "Họ và tên người cao tuổi",
       contractID: "Mã hợp đồng",
@@ -405,19 +425,19 @@ export const vn = {
       nursingHomeAdd: "Nơi sinh hoạt",
       address: "Địa chỉ thường trú",
       medicalProfile: "Hồ sơ bệnh án",
-      representative: "Người đại diện",
+      representative: "Thông tin người đại diện",
       urgentContact: "Liên hệ khẩn cấp"
     },
   },
-  MedicalProfile:{
-    name: "Ông/Bà",
+  MedicalProfile: {
+    name: "Người cao tuổi",
     dateOfBirth: "Ngày sinh",
     age: "Tuổi",
     generalIndex: "Chỉ số tổng quát",
     underlyingMedical: "Bệnh nền",
     note: "Ghi chú"
   },
-  Notification:{
+  Notification: {
     title: "Thông báo",
   },
   NurseHome: {
@@ -432,14 +452,14 @@ export const vn = {
     capacity: "Số người cao tuổi",
     type: "Loại",
   },
-  NurseHealthMonitor:{
+  NurseHealthMonitor: {
     title: "Theo dõi sức khỏe",
     createHealthMonitor: "Tạo báo cáo sức khỏe",
     healthIndex: "Chỉ số sức khỏe",
     generalNote: "Chỉ số tổng quát",
     chooseHealthIndex: "Chọn các chỉ số bạn muốn kiểm tra"
   },
-  NurseRegisterService:{
+  NurseRegisterService: {
     status: "Trạng thái",
     description: "Mô tả",
     time: "Thời gian thực hiện",

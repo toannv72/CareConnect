@@ -3,88 +3,102 @@ import { StyleSheet, Text, TouchableOpacity, FlatList, LayoutAnimation } from "r
 import { Image, View } from "react-native";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { useNavigation } from "@react-navigation/native";
+import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter"
+import ComDateTimeConverter from "../../Components/ComDateConverter/ComDateTimeConverter"
 import userIcon from "../../../assets/User_fill.png"
 import lockIcon from "../../../assets/images/Nurse/CareSchedule/time.png"
 import checkIcon from "../../../assets/Vector.png"
 import UpIcon from "../../../assets/images/Nurse/RegisterService/UpIcon.png"
 import DownIcon from "../../../assets/images/Nurse/RegisterService/DownIcon.png"
+import moment from "moment";
 
 export default function ComElder({ data }) {
   const {
-    text: { healthMonitor },
-    setLanguage,
-  } = useContext(LanguageContext);
+    text: { healthMonitor }, setLanguage } = useContext(LanguageContext);
   const navigation = useNavigation();
-
-  const [isCollapsed, setIsCollapsed] = useState(true);
+  const today = moment().format("YYYY-MM-DD");
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const toggleCollapse = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setIsCollapsed(!isCollapsed);
   };
 
-  const renderItem = ({ item, index }) => (
-    <TouchableOpacity
-      key={index}
-      style={styles.body1}
-      onPress={() => navigation.navigate("RegisterServiceDetail", { service: item })}
+  const getStatusText = (status) => {
+    switch (status) {
+      case 'InComplete':
+        return { text: 'Chưa thực hiện', color: 'green' };
+      case 'Complete':
+        return { text: 'Đã thực hiện', color: '#000' };
+      case 'NotPerformed':
+        return { text: 'Hết hạn thực hiện', color: 'red' };
+      default:
+        return status;
+    }
+  };
+
+  const renderItem = ({ item, index }) => {
+    const todayOrderDate = item?.orderDates?.find(orderDate =>
+      moment(orderDate?.date).format("YYYY-MM-DD") === today
+    )
+    return (
+      <TouchableOpacity
+        key={index}
+        style={styles.body1}
+        onPress={() => navigation.navigate("RegisterServiceDetail", { serviceData: item?.servicePackage, elderData: data, todayOrderDate })}
       >
-      <Image
-        source={{ uri: item?.img }}
-        style={{
-          width: 75,
-          height: 75,
-          objectFit: "fill",
-        }}
-      />
-      <View >
-        <Text style={{ fontWeight: "600", fontSize: 16, marginBottom: 5 }}>
-          {item?.title}
-        </Text>
-        <View style={{ flexDirection: "row", gap: 5 }}>
-          <Image
-            source={userIcon}
-            style={{
-              width: 20,
-              height: 20,
-              objectFit: "fill",
-              tintColor: "#33B39C"
-            }}
-          />
-          <Text>
-            {item?.implementor ? item?.implementor : "Chưa có"}
+        <Image source={{ uri: item?.servicePackage?.imageUrl }}
+          style={{
+            width: 75,
+            height: 75,
+            objectFit: "fill",
+            borderWidth: 0.5,
+            borderColor: "#000"
+          }}
+        />
+        <View >
+          <Text style={{ fontWeight: "600", fontSize: 16, marginBottom: 5 }}>
+            {item?.servicePackage?.name}
           </Text>
+          <View style={{ flexDirection: "row", gap: 5 }}>
+            <Image
+              source={userIcon}
+              style={{
+                width: 20,
+                height: 20,
+                objectFit: "fill",
+                tintColor: "#33B39C"
+              }}
+            />
+            <Text>{todayOrderDate?.user?.fullName ? todayOrderDate?.user?.fullName : "Chưa có"}</Text>
+          </View>
+          <View style={{ flexDirection: "row", gap: 5 }}>
+            <Image
+              source={lockIcon}
+              style={{
+                width: 22,
+                height: 22,
+                objectFit: "fill",
+              }}
+            />
+            <Text>{todayOrderDate?.completedAt ? ComDateTimeConverter(todayOrderDate?.completedAt) : "Chưa có"}</Text>
+          </View>
+          <View style={{ flexDirection: "row", gap: 7 }}>
+            <Image
+              source={checkIcon}
+              style={{
+                width: 17,
+                height: 17,
+                objectFit: "fill",
+                marginLeft: 2
+              }}
+            />
+            <Text style={{ fontWeight: "bold" }}>{getStatusText(todayOrderDate?.status)?.text}</Text>
+          </View>
         </View>
-        <View style={{ flexDirection: "row", gap: 5 }}>
-          <Image
-            source={lockIcon}
-            style={{
-              width: 22,
-              height: 22,
-              objectFit: "fill",
-            }}
-          />
-          <Text>
-            {item?.time ? item?.time : "Chưa có"}
-          </Text>
-        </View>
-        <View style={{ flexDirection: "row", gap: 7 }}>
-          <Image
-            source={checkIcon}
-            style={{
-              width: 17,
-              height: 17,
-              objectFit: "fill",
-              marginLeft: 2
-            }}
-          />
-          <Text>
-            {item?.status}
-          </Text>
-        </View>
-      </View>
-    </TouchableOpacity>
-  )
+      </TouchableOpacity>
+    )
+  }
 
   return (
     <View
@@ -94,57 +108,42 @@ export default function ComElder({ data }) {
         onPress={toggleCollapse}
       >
         <Image
-          source={{ uri: data?.elder?.img }}
+          source={{ uri: data?.imageUrl }}
           style={{
             width: 60,
             height: 60,
             borderRadius: 50,
             objectFit: "fill",
+            borderWidth: 0.5,
+            borderColor: "#000"
           }}
         />
         <View style={styles?.container}>
-            <View style={{ flexDirection: "row" }}>
-              <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-                {healthMonitor?.name}
-              </Text>
-              <Text>
-                : {data?.elder?.name}
-              </Text>
-            </View>
-            <View style={{ flexDirection: "row" }}>
-              <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-                {healthMonitor?.age}
-              </Text>
-              <Text>: {data?.elder?.age}</Text>
-            </View>
-            <View style={{ flexDirection: "row" }}>
-              <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-                {healthMonitor?.sex}
-              </Text>
-              <Text>: {data?.elder?.sex}</Text>
-            </View>
-            <View style={{ flexDirection: "row" }}>
-              <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-                {healthMonitor?.room}
-              </Text>
-              <Text>: {data?.elder?.room}</Text>
-            </View>
-            <View style={{ flexDirection: "row" }}>
-              <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-                {healthMonitor?.area}
-              </Text>
-              <Text>: {data?.elder?.area}</Text>
-            </View>
+          <View style={{ flexDirection: "row" }}>
+            <Text style={{ fontWeight: "bold", fontSize: 14 }}>
+              {healthMonitor?.name}
+            </Text>
+            <Text> : {data?.name} </Text>
           </View>
-        <Image
-          source={isCollapsed ? DownIcon : UpIcon}
-          style={styles?.icon}
-        />
+          <View style={{ flexDirection: "row" }}>
+            <Text style={{ fontWeight: "bold", fontSize: 14 }}>
+              {healthMonitor?.age}
+            </Text>
+            <Text>: <ComDateConverter>{data?.dateOfBirth}</ComDateConverter></Text>
+          </View>
+          <View style={{ flexDirection: "row" }}>
+            <Text style={{ fontWeight: "bold", fontSize: 14 }}>
+              {healthMonitor?.sex}
+            </Text>
+            <Text>: {data?.gender == "Male" ? "Nam" : "Nữ"}</Text>
+          </View>
+        </View>
+        <Image source={isCollapsed ? DownIcon : UpIcon} style={styles?.icon} />
       </TouchableOpacity>
 
       {!isCollapsed && (
         <FlatList
-          data={data?.service}
+          data={data?.orderDetails}
           renderItem={renderItem}
           keyExtractor={(item, index) => index.toString()}
         />

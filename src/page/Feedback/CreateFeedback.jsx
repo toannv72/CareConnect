@@ -1,26 +1,25 @@
 import React, { useContext, useState } from "react";
-import { StyleSheet, View, Text, KeyboardAvoidingView, Keyboard, Image } from "react-native";
+import { StyleSheet, View, Text, KeyboardAvoidingView, Platform, Keyboard, Image, ActivityIndicator } from "react-native";
 import * as yup from "yup";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ComInput from "../../Components/ComInput/ComInput";
 import ComSelect from "../../Components/ComInput/ComSelect";
 import { LanguageContext } from "../../contexts/LanguageContext";
-import { Form } from "react-native-autofocus";
+import ComToast from "../../Components/ComToast/ComToast";
 import ComButton from "../../Components/ComButton/ComButton";
 import { useNavigation } from '@react-navigation/native';
 import ComHeader from '../../Components/ComHeader/ComHeader';
 import feedbackImg from "../../../assets/images/feedback/feedback.png";
 import { postData } from "../../api/api";
 import { useRoute } from "@react-navigation/native";
+import Toast from 'react-native-root-toast';
 
 export default function CreateFeedback() {
     const navigation = useNavigation();
-    const [value, setValue] = useState("1");
+    const [loading, setLoading] = useState(false);
     const route = useRoute();
-    const { data } = route.params;
-
-    // const [data, setData] = useState({})
+    const { data, serviceData, orderDetailId } = route.params;
 
     const {
         text: {
@@ -30,7 +29,16 @@ export default function CreateFeedback() {
         setLanguage,
     } = useContext(LanguageContext);
 
-    const feedbackSchema = yup.object().shape({});
+    const feedbackSchema = yup.object().shape({
+        content: yup
+            .string()
+            .trim()
+            .required(feedback?.message?.title),
+        title: yup
+            .string()
+            .trim()
+            .required(feedback?.message?.content),
+    });
 
     const methods = useForm({
         resolver: yupResolver(feedbackSchema),
@@ -50,20 +58,22 @@ export default function CreateFeedback() {
 
     const handleSend = (formData) => {
         // Xử lý đăng nhập với dữ liệu từ data
+        setLoading(true)
         const updatedData = {
             ...formData,
-            orderDetailId: data?.orderDetails[0]?.id, // Thêm id với giá trị cụ thể. Bạn có thể thay thế "unique-id" bằng giá trị thực tế.
+            orderDetailId: orderDetailId, // Thêm id với giá trị cụ thể. Bạn có thể thay thế "unique-id" bằng giá trị thực tế.
         };
         Keyboard.dismiss();
         postData("/feedback", updatedData)
             .then((response) => {
-                console.log("Thành công");
-                // showToast("success", "Tạo báo cáo thành công", "", "bottom");
-                navigation.navigate("ServiceHistory");
+                setLoading(false)
+                ComToast({ text: 'Đánh giá thành công' });
+                navigation.goBack();
             })
             .catch((error) => {
-                console.error("API Error: ", error);
-                // showToast("error", "Có lỗi xảy ra, vui lòng thử lại!", "", "bottom");
+                setLoading(false)
+                console.log("API Error: ", error);
+                ComToast({ text: 'Có lỗi xảy ra, vui lòng thử lại!' });
             });
     };
 
@@ -73,10 +83,6 @@ export default function CreateFeedback() {
         { label: 'Không hài lòng', value: 'Unsatisfied' },
     ];
 
-    const handleSelect = (selectedItems, index) => {
-        console.log('Selected Items:', selectedItems);
-    };
-
     return (
         <>
             <ComHeader
@@ -84,14 +90,14 @@ export default function CreateFeedback() {
                 showTitle={true}
                 title={feedback?.title}
             />
-            <KeyboardAvoidingView style={styles.container} >
+            <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                 <View style={styles.body}>
                     <Image
                         source={feedbackImg}
                     />
-                    {/* <Text style={{ fontSize: 16, fontWeight: 'bold', textAlign: "center", paddingVertical: 20 }}>
-                        {data.text}
-                    </Text> */}
+                    <Text style={{ fontSize: 16, fontWeight: 'bold', textAlign: "center", paddingVertical: 20 }}>
+                        {serviceData?.name}
+                    </Text>
                     <FormProvider {...methods}>
                         <View style={{ width: "90%", gap: 10 }}>
                             <ComInput
@@ -119,9 +125,8 @@ export default function CreateFeedback() {
                                 errors={errors}
                                 required
                             ></ComSelect>
-                            {/* Chờ bổ sung ComUpdate */}
                             <ComButton onPress={handleSubmit(handleSend)}>
-                                {feedback?.label?.send}
+                                {loading ? <ActivityIndicator color="#fff" /> : feedback?.label?.send}
                             </ComButton>
                         </View>
                     </FormProvider>

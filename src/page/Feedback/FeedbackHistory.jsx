@@ -6,11 +6,12 @@ import ComSelectButton from "../../Components/ComButton/ComSelectButton";
 import ComInputSearch from "../../Components/ComInput/ComInputSearch";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import ComLoading from "../../Components/ComLoading/ComLoading";
 import ComFeedback from "./ComFeedback";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { postData, getData } from "../../api/api";
 import { useAuth } from "../../../auth/useAuth";
+import ComNoData from "../../Components/ComNoData/ComNoData";
+import ComLoading from "../../Components/ComLoading/ComLoading";
 
 export default function FeedbackHistory() {
     const { user } = useAuth();
@@ -65,19 +66,23 @@ export default function FeedbackHistory() {
                 title={feedback?.title}
             />
             <View style={styles.container}>
-                <ComLoading show={loading}>
-                    <ScrollView
-                        showsVerticalScrollIndicator={false}
-                        showsHorizontalScrollIndicator={false}
-                    >
-                        <View>
-                            {data?.map((value, index) => (
-                                <ComFeedback key={index} data={value} />
-                            ))}
-                        </View>
-                        <View style={{ height: 120 }}></View>
-                    </ScrollView>
-                </ComLoading>
+                {loading ? (
+                    <ComLoading show={true} />
+                ) : (
+                    data?.length == 0 ? (<ComNoData>Không có đánh giá nào</ComNoData>
+                    ) : (
+                        <ScrollView
+                            showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={false}
+                        >
+                            <View>
+                                {data?.map((value, index) => (
+                                    <ComFeedback key={index} data={value} />
+                                ))}
+                            </View>
+                            <View style={{ height: 120 }}></View>
+                        </ScrollView>
+                    ))}
             </View>
             {/* <View style={{ height: 100, backgroundColor: "#fff" }}></View> */}
         </>

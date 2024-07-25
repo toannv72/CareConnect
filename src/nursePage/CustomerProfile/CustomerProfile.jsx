@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigation } from "@react-navigation/native";
 import React, { useContext, useState, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { Image, StyleSheet, View } from "react-native";
+import { Image, StyleSheet, View, Linking } from "react-native";
 import * as yup from "yup";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import ComInput from "../../Components/ComInput/ComInput";
@@ -70,6 +70,12 @@ export default function CustomerProfile() {
             });
         }
     }, [userData]);
+
+    const callNumber = (phoneNumber) => {
+        // Sử dụng Linking.openURL để mở ứng dụng điện thoại với số đã cho
+        Linking.openURL(`tel:${phoneNumber}`);
+    };
+
 
     return (
         <>
@@ -154,7 +160,9 @@ export default function CustomerProfile() {
                                 <View style={{ height: 100 }}></View>
                             </ScrollView>
                             <View>
-                                <ComButton style={{ borderRadius: 50, marginBottom: 30 }}>
+                                <ComButton
+                                    style={{ borderRadius: 50, marginBottom: 30 }}
+                                    onPress={() => { callNumber(userData?.phoneNumber) }}>
                                     {ElderProfile?.detail?.urgentContact}
                                 </ComButton>
                             </View>

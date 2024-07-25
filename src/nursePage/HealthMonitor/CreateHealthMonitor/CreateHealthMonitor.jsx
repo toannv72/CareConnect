@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef } from "react";
-import { View, StyleSheet, ScrollView, Image, Text, KeyboardAvoidingView } from 'react-native';
+import { View, StyleSheet, ScrollView, Image, Text, KeyboardAvoidingView, Platform } from 'react-native';
 import { LanguageContext } from "../../../contexts/LanguageContext";
 import { useRoute } from "@react-navigation/native";
 import HealthMonitor from "../../../../assets/images/HealthMonitor/HealthMonitor.png";
@@ -9,18 +9,18 @@ import { FormProvider, useForm, useWatch } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ComInput from "../../../Components/ComInput/ComInput";
+import ComToast from "../../../Components/ComToast/ComToast";
 import ComButton from "../../../Components/ComButton/ComButton";
 import { postData } from "../../../api/api";
-import Toast from 'react-native-toast-message';
+import Toast from 'react-native-root-toast';
+import { healthRegex } from "../../../Components/ComRegexPatterns/regexPatterns";
 
 export default function CreateHealthMonitor() {
     const { text: { NurseHealthMonitor } } = useContext(LanguageContext);
     const navigation = useNavigation();
     const route = useRoute();
-    const selectedIndexs = route.params?.selectedIndexs || [];
+    const { selectedIndexs, elderId } = route.params || [];
     const previousValues = useRef({});
-
-    const showToast = (type, text1, text2, position) => { Toast.show({ type: type, text1: text1, text2: text2, position: position }) }
 
     const loginSchema = yup.object().shape({
         notes: yup.string().required('Vui lòng nhập ghi chú tổng quát'),
@@ -28,7 +28,7 @@ export default function CreateHealthMonitor() {
             category?.measureUnitsActive.forEach(unit => {
                 acc[`value_${unit.id}`] = yup.string()
                     .required('Vui lòng nhập kết quả')
-                    .matches(/^\d+(\.\d{1,2})?$/, 'Kết quả phải là số dương và không quá hai chữ số thập phân')
+                    .matches(healthRegex, 'Kết quả phải là số dương, chỉ chứa số và dấu .')
                     .test('is-positive', 'Kết quả phải là số dương', value => parseFloat(value) > 0 || value === "")
             });
             return acc;
@@ -73,6 +73,10 @@ export default function CreateHealthMonitor() {
     });
 
     const onSubmit = (data) => {
+        const day = new Date().getDate().toString().padStart(2, "0");
+        const month = (new Date().getMonth() + 1).toString().padStart(2, "0");
+        const year = new Date().getFullYear();
+
         const healthReportDetails = selectedIndexs.map((category) => ({
             healthCategoryId: category.id,
             healthReportDetailMeasures: category?.measureUnitsActive.map((unit) => ({
@@ -83,19 +87,20 @@ export default function CreateHealthMonitor() {
         }));
 
         const formattedData = {
-            elderId: 2, // Replace with actual elderId if available
+            elderId: elderId, // Replace with actual elderId if available
             notes: data.notes,
             healthReportDetails,
+            date: `${year}-${month}-${day}`
         };
 
         postData("/health-report", formattedData)
             .then((response) => {
-                showToast("success", "Tạo báo cáo thành công", "", "bottom");
-                navigation.navigate("ListHealthMonitor");
+                ComToast({ text: 'Tạo báo cáo thành công' });
+                navigation.navigate("ListHealthMonitor", { id: elderId });
             })
             .catch((error) => {
-                console.error("API Error: ", error);
-                showToast("error", "Có lỗi xảy ra, vui lòng thử lại!", "", "bottom");
+                console.error("API Error: ", error?.message);
+                ComToast({ text: 'Có lỗi xảy ra, vui lòng thử lại!' });
             });
     };
 
@@ -113,7 +118,7 @@ export default function CreateHealthMonitor() {
     return (
         <>
             <ComHeader showBackIcon showTitle title={NurseHealthMonitor?.createHealthMonitor} />
-            <KeyboardAvoidingView style={styles.body}>
+            <KeyboardAvoidingView style={styles.body} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                 <View style={styles.container}>
                     <FormProvider {...methods}>
                         <View style={{ width: "100%", gap: 10, flex: 1 }}>

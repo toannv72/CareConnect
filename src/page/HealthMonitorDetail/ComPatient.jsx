@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { Image, View } from "react-native";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { useNavigation } from "@react-navigation/native";
+import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter"
 
 export default function ComPatient({ data }) {
   const {
@@ -15,7 +16,7 @@ export default function ComPatient({ data }) {
     <TouchableOpacity
       style={styles.body}
       onPress={() => {
-        // navigation.navigate("ElderDetailProfile", { data: data });
+        navigation.navigate("ElderDetailProfile", { data: data });
       }}
     >
       <Image
@@ -43,7 +44,7 @@ export default function ComPatient({ data }) {
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
               {HealthMonitorDetail?.YearOfBirth}
             </Text>
-            <Text>: {data?.dateOfBirth}</Text>
+            <Text>: <ComDateConverter>{data?.dateOfBirth}</ComDateConverter></Text>
           </Text>
         </View>
         <View style={styles?.container}>
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 10,
     marginBottom: 10,
-    padding: 10,
+    paddingVertical: 10,
     justifyContent: "center",
     alignItems: "center",
   },

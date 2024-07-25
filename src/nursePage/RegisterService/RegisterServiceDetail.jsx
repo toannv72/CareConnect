@@ -1,10 +1,15 @@
-import React, { useContext, useState } from "react";
-import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity, FlatList } from 'react-native';
+import React, { useContext, useState, useCallback } from "react";
+import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { useRoute } from "@react-navigation/native";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import ComButton from "../../Components/ComButton/ComButton";
+import ComToast from "../../Components/ComToast/ComToast";
+import ComPopup from "../../Components/ComPopup/ComPopup";
+import { putData } from "../../api/api";
+import { postData, getData } from "../../api/api";
+import ComDateTimeConverter from "../../Components/ComDateConverter/ComDateTimeConverter"
 
 export default function RegisterServiceDetail({ }) {
     const {
@@ -14,8 +19,63 @@ export default function RegisterServiceDetail({ }) {
 
     const navigation = useNavigation();
     const route = useRoute();
-    const serviceData = route.params?.service || {};
-    console.log("serviceData", serviceData)
+    const [loading, setLoading] = useState(false);
+    const [popup, setPopup] = useState(false);
+    const [orderdate, setOrderdate] = useState({});
+    const { serviceData, todayOrderDate, elderData } = route.params || {};
+    const [isComplete, setIsComplete] = useState(todayOrderDate?.status);
+
+    useFocusEffect(
+        useCallback(() => {
+            setLoading(true);
+            getData(`/order-date/${todayOrderDate?.id}`, {})
+                .then((orderdate) => {
+                    setOrderdate(orderdate?.data);
+                    setLoading(false);
+                })
+                .catch((error) => {
+                    setLoading(false);
+                    console.error("Error getData fetching items:", error);
+                });
+        }, [isComplete])
+    );
+
+    const getStatusText = (status) => {
+        switch (status) {
+            case 'InComplete':
+                return { text: 'Chưa thực hiện', color: 'green' };
+            case 'Complete':
+                return { text: 'Đã thực hiện', color: 'red' };
+            case 'NotPerformed':
+                return { text: 'Hết hạn thực hiện', color: 'red' };
+            default:
+                return status;
+        }
+    };
+
+    const onConfirm = () => {
+        const formattedData = {
+            status: "Complete"
+        }
+        setLoading(true)
+        putData(`/order-date`, todayOrderDate?.id, formattedData, {})
+            .then((response) => {
+                setLoading(false)
+                ComToast({ text: 'Xác nhận thành công' });
+                setIsComplete("Complete")
+                handleClosePopup()
+            })
+            .catch((error) => {
+                setLoading(false)
+                console.error("API Error: ", error);
+                handleClosePopup()
+                ComToast({ text: 'Có lỗi xảy ra, vui lòng thử lại!' });
+            });
+    }
+
+    const handleClosePopup = () => {
+        setPopup(false);
+    };
 
     return (
         <>
@@ -26,7 +86,7 @@ export default function RegisterServiceDetail({ }) {
             />
             <View style={styles?.body}>
                 <Image
-                    source={{ uri: serviceData?.img }}
+                    source={{ uri: serviceData?.imageUrl }}
                     style={{
                         height: 200,
                         objectFit: "fill",
@@ -36,15 +96,22 @@ export default function RegisterServiceDetail({ }) {
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                 >
-
                     <View style={styles?.content}>
-                        <Text style={styles?.title}>{serviceData?.title}</Text>
+                        <Text style={styles?.title}>{serviceData?.name}</Text>
+                        <View style={{ flexDirection: "row" }}>
+                            <Text style={{ fontWeight: "bold", fontSize: 14 }}>
+                                Người cao tuổi
+                            </Text>
+                            <Text>
+                                : {elderData?.name}
+                            </Text>
+                        </View>
                         <View style={{ flexDirection: "row" }}>
                             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
                                 {NurseRegisterService?.status}
                             </Text>
                             <Text>
-                                : {serviceData?.status}
+                                : {getStatusText(orderdate?.status)?.text}
                             </Text>
                         </View>
                         <View style={{ flexDirection: "row" }}>
@@ -52,7 +119,7 @@ export default function RegisterServiceDetail({ }) {
                                 {NurseRegisterService?.implementor}
                             </Text>
                             <Text>
-                                : {serviceData?.implementor ? serviceData?.implementor : "Chưa có"}
+                                : {orderdate?.user?.fullName ? orderdate?.user?.fullName : "Chưa có"}
                             </Text>
                         </View>
                         <View style={{ flexDirection: "row" }}>
@@ -60,24 +127,34 @@ export default function RegisterServiceDetail({ }) {
                                 {NurseRegisterService?.time}
                             </Text>
                             <Text>
-                                : {serviceData?.time ? serviceData?.time : "Chưa có"}
+                                : {orderdate?.completedAt ? ComDateTimeConverter(orderdate?.completedAt) : "Chưa có"}
                             </Text>
                         </View>
+
                         <Text style={{ fontWeight: "600" }}>{NurseRegisterService?.description}:</Text>
                         <Text>{serviceData?.description}</Text>
                     </View>
                 </ScrollView>
 
-                {serviceData?.status == "Chưa thực hiện" && (
-                <View style={styles?.content}>
-                    <ComButton
-                        // onPress={() => navigation.navigate("CreateHealthMonitor", { selectedIndexs: selectedHealthIndexItems })}
-                        >
-                        {NurseRegisterService?.markToComplete}
-                    </ComButton>
-                </View>
+                {isComplete == "InComplete" && (
+                    <View style={styles?.content}>
+                        <ComButton onPress={() => { setPopup(true) }} style={{ justifyContent: "center", alignItems: "center" }}>
+                            {loading ? <ActivityIndicator color="#fff" /> : NurseRegisterService?.markToComplete}
+                        </ComButton>
+                    </View>
                 )}
             </View>
+            <ComPopup
+                visible={popup}
+                title="Xác nhận đã thực hiện dịch vụ"
+                onClose={handleClosePopup}
+                buttons={[
+                    { text: 'Hủy', onPress: handleClosePopup, check: true },
+                    { text: 'Xác nhận', onPress: () => { onConfirm() } },
+                ]}
+            >
+                <Text style={{ textAlign: "center" }}>Bạn xác nhận đã thực hiện dịch vụ này cho người cao tuổi?</Text>
+            </ComPopup>
         </>
     )
 
@@ -92,7 +169,8 @@ const styles = StyleSheet.create({
     title: {
         fontWeight: "600",
         fontSize: 18,
-        textAlign: "center"
+        textAlign: "center",
+        marginBottom: 10
     },
     container: {
         flex: 1,

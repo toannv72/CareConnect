@@ -7,15 +7,19 @@ const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser, removeUser] = useStorage("user", null);
+  const [role, setRole, removeRole] = useStorage("role", null);
   const [elders, setElders, removeElders] = useStorage("elders", []);
   const [contracts, setContracts, removeContracts] = useStorage("contracts", []);
   const [accessToken, setAccessToken, removeAccessToken] = useStorage("accessToken", null);
+  const [expoPushToken, setExpoPushToken, removeExpoPushToken] = useStorage("expoPushToken", "");
 
-  const login = (userData) => {
+  const login = (userData, expoPushToken) => {
     const ability = new Ability(defineRulesFor(userData));
-    setUser({ ...userData });
+    setUser({ ...userData })
     setElders(userData?.elders)
     setContracts(userData?.contracts)
+    setRole(userData?.roles[0])
+    setExpoPushToken(expoPushToken)
   };
 
   const update = (userData) => {
@@ -24,16 +28,16 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    // setUser(null);
-    // setAccessToken(null);
     removeUser();
     removeAccessToken();
     removeElders();
     removeContracts();
+    removeRole();
+    removeExpoPushToken();
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, login, logout, contracts, elders, accessToken }}>
+    <AuthContext.Provider value={{ user, setUser, login, logout, contracts, elders, accessToken, role, expoPushToken }}>
       {children}
     </AuthContext.Provider>
   );

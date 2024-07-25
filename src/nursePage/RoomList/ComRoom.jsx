@@ -60,7 +60,7 @@ export default function ComRoom({ data, onPress }) {
                         style={[styles?.roomType, { backgroundColor: color }]}
                         numberOfLines={1}
                         ellipsizeMode="tail">
-                        {data?.type}
+                        {data?.nursingPackage?.name}
                     </Text>
                     <View style={[styles?.iconContain, { backgroundColor: color }]}>
                         <Image
@@ -77,6 +77,7 @@ export default function ComRoom({ data, onPress }) {
                         </Text>
                         <Text style={{ flex: 2 }} numberOfLines={1} ellipsizeMode="tail">: {data?.name}</Text>
                     </View>
+                    
                     <View style={{ flexDirection: "row" }} numberOfLines={1} >
                         <Text style={{ fontWeight: "bold", fontSize: 14 }}>Gói dưỡng lão: </Text>
                         <Text style={{ flex: 2 }} numberOfLines={1} ellipsizeMode="tail">{data?.nursingPackage?.name}</Text>
@@ -128,16 +129,17 @@ const styles = StyleSheet.create({
         width: "70%"
     },
     roomType: {
-        width: 75,
+        width: 80,
         textAlign: "center",
         paddingHorizontal: 5,
         paddingVertical: 2,
         borderRadius: 5,
-        marginBottom: 5
+        marginBottom: 5,
+        fontSize: 12
     },
     image: {
         width: 27,
-        height: 23,
+        height: 25,
         borderRadius: 10,
         objectFit: "fill",
         tintColor: "#fff",

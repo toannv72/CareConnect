@@ -12,6 +12,8 @@ const ComDatePicker = ({
   errors,
   placeholder,
   enabled, // Bỏ qua placeholder vì không cần thiết
+  maximumDate,
+  minimumDate,
   ...props
 }) => {
   const errorMessage = errors[name]?.message;
@@ -73,6 +75,8 @@ const ComDatePicker = ({
                 is24Hour={true}
                 display="default"
                 locale="vi-VN"
+                maximumDate={maximumDate}
+                minimumDate={minimumDate}
                 onChange={(event, selectedDate) => {
                   onChangeD(event, selectedDate);
                   onChange(selectedDate);

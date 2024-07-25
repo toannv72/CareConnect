@@ -42,13 +42,13 @@ export default function ComAddPackage({ data }) {
         }}
       />
       <View style={styles?.container}>
-        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems:"center", gap: 10, marginBottom: 5}}>
-          <Text style={{ fontWeight: "600", fontSize: 16, width: "80%" }} numberOfLines={2}>{data?.name}</Text>
+        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems:"center", gap: 10}}>
+          <Text style={{ fontWeight: "600", fontSize: 15, width: "80%" }} numberOfLines={2}>{data?.name}</Text>
           <TouchableOpacity
             onPress={() => toggleFavorite(data)}
-            style={[{ backgroundColor: isFavorite ? "#fac8d2" : "#bdbbbb", justifyContent: "center", padding: 5, borderRadius: 50, marginRight: 15 }]}>
+            style={[{ backgroundColor: isFavorite ? "#fac8d2" : "#bdbbbb", justifyContent: "center", padding: 7, borderRadius: 50, marginRight: 15 }]}>
             <Image source={Heart}
-              style={{ width: 17, height: 17,  tintColor: isFavorite ? "red" : "#636360"  }} />
+              style={{ width: 20, height: 20,  tintColor: isFavorite ? "red" : "#636360"  }} />
           </TouchableOpacity>
         </View>
         <Text numberOfLines={2}>{data?.description}</Text>

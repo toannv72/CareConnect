@@ -11,7 +11,6 @@ import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter
 import Heart from "../../../assets/heart.png";
 
 export default function AddingServiceDetail() {
-
     const {
         text: { addingPackages },
         setLanguage,
@@ -21,11 +20,8 @@ export default function AddingServiceDetail() {
     const { id } = route.params;
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState({});
-    const [isRegistrationClosed, setIsRegistrationClosed] = useState(false);
     const navigation = useNavigation();
-    const handleBackPress = () => {
-        navigation.goBack();
-    };
+    const handleBackPress = () => { navigation.goBack() };
 
     const formatCurrency = (number) => {
         return number?.toLocaleString("vi-VN", {
@@ -39,18 +35,12 @@ export default function AddingServiceDetail() {
         getData(`/service-package/${id}`, {})
             .then((packageData) => {
                 setData(packageData?.data);
-                if (packageData?.data?.type === "OneDay") {
-                    const currentDate = new Date();
-                    const endRegistrationDate = new Date(packageData?.data?.endRegistrationStartDate);
-                    if (currentDate > endRegistrationDate) {
-                        setIsRegistrationClosed(true);
-                    }
-                }
+                // check tổng lượt đăng ký
                 setLoading(false)
             })
             .catch((error) => {
                 setLoading(false)
-                console.error("Error fetching service-package:", error);
+                console.log("Error fetching service-package:", error);
             });
     }, [])
 
@@ -75,23 +65,23 @@ export default function AddingServiceDetail() {
             </View>
 
             <View style={styles.body}>
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false}>
-                    <View style={{ flex: 1, gap: 10, backgroundColor: "#f2f1eb", borderRadius: 20 }}>
-                        <View style={{ flexDirection: "row", marginTop: 20, justifyContent: "space-between" }}>
-                            <View style={{ padding: 10, backgroundColor: "#33B39C", justifyContent: "center", borderTopRightRadius: 50, borderBottomRightRadius: 50, width: "45%" }}>
-                                <Text style={{ fontSize: 16, color: "#fff", fontWeight: "600", paddingLeft: 5 }} numberOfLines={1}>
-                                    {data?.servicePackageCategory?.name}
-                                </Text>
-                            </View>
-                            <TouchableOpacity
-                                onPress={() => toggleFavorite(data)}
-                                style={[{ backgroundColor: isFavorite ? "#fac8d2" : "#bdbbbb", justifyContent: "center", padding: 10, borderRadius: 50, marginRight: 25 }]}>
-                                <Image source={Heart}
-                                    style={{ width: 25, height: 25, tintColor: isFavorite ? "red" : "#636360" }} />
-                            </TouchableOpacity>
+                <View style={{ flex: 1, gap: 10, backgroundColor: "#f2f1eb", borderRadius: 20 }}>
+                    <View style={{ flexDirection: "row", marginTop: 20, justifyContent: "space-between" }}>
+                        <View style={{ padding: 10, backgroundColor: "#33B39C", justifyContent: "center", borderTopRightRadius: 50, borderBottomRightRadius: 50, width: "45%" }}>
+                            <Text style={{ fontSize: 16, color: "#fff", fontWeight: "600", paddingLeft: 5 }} numberOfLines={1}>
+                                {data?.servicePackageCategory?.name}
+                            </Text>
                         </View>
+                        <TouchableOpacity
+                            onPress={() => toggleFavorite(data)}
+                            style={[{ backgroundColor: isFavorite ? "#fac8d2" : "#bdbbbb", justifyContent: "center", padding: 10, borderRadius: 50, marginRight: 25 }]}>
+                            <Image source={Heart}
+                                style={{ width: 25, height: 25, tintColor: isFavorite ? "red" : "#636360" }} />
+                        </TouchableOpacity>
+                    </View>
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        showsHorizontalScrollIndicator={false}>
                         <View style={{ padding: 20, gap: 10 }}>
                             <Text style={{ fontWeight: "bold", fontSize: 20, textAlign: "center" }}>
                                 {data?.name}
@@ -104,16 +94,7 @@ export default function AddingServiceDetail() {
                                 /{addingPackages?.package?.time}
                             </Text>
 
-                            <Text style={{ flexDirection: "row" }}>
-                                <Text style={styles.contentBold}>
-                                    Type
-                                </Text>
-                                <Text style={{ fontSize: 16 }}>
-                                    : {data?.type}
-                                </Text>
-                            </Text>
-
-                            {data?.registrationLimit !== 0 && (
+                            {data?.registrationLimit !== 0 && (//có giới hạn người đăng ký
                                 <Text style={{ flexDirection: "row" }}>
                                     <Text style={styles.contentBold}>
                                         {addingPackages?.package?.registrationLimit}
@@ -124,67 +105,42 @@ export default function AddingServiceDetail() {
                                 </Text>
                             )}
 
-                            {/* {data?.timeBetweenServices !== 0 && (
-                                <Text style={{ flexDirection: "row" }}>
-                                    <Text style={styles.contentBold}>
-                                        {addingPackages?.package?.timeBetweenServices}
-                                    </Text>
-                                    <Text style={{ fontSize: 16 }}>
-                                        : {data?.timeBetweenServices}
-                                    </Text>
-                                    {" " + addingPackages?.package?.dayBetweenServices}
-                                </Text>
-                            )} */}
-
-                            {
-                                data?.type == "OneDay" && (
-                                    <>
-                                        <Text style={{ flexDirection: "row" }}>
-                                            <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-                                                {addingPackages?.package?.endRegistrationStartDate}
-                                            </Text>
-                                            <Text>
-                                                : <ComDateConverter>{data?.endRegistrationStartDate}</ComDateConverter>
-                                            </Text>
+                            <View style={{ gap: 10 }}>
+                                {data?.endRegistrationDate && (
+                                    <Text style={{ flexDirection: "row" }}>
+                                        <Text style={{ fontWeight: "600", fontSize: 16 }}>
+                                            {addingPackages?.package?.endRegistrationStartDate}
                                         </Text>
-                                        <Text style={{ flexDirection: "row" }}>
-                                            <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-                                                {addingPackages?.package?.eventDate}
-                                            </Text>
-                                            <Text>
-                                                : <ComDateConverter>{data?.eventDate}</ComDateConverter>
-                                            </Text>
+                                        <Text>
+                                            : <ComDateConverter>{data?.endRegistrationDate}</ComDateConverter>
                                         </Text>
-                                    </>
-                                )
-                            }
+                                    </Text>)
+                                }
+                                {data?.eventDate && (
+                                    <Text style={{ flexDirection: "row" }}>
+                                        <Text style={{ fontWeight: "600", fontSize: 16 }}>
+                                            {addingPackages?.package?.eventDate}
+                                        </Text>
+                                        <Text>
+                                            : <ComDateConverter>{data?.eventDate}</ComDateConverter>
+                                        </Text>
+                                    </Text>)
+                                }
+                            </View>
                             {/* mô tả */}
-                            <Text style={styles.contentBold}>
+                            <Text style={{ fontWeight: "600", fontSize: 16 }}>
                                 {addingPackages?.package?.description}
                             </Text>
                             <Text style={{ fontSize: 16 }}>{data?.description}</Text>
                         </View>
-                    </View>
-                </ScrollView>
-                <View style={{ marginVertical: 20 }}>
-                    {
-                        isRegistrationClosed &&
-                        <View style={{}}>
-                            <Text style={{ color: "red", textAlign: "center" }}>Đã hết hạn đăng ký dịch vụ</Text>
-                        </View>
-                    }
-                    <ComSelectButton
-                        onPress={() => {
-                            if (!isRegistrationClosed) {
-                                navigation.navigate("AddingServiceRegister", { data: data });
-                            }
-                        }}
-                        disable={isRegistrationClosed}
-                    >
-                        {isRegistrationClosed ? "Đã hết hạn đăng ký dịch vụ" : addingPackages?.register?.registerTitle}
+                    </ScrollView>
+                </View>
+                <View style={{ marginVertical: 10 }}>
+                    <ComSelectButton onPress={() => { navigation.navigate("AddingServiceRegister", { data: data }) }}>
+                        {addingPackages?.register?.registerTitle}
                     </ComSelectButton>
                 </View>
-            </View>
+            </View >
         </>
     );
 }

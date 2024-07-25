@@ -15,8 +15,12 @@ const ComHeader = ({
   const handleBackPress = () => {
     if (route.name === 'EditProfile' || !navigation.canGoBack()) {
       navigation.navigate("Homes");
-    }else if(route.name === 'Cart'){
-      navigation.navigate("AddingService");
+    }
+    else if (route.name === 'BillHistory' || !navigation.canGoBack()) {
+      navigation.navigate("Account");
+    }
+    else if (route.name === 'BillDetail' || !navigation.canGoBack()) {
+      navigation.navigate("BillHistory");
     }
      else {
       navigation.goBack();
@@ -57,8 +61,8 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   backIcon: {
-    width: 30,
-    height: 30,
+    width: 27,
+    height: 27,
   },
   titleContainer: {
     flex: 1,
@@ -67,7 +71,7 @@ const styles = StyleSheet.create({
     marginRight: 40,
   },
   titleText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
   },

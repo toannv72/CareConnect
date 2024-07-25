@@ -1,20 +1,18 @@
 import React, { useContext, useState, useCallback } from "react";
-import { StyleSheet, View, ActivityIndicator, Keyboard, Image, KeyboardAvoidingView } from "react-native";
+import { StyleSheet, View, ActivityIndicator, Keyboard, Image, KeyboardAvoidingView, Platform } from "react-native";
 import * as yup from "yup";
 import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ComInput from "../../Components/ComInput/ComInput";
 import { useStorage } from "../../hooks/useLocalStorage";
 import { LanguageContext } from "../../contexts/LanguageContext";
-import ComTitlePage from "../../Components/ComTitlePage/ComTitlePage";
 import ComButton from "../../Components/ComButton/ComButton";
-import ComTitleLink from "../../Components/ComTitleLink/ComTitleLink";
-import ComTitle from "../../Components/ComTitle/ComTitle";
+import ComToast from "../../Components/ComToast/ComToast";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { postData } from "../../api/api";
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import Lock from "../../../assets/Lock.png"
-import Toast from 'react-native-toast-message';
+import { passwordRegex } from "../../Components/ComRegexPatterns/regexPatterns";
 
 export default function ChangePassword() {
   const [accessToken, setToken] = useStorage("Token", {});
@@ -35,7 +33,7 @@ export default function ChangePassword() {
       .trim()
       .required(ChangePassword?.message?.password)
       .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+        passwordRegex,
         ChangePassword?.message?.passwordInvalid
       ),
     oldPassword: yup
@@ -65,21 +63,11 @@ export default function ChangePassword() {
     formState: { errors },
   } = methods;
 
-  const showToast = (type, text1, text2, position) => {
-    Toast.show({
-      type: type,
-      text1: text1,
-      text2: text2,
-      position: position
-    });
-  }
-
   const handleChangePassword = (data) => {
     // Xử lý đăng nhập với dữ liệu từ data
     setLoading(!loading);
     Keyboard.dismiss();
     delete data.confirmPassword;
-    console.log(data);
 
     postData("/users/change-password", data, {})
       .then((data) => {
@@ -87,25 +75,20 @@ export default function ChangePassword() {
         // Chờ setToken hoàn thành trước khi navigate
         return new Promise((resolve) => {
           setTimeout(() => {
-            showToast("success", "Thay đổi mật khẩu thành công", "", "bottom")
+            ComToast({ text: 'Thay đổi mật khẩu thành công' });
             navigation.navigate("ChangePasswordSuccess", { phone: data });
             resolve(); // Báo hiệu Promise đã hoàn thành
           }, 0); // Thời gian chờ 0ms để đảm bảo setToken đã được thực hiện
         });
       })
       .catch((error) => {
-        // console.error("Error register:", error);
-        // setLoading(false)
-        // showToast("error", "Chỉnh sửa thông tin thất bại", "", "bottom")
-
         if (error?.response?.status === 400) {
-          console.log("Error login :", error);
           setLoading(loading)
-          showToast("error", ChangePassword?.message?.olePassword, "Chỉnh sửa mật khẩu thất bại", "bottom")
+          ComToast({ text: "Chỉnh sửa mật khẩu thất bại. " + ChangePassword?.message?.olePassword });
         } else {
           console.log("Error login:", error);
           setLoading(false)
-          showToast("error", ChangePassword?.message?.loginError, "Chỉnh sửa mật khẩu thất bại", "bottom")
+          ComToast({ text: ChangePassword?.message?.loginError });
         }
       });
   };
@@ -128,7 +111,7 @@ export default function ChangePassword() {
         showTitle
         title={ChangePassword?.pageTitle}
       />
-      <KeyboardAvoidingView style={styles.container}>
+      <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <View style={styles.container1}>
           <View style={styles.body}>
             <Image

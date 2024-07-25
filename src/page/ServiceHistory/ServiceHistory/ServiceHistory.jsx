@@ -5,6 +5,7 @@ import ComHeader from '../../../Components/ComHeader/ComHeader';
 import ComInputSearch from "../../../Components/ComInput/ComInputSearch";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import ComNoData from "../../../Components/ComNoData/ComNoData";
 import ComLoading from "../../../Components/ComLoading/ComLoading";
 import ComServiceHistoryPackage from "./ComServiceHistoryPackage";
 import { LanguageContext } from "./../../../contexts/LanguageContext";
@@ -24,10 +25,9 @@ export default function ServiceHistory() {
     const [page, setPage] = useState(1); // Track pagination page
     const [loadMoreLoading, setLoadMoreLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true); // Track if there are more items to load
-
     const fetchNextPage = async () => {
         setLoadMoreLoading(true);
-        getData(`/orders?UserId=${user?.id}&Status=Paid&PageIndex=${page}&PageSize=10`, {})
+        getData(`/orders?UserId=${user?.id}&Status=Paid&PageIndex=${page}&PageSize=10&SortColumn=createdAt&SortDir=Desc`, {})
             .then((orders) => {//lọc những order ko có service
                 const filteredOrders = orders?.data?.contends.filter(order => order.orderDetails[0]?.servicePackage !== null);
                 const newItems = filteredOrders || [];
@@ -52,28 +52,6 @@ export default function ServiceHistory() {
         }, [])
     );
 
-    // const searchSchema = yup.object().shape({
-    //     search: yup.string(),
-    // });
-    // const methods = useForm({
-    //     resolver: yupResolver(searchSchema),
-    //     defaultValues: {
-    //         search: "",
-    //     },
-    // });
-
-    // const {
-    //     control,
-    //     handleSubmit,
-    //     formState: { errors },
-    // } = methods;
-
-    // const onSubmit = (data) => {
-    //     console.log("====================================");
-    //     console.log(data);
-    //     console.log("====================================");
-    //     setLoading(!loading);
-    // };
     return (
         <>
             <ComHeader
@@ -82,26 +60,34 @@ export default function ServiceHistory() {
                 title={addingPackages?.history?.title}
             />
             <View style={styles.container}>
-                <ComLoading show={loading}>
-                    <ScrollView
-                        showsVerticalScrollIndicator={false}
-                        showsHorizontalScrollIndicator={false}
-                        style={styles.scrollView}
-                    >
-                        <View>
-                            {data?.map((value, index) => (
-                                <ComServiceHistoryPackage key={index} data={value} />
-                            ))}
-                        </View>
-                        <View style={{ justifyContent: "center", alignItems: "center" }}>
-                            <View style={{ width: "35%" }}>
-                                {loadMoreLoading ? (<ActivityIndicator />) :
-                                    (<ComSelectButton onPress={fetchNextPage} disable={!hasMore}>Xem thêm</ComSelectButton>)}
-                                <View style={{ height: 20 }} />
+                {loading ? (
+                    <ComLoading show={true} />
+                ) : (
+                    data?.length == 0 ? (<ComNoData>Không có dịch vụ nào</ComNoData>
+                    ) : (
+                        <ScrollView
+                            showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={false}
+                            style={styles.scrollView}
+                        >
+                            <View>
+                                {data?.map((value, index) => (
+                                    <View key={index}>
+                                        {value?.orderDetails?.map((orderDetail, detailIndex) => (
+                                            <ComServiceHistoryPackage key={detailIndex} data={orderDetail} orderData={value} />
+                                        ))}
+                                    </View>
+                                ))}
                             </View>
-                        </View>
-                    </ScrollView>
-                </ComLoading>
+                            <View style={{ justifyContent: "center", alignItems: "center" }}>
+                                <View style={{ width: "35%" }}>
+                                    {loadMoreLoading ? (<ActivityIndicator />) :
+                                        (<ComSelectButton onPress={fetchNextPage} disable={!hasMore}>Xem thêm</ComSelectButton>)}
+                                    <View style={{ height: 20 }} />
+                                </View>
+                            </View>
+                        </ScrollView>
+                    ))}
             </View>
         </>
     );
@@ -110,7 +96,6 @@ export default function ServiceHistory() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 10,
         backgroundColor: "#fff",
         paddingHorizontal: 15
     },

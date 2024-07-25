@@ -168,6 +168,21 @@ export default function ServiceAnydayRegister() {
         return disabledDates;
     }, [registeredDates]);
 
+    const getDisabledDates = (orderDetail) => {
+        const currentMonth = new Date().getMonth();
+        return orderDetail?.map(item => {
+          if (item?.dayOfMonth !== null) {
+            return item?.dayOfMonth;
+          } else if (item?.date) {
+            const date = new Date(item?.date);
+            if (!isNaN(date) && date.getMonth() === currentMonth) {
+                return date.getDate();
+            }
+          }
+          return null; // Hoặc giá trị mặc định nào đó nếu không hợp lệ
+        }).filter(date => date !== null); // Lọc ra các giá trị null
+      };
+
     return (
         <>
             <View style={styles.header}>
@@ -267,7 +282,7 @@ export default function ServiceAnydayRegister() {
                 )}
                 {(selectedId === '3') && (
                     <View>
-                        <Calendar31Days selectedDates={selectedDates} setSelectedDates={setSelectedDates} disableDates={orderDetail?.filter(item => item?.dayOfMonth !== null)?.map(item => item?.dayOfMonth)}/>
+                        <Calendar31Days selectedDates={selectedDates} setSelectedDates={setSelectedDates} disableDates={getDisabledDates(orderDetail)}/>
                     </View>
                 )}
                 <View style={{ height: 50 }}></View>
