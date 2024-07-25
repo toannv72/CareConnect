@@ -35,7 +35,7 @@ export default function ComSchedule({ data, shift, onPress, isSelected }) {
                                 source={timeIcon}
                                 style={styles?.clockImage}
                             />
-                            <Text style={{ fontSize: 14 }}>{item?.startTime} - {item?.endTime}</Text>
+                            <Text style={{ fontSize: 14 }}>Từ {item?.startTime} đến {item?.endTime}</Text>
                         </View>
 
                     ))}

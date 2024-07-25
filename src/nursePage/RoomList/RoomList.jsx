@@ -40,8 +40,7 @@ export default function RoomList() {
             setLoading(true);
             getData(`/care-schedule?CareMonth=${moment().month() + 1}&CareYear=${moment().year()}&UserId=${user?.id}`, {})
                 .then((careSchedule) => {
-                    const filterData = getRoomList(careSchedule?.data?.contends)
-                    setData(filterData);
+                    setData(careSchedule?.data?.contends[0]?.rooms);
                     setLoading(false);
                 })
                 .catch((error) => {

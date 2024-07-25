@@ -1,28 +1,34 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, Image, ActivityIndicator } from "react-native";
 import bill from "../../../assets/profile_icons/bill.png";
 import { useAuth } from "../../../auth/useAuth";
 import { postData, deleteData } from "../../api/api";
+import ComToast from "../../Components/ComToast/ComToast";
 
 const MenuItem = ({ iconName, text, link, colorRed }) => {
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
   const { logout, expoPushToken } = useAuth();
   const deleteToken = async () => {
     try {
       await deleteData(`/devices`, "", { token: expoPushToken });
       console.log("Delete expoPushToken successfully");
+      setLoading(false)
     } catch (error) {
+      setLoading(false)
       console.error("API Delete expoPushToken Error: ", error);
     }
   };
   const press = async () => {
     if (colorRed) {
+      setLoading(true)
       await deleteToken(); // Wait for deleteToken to complete
       logout(); // Call logout after deleteToken is successful
     } else {
       logout(); // Call logout immediately if colorRed is not true
     }
+    ComToast({ text: 'Đăng xuất thành công' });
     navigation.navigate(link);
   };
   return (
@@ -30,7 +36,7 @@ const MenuItem = ({ iconName, text, link, colorRed }) => {
       <Image source={iconName} style={styles.image} />
       {colorRed ? (
         <Text style={{ fontSize: 18, color: "red", fontWeight: "500" }}>
-          {text}
+          {loading ? <ActivityIndicator /> : text}
         </Text>
       ) : (
         <Text style={{ fontSize: 18, fontWeight: "500" }}>{text}</Text>

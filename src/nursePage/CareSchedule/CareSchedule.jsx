@@ -20,6 +20,7 @@ export default function CareSchedule() {
     const [careSchedule, setCareSchedule] = useState([]); // CareSchedule (which rooms)
     const [currentMonth, setCurrentMonth] = useState(moment().month() + 1); // Current month
     const [currentYear, setCurrentYear] = useState(moment().year()); // Current year
+    const [calendarKey, setCalendarKey] = useState(0); // Key to force re-render of Calendar
     const { user } = useAuth();
 
     const {
@@ -41,11 +42,11 @@ export default function CareSchedule() {
     const onMonthChange = (month) => {
         const newMonth = month.month < 10 ? `0${month.month}` : month.month;
         const newYear = month.year;
-        setCurrentMonth(month.month); // Update current month để biết tháng đang được chọn và đem so sánh
-        setCurrentYear(month.year); // Update current year để biết năm đang được chọn và đem so sánh
+        setCurrentMonth(month.month); // Update current month to know the month being selected and compare
+        setCurrentYear(month.year); // Update current year to know the year being selected and compare
         // Fetch data for the new month and year
         const fetchData = async () => {
-            await getEmployeeSchedule(newMonth, newYear);//call lại spi với tháng năm mới
+            await getEmployeeSchedule(newMonth, newYear); // call the API with the new month and year
         };
         fetchData();
     };
@@ -53,6 +54,9 @@ export default function CareSchedule() {
     useFocusEffect(
         useCallback(() => {
             setSelectedDate(today);
+            setCurrentMonth(moment().month() + 1); // Reset current month to current month
+            setCurrentYear(moment().year()); // Reset current year to current year
+            setCalendarKey(prevKey => prevKey + 1); // Update calendar key to force re-render
             const fetchData = async () => {
                 await getEmployeeSchedule(); // Fetch initial data
             };
@@ -62,9 +66,9 @@ export default function CareSchedule() {
 
     useEffect(() => {
         const newMarkedDates = nurseSchedules.reduce((acc, item) => {
-            const itemDate = item?.monthlyCalendar?.dateInMonth; // lấy ra date in month
-            const itemFullDate = moment(`${currentYear}-${currentMonth}-${itemDate}`, "YYYY-MM-DD").format("YYYY-MM-DD"); // tạo ra full date = itemDate, month và year được chọn (dèault là hiện tại)
-            acc[itemFullDate] = {//đánh dấu là ngày có task 
+            const itemDate = item?.monthlyCalendar?.dateInMonth; // get date in month
+            const itemFullDate = moment(`${currentYear}-${currentMonth}-${itemDate}`, "YYYY-MM-DD").format("YYYY-MM-DD"); // create full date = itemDate, selected month and year (default is current)
+            acc[itemFullDate] = { // mark as a day with task
                 dots: [{ key: 'task', color: 'red' }],
                 selected: itemFullDate === selectedDate
             };
@@ -121,9 +125,11 @@ export default function CareSchedule() {
             />
             <View style={styles.body}>
                 <Calendar
+                    key={calendarKey} // Use the calendar key to force re-render
                     markingType={'multi-dot'}
                     markedDates={markedDates}
                     style={{ marginHorizontal: 15, marginBottom: 5 }}
+                    current={moment().format("YYYY-MM-DD")} // Set current date to focus on
                     onDayPress={onDayPress}
                     onMonthChange={onMonthChange}
                     {...LocaleConfig}

@@ -21,15 +21,13 @@ export default function NurseHealthMonitor({ data }) {
     const navigation = useNavigation();
     const [nursingSchedules, setNursingSchedules] = useState([])
     const [loading, setLoading] = useState(false);
-    const today = moment().format("YYYY-MM-DD");
 
     useEffect(() => {
         setLoading(true);
         getData(`/care-schedule?CareMonth=${moment().month() + 1}&CareYear=${moment().year()}&UserId=${user?.id}`, {})
             .then((schedule) => {
                 const schedules = schedule?.data?.contends || [];
-                const uniqueRooms = filterUniqueRooms(schedules);
-                setNursingSchedules(uniqueRooms);
+                setNursingSchedules(schedules[0]?.rooms);
                 setLoading(false);
             })
             .catch((error) => {
@@ -37,18 +35,6 @@ export default function NurseHealthMonitor({ data }) {
                 console.log("Error getData fetching items:", error);
             });
     }, []);
-
-    const filterUniqueRooms = (schedules) => {
-        const uniqueRooms = [];
-        const seenIds = {};
-        schedules.forEach(schedule => {
-            if (!seenIds[schedule?.room?.id]) {
-                seenIds[schedule?.room?.id] = true;
-                uniqueRooms.push(schedule?.room);
-            }
-        });
-        return uniqueRooms;
-    }
 
     return (
         <>
