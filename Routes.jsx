@@ -486,7 +486,7 @@ function MyBottomNavigationBar() {
           return <ComIcon icon={iconName} />;
         },
       })}
-    // keyboardShouldPersistTaps="handled"
+      // keyboardShouldPersistTaps="handled"
     >
       <Tab.Screen
         name="Home"
@@ -501,13 +501,14 @@ function MyBottomNavigationBar() {
       <Tab.Screen
         name="HealthCondition"
         options={{ headerShown: false }}
+        component={HealthMonitor}
+      />
+      <Tab.Screen
+        name="Notification"
+        options={{ headerShown: false }}
         component={Notification2}
       />
-      {/* <Tab.Screen
-        name="HealthCondition"
-        options={{ headerShown: false }}
-        component={HealthMonitor}
-      /> */}
+
       {/* <Tab.Screen
         name="Notification"
         options={{ headerShown: false }}
