@@ -25,8 +25,7 @@ export default function NurseHealthMonitor({ data }) {
 
     useEffect(() => {
         setLoading(true);
-        // getData(`/care-schedule?Date=2024-07-14&UserId=${user?.id}`, {})
-        getData(`/care-schedule?Date=${today}&UserId=${user?.id}`, {})
+        getData(`/care-schedule?CareMonth=${moment().month() + 1}&CareYear=${moment().year()}&UserId=${user?.id}`, {})
             .then((schedule) => {
                 const schedules = schedule?.data?.contends || [];
                 const uniqueRooms = filterUniqueRooms(schedules);

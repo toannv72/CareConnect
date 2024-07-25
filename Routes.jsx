@@ -88,7 +88,7 @@ const Routes = () => {
   return (
     <NavigationContainer ref={navigationRef}
       onUnhandledAction={() => navigationRef.current?.navigate('NotFound')}>
-      <Stack.Navigator initialRouteName="NurseHomes">
+      <Stack.Navigator initialRouteName="Login">
         <Stack.Screen
           name="Homes"
           options={{ headerLeft: null, headerShown: false }}

@@ -90,7 +90,18 @@ export default function ServicePaymentStatus() {
                 <ComTitlePage>
                     <Text style={{ color: getStatusText(data?.status)?.color }}>{getStatusText(data?.status)?.text}</Text>
                 </ComTitlePage>
-                <Image style={{ width: 200, height: 200, tintColor: getStatusText(data?.status)?.color }} source={getStatusText(data?.status)?.img} />
+                {data?.status === "Paid" &&
+                    <Image style={{ width: 200, height: 200, tintColor: getStatusText(data?.status)?.color }} source={check} />
+                }
+                {data?.status === "UnPaid" &&
+                    <Image style={{ width: 200, height: 200, tintColor: getStatusText(data?.status)?.color }} source={Loading_2} />
+                }
+                {data?.status === "OverDue" &&
+                    <Image style={{ width: 200, height: 200, tintColor: getStatusText(data?.status)?.color }} source={Overdue} />
+                }
+                {data?.status === "Failed" &&
+                    <Image style={{ width: 200, height: 200, tintColor: getStatusText(data?.status)?.color }} source={fail} />
+                }
                 <View style={styles?.container1}>
                     <View >
                         {(data?.status === "Paid" || data?.status === "UnPaid") && (
