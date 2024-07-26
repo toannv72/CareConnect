@@ -518,13 +518,8 @@ function MyBottomNavigationBar() {
       <Tab.Screen
         name="Notification"
         options={{ headerShown: false }}
-        component={Notification2}
+        component={Notification}
       />
-      {/* <Tab.Screen
-        name="Account"
-        options={{ headerShown: false }}
-        component={VisitationSchedule}
-      /> */}
       <Tab.Screen
         name="Account"
         options={{ headerShown: false }}

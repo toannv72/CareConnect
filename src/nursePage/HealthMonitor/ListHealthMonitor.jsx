@@ -25,7 +25,7 @@ export default function ListHealthMonitor({ data }) {
     useFocusEffect(
         useCallback(() => {
             setLoading(!loading);
-            getData(`/health-report?ElderId=${id}&SortColumn=createdAt&SortDir=Desc&PageSize=50`, {})
+            getData(`/health-report?ElderId=${id}&SortColumn=Date&SortDir=Desc&PageSize=50`, {})
                 .then((healthMonitor) => {
                     setHealthMonitor(healthMonitor?.data?.contends);
                     setLoading(loading);

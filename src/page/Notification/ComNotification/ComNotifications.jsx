@@ -1,8 +1,25 @@
 import { useState, useEffect, useRef } from "react";
 import { Text, View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import ComTitle from "./../../../Components/ComTitle/ComTitle";
+import { useNavigation } from "@react-navigation/native";
 
 export default function ComNotification({ tile, data }) {
+  const navigation = useNavigation();
+  const handlePress = (entity, id, data) => {
+    switch (entity) {
+      case 'scheduleService':
+        navigation.navigate("ScheduledService");
+        break;
+      case 'contract':
+        navigation.navigate("ContractDetail", { id });
+        break;
+      case 'healthReport':
+        navigation.navigate("HealthMonitorDetail", { id, data: data });
+        break;
+      default:
+        console.warn("Unknown entity: ", entity);
+    }
+  };
   return (
     <View style={styles.main}>
       <ComTitle style={{ fontSize: 24, marginBottom: 10 }}>{tile}</ComTitle>
@@ -12,9 +29,9 @@ export default function ComNotification({ tile, data }) {
             key={index}
             style={[index !== data.length - 1 && styles.bodySeparator]}
           >
-            <TouchableOpacity style={[styles.body]}>
+            <TouchableOpacity style={[styles.body]} onPress={() => handlePress(value.entity, value.id, value.data)}>
               <Image
-                source={{ uri: value?.img }}
+                source={value?.img}
                 style={{
                   width: 60,
                   height: 60,
@@ -46,6 +63,7 @@ export default function ComNotification({ tile, data }) {
 const styles = StyleSheet.create({
   main: {
     flex: 1,
+    marginBottom: 15
   },
   body: {
     flexDirection: "row",
@@ -62,6 +80,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "center",
     flexWrap: "wrap",
+    gap: 5
   },
   contex: {
     borderRadius: 10,

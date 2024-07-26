@@ -46,7 +46,7 @@ async function registerForPushNotificationsAsync() {
 export default function NurseHome({ navigation }) {
   const { user, setUser, login } = useAuth();
   const [expoPushToken, setExpoPushToken] = useState("");
-  
+
   const {
     text: {
       NurseHome,
@@ -78,21 +78,21 @@ export default function NurseHome({ navigation }) {
           .catch((error) => {
             console.error("API devices Error: ", error?.message);
           });
-        getData("/users/profile")
-          .then((userData) => {
-            login(userData?.data, expoPushToken);
-            setUser(userData?.data);
-          })
-          .catch((error) => {
-            console.error("Error fetching user profile:", error);
-          });
       }
+      getData("/users/profile")
+        .then((userData) => {
+          login(userData?.data, expoPushToken);
+          setUser(userData?.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching user profile:", error);
+        });
     }, [expoPushToken])
   );
 
   return (
     <View style={styles.container}>
-      <Header  user={user}/>
+      <Header user={user} />
       <ScrollView>
         <View style={styles.imageBody}>
           <Image

@@ -143,7 +143,7 @@ export default function ComElder({ data }) {
 
       {!isCollapsed && (
         <FlatList
-          data={data?.orderDetails}
+          data={data?.orderDetailsService}
           renderItem={renderItem}
           keyExtractor={(item, index) => index.toString()}
         />

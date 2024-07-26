@@ -71,15 +71,16 @@ export default function Home({ navigation }) {
           .catch((error) => {
             console.error("API devices Error: ", error?.message);
           });
-        getData("/users/profile")
-          .then((userData) => {
-            login(userData?.data, expoPushToken);
-            setUser(userData?.data);
-          })
-          .catch((error) => {
-            console.error("Error fetching user profile:", error);
-          });
+       
       }
+      getData("/users/profile")
+      .then((userData) => {
+        login(userData?.data, expoPushToken);
+        setUser(userData?.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching user profile:", error);
+      });
     }, [expoPushToken])
   );
 

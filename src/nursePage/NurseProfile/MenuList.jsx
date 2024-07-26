@@ -25,10 +25,8 @@ const MenuItem = ({ iconName, text, link, colorRed }) => {
       setLoading(true)
       await deleteToken(); // Wait for deleteToken to complete
       logout(); // Call logout after deleteToken is successful
-    } else {
-      logout(); // Call logout immediately if colorRed is not true
+      ComToast({ text: 'Đăng xuất thành công' });
     }
-    ComToast({ text: 'Đăng xuất thành công' });
     navigation.navigate(link);
   };
   return (

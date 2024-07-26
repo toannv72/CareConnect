@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image, ActivityIndicator } from "react-native";
 import bill from "../../../assets/profile_icons/bill.png";
 import { useAuth } from "../../../auth/useAuth";
@@ -25,10 +25,8 @@ const MenuItem = ({ iconName, text, link, colorRed }) => {
       setLoading(true)
       await deleteToken(); // Wait for deleteToken to complete
       logout(); // Call logout after deleteToken is successful
-    } else {
-      logout(); // Call logout immediately if colorRed is not true
+      ComToast({ text: 'Đăng xuất thành công' });
     }
-    ComToast({ text: 'Đăng xuất thành công' });
     navigation.navigate(link);
   };
 
@@ -37,7 +35,7 @@ const MenuItem = ({ iconName, text, link, colorRed }) => {
       <Image source={iconName} style={styles.image} />
       {colorRed ? (
         <Text style={{ fontSize: 18, color: "red", fontWeight: "500" }}>
-          {loading ? <ActivityIndicator/> : text}
+          {loading ? <ActivityIndicator /> : text}
         </Text>
       ) : (
         <Text style={{ fontSize: 18, fontWeight: "500" }}>{text}</Text>

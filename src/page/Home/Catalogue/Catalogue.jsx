@@ -24,8 +24,8 @@ export default function Catalogue() {
     <View style={styles?.body}>
       <TopicContent>{Home?.catalogue}</TopicContent>
       <View style={styles.comCatalogue}>
-        {/* <TouchableOpacity onPress={() => goto("ElderProfile")}> */}
-        <TouchableOpacity onPress={() => goto("ScheduledService")}>
+        <TouchableOpacity onPress={() => goto("ElderProfile")}>
+        {/* <TouchableOpacity onPress={() => goto("ScheduledService")}> */}
           <ComCatalogue
             url={
               elderProfile

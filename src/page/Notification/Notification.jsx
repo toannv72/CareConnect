@@ -4,6 +4,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import ComNotification from "./ComNotification/ComNotifications";
 import ComSelectButton from "../../Components/ComButton/ComSelectButton";
 import ComHeader from "../../Components/ComHeader/ComHeader";
+import bell from "../../../assets/bell.png";
 import { LanguageContext } from "../../contexts/LanguageContext";
 
 export default function Notification({ }) {
@@ -21,26 +22,38 @@ export default function Notification({ }) {
 
   const data = [
     {
-      img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
-      name: "Phát hiện cụ ABC có chỉ số sức khỏe bất thường ",
+      img: bell,
+      name: "Bạn có dịch vụ cần xác nhận thực hiện trong tháng sau",
       day: "10:00 - 14/05/2024 ",
+      entity: "scheduleService",
+      id: null,
+      data: {}
     },
     {
-      img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
-      name: "Phát hiện cụ ABC có chỉ số sức khỏe bất thường ",
+      img: bell,
+      name: "Bạn có hợp đồng sắp hết hạn vào ngày ..",
       day: "10:00 - 14/05/2024 ",
+      entity: "contract",
+      id: 7,
+      data: {}
     },
     {
-      img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
+      img: bell,
       name: "Phát hiện cụ ABC có chỉ số sức khỏe bất thường ",
       day: "10:00 - 14/05/2024 ",
-    },
-    {
-      img: "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-thien-nhien-3d-002.jpg",
-      name: "Phát hiện cụ ABC có chỉ số sức khỏe bất thường ",
-      day: "10:00 - 14/05/2024 ",
-    },
+      entity: "healthReport",
+      id: 6,
+      data:  {
+        "id": 6,
+        "createdBy": "08dca44f-6b05-454a-8e9f-944208a72666",
+        "createdAt": "2024-07-25T17:24:08.677377+00:00",
+        "date": "2024-07-26",
+      "notes": "Rat tot",
+      "isWarning": false,
+        "elderId": 16,}
+    }
   ];
+
   const check = () => {
     setSelect(false);
     setSelect1(true);
@@ -63,7 +76,7 @@ export default function Notification({ }) {
         showTitle
       />
       <View style={styles.body}>
-        <ScrollView
+        {/* <ScrollView
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           horizontal={true}
@@ -84,19 +97,15 @@ export default function Notification({ }) {
             </ComSelectButton>
             <View style={{ width: 20 }}></View>
           </View>
-        </ScrollView>
+        </ScrollView> */}
         <ScrollView
           showsVerticalScrollIndicator={false}
           style={styles?.scrollView}
           showsHorizontalScrollIndicator={false}
         >
           <ComNotification tile={"Hôm nay"} data={data} />
-
           <ComNotification tile={"Trước đó"} data={data} />
-          <ComNotification tile={"Trước đó"} data={data} />
-          <ComNotification tile={"Trước đó"} data={data} />
-
-          <View style={{ height: 190 }}></View>
+          <View style={{ height: 50 }}></View>
         </ScrollView>
       </View>
     </>

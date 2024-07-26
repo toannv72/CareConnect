@@ -2,6 +2,7 @@ import React from "react";
 import { TouchableOpacity, View, Text, StyleSheet, Image } from "react-native";
 import backArrowBlack from "../../../assets/icon/backArrowBlack.png";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { useAuth } from "../../../auth/useAuth";
 
 const ComHeader = ({
   showBackIcon = false,
@@ -11,10 +12,14 @@ const ComHeader = ({
 }) => {
   const navigation = useNavigation();
   const route = useRoute();
-
+  const { role } = useAuth();
+  console.log(" ComHeader", role)
   const handleBackPress = () => {
     if (route.name === 'EditProfile' || !navigation.canGoBack()) {
-      navigation.navigate("Homes");
+      if (role?.name == "Nurse")
+        navigation.navigate("NurseHomes");
+      else
+        navigation.navigate("Homes");
     }
     else if (route.name === 'BillHistory' || !navigation.canGoBack()) {
       navigation.navigate("Account");
@@ -22,7 +27,7 @@ const ComHeader = ({
     else if (route.name === 'BillDetail' || !navigation.canGoBack()) {
       navigation.navigate("BillHistory");
     }
-     else {
+    else {
       navigation.goBack();
     }
   };

@@ -45,7 +45,7 @@ export default function AddingServicePackages() {
     };
 
     const fetchNextPage = async (search) => {
-        let url = `/service-package?SortColumn=id&SortDir=Desc`;
+        let url = `/service-package?`;
         if (selectedCategory) { url += `&PackageCategoryId=${selectedCategory}` }
         if (search) { url += `&Search=${search}` }
         setLoading(true);
@@ -153,12 +153,16 @@ export default function AddingServicePackages() {
                                     <ComAddPackage key={index} data={item} />
                                 ))
                             }
-                            <View style={{ justifyContent: "center", alignItems: "center" }}>
-                                <View style={{ width: "35%" }}>
-                                    <ComSelectButton onPress={handleLoadMore} disable={displayedItems >= data.length}>Xem thêm</ComSelectButton>
-                                    <View style={{ height: 100 }} />
+                            {
+                                displayedItems < filteredData.length &&
+                                <View style={{ justifyContent: "center", alignItems: "center" }}>
+                                    <View style={{ width: "35%" }}>
+                                        <ComSelectButton onPress={handleLoadMore} disable={displayedItems >= filteredData.length}>Xem thêm</ComSelectButton>
+                                        {/* <View style={{ height: 50 }} /> */}
+                                    </View>
                                 </View>
-                            </View>
+                            }
+
                         </ScrollView>
                     ))}
             </View >
