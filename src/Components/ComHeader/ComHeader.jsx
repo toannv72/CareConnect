@@ -13,7 +13,6 @@ const ComHeader = ({
   const navigation = useNavigation();
   const route = useRoute();
   const { role } = useAuth();
-  console.log(" ComHeader", role)
   const handleBackPress = () => {
     if (route.name === 'EditProfile' || !navigation.canGoBack()) {
       if (role?.name == "Nurse")
@@ -76,7 +75,7 @@ const styles = StyleSheet.create({
     marginRight: 40,
   },
   titleText: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "bold",
     textAlign: "center",
   },

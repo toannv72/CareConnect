@@ -2,67 +2,48 @@ import React, { useContext, useState, useCallback } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import ComVisitationSchedule from "./ComVisitationSchedule";
 import { LanguageContext } from "./../../contexts/LanguageContext";
-import { Controller, Form, FormProvider, useForm } from "react-hook-form";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { ScrollView } from "react-native";
 import ComLoading from "../../Components/ComLoading/ComLoading";
 import Visitation from "../../../assets/images/VisitationSchedule/VisitationSchedule.png";
 import plusIcon from "../../../assets/profile_icons/plus.png";
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
-import { postData, getData } from "../../api/api";
+import { getData } from "../../api/api";
 import { useAuth } from "../../../auth/useAuth";
 import ComNoData from "../../Components/ComNoData/ComNoData";
-import CategoryButtons from '../../Components/ComCategories/ComCategories';
 import ComSelectButton from "../../Components/ComButton/ComSelectButton";
 
 export default function VisitationSchedule() {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [displayedItems, setDisplayedItems] = useState(10);
   const [select, setSelect] = useState(false);
   const { user } = useAuth();
   const categories = ["FollowUpVisit", "Consultation", "ProcedureCompletion", "Cancel"];
 
-  const searchSchema = yup.object().shape({
-    search: yup.string(),
-  });
   const navigation = useNavigation();
   const {
-    text: {
-      visitationText,
-      common: { button },
-    },
+    text: { visitationText, common: { button } },
     setLanguage,
   } = useContext(LanguageContext);
-  const methods = useForm({
-    resolver: yupResolver(searchSchema),
-    defaultValues: {
-      search: "",
-    },
-  });
 
-
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = methods;
-
-  const register = () => {
-    navigation.navigate("RegisterVisitation");
-
-  };
+  const register = () => { navigation.navigate("RegisterVisitation") };
 
   const check = () => {
     setSelectedCategory(null)
     setSelect(false);
+    setDisplayedItems(10);
   };
 
   const handleCategorySelect = (value) => {
     setSelectedCategory(value);
     setSelect(true);
+    setDisplayedItems(10);
+  };
+
+  const handleLoadMore = () => {
+    setDisplayedItems(prevCount => prevCount + 10);
   };
 
   const getStatusText = (status) => {
@@ -138,11 +119,7 @@ export default function VisitationSchedule() {
             <View style={{ flexDirection: "row", alignItems: "center", gap: 3 }}>
               <Image
                 source={plusIcon}
-                style={{
-                  height: 25,
-                  width: 25,
-                  objectFit: "fill",
-                }}
+                style={{ height: 25, width: 25, objectFit: "fill" }}
               />
               <Text
                 style={{
@@ -167,8 +144,7 @@ export default function VisitationSchedule() {
               Tất cả
             </ComSelectButton>
             {categories.map((category) => (
-              <ComSelectButton
-                key={category}
+              <ComSelectButton key={category}
                 onPress={() => handleCategorySelect(category)}
                 check={selectedCategory === category ? false : true}
               > {getStatusText(category).text} </ComSelectButton>
@@ -181,11 +157,20 @@ export default function VisitationSchedule() {
             showsHorizontalScrollIndicator={false}
           >
             {data?.length > 0 ? (
-              <View>
-                {data?.map((value, index) => (
-                  <ComVisitationSchedule key={index} data={value} />
-                ))}
-              </View>
+              <>
+                <View>
+                  {data?.slice(0, displayedItems)?.map((value, index) => (
+                    <ComVisitationSchedule key={index} data={value} />
+                  ))}
+                </View>
+                {displayedItems < data.length && (
+                  <View style={{ justifyContent: "center", alignItems: "center" }}>
+                    <View style={{ width: "35%" }}>
+                      <ComSelectButton onPress={handleLoadMore} >Xem thêm</ComSelectButton>
+                    </View>
+                  </View>
+                )}
+              </>
             ) : (<ComNoData>Không có dữ liệu</ComNoData>)}
             <View style={{ height: 370 }}></View>
           </ScrollView>

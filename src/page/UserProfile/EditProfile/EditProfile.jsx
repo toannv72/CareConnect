@@ -17,9 +17,10 @@ import ComHeader from "../../../Components/ComHeader/ComHeader";
 import { useStorage } from "../../../hooks/useLocalStorage";
 import { postData, getData, putData } from "../../../api/api";
 import { useAuth } from "../../../../auth/useAuth";
+import { cccdRegex } from "../../../Components/ComRegexPatterns/regexPatterns";
 
 export default function EditProfile({ }) {
-  const { user, login, setUser } = useAuth();
+  const { user, login, setUser, role } = useAuth();
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(user?.avatarUrl);
   const [imageUrl, setImageUrl] = useState(null);
@@ -28,6 +29,7 @@ export default function EditProfile({ }) {
   const {
     text: {
       EditProfile,
+      Register,
       common: { button },
     },
     setLanguage,
@@ -40,6 +42,11 @@ export default function EditProfile({ }) {
       .trim()
       .required(EditProfile?.message?.email),
     address: yup.string().trim().required(EditProfile?.message?.address),
+    cccd: yup
+      .string()
+      .trim()
+      .required(Register?.message?.cccd)
+      .matches(cccdRegex, Register?.message?.cccdInValid),
   });
 
   const methods = useForm({
@@ -219,7 +226,7 @@ export default function EditProfile({ }) {
                     name="cccd"
                     control={control}
                     errors={errors} // Pass errors object
-                    edit={false}
+                    edit={role?.name == "Customer" ? true : false}
                     required
                   />
                   <ComInput
@@ -231,7 +238,7 @@ export default function EditProfile({ }) {
                     required
                   />
                 </View>
-                <View style={{ height: 100 }}></View>
+                {/* <View style={{ height: 100 }}></View> */}
               </ScrollView>
             </View>
             <View>

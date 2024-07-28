@@ -12,7 +12,7 @@ export default function ComVisitationSchedule({ data }) {
   const [date] = data?.date?.split("T");
   const [year, month, day] = date.split("-");
 
-  const getStatusText = (status) => {
+  const getTypeText = (status) => {
     switch (status) {
       case 'FollowUpVisit':
         return { text: 'Thăm nuôi', color: 'green' };
@@ -22,6 +22,19 @@ export default function ComVisitationSchedule({ data }) {
         return { text: 'Hoàn thành thủ tục', color: 'red' };
       case 'Cancel':
         return { text: 'Hủy hợp đồng', color: 'red' };
+      default:
+        return status;
+    }
+  };
+
+  const getStatusText = (status) => {
+    switch (status) {
+      case 'Pending':
+        return { text: 'Đang chờ', color: 'green' };
+      case 'Completed':
+        return { text: 'Đã hoàn thành', color: 'red' };
+      case 'Cancelled':
+        return { text: 'Đã hủy', color: 'red' };
       default:
         return status;
     }
@@ -93,7 +106,13 @@ export default function ComVisitationSchedule({ data }) {
           <Text style={{ fontWeight: "bold", fontSize: 16 }}>
             Loại lịch hẹn:
           </Text>
-          <Text> {getStatusText(data?.type)?.text}</Text>
+          <Text> {getTypeText(data?.type)?.text}</Text>
+        </Text>
+        <Text>
+          <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+            Trạng thái:
+          </Text>
+          <Text> {getStatusText(data?.status)?.text}</Text>
         </Text>
 
       </View>
@@ -111,7 +130,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#33B39C",
     backgroundColor: "#caece6",
-
     elevation: 4, // Bóng đổ cho Android
     shadowColor: "#000", // Màu của bóng đổ cho iOS
     shadowOffset: { width: 0, height: 1 },

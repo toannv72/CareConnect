@@ -145,7 +145,7 @@ export default function LoginScreen() {
             </ComButton>
 
             <View style={styles?.link}>
-              <ComTitleLink to={"ForgetPassword"}>
+              <ComTitleLink to={"ForgetPassword"} style={{ color: "#33B39C" }}>
                 {Login?.link?.forgetPassword}
               </ComTitleLink>
               <ComTitle> {Login?.link?.labelRegister}</ComTitle>

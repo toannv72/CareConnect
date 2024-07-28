@@ -21,6 +21,7 @@ export default function Contracts() {
   const [select, setSelect] = useState(false);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [displayedItems, setDisplayedItems] = useState(10);
   const categories = ["Valid", "Expired", "Cancelled", "Pending"];
   const fetchNextPage = async () => {
     setLoading(true)
@@ -89,14 +90,21 @@ export default function Contracts() {
   const check = () => {
     setSelectedCategory(null)
     setSelect(false);
+    setDisplayedItems(10);
   };
 
   const handleCategorySelect = (value) => {
     setSelectedCategory(value);
     setSelect(true);
+    setDisplayedItems(10);
   };
   const handleClearSearch = () => {
     setSearchQuery("");
+    setDisplayedItems(10);
+  };
+
+  const handleLoadMore = () => {
+    setDisplayedItems(prevCount => prevCount + 10);
   };
 
   const filteredData = !select ? contracts : contracts.filter(item => item?.status === selectedCategory);
@@ -148,10 +156,19 @@ export default function Contracts() {
             {filteredData?.length > 0 ? (
               <>
                 <View>
-                  {filteredData?.map((value, index) => (
+                  {filteredData?.slice(0, displayedItems)?.map((value, index) => (
                     <ComAddContract key={index} data={value} />
                   ))}
                 </View>
+                {
+                  displayedItems < filteredData.length && (
+                    <View style={{ justifyContent: "center", alignItems: "center" }}>
+                      <View style={{ width: "35%" }}>
+                        <ComSelectButton onPress={handleLoadMore} disable={displayedItems >= filteredData.length}>Xem thêm</ComSelectButton>
+                      </View>
+                    </View>
+                  )
+                }
                 <View style={{ height: 150 }}></View>
               </>
             ) : (<ComNoData>Không có hợp đồng nào</ComNoData>)}

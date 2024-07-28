@@ -20,11 +20,15 @@ export default function Favorite() {
                 showBackIcon
             />
             <View style={styles.container}>
-                {favorites.length == 0 ? (<ComNoData>Không có dịch vụ nào</ComNoData>
-                ) : (favorites?.map((item, index) => (
-                    <ComAddPackage key={index} data={item} />
-                ))
-                )}
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}>
+                    {favorites.length == 0 ? (<ComNoData>Không có dịch vụ nào</ComNoData>
+                    ) : (favorites?.map((item, index) => (
+                        <ComAddPackage key={index} data={item} />
+                    ))
+                    )}
+                </ScrollView>
             </View>
         </>
     );

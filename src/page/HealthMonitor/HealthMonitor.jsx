@@ -75,10 +75,9 @@ export default function HealthMonitor() {
                   <ComHealth key={index} data={value} />
                 ))}
               </View>
-            )
-            }
+            )}
+            <View style={{ height: 100 }}></View>
           </ScrollView>
-
         </ComLoading>
       </View>
     </>
@@ -88,7 +87,7 @@ export default function HealthMonitor() {
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    paddingTop: 20,
+    paddingTop: 10,
     backgroundColor: "#fff",
     paddingHorizontal: 15,
   },

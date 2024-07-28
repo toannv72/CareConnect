@@ -455,7 +455,7 @@ function MyBottomNavigationBar() {
           elevation: 0,
           backgroundColor: "#14A499",
           borderRadius: 15,
-          height: 90,
+          height: Platform.OS === "android" ? 80 : 90,
           elevation: 30, // Bóng đổ cho Android
           shadowColor: "#000", // Màu của bóng đổ cho iOS
           shadowOffset: { width: 0, height: 2 },
@@ -543,7 +543,7 @@ function NurseBottomNavigationBar() {
           elevation: 0,
           backgroundColor: "#14A499",
           borderRadius: 15,
-          height: 90,
+          height: Platform.OS === "android" ? 80 : 90,
           elevation: 30, // Bóng đổ cho Android
           shadowColor: "#000", // Màu của bóng đổ cho iOS
           shadowOffset: { width: 0, height: 2 },

@@ -1,16 +1,16 @@
 export const vn = {
   common: {
     button: {
-      login: "Đăng Nhập",
-      reissue: "Đăng Ký",
+      login: "Đăng nhập",
+      reissue: "Đăng ký",
     },
   },
   Login: {
-    pageTitle: "Đăng Nhập",
+    pageTitle: "Đăng nhập",
     pageSubTitle: "Chào mừng đến với Viện Dưỡng Lão...!",
     button: {
-      login: "Đăng Nhập",
-      reissue: "Đăng Ký",
+      login: "Đăng nhập",
+      reissue: "Đăng ký",
     },
     label: {
       username: "Tên người dùng",
@@ -48,7 +48,7 @@ export const vn = {
     messageRegisterSuccess: "Chúc mừng bạn đã đặt lại mật khẩu thành công",
     button: {
       ForgetPassword: "Xác nhận",
-      reissue: "Đăng Ký",
+      reissue: "Đăng ký",
       login: "Đăng nhập",
     },
     label: {
@@ -132,7 +132,7 @@ export const vn = {
     },
   },
   RegisterSuccess: {
-    button: "Đăng Nhập",
+    button: "Đăng nhập",
     pageTitle: "Đăng ký thành công",
     content: "Chúc mừng bạn đăng ký thành công. Cùng khám phá CareConnect nào!",
   },
@@ -157,7 +157,7 @@ export const vn = {
       title: "Chi tiết gói dưỡng lão",
       description: "Mô tả",
       service: "Dịch vụ của gói",
-      registerForm: "Điền form đăng ký",
+      registerForm: "Đăng ký",
       signContract: "Đăng ký lịch hẹn hoàn thành thủ tục",
     },
     popup: {
@@ -350,7 +350,7 @@ export const vn = {
     messageRegisterSuccess: "Chúc mừng bạn đã đặt lại mật khẩu thành công",
     button: {
       ChangePassword: "Xác nhận",
-      reissue: "Đăng Ký",
+      reissue: "Đăng ký",
       back: "Quay lại",
     },
     label: {

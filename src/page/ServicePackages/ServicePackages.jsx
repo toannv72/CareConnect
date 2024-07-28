@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect, useCallback } from "react";
-import { StyleSheet, View, Image, Text } from "react-native";
+import { StyleSheet, View, Image, Text, TouchableOpacity } from "react-native";
 import ComPackage from "./ComPackage";
 import { LanguageContext } from "./../../contexts/LanguageContext";
 import { Controller, Form, FormProvider, useForm } from "react-hook-form";
@@ -132,12 +132,16 @@ export default function ServicePackages() {
                   <ComPackage key={index} data={value} />
                 ))}
               </View>
-              <View style={{ justifyContent: "center", alignItems: "center" }}>
-                <View style={{ width: "35%" }}>
-                  {loadMoreLoading ? (<ActivityIndicator />) :
-                    (<ComSelectButton onPress={fetchNextPage} disable={!hasMore}>Xem thêm</ComSelectButton>)}
+              {hasMore && (
+                <View style={{ justifyContent: "center", alignItems: "center" }}>
+                  <View style={{ width: "35%" }}>
+                    {loadMoreLoading ? (<ActivityIndicator />) :
+                      (<TouchableOpacity onPress={fetchNextPage} disable={!hasMore}>
+                        <Text style={{ fontSize: 16, textAlign: "center", color: "#33B39C" }}>Xem thêm</Text>
+                      </TouchableOpacity>)}
+                  </View>
                 </View>
-              </View>
+              )}
               <View style={{ height: 30 }}></View>
             </ScrollView>
           ))}

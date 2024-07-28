@@ -95,7 +95,7 @@ export default function Home({ navigation }) {
         <TopPlacesCarousel list={TOP_PLACES} />
         <Catalogue />
         <Services />
-        <News />
+        {/* <News /> */}
         <View style={{ height: 120 }}></View>
       </ScrollView>
     </View>

@@ -23,6 +23,7 @@ export default function DetailProfile({ route }) {
     Object.keys(user).forEach(key => {
       setValue(key, user[key]);
     });
+    setValue("cccd", user?.cccd)
     setValue("dateOfBirth", moment(user?.dateOfBirth, "YYYY-MM-DD").format("DD/MM/YYYY") ?? "",);
   }, [user]);
 
@@ -47,7 +48,7 @@ export default function DetailProfile({ route }) {
       gender: user?.gender ?? "",
       dateOfBirth: moment(user?.dateOfBirth, "YYYY-MM-DD").format("DD/MM/YYYY") ?? "",
       phoneNumber: user?.phoneNumber ?? "",
-      idNumber: user?.cccd ?? "",
+      cccd: user?.cccd ?? "",
       address: user?.address ?? ""
     },
   });
@@ -150,7 +151,7 @@ export default function DetailProfile({ route }) {
                   <ComInput
                     label={EditProfile?.label?.idNumber}
                     placeholder={EditProfile?.placeholder?.idNumber}
-                    name="idNumber"
+                    name="cccd"
                     edit={false}
                     control={control}
                     errors={errors} // Pass errors object

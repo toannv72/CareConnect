@@ -39,7 +39,7 @@ export default function Register() {
       .string()
       .required(EditProfile?.message?.gender),
     dateOfBirth: yup
-      .string()
+      .date()
       .required(EditProfile?.message?.dateOfBirth),
     email: yup
       .string()
@@ -61,11 +61,11 @@ export default function Register() {
       .trim()
       .required(Register?.message?.phoneRequired)
       .matches(phoneNumberRegex, Register?.message?.phoneInvalid),
-    cccd: yup
-      .string()
-      .trim()
-      .required(Register?.message?.cccd)
-      .matches(cccdRegex, Register?.message?.cccdInValid),
+    // cccd: yup
+    //   .string()
+    //   .trim()
+    //   .required(Register?.message?.cccd)
+    //   .matches(cccdRegex, Register?.message?.cccdInValid),
   });
   const formattedDate = (dateValue) => {
     if (!dateValue || !(dateValue instanceof Date)) {
@@ -88,13 +88,13 @@ export default function Register() {
       methods.reset({
         fullName: "",
         gender: "Male",
-        dateOfBirth: "",
+        dateOfBirth: moment().subtract(18, "years").toDate(),
         email: "",
         password: "",
         confirmPassword: "",
         confirmPassword: "",
         phoneNumber: "",
-        cccd: ""
+        // cccd: ""
       });
       if (scrollViewRef.current) {
         scrollViewRef.current.scrollTo({ y: 0, animated: true }); // Scroll to top
@@ -219,7 +219,7 @@ export default function Register() {
                 errors={errors} // Pass errors object
                 required
               />
-              <ComInput
+              {/* <ComInput
                 label={Register?.label?.cccd}
                 placeholder={Register?.label?.cccd}
                 name="cccd"
@@ -227,7 +227,7 @@ export default function Register() {
                 keyboardType="numeric" // Set keyboardType for First Name input
                 errors={errors} // Pass errors object
                 required
-              />
+              /> */}
               <ComInput
                 label={Register?.label?.password}
                 placeholder={Register?.placeholder?.password}

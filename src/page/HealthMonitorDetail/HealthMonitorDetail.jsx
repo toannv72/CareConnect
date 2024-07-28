@@ -67,7 +67,7 @@ export default function HealthMonitorDetail() {
       })
       .catch((error) => {
         setLoading(false);
-        console.error("Error getData fetching items:", error);
+        console.error("Error getData health-report items:", error);
       });
     getData(`/elders/${data?.elderId}`, {})
       .then((elders) => {
@@ -76,7 +76,7 @@ export default function HealthMonitorDetail() {
       })
       .catch((error) => {
         setLoading(false);
-        console.error("Error getData fetching items:", error);
+        console.error("Error getData elders items:", error);
       });
   }, []);
 

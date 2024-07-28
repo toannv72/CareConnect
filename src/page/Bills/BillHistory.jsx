@@ -101,12 +101,6 @@ export default function BillHistory() {
         formState: { errors },
     } = methods;
 
-    const onSubmit = (data) => {
-        console.log("Search data:", data);
-        setLoading(true);
-        setLoading(false);
-    };
-
     const filteredData = data.filter((bill) => {
         const [year, month] = bill?.dueDate.split('-');
         const formattedDate = `${month}/${year}`;
@@ -184,11 +178,15 @@ export default function BillHistory() {
                                         <ComBill key={index} data={value} />
                                     ))}
                                 </View>
-                                <View style={{ justifyContent: "center", alignItems: "center" }}>
-                                    <View style={{ width: "35%" }}>
-                                        <ComSelectButton onPress={handleLoadMore} disable={displayedItems >= filteredData.length}>Xem thêm</ComSelectButton>
-                                    </View>
-                                </View>
+                                {
+                                    displayedItems < filteredData.length && (
+                                        <View style={{ justifyContent: "center", alignItems: "center" }}>
+                                            <View style={{ width: "35%" }}>
+                                                <ComSelectButton onPress={handleLoadMore} disable={displayedItems >= filteredData.length}>Xem thêm</ComSelectButton>
+                                            </View>
+                                        </View>
+                                    )
+                                }
                                 <View style={{ height: 20 }}></View>
                             </View>
                         )}

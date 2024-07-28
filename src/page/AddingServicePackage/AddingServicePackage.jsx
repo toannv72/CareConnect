@@ -1,5 +1,5 @@
 import React, { useContext, useState, useCallback, useEffect } from "react";
-import { View, StyleSheet, Image, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { useForm, FormProvider } from "react-hook-form";
 import ComHeader from '../../Components/ComHeader/ComHeader';
 import ComSelectButton from "../../Components/ComButton/ComSelectButton";
@@ -10,12 +10,12 @@ import ComAddPackage from "./ComAddPackage";
 import { LanguageContext } from "./../../contexts/LanguageContext";
 import ComNoData from "../../Components/ComNoData/ComNoData";
 import Heart from "../../../assets/heart.png";
-import { postData, getData } from "../../api/api";
+import { getData } from "../../api/api";
 import { stylesApp } from "../../styles/Styles";
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
-import CategoryButtons from '../../Components/ComCategories/ComCategories';
 import ComInputSearch from '../../Components/ComInput/ComInputSearch';
 import moment from "moment";
+import ComSelect from "../Bills/ComSelect";
 
 export default function AddingServicePackages() {
     const {
@@ -25,6 +25,7 @@ export default function AddingServicePackages() {
     const [data, setData] = useState([]);
     const [categoryData, setCategoryData] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const [selectedPriceOrder, setSelectedPriceOrder] = useState("Asc");
     const [loading, setLoading] = useState(false);
     const [displayedItems, setDisplayedItems] = useState(10);
     const [searchQuery, setSearchQuery] = useState("");
@@ -41,13 +42,13 @@ export default function AddingServicePackages() {
     const { control, handleSubmit, reset, formState: { errors } } = methods;
 
     const onSubmit = (data) => {
-        fetchNextPage(encodeURIComponent(data?.search.trim()))
+        setSearchQuery(data?.search.trim());
     };
 
-    const fetchNextPage = async (search) => {
-        let url = `/service-package?`;
+    const fetchNextPage = async (search = searchQuery) => {
+        let url = `/service-package?SortColumn=price&SortDir=${selectedPriceOrder}`;
         if (selectedCategory) { url += `&PackageCategoryId=${selectedCategory}` }
-        if (search) { url += `&Search=${search}` }
+        if (search) { url += `&Search=${encodeURIComponent(search)}` }
         setLoading(true);
         getData(url, {})
             .then((packageData) => {
@@ -60,8 +61,14 @@ export default function AddingServicePackages() {
             });
 
         getData('/service-package-categories', {})
-            .then((categoryData) => {
-                setCategoryData(categoryData?.data?.contends);
+            .then((categoryResponse) => {
+                const formattedCategoryData = [{ value: 0, label: "Tất cả" }].concat(
+                    categoryResponse?.data?.contends.map(category => ({
+                        value: category.id,
+                        label: category.name,
+                    }))
+                );
+                setCategoryData(formattedCategoryData);
                 setLoading(false);
             })
             .catch((error) => {
@@ -71,17 +78,18 @@ export default function AddingServicePackages() {
     };
 
     useEffect(() => {
-        if (selectedCategory || selectedCategory == 0 || searchQuery != "") { fetchNextPage(); }
-    }, [selectedCategory, searchQuery]);
+        fetchNextPage();
+    }, [selectedCategory, searchQuery, selectedPriceOrder]);
 
     useFocusEffect(
         useCallback(() => {
             reset();
             setLoading(!loading);
             setSearchQuery("");
-            fetchNextPage();
-            setSelectedCategory(null)
-            setDisplayedItems(10)
+            fetchNextPage("");
+            setSelectedCategory(null);
+            setSelectedPriceOrder("Asc");
+            setDisplayedItems(10);
         }, [])
     );
 
@@ -90,7 +98,12 @@ export default function AddingServicePackages() {
         setDisplayedItems(10);
     };
 
+    const handlePriceOrderSelect = (order) => {
+        setSelectedPriceOrder(order);
+    };
+
     const handleClearSearch = () => {
+        setSearchQuery("");
         setDisplayedItems(10);
         fetchNextPage("");
     };
@@ -98,15 +111,19 @@ export default function AddingServicePackages() {
     const currentDate = moment();
     const filteredData = data?.filter((service) => {
         const endRegistrationDate = moment(service?.endRegistrationDate);
-        const hasNotExpired = currentDate.isSameOrBefore(endRegistrationDate, "day");//chua het han dang ky
-        const hasSlotsLeft = service?.registrationLimit !== 0 ? service?.totalOrder < service?.registrationLimit : service?.totalOrder >= service?.registrationLimit;//chua het luot dang ky
-        //nếu có giới hạn người                 tổng lượt dky < giới hạn                             tổng lượt dky >= 0
+        const hasNotExpired = currentDate.isSameOrBefore(endRegistrationDate, "day");
+        const hasSlotsLeft = service?.registrationLimit !== 0 ? service?.totalOrder < service?.registrationLimit : service?.totalOrder >= service?.registrationLimit;
         return hasNotExpired && hasSlotsLeft;
     });
 
     const handleLoadMore = () => {
         setDisplayedItems(prevCount => prevCount + 10);
     };
+
+    const priceData = [
+        { value: "Asc", label: "Giá: Tăng dần" },
+        { value: "Desc", label: "Giá: Giảm dần" }
+    ];
 
     return (
         <>
@@ -134,40 +151,49 @@ export default function AddingServicePackages() {
                         <Image source={Heart} style={{ width: 30, height: 30, tintColor: "#fff" }} />
                     </TouchableOpacity>
                 </View>
-                <CategoryButtons
-                    categoryData={categoryData}
-                    selectedCategory={selectedCategory}
-                    onSelectCategory={handleCategorySelect}
-                    onClearSelection={() => { handleCategorySelect(0) }} // Pass handleClearSelection as prop
-                />
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 10 }}>
+                    <ComSelect
+                        name="status"
+                        options={categoryData}
+                        control={control}
+                        errors={errors}
+                        style={{ width: '49%' }}
+                        onChange={handleCategorySelect}
+                    />
+                    <ComSelect
+                        name="price"
+                        options={priceData}
+                        control={control}
+                        errors={errors}
+                        style={{ width: '49%' }}
+                        onChange={handlePriceOrderSelect}
+                    />
+                </View>
                 {loading ? (
                     <ComLoading show={true} />
                 ) : (
-                    filteredData.length == 0 ? (<ComNoData>Không có dịch vụ nào</ComNoData>
+                    filteredData.length === 0 ? (
+                        <ComNoData>Không có dịch vụ nào</ComNoData>
                     ) : (
                         <ScrollView
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}>
-                            {
-                                filteredData?.slice(0, displayedItems)?.map((item, index) => (
-                                    <ComAddPackage key={index} data={item} />
-                                ))
-                            }
-                            {
-                                displayedItems < filteredData.length &&
+                            {filteredData.slice(0, displayedItems).map((item, index) => (
+                                <ComAddPackage key={index} data={item} />
+                            ))}
+                            {displayedItems < filteredData.length &&
                                 <View style={{ justifyContent: "center", alignItems: "center" }}>
                                     <View style={{ width: "35%" }}>
                                         <ComSelectButton onPress={handleLoadMore} disable={displayedItems >= filteredData.length}>Xem thêm</ComSelectButton>
-                                        {/* <View style={{ height: 50 }} /> */}
                                     </View>
                                 </View>
                             }
-
+                            <View style={{ height: 100 }} />
                         </ScrollView>
                     ))}
-            </View >
+            </View>
         </>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
