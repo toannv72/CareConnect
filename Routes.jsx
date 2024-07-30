@@ -1,9 +1,10 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useContext, useState } from "react";
 import { Platform } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { NotificationsContext } from './src/contexts/NotificationsContext';
 import Login from "./src/page/Login/Login";
 import Register from "./src/page/Register/Register";
 import Home from "./src/page/Home/Home";
@@ -83,6 +84,7 @@ const Tab = createBottomTabNavigator();
 
 const Routes = () => {
   const navigationRef = useRef(null);
+
   return (
     <NavigationContainer ref={navigationRef}
       onUnhandledAction={() => navigationRef.current?.navigate('NotFound')}>
@@ -416,6 +418,7 @@ const Routes = () => {
 };
 const HomeStack = createNativeStackNavigator();
 const NurseStack = createNativeStackNavigator();
+
 function HomeStackScreen() {
   return (
     <HomeStack.Navigator>
@@ -442,6 +445,14 @@ function NurseStackScreen() {
   );
 }
 function MyBottomNavigationBar() {
+  const { notifications } = useContext(NotificationsContext);
+  const [hasUnreadNotifications, setHasUnreadNotifications] = useState(true);
+
+  useEffect(() => {
+    const unread = notifications.some(notification => !notification.isRead);
+    setHasUnreadNotifications(unread);
+  }, [notifications]);
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -455,7 +466,7 @@ function MyBottomNavigationBar() {
           elevation: 0,
           backgroundColor: "#14A499",
           borderRadius: 15,
-          height: Platform.OS === "android" ? 80 : 90,
+          height: Platform.OS === "android" ? 80 : 95,
           elevation: 30, // Bóng đổ cho Android
           shadowColor: "#000", // Màu của bóng đổ cho iOS
           shadowOffset: { width: 0, height: 2 },
@@ -473,7 +484,8 @@ function MyBottomNavigationBar() {
           } else if (route.name === "HealthCondition") {
             iconName = focused ? "Nav3" : "Nav3_1";
           } else if (route.name === "Notification") {
-            iconName = focused ? "Nav4" : "Nav4_1";
+            // iconName = focused ? "Nav4" : "Nav4_1";
+            iconName = hasUnreadNotifications ? (focused ? 'Nav4_1_2' : 'Nav4_1_1') : (focused ? 'Nav4' : 'Nav4_1');
           } else if (route.name === "Account") {
             iconName = focused ? "Nav5" : "Nav5_1";
           }
@@ -495,26 +507,11 @@ function MyBottomNavigationBar() {
         options={{ headerShown: false }}
         component={AddingServicePackages}
       />
-      {/* <Tab.Screen
-        name="HealthCondition"
-        options={{ headerShown: false }}
-        component={NotificationPage}
-      /> */}
       <Tab.Screen
         name="HealthCondition"
         options={{ headerShown: false }}
         component={HealthMonitor}
       />
-      {/* <Tab.Screen
-        name="Notification"
-        options={{ headerShown: false }}
-        component={Notification}
-      /> */}
-      {/* <Tab.Screen
-        name="Notification"
-        options={{ headerShown: false }}
-        component={NotificationApi}
-      /> */}
       <Tab.Screen
         name="Notification"
         options={{ headerShown: false }}
@@ -530,6 +527,14 @@ function MyBottomNavigationBar() {
 }
 
 function NurseBottomNavigationBar() {
+  const { notifications } = useContext(NotificationsContext);
+  const [hasUnreadNotifications, setHasUnreadNotifications] = useState(true);
+
+  useEffect(() => {
+    const unread = notifications.some(notification => !notification.isRead);
+    setHasUnreadNotifications(unread);
+  }, [notifications]);
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -559,7 +564,7 @@ function NurseBottomNavigationBar() {
           } else if (route.name === "CareSchedule") {
             iconName = focused ? "Nav2" : "Nav2_1";
           } else if (route.name === "Notification") {
-            iconName = focused ? "Nav4" : "Nav4_1";
+            iconName = hasUnreadNotifications ? (focused ? 'Nav4_1_2' : 'Nav4_1_1') : (focused ? 'Nav4' : 'Nav4_1');
           } else if (route.name === "Account") {
             iconName = focused ? "Nav5" : "Nav5_1";
           }
@@ -569,7 +574,7 @@ function NurseBottomNavigationBar() {
           return <ComNurseIcon icon={iconName} />;
         },
       })}
-      // keyboardShouldPersistTaps="handled"
+    // keyboardShouldPersistTaps="handled"
     >
       <Tab.Screen
         name="Home"

@@ -3,7 +3,7 @@ import Routes from "./Routes.jsx";
 import { LanguageProvider } from "./src/contexts/LanguageContext";
 import { Styles } from "./src/styles/Styles.jsx";
 import { AuthProvider } from "./auth/useAuth.jsx";
-import { CartProvider } from './src/contexts/CartContext.jsx';
+import { NotificationsProvider } from './src/contexts/NotificationsContext.jsx';
 import { FavoriteProvider } from './src/contexts/FavoriteContext.jsx';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import * as Linking from 'expo-linking';
@@ -16,7 +16,9 @@ const App = () => {
       <AuthProvider>
         <FavoriteProvider>
           <RootSiblingParent>
-            <Routes />
+            <NotificationsProvider>
+              <Routes />
+            </NotificationsProvider>
           </RootSiblingParent>
         </FavoriteProvider>
       </AuthProvider>

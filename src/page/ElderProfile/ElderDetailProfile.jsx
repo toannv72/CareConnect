@@ -10,6 +10,7 @@ import ComButton from "../../Components/ComButton/ComButton";
 import ComSelect from "../../Components/ComInput/ComSelect";
 import { ScrollView } from "react-native";
 import ComHeader from "../../Components/ComHeader/ComHeader";
+import { useAuth } from "../../../auth/useAuth";
 import { useRoute } from "@react-navigation/native";
 import moment from 'moment';
 import { postData, getData } from "../../api/api";
@@ -17,11 +18,13 @@ import { postData, getData } from "../../api/api";
 export default function DetailProfile() {
   const navigation = useNavigation();
   const route = useRoute();
+  const { role } = useAuth();
   const { data } = route.params;
   const {
     text: {
       ElderProfile,
       EditProfile,
+      contractsPage,
       common: { button },
     },
     setLanguage,
@@ -77,7 +80,9 @@ export default function DetailProfile() {
       setValue("gender", data?.gender ?? "");
     }
   }, [data, setValue]);
-
+  const representative = () => {
+    navigation.navigate("CustomerProfile", { userData: data?.user });
+  };
   return (
     <>
       <ComHeader
@@ -140,16 +145,18 @@ export default function DetailProfile() {
                       />
                     </View>
                   </View>
-
-                  <ComInput
-                    label={EditProfile?.label?.idNumber}
-                    placeholder={EditProfile?.placeholder?.idNumber}
-                    name="idNumber"
-                    edit={false}
-                    control={control}
-                    errors={errors} // Pass errors object
-                  />
-
+                  {
+                    role?.name == "Customer" && (
+                      <ComInput
+                        label={EditProfile?.label?.idNumber}
+                        placeholder={EditProfile?.placeholder?.idNumber}
+                        name="idNumber"
+                        edit={false}
+                        control={control}
+                        errors={errors} // Pass errors object
+                      />
+                    )
+                  }
                   <ComInput
                     label={ElderProfile?.detail?.nursingHomeAdd}
                     placeholder={ElderProfile?.detail?.nursingHomeAdd}
@@ -170,9 +177,15 @@ export default function DetailProfile() {
               </ScrollView>
             </View>
             <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 10, paddingBottom: 5 }}>
-              <ComButton onPress={medicalProfile} check={true} style={{ flex: 1, borderRadius: 50 }}>
+              <ComButton onPress={medicalProfile} check={true} style={{ flex: role?.name == "Nurse" ? 0.6 : 1, borderRadius: 50 }}>
                 {ElderProfile?.detail?.medicalProfile}
               </ComButton>
+              {
+                role?.name == "Nurse" &&
+                (<ComButton onPress={representative} style={{ flex: 0.4, borderRadius: 50 }}>
+                  {contractsPage?.representative}
+                </ComButton>)
+              }
             </View>
           </FormProvider>
         </View >

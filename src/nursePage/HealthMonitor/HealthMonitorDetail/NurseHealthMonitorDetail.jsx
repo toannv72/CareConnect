@@ -14,12 +14,14 @@ import ComHeader from "../../../Components/ComHeader/ComHeader";
 import { postData, getData } from "../../../api/api";
 import User_fill from "../../../../assets/User_fill.png"
 import { stylesApp } from "../../../styles/Styles";
+import { useNavigation } from "@react-navigation/native";
 
 export default function HealthMonitorDetail() {
   const route = useRoute();
-  const { data } = route.params;
+  const { data, elderData, roomData } = route.params;
   const [loading, setLoading] = useState(false);
   const [healthMonitor, setHealthMonitor] = useState([]);
+  const navigation = useNavigation();
 
   const {
     text: {
@@ -113,7 +115,6 @@ export default function HealthMonitorDetail() {
               <ComTimeDivision time={`Lần đo thứ ${index + 1} - ${formattedTime(item?.createdAt)}`}></ComTimeDivision>
               <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                 <Text>Chỉ số sức khỏe</Text>
-                <Text>{item?.id}</Text>
                 <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
                   <Image
                     source={User_fill}

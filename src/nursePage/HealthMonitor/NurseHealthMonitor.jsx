@@ -62,7 +62,7 @@ export default function NurseHealthMonitor({ data }) {
                                                         key={elderIndex}
                                                         data={elder}
                                                         onPress={() => {
-                                                            navigation.navigate("ListHealthMonitor", { id: elder?.id });
+                                                            navigation.navigate("ListHealthMonitor", { id: elder?.id, elderData: elder, roomData: value });
                                                         }}
                                                         style={{ backgroundColor: "#d3f5ef", marginBottom: 10 }}
                                                     />

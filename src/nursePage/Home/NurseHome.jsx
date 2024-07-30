@@ -8,6 +8,7 @@ import { postData, getData } from "../../api/api";
 import nurseHome from "../../../assets/images/nurseHome/nurseHome.png"
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { useFocusEffect } from '@react-navigation/native';
+import { NotificationsContext } from '../../contexts/NotificationsContext';
 import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
@@ -46,6 +47,7 @@ async function registerForPushNotificationsAsync() {
 export default function NurseHome({ navigation }) {
   const { user, setUser, login } = useAuth();
   const [expoPushToken, setExpoPushToken] = useState("");
+  const { updateNotifications } = useContext(NotificationsContext);
 
   const {
     text: {
@@ -66,6 +68,14 @@ export default function NurseHome({ navigation }) {
     };
 
     fetchPushToken();
+
+    getData(`/notifications`, {})
+      .then((notifications) => {
+        updateNotifications(notifications?.data?.contends)
+      })
+      .catch((error) => {
+        console.error("Error fetching notifications:", error);
+      });
   }, []);
 
   useFocusEffect(

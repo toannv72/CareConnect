@@ -14,8 +14,8 @@ const ComHeader = ({
   const route = useRoute();
   const { role } = useAuth();
   const handleBackPress = () => {
-    if (route.name === 'EditProfile' || !navigation.canGoBack()) {
-      if (role?.name == "Nurse")
+    if (route.name === 'DetailProfile' || !navigation.canGoBack()) {
+      if (role?.name == "Nurse") 
         navigation.navigate("NurseHomes");
       else
         navigation.navigate("Homes");

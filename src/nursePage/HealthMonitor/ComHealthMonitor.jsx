@@ -7,7 +7,7 @@ import healthRecord from "../../../assets/images/HealthMonitor/healthRecord.png"
 import { postData, getData } from "../../api/api";
 import { stylesApp } from "../../styles/Styles";
 
-export default function ComHealthMonitor({ data, isSelected, style, time, status }) {
+export default function ComHealthMonitor({ data, isSelected, style, time, status, elderData, roomData }) {
   const {
     text: { healthMonitor },
     setLanguage,
@@ -15,13 +15,11 @@ export default function ComHealthMonitor({ data, isSelected, style, time, status
   const navigation = useNavigation();
 
   const [nurseData, setNurseData] = useState({})
-  const [roomData, setRoomData] = useState({})
   const [loading, setLoading] = useState(false);
 
   const formattedTime = (dateValue) => {
     const hours = new Date(dateValue).getHours().toString().padStart(2, '0');
     const minutes = new Date(dateValue).getMinutes().toString().padStart(2, '0');
-    const seconds = new Date(dateValue).getSeconds();
     return `${hours}:${minutes}`;
   };
 
@@ -43,17 +41,6 @@ export default function ComHealthMonitor({ data, isSelected, style, time, status
         setLoading(loading);
         console.error("Error getData fetching nurseData:", error);
       });
-
-    // getData(`/room/${data?.elder?.roomId}`, {})
-    //   .then((roomData) => {
-    //     console.log("roomData", roomData?.data?.name)
-    //     setRoomData(roomData?.data);
-    //     setLoading(loading);
-    //   })
-    //   .catch((error) => {
-    //     setLoading(loading);
-    //     console.error("Error getData fetching nurseData:", error);
-    //   });
   }, []);
 
   return (

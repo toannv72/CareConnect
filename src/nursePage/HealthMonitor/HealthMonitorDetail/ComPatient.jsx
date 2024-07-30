@@ -4,7 +4,7 @@ import { Image, View } from "react-native";
 import { LanguageContext } from "../../../contexts/LanguageContext";
 import { useNavigation } from "@react-navigation/native";
 
-export default function ComPatient({ data }) {
+export default function ComPatient({ data, onPress }) {
   const {
     text: { HealthMonitorDetail },
     setLanguage,
@@ -14,22 +14,20 @@ export default function ComPatient({ data }) {
   return (
     <TouchableOpacity
       style={styles.body}
-      onPress={() => {
-        // navigation.navigate("HealthMonitorDetailDetail", { id: data.id });
-      }}
+      onPress={onPress}
     >
       <Image
-        source={{ uri: data?.img }}
+        source={{ uri: data?.imageUrl }}
         style={{
           width: 65,
-          height: 80,
+          height: 65,
           borderRadius: 50,
           objectFit: "fill",
           borderWidth: 0.5,
           borderColor: "#000",
         }}
       />
-      <View style={styles?.container1}>
+     <View style={styles?.container1}>
         <View style={styles?.container}>
           <Text style={{ flexDirection: "row" }}>
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
@@ -41,25 +39,17 @@ export default function ComPatient({ data }) {
         <View style={styles?.container}>
           <Text style={{ flexDirection: "row" }}>
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-              {HealthMonitorDetail?.yearOld}
-            </Text>
-            <Text>: {data?.age}</Text>
-          </Text>
-        </View>
-        <View style={styles?.container}>
-          <Text style={{ flexDirection: "row" }}>
-            <Text style={{ fontWeight: "bold", fontSize: 14 }}>
               {HealthMonitorDetail?.YearOfBirth}
             </Text>
-            <Text>: {data?.room}</Text>
+            <Text>: <ComDateConverter>{data?.dateOfBirth}</ComDateConverter></Text>
           </Text>
         </View>
         <View style={styles?.container}>
           <Text style={{ flexDirection: "row" }}>
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-              {HealthMonitorDetail?.weight}
+              {HealthMonitorDetail?.gender}
             </Text>
-            <Text>: {data?.room}kg</Text>
+            <Text>: { data?.gender === 'Male' ? 'Nam' : data?.gender === 'Female' ? 'Nữ' : ''}</Text>
           </Text>
         </View>
       </View>

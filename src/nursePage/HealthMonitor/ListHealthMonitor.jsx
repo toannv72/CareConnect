@@ -14,8 +14,7 @@ export default function ListHealthMonitor({ data }) {
     const [healthMonitor, setHealthMonitor] = useState([])
     const [loading, setLoading] = useState(false);
     const route = useRoute();
-    const { id } = route.params;
-
+    const { id, elderData, roomData } = route.params;
     const {
         text: { NurseHealthMonitor },
         setLanguage,
@@ -76,6 +75,8 @@ export default function ListHealthMonitor({ data }) {
                                         <Text style={styles.dateHeader}>{formattedDate(date)}</Text>
                                         {items[0] && ( // Chỉ hiển thị nếu có mục cho ngày đó
                                             <ComHealthMonitor
+                                                elderData={elderData}
+                                                roomData={roomData}
                                                 data={items[0]}
                                                 time={groupedData[date].length}
                                                 style={{
@@ -98,7 +99,7 @@ export default function ListHealthMonitor({ data }) {
                 </ComLoading>
                 <TouchableOpacity
                     style={styles.imageContainer}
-                    onPress={() => navigation.navigate("ListHealthIndex", {elderId:id} )} // Chuyển đến trang mới
+                    onPress={() => navigation.navigate("ListHealthIndex", { elderId: id })} // Chuyển đến trang mới
                 >
                     <Image
                         source={plusIcon} // Đường dẫn tới ảnh của bạn

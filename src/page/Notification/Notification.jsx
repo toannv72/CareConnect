@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useContext, useCallback } from "react";
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { Text, View, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
+import { NotificationsContext } from '../../../src/contexts/NotificationsContext';
 import ComNotification from "./ComNotification/ComNotifications";
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import { LanguageContext } from "../../contexts/LanguageContext";
@@ -21,6 +21,7 @@ export default function Notification({ }) {
   const [displayedPreviousNotis, setDisplayedPreviousNotis] = useState([]);
   const [allRead, setAllRead] = useState(false);
   const [previousNotisLimit, setPreviousNotisLimit] = useState(10);
+  const { updateNotifications } = useContext(NotificationsContext);
 
   const {
     text: { Notification, common: { button } },
@@ -40,6 +41,7 @@ export default function Notification({ }) {
         setDisplayedPreviousNotis(previousNotis.slice(0, limit));
         const allReadStatus = allNotis.every((noti) => noti.isRead);
         setAllRead(allReadStatus);
+        updateNotifications(allNotis)
         setLoading(false);
       })
       .catch((error) => {
@@ -52,7 +54,7 @@ export default function Notification({ }) {
     useCallback(() => {
       setPreviousNotisLimit(10); // Reset the limit to 10 items
       fetchNotifications(10);
-    }, [fetchNotifications])
+    }, [])
   );
 
   const handleReadAll = async () => {
@@ -72,7 +74,7 @@ export default function Notification({ }) {
   };
 
   const handleLoadMore = () => {
-    const newLimit = previousNotisLimit + 2;
+    const newLimit = previousNotisLimit + 10;
     setPreviousNotisLimit(newLimit);
     fetchNotifications(newLimit);
   };
@@ -142,7 +144,14 @@ export default function Notification({ }) {
                 )}
               {previousNotis.length > 0 && (
                 <View>
-                  <ComTitle style={{ fontSize: 16, marginBottom: 10 }}>Trước đó</ComTitle>
+                  <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                    <ComTitle style={{ fontSize: 16, marginBottom: 10 }}>Trước đó</ComTitle>
+                    {todayNotis.length == 0 && (
+                      <TouchableOpacity onPress={() => handleReadAll()}>
+                        <Text style={{ color: allRead ? "#000" : "#33B39C" }}>Đánh dấu đã đọc tất cả</Text>
+                      </TouchableOpacity>
+                    )}
+                  </View>
                   <ComNotification tile={"Trước đó"} data={displayedPreviousNotis} />
                   {displayedPreviousNotis.length < previousNotis.length && (
                     <View style={{ justifyContent: "center", alignItems: "center" }}>
@@ -155,7 +164,7 @@ export default function Notification({ }) {
               )}
             </View>
           )}
-          <View style={{ height: 100 }}></View>
+          <View style={{ height: 20 }}></View>
         </ScrollView>
       </View>
     </>
@@ -179,8 +188,8 @@ const styles = StyleSheet.create({
     flexShrink: 0,
   },
   loadMoreText: {
-   fontSize: 16, 
-   textAlign: "center", 
-   color: "#33B39C"
+    fontSize: 16,
+    textAlign: "center",
+    color: "#33B39C"
   },
 });

@@ -7,6 +7,8 @@ import ComSelectButton from "../../../Components/ComButton/ComSelectButton";
 import ComService from "./ComService";
 import { postData, getData } from "../../../api/api";
 import CategoryButtons from '../../../Components/ComCategories/ComCategories';
+import ComNoData from "../../../Components/ComNoData/ComNoData";
+import moment from "moment";
 
 export default function Services() {
   const [data, setData] = useState([]);
@@ -19,7 +21,7 @@ export default function Services() {
 
   useEffect(() => {
     setLoading(!loading);
-    let url = `/service-package?PageSize=5&SortColumn=totalOrder&SortDir=Desc`;
+    let url = `/service-package?SortColumn=totalOrder&SortDir=Desc`;
     if (selectedCategory) { url += `&PackageCategoryId=${selectedCategory}` }
     getData(url, {})
       .then((packageData) => {
@@ -51,6 +53,13 @@ export default function Services() {
     setData([]);
   };
 
+  const filteredData = data?.filter((service) => {
+    const endRegistrationDate = moment(service?.endRegistrationDate);
+    const hasNotExpired = moment().isSameOrBefore(endRegistrationDate, "day");
+    const hasSlotsLeft = service?.registrationLimit !== 0 ? service?.totalOrder < service?.registrationLimit : service?.totalOrder >= service?.registrationLimit;
+    return hasNotExpired && hasSlotsLeft;
+});
+
   return (
     <View style={styles?.body}>
       <TopicContent>{Home?.services}</TopicContent>
@@ -71,9 +80,16 @@ export default function Services() {
         // image={true}
         // lines={5}
         /> */}
-      {data.map((value, index) => (
-        <ComService key={index} data={value}></ComService>
-      ))}
+      {
+        filteredData.length === 0 ? (
+          <ComNoData>Không có dịch vụ nào</ComNoData>
+        ) : (
+          filteredData.slice(0, 5).map((value, index) => (
+            <ComService key={index} data={value}></ComService>
+          ))
+        )
+      }
+
     </View>
   );
 }

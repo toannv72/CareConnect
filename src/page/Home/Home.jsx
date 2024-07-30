@@ -1,9 +1,10 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useContext } from "react";
 import { StyleSheet, View, Text, ScrollView, Alert, Platform } from "react-native";
 import Header from "./Header";
 import Catalogue from "./Catalogue/Catalogue";
 import News from "./News/News";
 import Services from "./News/Services";
+import { NotificationsContext } from '../../../src/contexts/NotificationsContext';
 import TopPlacesCarousel from "../../Components/ComImg/TopPlacesCarousel";
 import { TOP_PLACES } from "../../../db";
 import { useAuth } from "../../../auth/useAuth";
@@ -47,6 +48,7 @@ async function registerForPushNotificationsAsync() {
 export default function Home({ navigation }) {
   const [expoPushToken, setExpoPushToken] = useState("");
   const { user, setUser, login } = useAuth();
+  const { updateNotifications } = useContext(NotificationsContext);
 
   useEffect(() => {
     const fetchPushToken = async () => {
@@ -59,6 +61,14 @@ export default function Home({ navigation }) {
     };
 
     fetchPushToken();
+
+    getData(`/notifications`, {})
+      .then((notifications) => {
+        updateNotifications(notifications?.data?.contends)
+      })
+      .catch((error) => {
+        console.error("Error fetching notifications:", error);
+      });
   }, []);
 
   useFocusEffect(
@@ -71,16 +81,16 @@ export default function Home({ navigation }) {
           .catch((error) => {
             console.error("API devices Error: ", error?.message);
           });
-       
+
       }
       getData("/users/profile")
-      .then((userData) => {
-        login(userData?.data, expoPushToken);
-        setUser(userData?.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching user profile:", error);
-      });
+        .then((userData) => {
+          login(userData?.data, expoPushToken);
+          setUser(userData?.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching user profile:", error);
+        });
     }, [expoPushToken])
   );
 

@@ -12,7 +12,7 @@ import ComNoData from "../../Components/ComNoData/ComNoData";
 import Heart from "../../../assets/heart.png";
 import { getData } from "../../api/api";
 import { stylesApp } from "../../styles/Styles";
-import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import ComInputSearch from '../../Components/ComInput/ComInputSearch';
 import moment from "moment";
 import ComSelect from "../Bills/ComSelect";
@@ -29,7 +29,6 @@ export default function AddingServicePackages() {
     const [loading, setLoading] = useState(false);
     const [displayedItems, setDisplayedItems] = useState(10);
     const [searchQuery, setSearchQuery] = useState("");
-    const route = useRoute();
     const searchSchema = yup.object().shape({
         search: yup.string(),
     });
@@ -47,7 +46,7 @@ export default function AddingServicePackages() {
 
     const fetchNextPage = async (search = searchQuery) => {
         let url = `/service-package?SortColumn=price&SortDir=${selectedPriceOrder}`;
-        if (selectedCategory) { url += `&PackageCategoryId=${selectedCategory}` }
+        if (selectedCategory && selectedCategory != 0) { url += `&PackageCategoryId=${selectedCategory}` }
         if (search) { url += `&Search=${encodeURIComponent(search)}` }
         setLoading(true);
         getData(url, {})
@@ -108,10 +107,9 @@ export default function AddingServicePackages() {
         fetchNextPage("");
     };
 
-    const currentDate = moment();
     const filteredData = data?.filter((service) => {
         const endRegistrationDate = moment(service?.endRegistrationDate);
-        const hasNotExpired = currentDate.isSameOrBefore(endRegistrationDate, "day");
+        const hasNotExpired = moment().isSameOrBefore(endRegistrationDate, "day");
         const hasSlotsLeft = service?.registrationLimit !== 0 ? service?.totalOrder < service?.registrationLimit : service?.totalOrder >= service?.registrationLimit;
         return hasNotExpired && hasSlotsLeft;
     });

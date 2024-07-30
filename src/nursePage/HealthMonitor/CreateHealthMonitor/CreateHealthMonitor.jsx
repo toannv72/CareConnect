@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useRef } from "react";
-import { View, StyleSheet, ScrollView, Image, Text, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { View, StyleSheet, ScrollView, Image, Text, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
 import { LanguageContext } from "../../../contexts/LanguageContext";
 import { useRoute } from "@react-navigation/native";
 import HealthMonitor from "../../../../assets/images/HealthMonitor/HealthMonitor.png";
@@ -8,14 +8,16 @@ import ComHeader from "../../../Components/ComHeader/ComHeader";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import ComPopup from "../../../Components/ComPopup/ComPopup";
 import ComInput from "../../../Components/ComInput/ComInput";
 import ComToast from "../../../Components/ComToast/ComToast";
 import ComButton from "../../../Components/ComButton/ComButton";
 import { postData } from "../../../api/api";
-import Toast from 'react-native-root-toast';
 import { healthRegex } from "../../../Components/ComRegexPatterns/regexPatterns";
 
 export default function CreateHealthMonitor() {
+    const [loading, setLoading] = useState(false);
+    const [popup, setPopup] = useState(false);
     const { text: { NurseHealthMonitor } } = useContext(LanguageContext);
     const navigation = useNavigation();
     const route = useRoute();
@@ -24,7 +26,7 @@ export default function CreateHealthMonitor() {
 
     const loginSchema = yup.object().shape({
         notes: yup.string().required('Vui lòng nhập ghi chú tổng quát'),
-        ...selectedIndexs.reduce((acc, category) => {
+        ...selectedIndexs.reduce((acc, category) => {//check yup cho từng field trong measureUnitsActive
             category?.measureUnitsActive.forEach(unit => {
                 acc[`value_${unit.id}`] = yup.string()
                     .required('Vui lòng nhập kết quả')
@@ -73,6 +75,7 @@ export default function CreateHealthMonitor() {
     });
 
     const onSubmit = (data) => {
+        setLoading(true)
         const day = new Date().getDate().toString().padStart(2, "0");
         const month = (new Date().getMonth() + 1).toString().padStart(2, "0");
         const year = new Date().getFullYear();
@@ -95,10 +98,13 @@ export default function CreateHealthMonitor() {
 
         postData("/health-report", formattedData)
             .then((response) => {
+                setLoading(true)
+                setPopup(false)
                 ComToast({ text: 'Tạo báo cáo thành công' });
                 navigation.navigate("ListHealthMonitor", { id: elderId });
             })
             .catch((error) => {
+                setPopup(false)
                 console.error("API Error: ", error?.message);
                 ComToast({ text: 'Có lỗi xảy ra, vui lòng thử lại!' });
             });
@@ -113,6 +119,19 @@ export default function CreateHealthMonitor() {
             default:
                 return status;
         }
+    };
+
+    const handleSubmitForm = async () => {
+        const result = await methods.trigger();//check nếu không có error nào từ yup
+        if (result) {
+            setPopup(true);
+        } else {
+            setPopup(false);
+        }
+    };
+
+    const handleClosePopup = () => {
+        setPopup(false);
     };
 
     return (
@@ -182,11 +201,37 @@ export default function CreateHealthMonitor() {
                                     />
                                 </View>
                             </ScrollView>
-                            <ComButton onPress={handleSubmit(onSubmit)}>Xác nhận</ComButton>
+                            <ComButton onPress={handleSubmitForm}>Xác nhận</ComButton>
                         </View>
                     </FormProvider>
                 </View>
             </KeyboardAvoidingView>
+            <ComPopup
+                visible={popup}
+                title="Bạn xác nhận đã điền đầy đủ và chính xác các kết quả?"
+                onClose={handleClosePopup}
+            >
+                <FormProvider {...methods}>
+                    <View style={{ width: "100%", gap: 10 }}>
+                        <Text style={{ color: "#A3A3A3", textAlign: "center" }}>Bạn không thể thay đổi kết quả sau khi đã xác nhận.</Text>
+                        <View
+                            style={{
+                                backgroundColor: "#fff",
+                                flexDirection: "row",
+                                justifyContent: "space-around",
+                                gap: 20,
+                            }}
+                        >
+                            <ComButton check onPress={handleClosePopup} style={{flex: 1}}>
+                                Hủy
+                            </ComButton>
+                            <ComButton onPress={handleSubmit(onSubmit)} style={{flex: 1}}>
+                                {loading ? <ActivityIndicator /> : "Xác nhận"}
+                            </ComButton>
+                        </View>
+                    </View>
+                </FormProvider>
+            </ComPopup>
         </>
     );
 }

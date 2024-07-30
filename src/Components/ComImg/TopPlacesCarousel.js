@@ -23,7 +23,7 @@ const TopPlacesCarousel = ({list}) => {
             style={[styles.card, style]}
             shadowType="dark"
             onPress={() => {
-              navigation.navigate('AddingService'); 
+              navigation.navigate("Homes", { screen: "AddingServicePackages" })
             }}>
             {/* <CardFavoriteIcon active={false} onPress={() => { }} /> */}
             <SharedElement

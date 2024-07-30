@@ -163,7 +163,7 @@ export const vn = {
     popup: {
       signContractTitle: "Đăng ký lịch hẹn hoàn thành thủ tục",
       limitDays: "Bạn chỉ có thể hẹn trước 14 ngày tính từ ngày mai",
-      signContractSubTitle: "Bạn và người thân sẽ trực tiếp đến Viện để được hỗ trợ hoàn thành hồ sơ bệnh án và hợp đồng để trải nghiệm dịch vụ của viện",
+      signContractSubTitle: "Bạn và người thân sẽ trực tiếp đến Viện để được hỗ trợ hoàn thành hồ sơ người cao tuổi và hợp đồng để trải nghiệm dịch vụ của viện",
       successTitle: "Đăng ký hoàn thành thủ tục thành công",
       successRenewContractTitle: "Đăng ký gia hạn hợp đồng thành công",
     },
@@ -424,7 +424,7 @@ export const vn = {
       relationship: "Mối quan hệ",
       nursingHomeAdd: "Nơi sinh hoạt",
       address: "Địa chỉ thường trú",
-      medicalProfile: "Hồ sơ bệnh án",
+      medicalProfile: "Hồ sơ người cao tuổi",
       representative: "Thông tin người đại diện",
       urgentContact: "Liên hệ khẩn cấp"
     },

@@ -29,11 +29,6 @@ export default function HealthMonitorDetail() {
     setLanguage,
   } = useContext(LanguageContext);
 
-  const onSubmit = (data) => {
-    console.log("====================================");
-    console.log(data);
-    console.log("====================================");
-  };
   const loginSchema = yup.object().shape({});
   const methods = useForm({
     resolver: yupResolver(loginSchema),

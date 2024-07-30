@@ -7,6 +7,8 @@ import ComTitle from "../../Components/ComTitle/ComTitle";
 import ComButton from "../../Components/ComButton/ComButton";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter";
+import { useAuth } from "../../../auth/useAuth";
+
 export default function ContractCandSuccess() {
   const navigation = useNavigation();
   const {
@@ -17,6 +19,9 @@ export default function ContractCandSuccess() {
     setLanguage,
   } = useContext(LanguageContext);
   const route = useRoute();
+  const { data } = route.params;
+  const { user } = useAuth();
+
   const toHomes = () => {
     navigation.navigate("Homes");
   };
@@ -26,18 +31,38 @@ export default function ContractCandSuccess() {
         <ComTitlePage>Yêu cầu hủy hợp đồng đã được gửi đi</ComTitlePage>
         <Image style={{}} source={Vector} />
         <View style={styles?.container1}>
-          <View style={styles?.container2}>
-            <Text style={{  fontSize: 16,textAlign:"center" }}>
-              Đã gửi thành công yêu cầu hủy hợp đồng. Vui lòng chờ phản hồi từ
-              phía Viện Dưỡng Lão.
+          <View >
+            <Text style={{ flexDirection: "row", fontSize: 16 }}>
+              <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                {visitationText?.subscribers}
+              </Text>
+              <Text>: {user?.fullName}</Text>
+            </Text>
+          </View>
+          <View >
+            <Text style={{ flexDirection: "row", fontSize: 16 }}>
+              <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                {visitationText?.phone}
+              </Text>
+              <Text>: {user?.phoneNumber}</Text>
+            </Text>
+          </View>
+          <View >
+            <Text style={{ flexDirection: "row", fontSize: 16 }}>
+              <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                {visitationText?.day}
+              </Text>
+              <Text>
+                : <ComDateConverter>{data?.date}</ComDateConverter>
+              </Text>
             </Text>
           </View>
         </View>
-      </View>
-      <View style={{ width: "90%", marginBottom: 20 }}>
-        <ComButton onPress={toHomes}>
-          {visitationText?.button?.toHomes}
-        </ComButton>
+        <View style={{ width: "90%", marginBottom: 20 }}>
+          <ComButton onPress={toHomes}>
+            {visitationText?.button?.toHomes}
+          </ComButton>
+        </View>
       </View>
     </View>
   );

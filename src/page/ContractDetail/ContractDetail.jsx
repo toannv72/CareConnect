@@ -26,7 +26,6 @@ export default ContractDetail = () => {
   const [contractAppointment, setContractAppointment] = useState({});//lấy Appointment theo ContractId 
   const [loading, setLoading] = useState(false);
   const [popupDate, setPopupDate] = useState(false);
-  const [selectedDate, setSelectedDate] = useState("");//cho calendar một giá trị mặc định là ngày hiện tại
 
   const navigation = useNavigation();
   const route = useRoute();
@@ -35,7 +34,6 @@ export default ContractDetail = () => {
   const handleClosePopup = () => {
     reset();
     setPopup(false);
-    setSelectedDate("")
   };
   const handleOpenPopup = () => {
     setPopup(true);
@@ -43,7 +41,6 @@ export default ContractDetail = () => {
   const handleClosePopupDate = () => {
     setPopupDate(false);
     reset();
-    setSelectedDate("")
   };
   const handleOpenPopupDate = () => {
     setPopupDate(true);
@@ -51,7 +48,7 @@ export default ContractDetail = () => {
   };
 
   const changeSelectedDate = (data) => {
-    setSelectedDate(data);
+    // setSelectedDate(data);
   };
 
   const {
@@ -73,6 +70,7 @@ export default ContractDetail = () => {
 
   const { control, handleSubmit, reset, watch, formState: { errors }, } = methods;
   const reason = watch("reason");
+  const selectedDate = watch("date");
 
   const getStatusText = (status) => {
     switch (status) {
@@ -128,16 +126,15 @@ export default ContractDetail = () => {
       contractId: id,
       elders: [{ id: data?.elder?.id }]
     };
-    setSelectedDate("")
     postData("/appointments", newData, {})
       .then((appointments) => {
         setLoading(false)
         handleClosePopupDate()
         handleClosePopup()
-        if (data?.reason != "")
-          navigation.navigate("ContractCandSuccess", { data: formData });
-        else
+        if (formData?.reason == "")
           navigation.navigate("ContractRenewSuccess", { data: formData });
+        else
+          navigation.navigate("ContractCandSuccess", { data: formData });
       })
       .catch((error) => {
         setLoading(false)
@@ -221,7 +218,7 @@ export default ContractDetail = () => {
               <ComButton check onPress={handleClosePopupDate} style={{ flex: 1 }}>
                 Hủy
               </ComButton>
-              <ComButton onPress={handleSubmit(handleCreateAppointment)} style={{ flex: 1 }}>
+              <ComButton onPress={handleSubmit(handleCreateAppointment)} style={{ flex: 1 }} disable={selectedDate == ""}>
                 {loading ? <ActivityIndicator /> : "Xác nhận"}
               </ComButton>
             </View>
