@@ -27,8 +27,9 @@ export const AuthProvider = ({ children }) => {
     setUser({ ...userData });
   };
 
-  const logout = () => {
-    removeUser();
+  const logout = async () => {
+    await removeUser();
+    setUser(null);
     removeAccessToken();
     removeElders();
     removeContracts();

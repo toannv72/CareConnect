@@ -12,7 +12,7 @@ const Calendar31Days = ({ selectedDates, setSelectedDates, disableDates, enableD
     }
     const handleDayPress = (day) => {
         if (day === '') return; // Bỏ qua ô trống
-        const currentMonth = moment().month() + 1; // Tháng hiện tại (1-based)
+        const currentMonth = moment().month() + 1; // Tháng hiện tại 
         const currentYear = moment().year(); // Năm hiện tại
         const dateString = `${currentYear}-${currentMonth < 10 ? `0${currentMonth}` : currentMonth}-${day < 10 ? `0${day}` : day}`; // Tạo chuỗi ngày
         // Kiểm tra tính hợp lệ của ngày
@@ -30,15 +30,19 @@ const Calendar31Days = ({ selectedDates, setSelectedDates, disableDates, enableD
     };
 
     const isSelected = (day) => {
-        const currentMonth = moment().month() + 1; // Tháng hiện tại (1-based)
+        const currentMonth = moment().month() + 1; // Tháng hiện tại 
         const currentYear = moment().year(); // Năm hiện tại
         const dateString = `${currentYear}-${currentMonth < 10 ? `0${currentMonth}` : currentMonth}-${day < 10 ? `0${day}` : day}`;
         return selectedDates.includes(dateString);
     };
 
-    const isDisabled = (day) => {
+     const isDisabled = (day) => {
         if (day === '') return false;
         const dayOfMonth = day;
+        const currentMonth = moment().month() + 1; // Tháng hiện tại 
+        const currentYear = moment().year(); // Năm hiện tại
+        const daysInMonth = moment(`${currentYear}-${currentMonth}`, "YYYY-MM").daysInMonth(); // Số ngày trong tháng hiện tại
+        if (day > daysInMonth) return true; // Disable ngày không tồn tại trong tháng hiện tại (ví dụ tháng 30 ngày disable 31)
         if (disableDates?.length === 0 && !enableDates?.length) {
             return false;
         }
@@ -58,6 +62,10 @@ const Calendar31Days = ({ selectedDates, setSelectedDates, disableDates, enableD
     const isEnabled = (day) => {
         if (day === '') return true;
         const dayOfMonth = day;
+        const currentMonth = moment().month() + 1; // Tháng hiện tại 
+        const currentYear = moment().year(); // Năm hiện tại
+        const daysInMonth = moment(`${currentYear}-${currentMonth}`, "YYYY-MM").daysInMonth(); // Số ngày trong tháng hiện tại
+        if (day > daysInMonth) return false; // Disable ngày không tồn tại trong tháng hiện tại (ví dụ tháng 30 ngày disable 31)
         if (!enableDates?.length && disableDates?.length === 0) {
             return true;
         }
@@ -73,7 +81,6 @@ const Calendar31Days = ({ selectedDates, setSelectedDates, disableDates, enableD
         }
         return true; // Mặc định là enabled
     };
-
 
     return (
         <View style={styles.calendarContainer}>

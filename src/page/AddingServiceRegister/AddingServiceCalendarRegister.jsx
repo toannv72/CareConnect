@@ -29,7 +29,7 @@ export default function AddingServiceCalendarRegister() {
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true)
-            // Step 1: Enable from servicePackageDates if type is WeeklyDays
+            // Enable from servicePackageDates if type is WeeklyDays
             let updatedWeekDays = [...weekDays]; // Create a copy of weekDays to avoid mutating state directly
             if (data?.type === "WeeklyDays" && data?.servicePackageDates) {
                 const activeDays = data?.servicePackageDates.map(date => date?.dayOfWeek);
@@ -39,11 +39,11 @@ export default function AddingServiceCalendarRegister() {
                     disable: !activeDays.includes(day?.value)
                 }));
             }
-            // Step 2: Fetch registeredDates from API
+            //Fetch registeredDates from API
             try {
                 const orderDetail = await getData(`/order-detail?ElderId=${elder?.id}&ServicePackageId=${data?.id}`, {});
                 const registeredDates = orderDetail?.data?.map(date => date?.dayOfWeek);
-                // Step 3: Disable registered dates in updatedWeekDays
+                // Disable registered dates in updatedWeekDays
                 updatedWeekDays = updatedWeekDays.map(day => ({
                     ...day,
                     disable: day.disable || registeredDates.includes(day?.value)
@@ -107,17 +107,37 @@ export default function AddingServiceCalendarRegister() {
     };
 
     const getOrderDates = (selectedDays) => {
-        const currentMonth = moment().month();
-        const daysInMonth = moment().daysInMonth();
-        const dates = [];
-
-        for (let i = 1; i <= daysInMonth; i++) {
-            const date = moment().date(i).month(currentMonth).format("YYYY-MM-DD");
-            const dayOfWeek = moment(date).isoWeekday();
-            if (!selectedDays.includes(moment.weekdays(dayOfWeek))) {
-                dates.push(date);
+        let currentMonth = moment().month();
+        let currentYear = moment().year();
+        let daysInMonth = moment().daysInMonth();//tính số ngày có trong tháng hiện tại
+        let dates = [];
+        //tạo ra list các date theo thứ trong tuần đã được họn
+        const generateDates = () => {
+            dates = [];
+            for (let i = 1; i <= daysInMonth; i++) {
+                const date = moment().year(currentYear).month(currentMonth).date(i).format("YYYY-MM-DD");
+                const dayOfWeek = moment(date).isoWeekday();
+                if (!selectedDays.includes(moment.weekdays(dayOfWeek))) {
+                    dates.push(date);
+                }
             }
+        };
+
+        generateDates();
+
+        // Kiểm tra xem tất cả các date có thuộc về quá khứ hoặc hiện tại không
+        const allDatesInPastOrToday = dates.every(date => moment(date).isBefore(moment(), 'day') || moment(date).isSame(moment(), 'day'));
+
+        if (allDatesInPastOrToday) {//nếu ttas cả các date là ngày quá khứ hoặc hiện tại
+            currentMonth += 1; //nhảy qua tháng sau
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear += 1;
+            }
+            daysInMonth = moment().year(currentYear).month(currentMonth).daysInMonth();//tính lại số ngày có trong tháng mới
+            generateDates();
         }
+
         return dates;
     };
 
@@ -211,7 +231,7 @@ export default function AddingServiceCalendarRegister() {
                             }
                         </View>
                         <View style={{ marginVertical: 10, gap: 5 }}>
-                            <Text style={{ fontWeight: "600" }}>Danh sách những ngày sẽ thực hiện dịch vụ trong tháng này:</Text>
+                            <Text style={{ fontWeight: "600" }}>Danh sách những ngày sẽ thực hiện dịch vụ:</Text>
                             {
                                 calculateSelectedDates()?.filter(date => moment(date).isAfter(moment(), 'day'))?.map((date, index) => (
                                     <Text key={index}> • <ComDateConverter>{date}</ComDateConverter></Text>

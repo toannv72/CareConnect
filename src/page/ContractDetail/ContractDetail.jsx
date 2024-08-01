@@ -171,12 +171,13 @@ export default ContractDetail = () => {
                 backgroundColor: "#fff",
                 flexDirection: "row",
                 justifyContent: "space-around",
+                gap: 10
               }}
             >
-              <ComButton check onPress={handleClosePopup}>
+              <ComButton check onPress={handleClosePopup} style={{flex: 1}}>
                 Hủy
               </ComButton>
-              <ComButton onPress={handleOpenPopupDate} disable={reason === ""}>
+              <ComButton onPress={handleOpenPopupDate} disable={reason === ""} style={{flex: 1}}>
                 {loading ? <ActivityIndicator /> : "Xác nhận"}
               </ComButton>
             </View>
@@ -264,7 +265,7 @@ export default ContractDetail = () => {
               </View>
               <View style={styles.bodySeparator}>
                 <Text style={styles.text}>Người cao tuổi</Text>
-                <Text style={styles.text2}>{data?.elder?.name} {data?.elder?.id}</Text>
+                <Text style={styles.text2}>{data?.elder?.name}</Text>
               </View>
               <View style={styles.bodySeparator}>
                 <Text style={styles.text}>Gói dưỡng lão</Text>

@@ -1,8 +1,7 @@
 import React, { useContext, useState, useCallback, useEffect } from "react";
-import { View, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity, ScrollView, Text } from 'react-native';
 import { useForm, FormProvider } from "react-hook-form";
 import ComHeader from '../../Components/ComHeader/ComHeader';
-import ComSelectButton from "../../Components/ComButton/ComSelectButton";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ComLoading from "../../Components/ComLoading/ComLoading";
@@ -181,9 +180,9 @@ export default function AddingServicePackages() {
                             ))}
                             {displayedItems < filteredData.length &&
                                 <View style={{ justifyContent: "center", alignItems: "center" }}>
-                                    <View style={{ width: "35%" }}>
-                                        <ComSelectButton onPress={handleLoadMore} disable={displayedItems >= filteredData.length}>Xem thêm</ComSelectButton>
-                                    </View>
+                                    <TouchableOpacity onPress={handleLoadMore}>
+                                        <Text style={{ fontSize: 16, textAlign: "center", color: "#33B39C"}}>Xem thêm</Text>
+                                    </TouchableOpacity>
                                 </View>
                             }
                             <View style={{ height: 100 }} />

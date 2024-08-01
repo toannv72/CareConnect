@@ -79,21 +79,17 @@ export default function Notification({ }) {
     fetchNotifications(newLimit);
   };
 
-  const check = () => {
-    setSelect(false);
-    setSelect1(true);
-    setSelect2(true);
-  };
-  const check1 = () => {
-    setSelect(true);
-    setSelect1(false);
-    setSelect2(true);
-  };
-  const check2 = () => {
-    setSelect(true);
-    setSelect1(true);
-    setSelect2(false);
-  };
+  // const typeData = [
+  //   { value: "HealthReport", label: "Báo cáo sức khỏe" },
+  //   { value: "Contract", label: "Hợp đồng" },
+  //   { value: "ScheduledService", label: "Đăng ký dịch vụ" }
+  // ];
+
+  // const statusData = [
+  //   { value: "true", label: "Đã đọc" },
+  //   { value: "false", label: "Chưa đọc" }
+  // ];
+
   return (
     <>
       <ComHeader
@@ -101,28 +97,24 @@ export default function Notification({ }) {
         showTitle
       />
       <View style={styles.body}>
-        {/* <ScrollView
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          horizontal={true}
-          style={styles?.scrollView}
-        >
-          <View style={styles?.buttonContainer}>
-            <ComSelectButton onPress={check} check={select}>
-              Tất cả
-            </ComSelectButton>
-            <ComSelectButton onPress={check1} check={select1}>
-              Khẩn cấp
-            </ComSelectButton>
-            <ComSelectButton onPress={check2} check={select2}>
-              Thanh toán
-            </ComSelectButton>
-            <ComSelectButton onPress={check2} check={select2}>
-              Thanh toán
-            </ComSelectButton>
-            <View style={{ width: 20 }}></View>
-          </View>
-        </ScrollView> */}
+        {/* <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 10 }}>
+          <ComSelect
+            name="type"
+            options={typeData}
+            control={control}
+            errors={errors}
+            style={{ width: '49%' }}
+            onChange={handleCategorySelect}
+          />
+          <ComSelect
+            name="status"
+            options={statusData}
+            control={control}
+            errors={errors}
+            style={{ width: '49%' }}
+            onChange={handlePriceOrderSelect}
+          />
+        </View> */}
         <ScrollView
           showsVerticalScrollIndicator={false}
           style={styles?.scrollView}
@@ -164,7 +156,7 @@ export default function Notification({ }) {
               )}
             </View>
           )}
-          <View style={{ height: 20 }}></View>
+          <View style={{ height: 100 }}></View>
         </ScrollView>
       </View>
     </>

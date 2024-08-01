@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import bell from "../../../../assets/bell.png";
 import { getData, patchData } from "../../../api/api";
 
-export default function ComNotification({ tile, data }) {
+export default function ComNotification({data }) {
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
 
@@ -42,7 +42,7 @@ export default function ComNotification({ tile, data }) {
     if (entity === 'HealthReport') {
       const reportData = await fetchHealthReport(id);
       if (reportData) {
-        navigation.navigate("HealthMonitorDetail", { id, data: reportData });
+        navigation.navigate("HealthMonitorDetail", { scrollToId: id, data: reportData });
       } else {
         console.error("Failed to fetch health report data");
       }

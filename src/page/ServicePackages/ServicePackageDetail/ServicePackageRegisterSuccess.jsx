@@ -45,7 +45,7 @@ export default function ServicePackageRegisterSuccess() {
               <Text style={{ fontWeight: "bold", fontSize: 18 }}>
                 {visitationText?.phone}
               </Text>
-              <Text>: {data?.phoneNumber}</Text>
+              <Text>: {user?.phoneNumber}</Text>
             </Text>
           </View>
           <View >

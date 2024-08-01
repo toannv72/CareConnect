@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { ScrollView, StyleSheet, View, Text, Image } from "react-native";
 import { FormProvider, useForm } from "react-hook-form";
 import { LanguageContext } from "../../contexts/LanguageContext";
@@ -17,10 +17,12 @@ import { stylesApp } from "../../styles/Styles";
 
 export default function HealthMonitorDetail() {
   const route = useRoute();
-  const { data } = route.params;
+  const { data, scrollToId } = route.params;
   const [loading, setLoading] = useState(false);
   const [healthMonitor, setHealthMonitor] = useState([]);
   const [elderData, setElderData] = useState({});
+  const scrollViewRef = useRef(null); 
+
   const {
     text: {
       HealthMonitorDetail,
@@ -51,10 +53,6 @@ export default function HealthMonitorDetail() {
   };
 
   useEffect(() => {
-    const day = new Date(data?.createdAt).getDate().toString().padStart(2, "0");
-    const month = (new Date(data?.createdAt).getMonth() + 1).toString().padStart(2, "0");
-    const year = new Date(data?.createdAt).getFullYear();
-    const date = `${year}-${month}-${day}`;
     setLoading(true);
     getData(`/health-report?ElderId=${data?.elderId}&Date=${data?.date}`, {})
       .then((healthMonitor) => {
@@ -75,6 +73,18 @@ export default function HealthMonitorDetail() {
       });
   }, []);
 
+  useEffect(() => {//scroll tới báo cáo mới tạo trong thông báo
+    if (!loading && healthMonitor.length > 0) {
+      const indexToScroll = healthMonitor.findIndex(item => item.id === scrollToId);
+      if (indexToScroll !== -1 && scrollViewRef.current) {
+        scrollViewRef.current.scrollTo({
+          y: indexToScroll * 260, // Adjust this value based on the approximate height of each item
+          animated: true,
+        });
+      }
+    }
+  }, [loading, healthMonitor]);
+
   const formattedTime = (dateValue) => {
     const hours = new Date(dateValue).getHours().toString().padStart(2, '0');
     const minutes = new Date(dateValue).getMinutes().toString().padStart(2, '0');
@@ -92,6 +102,7 @@ export default function HealthMonitorDetail() {
       <View style={styles.body}>
 
         <ScrollView
+          ref={scrollViewRef} 
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
         >
