@@ -81,7 +81,7 @@ export default function Services() {
         // lines={5}
         /> */}
       {
-        filteredData.length === 0 ? (
+        filteredData?.length === 0 ? (
           <ComNoData>Không có dịch vụ nào</ComNoData>
         ) : (
           filteredData.slice(0, 5).map((value, index) => (

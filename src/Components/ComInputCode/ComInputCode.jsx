@@ -25,9 +25,9 @@ export default function ComInputCode({ getCode }) {
   ) => {
     if (/^\d*$/.test(text)) {
       setCode(text);
-      if (text.length === 0 && prevInputRef && prevInputRef.current) {
+      if (text?.length === 0 && prevInputRef && prevInputRef.current) {
         // prevInputRef.current.focus();
-      } else if (text.length === 1 && nextInputRef && nextInputRef.current) {
+      } else if (text?.length === 1 && nextInputRef && nextInputRef.current) {
         nextInputRef.current.focus();
       }
     }

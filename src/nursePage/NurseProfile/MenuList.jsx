@@ -17,7 +17,7 @@ const MenuItem = ({ iconName, text, link, colorRed }) => {
       setLoading(false)
     } catch (error) {
       setLoading(false)
-      console.error("API Delete expoPushToken Error: ", error);
+      console.log("API Delete expoPushToken Error: ", error);
     }
   };
   const press = async () => {

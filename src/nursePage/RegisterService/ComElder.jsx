@@ -39,7 +39,7 @@ export default function ComElder({ data }) {
 
   const renderItem = ({ item, index }) => {
     const todayOrderDate = item?.orderDates?.find(orderDate =>
-      moment(orderDate?.date).format("YYYY-MM-DD") === today
+      moment(orderDate?.date).format("YYYY-MM-DD") === today || {}
     )
     return (
       <TouchableOpacity

@@ -64,7 +64,7 @@ export default function Search() {
             title: 'Gói dịch vụ',
             data: services,
         }
-    ].filter(section => section.data.length > 0);
+    ].filter(section => section?.data?.length > 0);
 
     const renderItem = ({ item, index, section }) => {
         let routeName = "";

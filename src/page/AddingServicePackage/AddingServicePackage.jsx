@@ -169,7 +169,7 @@ export default function AddingServicePackages() {
                 {loading ? (
                     <ComLoading show={true} />
                 ) : (
-                    filteredData.length === 0 ? (
+                    filteredData?.length === 0 ? (
                         <ComNoData>Không có dịch vụ nào</ComNoData>
                     ) : (
                         <ScrollView
@@ -178,7 +178,7 @@ export default function AddingServicePackages() {
                             {filteredData.slice(0, displayedItems).map((item, index) => (
                                 <ComAddPackage key={index} data={item} />
                             ))}
-                            {displayedItems < filteredData.length &&
+                            {displayedItems < filteredData?.length &&
                                 <View style={{ justifyContent: "center", alignItems: "center" }}>
                                     <TouchableOpacity onPress={handleLoadMore}>
                                         <Text style={{ fontSize: 16, textAlign: "center", color: "#33B39C"}}>Xem thêm</Text>

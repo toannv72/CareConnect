@@ -50,7 +50,7 @@ export default function ServiceDayRegister() {
     useEffect(() => {
         if (data?.servicePackageDates) {
             let enabledDates = data?.servicePackageDates.map(date => date?.repetitionDay);
-            if (orderDetail.length > 0) {
+            if (orderDetail?.length > 0) {
                 enabledDates = enabledDates.filter(date => 
                     !orderDetail.some(item => item?.dayOfMonth === date || new Date(item?.date).getDate() === date)
                 );

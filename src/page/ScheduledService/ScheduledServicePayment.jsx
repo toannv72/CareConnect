@@ -26,7 +26,7 @@ export default function ScheduledServicePayment({ }) {
         }) ?? '';
     };
 
-    const totalPrice = selectedServices.reduce((total, service) => total + (service.servicePackage.price * service.scheduledTimes.length), 0);
+    const totalPrice = selectedServices.reduce((total, service) => total + (service.servicePackage.price * service.scheduledTimes?.length), 0);
 
     const onConfirm = (payment) => {
         const endOfMonth = moment().endOf('month');// Xác định ngày cuối cùng của tháng hiện tại

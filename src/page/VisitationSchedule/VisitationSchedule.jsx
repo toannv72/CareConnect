@@ -163,7 +163,7 @@ export default function VisitationSchedule() {
                     <ComVisitationSchedule key={index} data={value} />
                   ))}
                 </View>
-                {displayedItems < data.length && (
+                {displayedItems < data?.length && (
                   <View style={{ justifyContent: "center", alignItems: "center" }}>
                     <View style={{ width: "35%" }}>
                       <ComSelectButton onPress={handleLoadMore} >Xem thêm</ComSelectButton>

@@ -50,6 +50,17 @@ export default function ComPackage({ data }) {
             <Text> {servicePackages?.package?.people}</Text>
           </View>
         </View>
+        <View style={{ flexDirection: "row" }}>
+          <Text style={{ fontWeight: "bold", fontSize: 14 }}>
+            {servicePackages?.package?.numOfNurse}
+          </Text>
+          <View style={{ flexDirection: "row" }}>
+            <Text>
+              : {data?.numberOfNurses}
+            </Text>
+            <Text> {servicePackages?.package?.people}</Text>
+          </View>
+        </View>
         <Text numberOfLines={2}>{data?.description}</Text>
         <Text>
           <Text style={{ fontWeight: "bold", fontSize: 16 }}>

@@ -105,28 +105,32 @@ export default function AddingServiceDetail() {
                                 </Text>
                             )}
 
-                            <View style={{ gap: 10 }}>
-                                {data?.endRegistrationDate && (
-                                    <Text style={{ flexDirection: "row" }}>
-                                        <Text style={{ fontWeight: "600", fontSize: 16 }}>
-                                            {addingPackages?.package?.endRegistrationStartDate}
-                                        </Text>
-                                        <Text>
-                                            : <ComDateConverter>{data?.endRegistrationDate}</ComDateConverter>
-                                        </Text>
-                                    </Text>)
-                                }
-                                {data?.eventDate && (
-                                    <Text style={{ flexDirection: "row" }}>
-                                        <Text style={{ fontWeight: "600", fontSize: 16 }}>
-                                            {addingPackages?.package?.eventDate}
-                                        </Text>
-                                        <Text>
-                                            : <ComDateConverter>{data?.eventDate}</ComDateConverter>
-                                        </Text>
-                                    </Text>)
-                                }
-                            </View>
+                            {
+                                data?.type == "OneDay" && (
+                                    <View style={{ gap: 10 }}>
+                                        {data?.endRegistrationDate && (
+                                            <Text style={{ flexDirection: "row" }}>
+                                                <Text style={{ fontWeight: "600", fontSize: 16 }}>
+                                                    {addingPackages?.package?.endRegistrationStartDate}
+                                                </Text>
+                                                <Text>
+                                                    : <ComDateConverter>{data?.endRegistrationDate}</ComDateConverter>
+                                                </Text>
+                                            </Text>)
+                                        }
+                                        {data?.eventDate && (
+                                            <Text style={{ flexDirection: "row" }}>
+                                                <Text style={{ fontWeight: "600", fontSize: 16 }}>
+                                                    {addingPackages?.package?.eventDate}
+                                                </Text>
+                                                <Text>
+                                                    : <ComDateConverter>{data?.eventDate}</ComDateConverter>
+                                                </Text>
+                                            </Text>)
+                                        }
+                                    </View>
+                                )
+                            }
                             {/* mô tả */}
                             <Text style={{ fontWeight: "600", fontSize: 16 }}>
                                 {addingPackages?.package?.description}

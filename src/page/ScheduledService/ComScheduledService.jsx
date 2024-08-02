@@ -87,12 +87,12 @@ const ComScheduledService = ({ data, hideCheck, onCheck, isSelected }) => {
                                                             tintColor: "#33B39C",
                                                         }]} />
                                                     <Text style={[styles.labelText]} >
-                                                        {formatCurrency(servicePackage.price) + " x " + scheduledTimes.length}
+                                                        {formatCurrency(servicePackage.price) + " x " + scheduledTimes?.length}
                                                     </Text>
                                                 </View>
                                             </View>
                                             <Text style={styles.labelText}>
-                                                {formatCurrency(servicePackage.price * scheduledTimes.length)}
+                                                {formatCurrency(servicePackage.price * scheduledTimes?.length)}
                                             </Text>
                                         </View>
 

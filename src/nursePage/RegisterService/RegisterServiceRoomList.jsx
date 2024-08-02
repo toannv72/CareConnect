@@ -40,7 +40,8 @@ export default function RegisterServiceRoomList() {
             setLoading(true);
             getData(`/care-schedule?CareMonth=${moment().month() + 1}&CareYear=${moment().year()}&UserId=${user?.id}`, {})
                 .then((careSchedule) => {
-                    setData(careSchedule?.data?.contends[0]?.rooms);
+                    const careServicesData =careSchedule?.data?.contends[0]?.rooms;
+                    setData(careServicesData ? careServicesData : []);
                     setLoading(false);
                 })
                 .catch((error) => {
@@ -71,7 +72,7 @@ export default function RegisterServiceRoomList() {
                         />
                     </View>
                     <ComLoading show={loading}>
-                        {data.length == 0 ? (
+                        {data?.length == 0 ? (
                             <ComNoData>Không có dữ liệu</ComNoData>
                         ) : (
                             <View style={{ padding: 20 }}>

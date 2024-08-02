@@ -26,8 +26,8 @@ export default function NurseHealthMonitor({ data }) {
         setLoading(true);
         getData(`/care-schedule?CareMonth=${moment().month() + 1}&CareYear=${moment().year()}&UserId=${user?.id}`, {})
             .then((schedule) => {
-                const schedules = schedule?.data?.contends || [];
-                setNursingSchedules(schedules[0]?.rooms);
+                const schedules = schedule?.data?.contends[0] || [];
+                setNursingSchedules(schedules?.rooms || []);
                 setLoading(false);
             })
             .catch((error) => {

@@ -137,7 +137,7 @@ export default function RegisterVisitation() {
           </ScrollView>
           <View style={{ marginVertical: 20 }}>
             <ComSelectButton
-              disable={selectedElderIds.length === 0}
+              disable={selectedElderIds?.length === 0}
               onPress={handleSubmit(onSubmit)}>
               {visitationText?.Confirm}
             </ComSelectButton>

@@ -161,10 +161,10 @@ export default function Contracts() {
                   ))}
                 </View>
                 {
-                  displayedItems < filteredData.length && (
+                  displayedItems < filteredData?.length && (
                     <View style={{ justifyContent: "center", alignItems: "center" }}>
                       <View style={{ width: "35%" }}>
-                        <ComSelectButton onPress={handleLoadMore} disable={displayedItems >= filteredData.length}>Xem thêm</ComSelectButton>
+                        <ComSelectButton onPress={handleLoadMore} disable={displayedItems >= filteredData?.length}>Xem thêm</ComSelectButton>
                       </View>
                     </View>
                   )

@@ -169,6 +169,7 @@ export const vn = {
     },
     package: {
       living: "Sinh hoạt cùng",
+      numOfNurse: "Số nhân viên chăm sóc",
       people: "người",
       month: "tháng",
     },

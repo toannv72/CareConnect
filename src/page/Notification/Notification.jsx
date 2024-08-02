@@ -120,10 +120,10 @@ export default function Notification({ }) {
           style={styles?.scrollView}
           showsHorizontalScrollIndicator={false}
         >
-          {todayNotis.length == 0 && previousNotis.length == 0 ? (<ComNoData>Không có thông báo nào</ComNoData>
+          {todayNotis?.length == 0 && previousNotis?.length == 0 ? (<ComNoData>Không có thông báo nào</ComNoData>
           ) : (
             <View>
-              {todayNotis.length > 0 &&
+              {todayNotis?.length > 0 &&
                 (<View>
                   <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                     <ComTitle style={{ fontSize: 16, marginBottom: 10 }}>Hôm nay</ComTitle>
@@ -134,18 +134,18 @@ export default function Notification({ }) {
                   <ComNotification tile={"Hôm nay"} data={todayNotis} />
                 </View>
                 )}
-              {previousNotis.length > 0 && (
+              {previousNotis?.length > 0 && (
                 <View>
                   <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                     <ComTitle style={{ fontSize: 16, marginBottom: 10 }}>Trước đó</ComTitle>
-                    {todayNotis.length == 0 && (
+                    {todayNotis?.length == 0 && (
                       <TouchableOpacity onPress={() => handleReadAll()}>
                         <Text style={{ color: allRead ? "#000" : "#33B39C" }}>Đánh dấu đã đọc tất cả</Text>
                       </TouchableOpacity>
                     )}
                   </View>
                   <ComNotification tile={"Trước đó"} data={displayedPreviousNotis} />
-                  {displayedPreviousNotis.length < previousNotis.length && (
+                  {displayedPreviousNotis?.length < previousNotis?.length && (
                     <View style={{ justifyContent: "center", alignItems: "center" }}>
                       <TouchableOpacity onPress={handleLoadMore}>
                         <Text style={styles.loadMoreText}>Xem thêm</Text>

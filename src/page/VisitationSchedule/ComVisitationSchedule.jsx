@@ -74,7 +74,7 @@ export default function ComVisitationSchedule({ data }) {
             {
               data?.elders?.length > 0 && (
                 data?.elders?.map((elder, index) => (
-                  <Text key={index}>{elder?.name}{index < data.elders.length - 1 && ", "}</Text>
+                  <Text key={index}>{elder?.name}{index < data.elders?.length - 1 && ", "}</Text>
                 )))
             }
           </Text>)

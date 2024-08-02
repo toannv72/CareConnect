@@ -7,23 +7,18 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ComInputSearch from "../../Components/ComInput/ComInputSearch";
 import { ScrollView } from "react-native";
-import { ActivityIndicator } from "react-native";
 import ComLoading from "../../Components/ComLoading/ComLoading";
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import { postData, getData } from "../../api/api";
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import ComSelectButton from "../../Components/ComButton/ComSelectButton";
-import * as Linking from 'expo-linking';
 import ComNoData from "../../Components/ComNoData/ComNoData";
 
 export default function ServicePackages() {
-  const navigation = useNavigation(); // Add this line
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [loadMoreLoading, setLoadMoreLoading] = useState(false);
-  const [page, setPage] = useState(1); // Track pagination page
-  const [hasMore, setHasMore] = useState(true); // Track if there are more items to load
   const [searchQuery, setSearchQuery] = useState("");
+  const [displayedItems, setDisplayedItems] = useState(10);
 
   const searchSchema = yup.object().shape({
     search: yup.string(),
@@ -47,29 +42,21 @@ export default function ServicePackages() {
 
   const onSubmit = (data) => {
     if (data?.search != "") {
-      setPage(1);
       setData([]);
       setSearchQuery(encodeURIComponent(data?.search.trim()));
     }
   };
 
   const fetchNextPage = async () => {
-    setLoadMoreLoading(!loadMoreLoading);
     let url = '/nursing-package';
 
     if (searchQuery) {
       url += `?Search=${searchQuery}`;
-    } else {
-      url += `?PageIndex=${page}&PageSize=10`;
     }
     getData(url, {})
       .then((nursingData) => {
-        const newItems = nursingData?.data?.contends || [];
-        setData(prevData => [...prevData, ...newItems]);
-        setPage(prevPage => prevPage + 1);
-        setLoadMoreLoading(false);
+        setData(nursingData?.data?.contends?.reverse() || []);
         setLoading(false);
-        setHasMore(page < nursingData?.data?.totalPages);
         setLoading(false);
       })
       .catch((error) => {
@@ -80,23 +67,27 @@ export default function ServicePackages() {
   useEffect(() => {
     if (searchQuery != "")
       fetchNextPage();
+    setDisplayedItems(10);
   }, [searchQuery]);
 
   useFocusEffect(
     useCallback(() => {
       reset();
       setData([]);
-      setPage(1);
-      // setLoading(true);
+      setDisplayedItems(10);
       setSearchQuery("");
       fetchNextPage();
     }, [])
   );
 
+  const handleLoadMore = () => {
+    setDisplayedItems(prevCount => prevCount + 10);
+  };
+
   const handleClearSearch = () => {
-    setPage(1);
     setData([])
     setSearchQuery(" ");
+    setDisplayedItems(10);
   };
 
   return (
@@ -128,20 +119,19 @@ export default function ServicePackages() {
               showsHorizontalScrollIndicator={false}
             >
               <View>
-                {data?.map((value, index) => (
+                {data?.slice(0, displayedItems)?.map((value, index) => (
                   <ComPackage key={index} data={value} />
                 ))}
               </View>
-              {hasMore && (
-                <View style={{ justifyContent: "center", alignItems: "center" }}>
-                  <View style={{ width: "35%" }}>
-                    {loadMoreLoading ? (<ActivityIndicator />) :
-                      (<TouchableOpacity onPress={fetchNextPage} disable={!hasMore}>
-                        <Text style={{ fontSize: 16, textAlign: "center", color: "#33B39C" }}>Xem thêm</Text>
-                      </TouchableOpacity>)}
+              {
+                displayedItems < data?.length && (
+                  <View style={{ justifyContent: "center", alignItems: "center" }}>
+                    <View style={{ width: "35%" }}>
+                      <ComSelectButton onPress={handleLoadMore}>Xem thêm</ComSelectButton>
+                    </View>
                   </View>
-                </View>
-              )}
+                )
+              }
               <View style={{ height: 30 }}></View>
             </ScrollView>
           ))}
@@ -158,4 +148,4 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     gap: 10,
   },
-});
+})

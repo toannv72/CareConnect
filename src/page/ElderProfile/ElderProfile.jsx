@@ -24,7 +24,7 @@ export default function ElderProfile() {
         showBackIcon
       />
       <View style={styles.body}>
-        {elders.length > 0 ? (
+        {elders?.length > 0 ? (
           <ScrollView
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}

@@ -72,7 +72,7 @@ export default function BillHistory() {
         // Cập nhật state uniqueMonths với danh sách các tháng đã sắp xếp và có nhãn
         setUniqueMonths(uniqueMonthsWithLabels);
         // Đặt giá trị mặc định cho selectedDate là mục đầu tiên trong uniqueMonths
-        if (uniqueMonthsWithLabels.length > 0) {
+        if (uniqueMonthsWithLabels?.length > 0) {
             setSelectedDate(uniqueMonthsWithLabels[0].value);
         }
     }, [data]);
@@ -169,7 +169,7 @@ export default function BillHistory() {
                     showsHorizontalScrollIndicator={false}
                 >
                     <ComLoading show={loading}>
-                        {filteredData.length == 0 ? (
+                        {filteredData?.length == 0 ? (
                             <ComNoData />
                         ) : (
                             <View>
@@ -179,10 +179,10 @@ export default function BillHistory() {
                                     ))}
                                 </View>
                                 {
-                                    displayedItems < filteredData.length && (
+                                    displayedItems < filteredData?.length && (
                                         <View style={{ justifyContent: "center", alignItems: "center" }}>
                                             <View style={{ width: "35%" }}>
-                                                <ComSelectButton onPress={handleLoadMore} disable={displayedItems >= filteredData.length}>Xem thêm</ComSelectButton>
+                                                <ComSelectButton onPress={handleLoadMore} disable={displayedItems >= filteredData?.length}>Xem thêm</ComSelectButton>
                                             </View>
                                         </View>
                                     )

@@ -292,7 +292,7 @@ export default function ServiceAnydayRegister() {
                         </View>
                         <View style={{ marginVertical: 10, gap: 5 }}>
                             <Text style={{ fontWeight: "600" }}>Danh sách những ngày sẽ thực hiện dịch vụ:</Text>
-                            {calculateSelectedDates()?.filter(date => moment(date).isAfter(moment(), 'day')).length > 0 ? (
+                            {calculateSelectedDates()?.filter(date => moment(date).isAfter(moment(), 'day'))?.length > 0 ? (
                                 calculateSelectedDates()?.filter(date => moment(date).isAfter(moment(), 'day'))?.map((date, index) => (
                                     <Text key={index}> • <ComDateConverter>{date}</ComDateConverter></Text>
                                 ))

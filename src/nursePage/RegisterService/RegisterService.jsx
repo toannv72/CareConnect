@@ -27,7 +27,8 @@ export default function RegisterService({ }) {
             setLoading(true);
             getData(`/care-services?RoomId=${roomData?.roomData?.id}&Date=${today}`, {})
                 .then((careServices) => {
-                    setData(careServices?.data?.elders);
+                    const careServicesData = careServices?.data?.elders;
+                    setData(careServicesData ? careServicesData : []);
                     setLoading(false);
                 })
                 .catch((error) => {
@@ -54,13 +55,13 @@ export default function RegisterService({ }) {
                     }}
                 />
                 {/* nếu k có elder nào       nếu tất cả các elder đều không có order   =>  hiện ComNoData*/}
-                {data.length == 0 || data.every(item => item?.orderDetailsService.length === 0) ? (
+                {data?.length == 0 || data.every(item => item?.orderDetailsService?.length === 0) ? (
                     <ComNoData>Không có dữ liệu</ComNoData>
                 ) : (
                     <FlatList
                         data={data}
                         showsVerticalScrollIndicator={false}
-                        renderItem={({ item }) => item?.orderDetailsService.length > 0 && <ComElder data={item} />}
+                        renderItem={({ item }) => item?.orderDetailsService?.length > 0 && <ComElder data={item} />}
                         keyExtractor={(item, index) => index.toString()}
                         style={{ margin: 10 }}
                     />

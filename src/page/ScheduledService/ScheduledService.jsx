@@ -50,7 +50,7 @@ export default function ScheduledService() {
                 updatedSelected = prevSelected.filter(selected => selected.id !== service.id);
             }
             // Update selectAll state => nếu tất cả item đã được chọn thì check, ngượic ngược lại thì uncheck
-            setSelectAll(updatedSelected.length === data?.scheduledServiceDetails?.length);
+            setSelectAll(updatedSelected?.length === data?.scheduledServiceDetails?.length);
             return updatedSelected;
         });
     };

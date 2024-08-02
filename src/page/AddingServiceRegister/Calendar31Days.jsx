@@ -7,7 +7,7 @@ const Calendar31Days = ({ selectedDates, setSelectedDates, disableDates, enableD
     const days = [...Array.from({ length: 31 }, (_, i) => i + 1), '', '', '', ''];
     // Chia các ngày thành các hàng với 7 ngày mỗi hàng
     const weeks = [];
-    for (let i = 0; i < days.length; i += 7) {
+    for (let i = 0; i < days?.length; i += 7) {
         weeks.push(days.slice(i, i + 7));
     }
     const handleDayPress = (day) => {
@@ -47,7 +47,7 @@ const Calendar31Days = ({ selectedDates, setSelectedDates, disableDates, enableD
             return false;
         }
         // Nếu cả enableDates và disableDates đều rỗng hoặc undefined, disable tất cả các ngày
-        if ((!enableDates || enableDates.length === 0) && (!disableDates || disableDates.length === 0)) {
+        if ((!enableDates || enableDates?.length === 0) && (!disableDates || disableDates?.length === 0)) {
             return true;
         }
         // Nếu có enableDates, ưu tiên kiểm tra trước
@@ -69,8 +69,8 @@ const Calendar31Days = ({ selectedDates, setSelectedDates, disableDates, enableD
         if (!enableDates?.length && disableDates?.length === 0) {
             return true;
         }
-        // Nếu cả enableDates và disableDates đều rỗng hoặc undefined, disable tất cả các ngày
-        if ((!enableDates || enableDates.length === 0) && (!disableDates || disableDates.length === 0)) {
+        // Nếu cả enableDates và disable/Dates đều rỗng hoặc undefined, disable tất cả cá/c ngày
+        if ((!enableDates || enableDates?.length === 0) && (!disableDates || disableDates?.length === 0)) {
             return false;
         }
         // Nếu có enableDates, ưu tiên kiểm tra trước

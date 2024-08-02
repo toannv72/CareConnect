@@ -23,7 +23,7 @@ export default function Favorite() {
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}>
-                    {favorites.length == 0 ? (<ComNoData>Không có dịch vụ nào</ComNoData>
+                    {favorites?.length == 0 ? (<ComNoData>Không có dịch vụ nào</ComNoData>
                     ) : (favorites?.map((item, index) => (
                         <ComAddPackage key={index} data={item} />
                     ))

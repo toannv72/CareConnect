@@ -16,8 +16,7 @@ import ComDatePicker from "../../Components/ComInput/ComDatePicker";
 import { postData, getData } from "../../api/api";
 import { ScrollView } from "react-native-gesture-handler";
 import moment from "moment";
-import Toast from 'react-native-root-toast';
-import { cccdRegex, nameRegex, phoneNumberRegex, passwordRegex } from "../../Components/ComRegexPatterns/regexPatterns";
+import { cccdRegex, phoneNumberRegex, passwordRegex } from "../../Components/ComRegexPatterns/regexPatterns";
 
 export default function Register() {
   const navigation = useNavigation();
@@ -33,8 +32,7 @@ export default function Register() {
     fullName: yup
       .string()
       .trim()
-      .required(Register?.message?.name)
-      .matches(nameRegex, Register?.message?.nameInValid),
+      .required(Register?.message?.name),
     gender: yup
       .string()
       .required(EditProfile?.message?.gender),

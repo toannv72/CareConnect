@@ -76,7 +76,7 @@ export default function ComNotification({data }) {
         {data?.map((value, index) => (
           <View
             key={index}
-            style={[index !== data.length - 1 && styles.bodySeparator]}
+            style={[index !== data?.length - 1 && styles.bodySeparator]}
           >
             <TouchableOpacity
               style={[

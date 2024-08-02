@@ -131,7 +131,7 @@ export default function ListHealthIndex({ data }) {
                 {loading ? (
                     <ComLoading show={true} />
                 ) : (
-                    healthIndex.length == 0 ? (<ComNoData>Không có chỉ số sức khỏe nào</ComNoData>
+                    healthIndex?.length == 0 ? (<ComNoData>Không có chỉ số sức khỏe nào</ComNoData>
                     ) : (
                         <ScrollView
                             showsVerticalScrollIndicator={false}
@@ -175,7 +175,7 @@ export default function ListHealthIndex({ data }) {
                         </ScrollView>
                     ))}
                 <ComSelectButton
-                    disable={selectedHealthIndexItems.length == 0 ? true : false}
+                    disable={selectedHealthIndexItems?.length == 0 ? true : false}
                     style={{ borderRadius: 50, marginBottom: 30, height: 50 }}
                     onPress={() => navigation.navigate("CreateHealthMonitor", { selectedIndexs: selectedHealthIndexItems, elderId })}>
                     Tiếp tục

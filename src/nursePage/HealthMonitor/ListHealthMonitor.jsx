@@ -67,7 +67,7 @@ export default function ListHealthMonitor({ data }) {
                         showsVerticalScrollIndicator={false}
                         showsHorizontalScrollIndicator={false}>
                         {
-                            healthMonitor.length == 0 ? (
+                            healthMonitor?.length == 0 ? (
                                 <ComNoData>Không có dữ liệu</ComNoData>
                             ) : (
                                 Object.entries(groupedData).map(([date, items]) => (
@@ -78,7 +78,7 @@ export default function ListHealthMonitor({ data }) {
                                                 elderData={elderData}
                                                 roomData={roomData}
                                                 data={items[0]}
-                                                time={groupedData[date].length}
+                                                time={groupedData[date]?.length}
                                                 style={{
                                                     backgroundColor: checkWarning(items) ? "#fac8d2" : "#caece6",
                                                     borderColor: checkWarning(items) ? "#fa6180" : "#33B39C"
