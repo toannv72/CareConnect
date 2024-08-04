@@ -51,12 +51,8 @@ const ComPaymentInfo = ({ data, createdAt }) => {
                                         style={[styles.icon]} />
                                 </TouchableOpacity>
                             </View>
-                            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                                <View style={{flex: 0.7}}>
-                                    {/* <Text style={{ flexDirection: "row" }}>
-                                        <Text style={styles.labelText}>Phân loại</Text>
-                                        <Text style={styles.contentText}>: Gói dịch vụ</Text>
-                                    </Text> */}
+                            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap : 5 }}>
+                                <View style={{flex: 0.75}}>
                                     <View style={{ flexDirection: "row", alignItems: "center", gap: 5, flexWrap: "wrap" }}>
                                         <Text style={styles.labelText}>Người cao tuổi:</Text>
                                         <Text>{elder?.name ?? 'Unknown'}</Text>
@@ -65,7 +61,7 @@ const ComPaymentInfo = ({ data, createdAt }) => {
                                         {formatCurrency(currentPrice) + " x " + filteredOrderDates?.length}
                                     </Text>
                                 </View>
-                                <Text style={[styles.contentText, {flex: 0.3}]}>
+                                <Text style={[styles.contentText, {flex: 0.25}]}>
                                     {formatCurrency(currentPrice * filteredOrderDates?.length)}
                                 </Text>
                             </View>

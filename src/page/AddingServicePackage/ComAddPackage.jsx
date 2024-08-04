@@ -61,14 +61,6 @@ export default function ComAddPackage({ data }) {
             : {data?.servicePackageCategory?.name}
           </Text>
         </Text>
-        <Text style={{ flexDirection: "row" }} numberOfLines={1}>
-          <Text style={{ fontWeight: "bold", fontSize: 14 }}>
-            Type
-          </Text>
-          <Text>
-            : {data?.type}
-          </Text>
-        </Text>
         {
           data?.type == "OneDay" && (
             <Text style={{ flexDirection: "row" }}>

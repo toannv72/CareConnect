@@ -8,6 +8,7 @@ import { useNavigation, useRoute, useFocusEffect } from "@react-navigation/nativ
 import { postData, getData } from "../../api/api";
 import ComNoData from "../../Components/ComNoData/ComNoData";
 import ComHeader from "../../Components/ComHeader/ComHeader";
+import moment from "moment";
 
 export default function Search() {
     const [services, setServices] = useState([]);
@@ -28,7 +29,14 @@ export default function Search() {
             setLoading(true);
             getData(`/service-package?Search=${encodeURIComponent(data?.search.trim())}`, {})
                 .then((packageData) => {
-                    setServices(packageData?.data?.contends)
+                    const filteredData = packageData?.data?.contends?.filter((service) => {
+                        const validstatus = service?.state === "Active" ? true : false // check trạng thái còn tồn tại hay ko
+                        const endRegistrationDate = moment(service?.endRegistrationDate);
+                        const hasNotExpired = moment().isSameOrBefore(endRegistrationDate, "day");
+                        const hasSlotsLeft = service?.registrationLimit !== 0 ? service?.totalOrder < service?.registrationLimit : service?.totalOrder >= service?.registrationLimit;
+                        return hasNotExpired && hasSlotsLeft && validstatus;
+                    }) || [];
+                    setServices(filteredData)
                     setInitialLoad(false);
                 })
                 .catch((error) => {
@@ -38,7 +46,11 @@ export default function Search() {
 
             getData(`/nursing-package?Search=${encodeURIComponent(data?.search.trim())}`, {})
                 .then((nursingPackage) => {
-                    setNursingPackage(nursingPackage?.data?.contends);
+                    const filteredData = nursingPackage?.data?.contends?.filter((service) => {
+                        const validstatus = service?.state === "Active" ? true : false // check trạng thái còn tồn tại hay ko
+                        return validstatus;
+                    }) || [];
+                    setNursingPackage(filteredData);
                     setLoading(false);
                     setInitialLoad(false);
                 })

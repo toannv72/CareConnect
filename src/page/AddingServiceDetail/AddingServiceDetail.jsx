@@ -9,6 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import { postData, getData } from "../../api/api";
 import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter";
 import Heart from "../../../assets/heart.png";
+import moment from "moment";
 
 export default function AddingServiceDetail() {
     const {
@@ -45,6 +46,14 @@ export default function AddingServiceDetail() {
     }, [])
 
     const isFavorite = favorites.some(item => item.id === data?.id);
+
+    const isValidService = (service) => {//check service hợp lệ thì mở đăng ký
+        const validStatus = service?.state === "Active"; // Check trạng thái còn tồn tại hay không
+        const endRegistrationDate = moment(service?.endRegistrationDate);
+        const hasNotExpired = moment().isSameOrBefore(endRegistrationDate, "day");
+        const hasSlotsLeft = service?.registrationLimit !== 0 ? service?.totalOrder < service?.registrationLimit : service?.totalOrder >= service?.registrationLimit;
+        return validStatus && hasNotExpired && hasSlotsLeft;
+    };
 
     return (
         <>
@@ -132,15 +141,16 @@ export default function AddingServiceDetail() {
                                 )
                             }
                             {/* mô tả */}
-                            <Text style={{ fontWeight: "600", fontSize: 16 }}>
+                            {/* <Text style={{ fontWeight: "600", fontSize: 16 }}>
                                 {addingPackages?.package?.description}
-                            </Text>
+                            </Text> */}
                             <Text style={{ fontSize: 16 }}>{data?.description}</Text>
                         </View>
                     </ScrollView>
                 </View>
                 <View style={{ marginVertical: 10 }}>
-                    <ComSelectButton onPress={() => { navigation.navigate("AddingServiceRegister", { data: data }) }}>
+                    <ComSelectButton onPress={() => { navigation.navigate("AddingServiceRegister", { data: data }) }}
+                        disable={!isValidService(data)}>
                         {addingPackages?.register?.registerTitle}
                     </ComSelectButton>
                 </View>
@@ -157,7 +167,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
     },
     header: {
-        paddingTop: 50,
+        paddingTop: 25,
         backgroundColor: "#fff",
     },
     contentBold: {
@@ -168,7 +178,7 @@ const styles = StyleSheet.create({
     backIconContainer: {
         position: 'absolute',
         zIndex: 100,
-        marginTop: 60,
+        marginTop: 35,
         marginLeft: 10,
         padding: 3,
         borderRadius: 100,

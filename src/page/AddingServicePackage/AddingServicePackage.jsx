@@ -107,10 +107,11 @@ export default function AddingServicePackages() {
     };
 
     const filteredData = data?.filter((service) => {
+        const validstatus = service?.state === "Active" ? true : false // check trạng thái còn tồn tại hay ko
         const endRegistrationDate = moment(service?.endRegistrationDate);
         const hasNotExpired = moment().isSameOrBefore(endRegistrationDate, "day");
         const hasSlotsLeft = service?.registrationLimit !== 0 ? service?.totalOrder < service?.registrationLimit : service?.totalOrder >= service?.registrationLimit;
-        return hasNotExpired && hasSlotsLeft;
+        return hasNotExpired && hasSlotsLeft && validstatus;
     });
 
     const handleLoadMore = () => {

@@ -55,7 +55,11 @@ export default function ServicePackages() {
     }
     getData(url, {})
       .then((nursingData) => {
-        setData(nursingData?.data?.contends?.reverse() || []);
+        const filterData = nursingData?.data?.contends?.filter((service) => {
+          const validstatus = service?.state === "Active" ? true : false // check trạng thái còn tồn tại hay ko
+          return validstatus;
+      }) || [];
+        setData(filterData?.reverse() || []);
         setLoading(false);
         setLoading(false);
       })
@@ -126,7 +130,7 @@ export default function ServicePackages() {
               {
                 displayedItems < data?.length && (
                   <View style={{ justifyContent: "center", alignItems: "center" }}>
-                    <View style={{ width: "35%" }}>
+                    <View style={{ width: "50%" }}>
                       <ComSelectButton onPress={handleLoadMore}>Xem thêm</ComSelectButton>
                     </View>
                   </View>

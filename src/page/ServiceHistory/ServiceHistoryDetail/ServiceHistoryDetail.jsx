@@ -99,18 +99,6 @@ export default function ServiceHistoryDetail() {
 
     return (
         <>
-            {/* <ComPopup
-                visible={popupVisible}
-                title="Bạn muốn hủy gian hạn Dịch vụ xoa bóp bấm huyệt theo tuần?"
-                image={sadIcon}
-                buttons={[
-                    { text: 'Đóng', onPress: handleClosePopup, check: true },
-                    { text: 'Xác nhận', onPress: () => { navigation.navigate("CancelRenewSuccess", { id: data.id }); } },
-                ]}
-                onClose={handleClosePopup}
-            >
-                <Text>Gói dịch vụ sẽ không tự động gia hạn lại</Text>
-            </ComPopup> */}
             <View style={styles.header}>
                 <TouchableOpacity onPress={handleBackPress} style={styles.backIconContainer}>
                     <Image source={backArrowWhite} style={styles.backIcon} />
@@ -122,9 +110,11 @@ export default function ServiceHistoryDetail() {
             </View>
             <View style={styles.body}>
                 <ScrollView showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
-                    <Text style={{ fontWeight: "bold", fontSize: 20, marginBottom: 10 }} numberOfLines={2}>
-                        {orderDetailData?.servicePackage?.name}
-                    </Text>
+                    <TouchableOpacity onPress={() => { navigation.navigate("AddingServiceDetail", { id: orderDetailData?.servicePackage?.id }) }}>
+                        <Text style={{ fontWeight: "bold", fontSize: 20, marginBottom: 10 }} numberOfLines={2}>
+                            {orderDetailData?.servicePackage?.name}
+                        </Text>
+                    </TouchableOpacity>
                     <View style={{ flexDirection: 'row' }}>
                         <Text style={{ flex: 1, fontSize: 16, marginBottom: 10 }}>
                             <Text style={{ fontWeight: "bold" }}>
@@ -200,7 +190,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
     },
     header: {
-        paddingTop: 50
+        paddingTop: 25
     },
     contentBold: {
         fontSize: 16,
@@ -210,7 +200,7 @@ const styles = StyleSheet.create({
     backIconContainer: {
         position: 'absolute',
         zIndex: 100,
-        marginTop: 60,
+        marginTop: 35,
         marginLeft: 10,
         padding: 3,
         borderRadius: 100,

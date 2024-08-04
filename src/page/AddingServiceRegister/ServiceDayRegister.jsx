@@ -6,9 +6,9 @@ import { useRoute } from "@react-navigation/native";
 import backArrowWhite from "../../../assets/icon/backArrowWhite.png";
 import { useNavigation } from '@react-navigation/native';
 import moment from "moment";
-import Toast from 'react-native-root-toast';
 import { getData } from "../../api/api"; // Import your API function
 import Calendar31Days from './Calendar31Days';
+import ComToast from "../../Components/ComToast/ComToast";
 
 export default function ServiceDayRegister() {
     const [enabledDates, setEnabledDates] = useState([]);
@@ -26,7 +26,6 @@ export default function ServiceDayRegister() {
     const handleBackPress = () => {
         navigation.goBack();
     };
-
     const formatCurrency = (number) => {
         return number.toLocaleString("vi-VN", {
             style: "currency",
@@ -51,13 +50,41 @@ export default function ServiceDayRegister() {
         if (data?.servicePackageDates) {
             let enabledDates = data?.servicePackageDates.map(date => date?.repetitionDay);
             if (orderDetail?.length > 0) {
-                enabledDates = enabledDates.filter(date => 
+                enabledDates = enabledDates.filter(date =>
                     !orderDetail.some(item => item?.dayOfMonth === date || new Date(item?.date).getDate() === date)
                 );
             }
             setEnabledDates(enabledDates);
         }
     }, [data?.servicePackageDates, orderDetail]);
+
+    const handlePayment = () => {
+        // Kiểm tra xem tất cả các ngày đã chọn có phải là ngày trong quá khứ hoặc hiện tại không
+        const allDatesArePastOrToday = selectedDates.every(date => moment(date).isSameOrBefore(moment(), 'day'));
+
+        const updatedDates = allDatesArePastOrToday
+            ? selectedDates.map(date => moment(date).add(1, 'month').format('YYYY-MM-DD'))
+            : selectedDates;
+        // Kiểm tra ngày kết thúc hợp đồng, nếu có ngày vượt => trả về true, ko thì false
+        const hasDatesAfterContractEnd = checkDatesAgainstContractEnd(updatedDates);
+        //nếu có ngày vượt ngày kết thúc hợp đồng => báo lỗi
+        if (hasDatesAfterContractEnd) {
+            ComToast({
+                text: 'Một số ngày bạn chọn vượt qua hạn kết thúc hợp đồng. Vui lòng chọn ngày khác.',
+                duration: 2500,
+            });
+        } else {//nếu không thì cho thanh toán bình thường
+            navigation.navigate("ServicePayment", { servicePackage: data, elder: elder, orderDates: updatedDates, type: "RecurringDay" });
+        }
+    };
+
+    const checkDatesAgainstContractEnd = (dates) => {
+        if (elder?.contractsInUse?.endDate) {
+            const endDate = moment(elder?.contractsInUse?.endDate);//lấy ra ngày kết thúc
+            return dates.some(date => moment(date).isAfter(endDate, 'day'));//check trong list date có ngày nào vượt qua ngày kết thúc ko
+        }
+        return false;
+    };
 
     return (
         <>
@@ -105,19 +132,17 @@ export default function ServiceDayRegister() {
                 <Text style={{ color: "gray" }}>Dịch vụ sẽ được gia hạn vào tháng sau với những ngày bạn chọn dưới đây</Text>
 
                 <View>
-                    <Calendar31Days 
-                        selectedDates={selectedDates} 
-                        setSelectedDates={setSelectedDates} 
-                        enableDates={enabledDates} 
+                    <Calendar31Days
+                        selectedDates={selectedDates}
+                        setSelectedDates={setSelectedDates}
+                        enableDates={enabledDates}
                     />
                 </View>
             </ScrollView>
             <View style={{ paddingHorizontal: 20, backgroundColor: "#fff", paddingVertical: 30 }}>
                 <ComSelectButton
                     disable={selectedDates?.length === 0}
-                    onPress={() => {
-                        navigation.navigate("ServicePayment", { servicePackage: data, elder: elder, orderDates: selectedDates, type: "RecurringDay" });
-                    }}>
+                    onPress={handlePayment}>
                     Thanh toán ngay
                 </ComSelectButton>
             </View>
@@ -133,7 +158,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
     },
     header: {
-        paddingTop: 50,
+        paddingTop: 25,
         backgroundColor: "#fff",
     },
     contentBold: {
@@ -144,7 +169,7 @@ const styles = StyleSheet.create({
     backIconContainer: {
         position: 'absolute',
         zIndex: 100,
-        marginTop: 60,
+        marginTop: 35,
         marginLeft: 10,
         padding: 3,
         borderRadius: 100,

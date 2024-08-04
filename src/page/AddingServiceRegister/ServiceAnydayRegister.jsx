@@ -12,9 +12,12 @@ import { getData } from "../../api/api";
 import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter"
 import { Calendar } from "react-native-calendars";
 import Calendar31Days from './Calendar31Days';
+import ComToast from "../../Components/ComToast/ComToast";
+
 export default function ServiceAnydayRegister() {
     const [selectedId, setSelectedId] = useState('1');
     const [registeredDates, setRegisteredDates] = useState([]);
+    const [registereddayOfMonth, setRegistereddayOfMonth] = useState([]);
     const [selectedDates, setSelectedDates] = useState([]);
     const [orderDetail, setOrderDetail] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -23,25 +26,19 @@ export default function ServiceAnydayRegister() {
     const navigation = useNavigation();
     const minDate = moment().add(3, 'day').format('YYYY-MM-DD');
     const maxDate = useMemo(() => {
-        if (elder?.contractsInUse?.endDate) {
+        if (elder?.contractsInUse?.endDate) {//nếu cơ hợp đồng còn hạn
             const endDate = moment(elder?.contractsInUse?.endDate);
-            const diffMonths = endDate.diff(moment(), 'months');
-            if (diffMonths < 2) { return endDate.format('YYYY-MM-DD'); }
-        }
+            const diffMonths = endDate.diff(moment(), 'months');//so sánh ngày kết thúc hopdong với ngày hiện tại
+            if (diffMonths < 2) { return endDate.format('YYYY-MM-DD'); }//nếu còn ít hơn 2 tháng, maxdate là hạn kết thúc hopdong
+        }//nếu > 2 tháng, maxdate là ngày cuối cùng, tháng thứ 2 kể thử hiện tại
         return moment().add(2, 'months').endOf('month').format('YYYY-MM-DD');
     }, [elder?.contractsInUse?.endDate]);
 
-    const {
-        text: { addingPackages },
-        setLanguage,
-    } = useContext(LanguageContext);
+    const { text: { addingPackages } } = useContext(LanguageContext);
 
     const handleBackPress = () => { navigation.goBack(); };
     const formatCurrency = (number) => {
-        return number.toLocaleString("vi-VN", {
-            style: "currency",
-            currency: "VND",
-        });
+        return number?.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
     };
 
     const radioButtons = useMemo(() => ([
@@ -72,14 +69,13 @@ export default function ServiceAnydayRegister() {
 
     const handleAnyDayPress = (day) => {
         const dateString = day.dateString;
-        // Tạo một bản sao của mảng selectedDates hiện tại
         const updatedSelectedDates = [...selectedDates];
         // Kiểm tra xem ngày đã được chọn hay chưa
-        const index = updatedSelectedDates.indexOf(dateString);
+        const index = updatedSelectedDates?.indexOf(dateString);
         if (index !== -1) { // Nếu ngày đã được chọn, loại bỏ nó khỏi mảng
-            updatedSelectedDates.splice(index, 1);
+            updatedSelectedDates?.splice(index, 1);
         } else { // Nếu ngày chưa được chọn, thêm nó vào mảng
-            updatedSelectedDates.push(dateString);
+            updatedSelectedDates?.push(dateString);
         } // Cập nhật selectedDates với mảng mới
         setSelectedDates(updatedSelectedDates);
     };
@@ -87,9 +83,8 @@ export default function ServiceAnydayRegister() {
     const handleRadioGroupChange = (id) => {
         setSelectedId(id);
         setSelectedDates([])
-        const resetWeekDays = weekDays.map(day => ({
-            ...day,
-            check: true // Reset lại trạng thái check về true
+        const resetWeekDays = weekDays?.map(day => ({
+            ...day, check: true // Reset lại trạng thái check về true
         }));
         setWeekDays(resetWeekDays);
     };
@@ -117,7 +112,6 @@ export default function ServiceAnydayRegister() {
         }
     };
 
-  
     const getOrderDates = (selectedDays) => {
         let currentMonth = moment().month();
         let currentYear = moment().year();
@@ -134,12 +128,9 @@ export default function ServiceAnydayRegister() {
                 }
             }
         };
-
         generateDates();
-
         // Kiểm tra xem tất cả các date có thuộc về quá khứ hoặc hiện tại không
         const allDatesInPastOrToday = dates.every(date => moment(date).isBefore(moment(), 'day') || moment(date).isSame(moment(), 'day'));
-
         if (allDatesInPastOrToday) {//nếu ttas cả các date là ngày quá khứ hoặc hiện tại
             currentMonth += 1; //nhảy qua tháng sau
             if (currentMonth > 11) {
@@ -149,14 +140,13 @@ export default function ServiceAnydayRegister() {
             daysInMonth = moment().year(currentYear).month(currentMonth).daysInMonth();//tính lại số ngày có trong tháng mới
             generateDates();
         }
-
         return dates;
     };
 
     const calculateSelectedDates = () => {
         const selectedDays = weekDays.filter(day => day.check).map(day => day.value);
         const dates = getOrderDates(selectedDays); // Assuming getOrderDates is defined to return formatted dates
-        const filteredDates = dates.filter(date => !registeredDates.includes(date));
+        const filteredDates = dates.filter(date => !registeredDates.includes(date));//loại bỏ những ngày đã được chọn mua từ option 1
         return filteredDates;
     };
 
@@ -167,6 +157,7 @@ export default function ServiceAnydayRegister() {
                 const orderDetail = await getData(`/order-detail?ElderId=${elder?.id}&ServicePackageId=${data?.id}`, {});
                 const registeredDates = orderDetail?.data?.map(date => date?.date);
                 setRegisteredDates(registeredDates);
+                setRegistereddayOfMonth(orderDetail?.data?.map(date => date?.dayOfMonth))
                 setOrderDetail(orderDetail?.data)
                 setLoading(false);
             } catch (error) {
@@ -183,29 +174,125 @@ export default function ServiceAnydayRegister() {
         }));
         setWeekDays(updatedWeekDays);
     }, [orderDetail]);
-    
+
     const disableDates = useMemo(() => {
         const disabledDates = {};
         registeredDates.forEach(date => {
             disabledDates[date] = { disabled: true, disableTouchEvent: true };
         });
+        const today = new Date();
+        const currentMonth = today.getMonth();
+        const currentYear = today.getFullYear();
+        const registereddayOfMonth = orderDetail
+            .filter(item => item.dayOfWeek === null && item.dayOfMonth !== null && item.date === null)
+            .map(item => item.dayOfMonth);
+
+        registereddayOfMonth.forEach(item => {
+            if (item) {
+                const currentMonthDate = new Date(currentYear, currentMonth, item);
+                const formattedDate = moment(currentMonthDate).format('YYYY-MM-DD');
+                disabledDates[formattedDate] = { disabled: true, disableTouchEvent: true };
+            }
+        });
+        // Add logic to disable dates based on the dayOfWeek from orderDetail
+        const daysOfWeekToDisable = orderDetail
+            .filter(item => item.dayOfWeek !== null && item.dayOfMonth === null && item.date === null)
+            .map(item => item.dayOfWeek);
+        daysOfWeekToDisable.forEach(dayOfWeek => {
+            for (let i = 1; i <= moment().daysInMonth(); i++) {
+                const date = moment().date(i);
+                if (date.format('dddd') === dayOfWeek) {
+                    const formattedDate = date.format('YYYY-MM-DD');
+                    disabledDates[formattedDate] = { disabled: true, disableTouchEvent: true };
+                }
+            }
+        });
         return disabledDates;
-    }, [registeredDates]);
+    }, [registeredDates, registereddayOfMonth, orderDetail]);
 
     const getDisabledDates = (orderDetail) => {
         const currentMonth = new Date().getMonth();
-        return orderDetail?.map(item => {
-          if (item?.dayOfMonth !== null) {
-            return item?.dayOfMonth;
-          } else if (item?.date) {
-            const date = new Date(item?.date);
-            if (!isNaN(date) && date.getMonth() === currentMonth) {
-                return date.getDate();
+        const getDatesForDayOfWeek = (dayOfWeek) => {
+            const daysInMonth = moment().daysInMonth();
+            const datesInMonth = [];
+            for (let i = 1; i <= daysInMonth; i++) {
+                const date = moment().date(i);
+                if (date.format('dddd') === dayOfWeek) {
+                    datesInMonth.push(date.date()); // Use `.date()` to get the day number
+                }
             }
-          }
-          return null; // Hoặc giá trị mặc định nào đó nếu không hợp lệ
-        }).filter(date => date !== null); // Lọc ra các giá trị null
-      };
+            return datesInMonth;
+        };
+    
+        return orderDetail?.map(item => {
+            if (item?.dayOfMonth !== null) {
+                return item?.dayOfMonth;
+            } else if (item?.date) {
+                const date = new Date(item?.date);
+                if (!isNaN(date) && date.getMonth() === currentMonth) {
+                    return date.getDate();
+                }
+            } else if (item?.dayOfWeek) {
+                return getDatesForDayOfWeek(item.dayOfWeek);
+            }
+            return null; // Default value if no valid date is found
+        }).flat().filter(date => date !== null); // Flatten and filter out null values
+    };
+    
+    // // check trong tháng
+    // const checkContractEndNextMonth = () => {
+    //     if (elder?.contractsInUse?.endDate) {
+    //         const endDate = moment(elder?.contractsInUse?.endDate);
+    //         const diffMonths = endDate.diff(moment(), 'months');
+    //         return diffMonths <= 1;
+    //     }
+    //     return false;
+    // };
+    // const handlePayment = () => {
+    //     const allDatesInPastOrToday = selectedDates.every(date => moment(date).isSameOrBefore(moment(), 'day'));
+    //     // nếu ttas cả các date là ngày quá khứ hoặc hiện tại && hợp đồng kết thúc vào tháng sau
+    //     if (allDatesInPastOrToday && checkContractEndNextMonth()) {//báo lỗi và không cho đăng ký
+    //         ComToast({ text: 'Bạn không thể đăng ký dịch vụ vì người cao tuổi này sẽ hết hạn hợp đồng vào ngày thực hiện dịch vụ.' ,
+    //             duration: 2500
+    //         });
+    //     } else {
+    //         let orderDates = [];
+    //         const filteredSelectedDates = selectedDates.filter(date => !registeredDates.includes(date));
+    //         const filteredCalculatedDates = calculateSelectedDates().filter(date => !registeredDates.includes(date));
+    //         if (selectedId === '1' || selectedId === '3') {
+    //             orderDates = filteredSelectedDates;
+    //         } else if (selectedId === '2') {
+    //             orderDates = filteredCalculatedDates;
+    //         }
+    //         navigation.navigate("ServicePayment", { servicePackage: data, elder: elder, orderDates: orderDates, type: getType(selectedId) });
+    //     }
+    // };
+    const handlePayment = () => {//check sát ngày
+        const allDatesInPastOrToday = selectedDates.every(date => moment(date).isSameOrBefore(moment(), 'day'));
+        const contractEndDate = moment(elder?.contractsInUse?.endDate);
+        // Function to check if adding a month to selected dates exceeds the contract end date
+        const checkDatesWithMonthAdded = (dates) => {
+            return dates.map(date => moment(date).add(1, 'month')).some(date => date.isAfter(contractEndDate, 'day'));
+        };
+
+        if (allDatesInPastOrToday && checkDatesWithMonthAdded(selectedDates)) {
+            ComToast({
+                text: 'Một số ngày bạn chọn vượt qua hạn kết thúc hợp đồng. Vui lòng chọn ngày khác.',
+                duration: 2500
+            });
+        } else {
+            let orderDates = [];
+            const filteredSelectedDates = selectedDates.filter(date => !registeredDates.includes(date));
+            const filteredCalculatedDates = calculateSelectedDates().filter(date => !registeredDates.includes(date));
+
+            if (selectedId === '1' || selectedId === '3') {
+                orderDates = filteredSelectedDates;
+            } else if (selectedId === '2') {
+                orderDates = filteredCalculatedDates;
+            }
+            navigation.navigate("ServicePayment", { servicePackage: data, elder: elder, orderDates: orderDates, type: getType(selectedId) });
+        }
+    };
 
     return (
         <>
@@ -272,22 +359,22 @@ export default function ServiceAnydayRegister() {
                     <>
                         <Text style={{ color: "gray" }}>Dịch vụ sẽ được gia hạn vào tháng sau với những thứ trong tuần bạn chọn dưới đây</Text>
                         <View style={{ flex: 1, flexDirection: 'row', justifyContent: "space-between" }}>
-                            { loading ? (
-                                    <View style={{ flex: 1, justifyContent: "center" }}>
-                                        <ActivityIndicator />
-                                    </View>) : (
-                                    weekDays.map((day, index) => (
-                                        <View key={index} >
-                                            <ComSelectWeekDays
-                                                check={day.check}
-                                                onPress={() => handleDayPress(index)}
-                                                disable={day.disable}
-                                            >
-                                                {day.label}
-                                            </ComSelectWeekDays>
-                                        </View>
-                                    ))
-                                )
+                            {loading ? (
+                                <View style={{ flex: 1, justifyContent: "center" }}>
+                                    <ActivityIndicator />
+                                </View>) : (
+                                weekDays.map((day, index) => (
+                                    <View key={index} >
+                                        <ComSelectWeekDays
+                                            check={day.check}
+                                            onPress={() => handleDayPress(index)}
+                                            disable={day.disable}
+                                        >
+                                            {day.label}
+                                        </ComSelectWeekDays>
+                                    </View>
+                                ))
+                            )
                             }
                         </View>
                         <View style={{ marginVertical: 10, gap: 5 }}>
@@ -298,7 +385,7 @@ export default function ServiceAnydayRegister() {
                                 ))
                             ) : (
                                 <Text style={{ marginTop: 10 }}>
-                                    {weekDays.find(day => !day.check) && "Bạn đã đăng ký dịch vụ vào những ngày này rồi"}
+                                    {weekDays.find(day => !day.check) && "Không thể đăng ký dịch vụ vào ngày này"}
                                 </Text>
                             )}
                         </View>
@@ -306,7 +393,7 @@ export default function ServiceAnydayRegister() {
                 )}
                 {(selectedId === '3') && (
                     <View>
-                        <Calendar31Days selectedDates={selectedDates} setSelectedDates={setSelectedDates} disableDates={getDisabledDates(orderDetail)}/>
+                        <Calendar31Days selectedDates={selectedDates} setSelectedDates={setSelectedDates} disableDates={getDisabledDates(orderDetail)} />
                     </View>
                 )}
                 <View style={{ height: 50 }}></View>
@@ -314,17 +401,7 @@ export default function ServiceAnydayRegister() {
             <View style={{ paddingHorizontal: 20, backgroundColor: "#fff" }}>
                 <ComSelectButton
                     disable={selectedDates?.length === 0 && calculateSelectedDates()?.length == 0}
-                    onPress={() => {
-                        let orderDates = [];
-                        const filteredSelectedDates = selectedDates.filter(date => !registeredDates.includes(date));
-                        const filteredCalculatedDates = calculateSelectedDates().filter(date => !registeredDates.includes(date));
-                        if (selectedId === '1' || selectedId === '3') {
-                            orderDates = filteredSelectedDates;
-                        } else if (selectedId === '2') {
-                            orderDates = filteredCalculatedDates;
-                        }
-                        navigation.navigate("ServicePayment", { servicePackage: data, elder: elder, orderDates: orderDates, type: getType(selectedId) });
-                    }}> Thanh toán ngay </ComSelectButton>
+                    onPress={handlePayment} > Thanh toán ngay </ComSelectButton>
             </View>
         </>
     )
@@ -338,7 +415,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
     },
     header: {
-        paddingTop: 50,
+        paddingTop: 25,
         backgroundColor: "#fff",
     },
     contentBold: {
@@ -349,7 +426,7 @@ const styles = StyleSheet.create({
     backIconContainer: {
         position: 'absolute',
         zIndex: 100,
-        marginTop: 60,
+        marginTop: 35,
         marginLeft: 10,
         padding: 3,
         borderRadius: 100,

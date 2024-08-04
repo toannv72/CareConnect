@@ -61,7 +61,7 @@ export default function UserProfile() {
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    paddingTop: 50,
+    paddingTop: 25,
     backgroundColor: "#fff",
     paddingHorizontal: 15,
     gap: 10,

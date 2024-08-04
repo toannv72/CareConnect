@@ -60,6 +60,7 @@ import ContractCandSuccess from "./src/page/ContractDetail/ContractCandSuccess";
 import ContractRenewSuccess from "./src/page/ContractDetail/ContractRenewSuccess";
 import ScheduledService from "./src/page/ScheduledService/ScheduledService";
 import ScheduledServicePayment from "./src/page/ScheduledService/ScheduledServicePayment";
+import UserNurseProfile from "./src/page/ServiceHistory/NurseProfile/NurseProfile";
 // -------Role: Nurse--------
 import NurseHome from "./src/nursePage/Home/NurseHome";
 import NurseProfile from "./src/nursePage/NurseProfile/NurseProfile";
@@ -88,7 +89,7 @@ const Routes = () => {
   return (
     <NavigationContainer ref={navigationRef}
       onUnhandledAction={() => navigationRef.current?.navigate('NotFound')}>
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator initialRouteName="Homes">
         <Stack.Screen
           name="Homes"
           options={{ headerLeft: null, headerShown: false }}
@@ -340,6 +341,11 @@ const Routes = () => {
           options={{ headerLeft: null, headerShown: false }}
           name="ScheduledServicePayment"
           component={ScheduledServicePayment}
+        />
+         <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="UserNurseProfile"
+          component={UserNurseProfile}
         />
         {/* =======nurse====== */}
         <Stack.Screen

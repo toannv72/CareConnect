@@ -103,7 +103,9 @@ export default ContractDetail = () => {
     getData(`/appointments?UserId=${user?.id}&ContractId=${id}`, {})
       .then((appointment) => {
         setLoading(false);
-        setContractAppointment(appointment?.data?.contends);
+        // chỉ lấy lịch hẹn đang pending
+        const pendingAppointment = (appointment?.data?.contends || []).filter(item => item?.status === "Pending");
+        setContractAppointment(pendingAppointment);
       })
       .catch((error) => {
         console.log("Error fetching appointments?ContractId:", error);
@@ -333,7 +335,7 @@ export default ContractDetail = () => {
                 <ComButton onPress={handleOpenPopupDate} style={{ flex: 1 }}>Yêu cầu gia hạn</ComButton>
               ) : (
                 (data?.status == "Valid" && contractAppointment?.length == 0) &&
-                <ComButton onPress={handleOpenPopup} style={{ flex: 1 }}>Yêu cầu hủy</ComButton>
+                <ComButton onPress={handleOpenPopup} check={true} warning={true} style={{ flex: 1 }}>Yêu cầu hủy</ComButton>
               )}
             </View>
           </ScrollView>

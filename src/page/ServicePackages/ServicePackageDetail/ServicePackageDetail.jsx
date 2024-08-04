@@ -74,15 +74,15 @@ export default function ServicePackageDetail({ }) {
       type: "Consultation"
     };
     postData("/appointments", formData, {})
-    .then((appointments) => {
-      handleClosePopupDate()
-      navigation.navigate("ServicePackageRegisterSuccess", { data: formData });
-    })
-    .catch((error) => {
-      handleClosePopupDate()
-      ComToast({ text: 'Đã có lỗi xảy ra, vui lòng thử lại' });
-      console.log("Error appointments:", error);
-    });
+      .then((appointments) => {
+        handleClosePopupDate()
+        navigation.navigate("ServicePackageRegisterSuccess", { data: formData });
+      })
+      .catch((error) => {
+        handleClosePopupDate()
+        ComToast({ text: 'Đã có lỗi xảy ra, vui lòng thử lại' });
+        console.log("Error appointments:", error);
+      });
   };
 
   return (
@@ -133,6 +133,7 @@ export default function ServicePackageDetail({ }) {
         </ScrollView>
         <View style={styles?.content}>
           <ComButton
+            disable={serviceData?.state == "Deleted"}
             onPress={handleOpenPopupDate}>
             {servicePackages?.detail?.registerForm}
           </ComButton>

@@ -81,7 +81,8 @@ export default function BillHistory() {
         { value: "all", label: "Tất cả" },
         { value: "Paid", label: "Đã thanh toán" },
         { value: "UnPaid", label: "Chưa thanh toán" },
-        { value: "OverDue", label: "Đã quá hạn" }
+        { value: "OverDue", label: "Đã quá hạn" },
+        { value: "Failed", label: "Đã xảy ra lỗi" },
     ];
 
     const searchSchema = yup.object().shape({

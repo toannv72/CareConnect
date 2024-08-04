@@ -17,7 +17,7 @@ export default function ComBill({ data }) {
 
   const formatCurrency = (number) => {
     // Sử dụng hàm toLocaleString() để định dạng số
-    return number.toLocaleString("vi-VN", {
+    return number?.toLocaleString("vi-VN", {
       style: "currency",
       currency: "VND",
     });
@@ -25,7 +25,7 @@ export default function ComBill({ data }) {
 
   return (
     <TouchableOpacity
-      style={[styles.body, { backgroundColor: data.status === "Đã quá hạn" ? "#FF000037" : "none" }]}
+      style={[styles.body, { backgroundColor: data?.status === "Đã quá hạn" ? "#FF000037" : "none" }]}
       onPress={() => {
         navigation.navigate("BillDetail", { id: data?.id });
       }}

@@ -56,7 +56,8 @@ const styles = StyleSheet.create({
     margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
-    padding: 30,
+    paddingHorizontal: 30,
+    paddingTop: 30,
     alignItems: "center",
     justifyContent: "center",
     alignContent: "center",
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   childContainer: {
-    marginBottom: 10,
+    // marginBottom: 10,
   },
   buttonContainer: {
     flexDirection: "row",

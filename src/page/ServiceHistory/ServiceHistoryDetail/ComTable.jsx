@@ -3,9 +3,10 @@ import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { View } from "react-native";
 import ComDateTimeConverter from "../../../Components/ComDateConverter/ComDateTimeConverter";
 import ComDateConverter from "../../../Components/ComDateConverter/ComDateConverter";
+import { useNavigation } from '@react-navigation/native';
 
 export default function ComTable({ columns, dataSource, columnLabels, linkColumns = [] }) {
-
+  const navigation = useNavigation();
   const formatCurrency = (number) => {
     // Sử dụng hàm toLocaleString() để định dạng số
     if (typeof number !== 'undefined') {
@@ -37,7 +38,16 @@ export default function ComTable({ columns, dataSource, columnLabels, linkColumn
       {dataSource?.map((rowData, rowIndex) => (
         <View key={rowIndex} style={styles.row}>
           <View style={styles.dataCell}>
-            <Text style={[styles.dataText]}>{rowData?.user?.fullName ? rowData?.user?.fullName : "Chưa có"}</Text>
+            {
+              rowData?.user?.fullName ? (
+                <TouchableOpacity onPress={() => { navigation.navigate("UserNurseProfile", { id: rowData?.user?.id }) }}>
+                  <Text style={[styles.dataText, { color: "#33B39C" }]}>{rowData?.user?.fullName ? rowData?.user?.fullName : "Chưa có"}</Text>
+                </TouchableOpacity>
+              ) : (
+                <Text style={[styles.dataText]}>Chưa có</Text>
+              )
+            }
+
           </View>
           <View style={styles.dataCell}>
             <Text style={[styles.dataText]}>{rowData?.completedAt ? ComDateTimeConverter(rowData?.completedAt) : <ComDateConverter>{rowData?.date}</ComDateConverter>}</Text>

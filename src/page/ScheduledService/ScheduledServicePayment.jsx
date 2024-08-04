@@ -151,13 +151,15 @@ export default function ScheduledServicePayment({ }) {
                     <View style={[{ flexDirection: "row", justifyContent: "space-between" }]}>
 
                         <ComSelectButton
+                            style={{ flex: 0.9 }}
                             disable={selectedServices?.length == 0}
                             onPress={() => onConfirm("Now")}
-                        >   Thanh toán ngay   </ComSelectButton>
+                        >  Thanh toán ngay  </ComSelectButton>
                         <ComSelectButton
+                            style={{ flex: 0.9 }}
                             disable={selectedServices?.length == 0}
                             onPress={() => onConfirm("Later")}
-                        >   Thanh toán sau   </ComSelectButton>
+                        >  Thanh toán sau  </ComSelectButton>
                     </View>
                 </View>
 
