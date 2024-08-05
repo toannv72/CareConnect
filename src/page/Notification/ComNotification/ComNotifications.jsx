@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import bell from "../../../../assets/bell.png";
 import { getData, patchData } from "../../../api/api";
 
-export default function ComNotification({data }) {
+export default function ComNotification({ data }) {
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
 
@@ -38,7 +38,7 @@ export default function ComNotification({data }) {
 
   const handlePress = async (entity, id, notiId) => {
     await updateNotificationStatus(notiId);
-    
+
     if (entity === 'HealthReport') {
       const reportData = await fetchHealthReport(id);
       if (reportData) {
@@ -54,6 +54,9 @@ export default function ComNotification({data }) {
         case 'ScheduledService':
           navigation.navigate("ScheduledService");
           break;
+        case 'CareSchedule':
+          navigation.navigate("NurseHomes", { screen: "CareSchedule" })
+          break;
         default:
           console.error("Unknown entity: ", entity);
       }
@@ -68,7 +71,7 @@ export default function ComNotification({data }) {
     const hours = date.getHours().toString().padStart(2, '0');
     const minutes = date.getMinutes().toString().padStart(2, '0');
     return `${hours}:${minutes} - ${day}/${month}/${year}`;
-};
+  };
 
   return (
     <View style={styles.main}>
@@ -100,7 +103,7 @@ export default function ComNotification({data }) {
                   {value?.content}
                 </Text>
                 <Text>{value?.title}</Text>
-                <Text style={{fontSize: 12,  color: "#A3A3A3"}}>{ComDateTimeConverter(value?.createdAt)}</Text>
+                <Text style={{ fontSize: 12, color: "#A3A3A3" }}>{ComDateTimeConverter(value?.createdAt)}</Text>
               </View>
             </TouchableOpacity>
           </View>

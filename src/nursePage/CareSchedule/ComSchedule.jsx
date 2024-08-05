@@ -13,6 +13,11 @@ export default function ComSchedule({ data, shift, onPress, isSelected }) {
     } = useContext(LanguageContext);
     const navigation = useNavigation();
 
+    const formatTime = (time) => {
+        const [hour, minute] = time.split(":");
+        return `${hour.padStart(2, "0")}:${minute.padStart(2, "0")}`;
+      };
+
     return (
         <>
             <TouchableOpacity
@@ -35,7 +40,7 @@ export default function ComSchedule({ data, shift, onPress, isSelected }) {
                                 source={timeIcon}
                                 style={styles?.clockImage}
                             />
-                            <Text style={{ fontSize: 14 }}>Từ {item?.startTime} đến {item?.endTime}</Text>
+                            <Text style={{ fontSize: 14 }}>Từ {formatTime(item?.startTime)} đến {formatTime(item?.endTime)}</Text>
                         </View>
 
                     ))}
