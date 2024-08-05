@@ -10,11 +10,9 @@ import moment from 'moment';
 import ComTitle from "../../Components/ComTitle/ComTitle";
 import ComToast from "../../Components/ComToast/ComToast";
 import ComNoData from "../../Components/ComNoData/ComNoData";
+import ComLoading from "../../Components/ComLoading/ComLoading";
 
 export default function Notification({ }) {
-  const [select, setSelect] = useState(false);
-  const [select1, setSelect1] = useState(true);
-  const [select2, setSelect2] = useState(true);
   const [loading, setLoading] = useState(false);
   const [todayNotis, setTodayNotis] = useState([]);
   const [previousNotis, setPreviousNotis] = useState([]);
@@ -28,8 +26,10 @@ export default function Notification({ }) {
     setLanguage,
   } = useContext(LanguageContext);
 
-  const fetchNotifications = useCallback((limit) => {
-    setLoading(true);
+  const fetchNotifications = useCallback((limit, shouldSetLoading = true) => {
+    if (shouldSetLoading) {
+      setLoading(true);
+    }
     getData(`/notifications`, {})
       .then((notifications) => {
         const allNotis = notifications?.data?.contends;
@@ -41,12 +41,12 @@ export default function Notification({ }) {
         setDisplayedPreviousNotis(previousNotis.slice(0, limit));
         const allReadStatus = allNotis.every((noti) => noti.isRead);
         setAllRead(allReadStatus);
-        updateNotifications(allNotis)
+        updateNotifications(allNotis);
         setLoading(false);
       })
       .catch((error) => {
         setLoading(false);
-        console.error("Error fetching notifications:", error);
+        // console.error("Error fetching notifications:", error);
       });
   }, []);
 
@@ -54,41 +54,40 @@ export default function Notification({ }) {
     useCallback(() => {
       setPreviousNotisLimit(10); // Reset the limit to 10 items
       fetchNotifications(10);
+      const intervalId = setInterval(() => {
+        getData(`/notifications`, {})
+          .then((notifications) => {
+            const allNotis = notifications?.data?.contends;
+            const today = moment().startOf('day');
+            const todayNotis = allNotis.filter((noti) => moment(noti.createdAt).isSame(today, 'day'));
+            setTodayNotis(todayNotis);
+          })
+          .catch((error) => {
+            // console.error("Error fetching notifications:", error);
+          });// Fetch data every 2 seconds
+      }, 1500);
+      return () => clearInterval(intervalId);
     }, [])
   );
 
   const handleReadAll = async () => {
-    if (allRead) {
-      return;
-    }
+    if (allRead) { return;}
     patchData(`/notifications/readAll`, "", {}, {})
       .then((response) => {
         fetchNotifications(previousNotisLimit);
         ComToast({ text: 'Đánh dấu đã đọc tất cả thành công' });
       })
       .catch((error) => {
-        setLoading(false)
+        setLoading(false);
         ComToast({ text: 'Đã xảy ra lỗi, vui lòng thử lại sau.' });
-        console.error("API readAll Notification Error: ", error);
       });
   };
 
   const handleLoadMore = () => {
     const newLimit = previousNotisLimit + 10;
     setPreviousNotisLimit(newLimit);
-    fetchNotifications(newLimit);
+    fetchNotifications(newLimit, false); // Pass false to skip setting loading to true
   };
-
-  // const typeData = [
-  //   { value: "HealthReport", label: "Báo cáo sức khỏe" },
-  //   { value: "Contract", label: "Hợp đồng" },
-  //   { value: "ScheduledService", label: "Đăng ký dịch vụ" }
-  // ];
-
-  // const statusData = [
-  //   { value: "true", label: "Đã đọc" },
-  //   { value: "false", label: "Chưa đọc" }
-  // ];
 
   return (
     <>
@@ -97,65 +96,53 @@ export default function Notification({ }) {
         showTitle
       />
       <View style={styles.body}>
-        {/* <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 10 }}>
-          <ComSelect
-            name="type"
-            options={typeData}
-            control={control}
-            errors={errors}
-            style={{ width: '49%' }}
-            onChange={handleCategorySelect}
-          />
-          <ComSelect
-            name="status"
-            options={statusData}
-            control={control}
-            errors={errors}
-            style={{ width: '49%' }}
-            onChange={handlePriceOrderSelect}
-          />
-        </View> */}
         <ScrollView
           showsVerticalScrollIndicator={false}
           style={styles?.scrollView}
           showsHorizontalScrollIndicator={false}
         >
-          {todayNotis?.length == 0 && previousNotis?.length == 0 ? (<ComNoData>Không có thông báo nào</ComNoData>
-          ) : (
-            <View>
-              {todayNotis?.length > 0 &&
-                (<View>
-                  <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                    <ComTitle style={{ fontSize: 16, marginBottom: 10 }}>Hôm nay</ComTitle>
-                    <TouchableOpacity onPress={() => handleReadAll()}>
-                      <Text style={{ color: allRead ? "#000" : "#33B39C" }}>Đánh dấu đã đọc tất cả</Text>
-                    </TouchableOpacity>
-                  </View>
-                  <ComNotification tile={"Hôm nay"} data={todayNotis} />
-                </View>
-                )}
-              {previousNotis?.length > 0 && (
+          {
+            loading ? (
+              <ComLoading show={true} />
+            ) : (
+              todayNotis?.length == 0 && previousNotis?.length == 0 ? (<ComNoData>Không có thông báo nào</ComNoData>
+              ) : (
                 <View>
-                  <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                    <ComTitle style={{ fontSize: 16, marginBottom: 10 }}>Trước đó</ComTitle>
-                    {todayNotis?.length == 0 && (
-                      <TouchableOpacity onPress={() => handleReadAll()}>
-                        <Text style={{ color: allRead ? "#000" : "#33B39C" }}>Đánh dấu đã đọc tất cả</Text>
-                      </TouchableOpacity>
+                  {todayNotis?.length > 0 &&
+                    (<View>
+                      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                        <ComTitle style={{ fontSize: 16, marginBottom: 10 }}>Hôm nay</ComTitle>
+                        <TouchableOpacity onPress={() => handleReadAll()}>
+                          <Text style={{ color: allRead ? "#000" : "#33B39C" }}>Đánh dấu đã đọc tất cả</Text>
+                        </TouchableOpacity>
+                      </View>
+                      <ComNotification tile={"Hôm nay"} data={todayNotis} />
+                    </View>
                     )}
-                  </View>
-                  <ComNotification tile={"Trước đó"} data={displayedPreviousNotis} />
-                  {displayedPreviousNotis?.length < previousNotis?.length && (
-                    <View style={{ justifyContent: "center", alignItems: "center" }}>
-                      <TouchableOpacity onPress={handleLoadMore}>
-                        <Text style={styles.loadMoreText}>Xem thêm</Text>
-                      </TouchableOpacity>
+                  {previousNotis?.length > 0 && (
+                    <View>
+                      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                        <ComTitle style={{ fontSize: 16, marginBottom: 10 }}>Trước đó</ComTitle>
+                        {todayNotis?.length == 0 && (
+                          <TouchableOpacity onPress={() => handleReadAll()}>
+                            <Text style={{ color: allRead ? "#000" : "#33B39C" }}>Đánh dấu đã đọc tất cả</Text>
+                          </TouchableOpacity>
+                        )}
+                      </View>
+                      <ComNotification tile={"Trước đó"} data={displayedPreviousNotis} />
+                      {displayedPreviousNotis?.length < previousNotis?.length && (
+                        <View style={{ justifyContent: "center", alignItems: "center" }}>
+                          <TouchableOpacity onPress={handleLoadMore}>
+                            <Text style={styles.loadMoreText}>Xem thêm</Text>
+                          </TouchableOpacity>
+                        </View>
+                      )}
                     </View>
                   )}
                 </View>
-              )}
-            </View>
-          )}
+              )
+            )
+          }
           <View style={{ height: 100 }}></View>
         </ScrollView>
       </View>

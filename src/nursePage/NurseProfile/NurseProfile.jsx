@@ -11,7 +11,10 @@ import feedback from "../../../assets/profile_icons/feedback.png";
 import notification from "../../../assets/profile_icons/notification.png";
 import serviceHistory from "../../../assets/profile_icons/serviceHistory.png";
 import signout from "../../../assets/profile_icons/signout.png";
+import { useStorage } from "../../hooks/useLocalStorage";
+
 export default function UserProfile() {
+  const [user] = useStorage("user", {});
 
   const data = [
     {
@@ -44,7 +47,7 @@ export default function UserProfile() {
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    paddingTop: 25,
+    // paddingTop: 25,
     backgroundColor: "#fff",
     paddingHorizontal: 15,
     gap: 10,

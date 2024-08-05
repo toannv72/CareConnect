@@ -53,7 +53,7 @@ const ComHeader = ({
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    paddingTop: 25,
+    // paddingTop: 25,
     paddingBottom: 5,
   },
   backIconContainer: {

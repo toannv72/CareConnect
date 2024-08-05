@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
     },
     header: {
-        paddingTop: 25,
+        // paddingTop: 25,
         backgroundColor: "#fff",
     },
     contentBold: {
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
     backIconContainer: {
         position: 'absolute',
         zIndex: 100,
-        marginTop: 35,
+        marginTop: 10,
         marginLeft: 10,
         padding: 3,
         borderRadius: 100,

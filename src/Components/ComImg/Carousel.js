@@ -35,7 +35,7 @@ const Carousel = ({renderItem, items = []}) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 18,
+    // paddingVertical: 18,
   },
 });
 

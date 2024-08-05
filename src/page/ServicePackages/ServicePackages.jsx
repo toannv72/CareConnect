@@ -49,7 +49,7 @@ export default function ServicePackages() {
 
   const fetchNextPage = async () => {
     let url = '/nursing-package';
-
+    setLoading(true);
     if (searchQuery) {
       url += `?Search=${searchQuery}`;
     }
@@ -61,9 +61,9 @@ export default function ServicePackages() {
       }) || [];
         setData(filterData?.reverse() || []);
         setLoading(false);
-        setLoading(false);
       })
       .catch((error) => {
+        setLoading(false);
         console.error("Error fetching nursing-package:", error);
       });
   }

@@ -74,7 +74,7 @@ export default function NurseHome({ navigation }) {
         updateNotifications(notifications?.data?.contends)
       })
       .catch((error) => {
-        console.error("Error fetching notifications:", error);
+        // console.error("Error fetching notifications:", error);
       });
   }, []);
 
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    paddingTop: 40,
+    // paddingTop: 40,
   },
   body: {
     paddingHorizontal: 20,

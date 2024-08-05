@@ -23,8 +23,7 @@ export default function LoginScreen() {
   const [LoginError, setLoginError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const { login } = useAuth();
-
+  const { accessToken, role } = useAuth();
   const {
     text: {
       Login,
@@ -59,15 +58,21 @@ export default function LoginScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      setLoginState(false);
-      setLoginError(false);
-      setErrorMessage("");
-      setLoading(false);
-      methods.reset({
-        username: "",
-        password: "",
-      });
-    }, [])
+      if (accessToken && role?.name == "Customer")
+        navigation.navigate("Homes", { screen: "Home" });
+      else if (accessToken && role?.name == "Nurse")
+        navigation.navigate("NurseHomes", { screen: "NurseHome" });
+      else{
+        setLoginState(false);
+        setLoginError(false);
+        setErrorMessage("");
+        setLoading(false);
+        methods.reset({
+          username: "",
+          password: "",
+        });
+      }
+    }, [accessToken])
   );
 
   const handleLogin = (data) => {

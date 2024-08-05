@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import React, { useContext, useState, useEffect } from "react";
+import { useNavigation, useRoute, useFocusEffect } from "@react-navigation/native";
+import React, { useContext, useState, useEffect, useCallback } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Image, StyleSheet, View } from "react-native";
 import * as yup from "yup";
@@ -12,20 +12,24 @@ import { ScrollView } from "react-native";
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import moment from 'moment';
 import { useAuth } from "../../../auth/useAuth";
+import { getData } from "../../api/api";
+import ImageModal from 'react-native-image-modal'
 
 export default function DetailProfile({ route }) {
   const navigation = useNavigation();
   const { user } = useAuth();
   const [image, setImage] = useState(user?.avatarUrl);
+  const [loading, setLoading] = useState(false);
+  const [userData, setUserData] = useState({});
 
   useEffect(() => { // cập nhật giá trị user sau mỗi lần update
-    setImage(user?.avatarUrl);
-    Object.keys(user).forEach(key => {
-      setValue(key, user[key]);
+    setImage(userData?.avatarUrl);
+    Object.keys(userData).forEach(key => {
+      setValue(key, userData[key]);
     });
-    setValue("cccd", user?.cccd)
-    setValue("dateOfBirth", moment(user?.dateOfBirth, "YYYY-MM-DD").format("DD/MM/YYYY") ?? "",);
-  }, [user]);
+    setValue("cccd", userData?.cccd)
+    setValue("dateOfBirth", moment(userData?.dateOfBirth, "YYYY-MM-DD").format("DD/MM/YYYY") ?? "",);
+  }, [userData]);
 
   const {
     text: {
@@ -38,18 +42,18 @@ export default function DetailProfile({ route }) {
 
   });
   const Edit = () => {
-    navigation.navigate("EditProfile", { user });
+    navigation.navigate("EditProfile", { userData });
   };
   const methods = useForm({
     resolver: yupResolver(),
     defaultValues: {
-      fullName: user?.fullName ?? "",
-      email: user?.email ?? "",
-      gender: user?.gender ?? "",
-      dateOfBirth: moment(user?.dateOfBirth, "YYYY-MM-DD").format("DD/MM/YYYY") ?? "",
-      phoneNumber: user?.phoneNumber ?? "",
-      cccd: user?.cccd ?? "",
-      address: user?.address ?? ""
+      fullName: userData?.fullName ?? "",
+      email: userData?.email ?? "",
+      gender: userData?.gender ?? "",
+      dateOfBirth: moment(userData?.dateOfBirth, "YYYY-MM-DD").format("DD/MM/YYYY") ?? "",
+      phoneNumber: userData?.phoneNumber ?? "",
+      cccd: userData?.cccd ?? "",
+      address: userData?.address ?? ""
     },
   });
   const {
@@ -70,6 +74,21 @@ export default function DetailProfile({ route }) {
     }
   ];
 
+  useFocusEffect(
+    useCallback(() => {
+      setLoading(true);
+      getData(`/users/${user?.id}`, {})
+        .then((users) => {
+          setUserData(users?.data);
+          setLoading(false);
+        })
+        .catch((error) => {
+          setLoading(false);
+          console.log("Error getData fetching items:", error);
+        });
+    }, [user])
+  );
+
   return (
     <>
       <ComHeader
@@ -86,12 +105,21 @@ export default function DetailProfile({ route }) {
                 showsHorizontalScrollIndicator={false}
               >
                 <View style={styles.avatarContainer}>
-                  <Image
+                  {/* <Image
                     source={{
                       uri: image ? image : "https://firebasestorage.googleapis.com/v0/b/careconnect-2d494.appspot.com/o/images%2F3be127ed-a90e-4364-8160-99338def0144.png?alt=media&token=3de8a6cb-0986-4347-9a22-eb369f7d02ff",
                     }}
                     style={styles.avatar}
-                  />
+                  /> */}
+                  <View>
+                    <ImageModal
+                      resizeMode='contain'
+                      style={styles.avatar}
+                      source={{
+                        uri: image ? image : "https://firebasestorage.googleapis.com/v0/b/careconnect-2d494.appspot.com/o/images%2F3be127ed-a90e-4364-8160-99338def0144.png?alt=media&token=3de8a6cb-0986-4347-9a22-eb369f7d02ff",
+                      }}
+                    />
+                  </View>
                 </View>
 
                 <View style={{ gap: 10 }}>
@@ -196,8 +224,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   avatar: {
-    width: 170,
-    height: 170,
+    width: 130,
+    height: 130,
     borderRadius: 1000,
     borderWidth: 1,
     borderColor: "gray",

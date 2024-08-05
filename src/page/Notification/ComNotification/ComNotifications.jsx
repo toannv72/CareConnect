@@ -32,7 +32,7 @@ export default function ComNotification({ data }) {
     try {
       await patchData(`/notifications`, notiid, dataPatch, {});
     } catch (error) {
-      console.error("API read Notification Error: ", error);
+      console.log("API read Notification Error: ", error);
     }
   };
 
@@ -44,7 +44,7 @@ export default function ComNotification({ data }) {
       if (reportData) {
         navigation.navigate("HealthMonitorDetail", { scrollToId: id, data: reportData });
       } else {
-        console.error("Failed to fetch health report data");
+        console.log("Failed to fetch health report data");
       }
     } else {
       switch (entity) {
@@ -58,7 +58,7 @@ export default function ComNotification({ data }) {
           navigation.navigate("NurseHomes", { screen: "CareSchedule" })
           break;
         default:
-          console.error("Unknown entity: ", entity);
+          console.log("Unknown entity: ", entity);
       }
     }
   };
