@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import React, { useContext, useState, useEffect } from "react";
+import { useNavigation, useRoute, useFocusEffect } from "@react-navigation/native";
+import React, { useContext, useState, useEffect, useCallback } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Image, StyleSheet, Text, ActivityIndicator, View, Keyboard, KeyboardAvoidingView, Platform } from "react-native";
 import * as yup from "yup";
@@ -14,10 +14,9 @@ import ComDatePicker from "../../../Components/ComInput/ComDatePicker";
 import { ScrollView } from "react-native";
 import { firebaseImg } from "../../../api/firebaseImg";
 import ComHeader from "../../../Components/ComHeader/ComHeader";
-import { useStorage } from "../../../hooks/useLocalStorage";
-import { postData, getData, putData } from "../../../api/api";
 import { useAuth } from "../../../../auth/useAuth";
 import { cccdRegex } from "../../../Components/ComRegexPatterns/regexPatterns";
+import { getData, putData } from "../../../api/api";
 
 export default function EditProfile({ }) {
   const { user, login, setUser, role } = useAuth();
@@ -25,14 +24,35 @@ export default function EditProfile({ }) {
   const [image, setImage] = useState(user?.avatarUrl);
   const [imageUrl, setImageUrl] = useState(null);
   const navigation = useNavigation();
+  const route = useRoute();
+  const [userData, setUserData] = useState(user || {});
+
+  useEffect(() => { // cập nhật giá trị user sau mỗi lần update
+    setImage(userData?.avatarUrl);
+    Object.keys(userData).forEach(key => {
+      setValue(key, userData[key]);
+    });
+    setValue("cccd", userData?.cccd)
+    setValue("gender", userData?.gender)
+    setValue("dateOfBirth", new Date(userData?.dateOfBirth))
+  }, [userData]);
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     setLoading(true);
+  //     getData(`/users/${user?.id}`, {})
+  //       .then((users) => {
+  //         setUserData(users?.data);
+  //         setLoading(false);
+  //       })
+  //       .catch((error) => {
+  //         setLoading(false);
+  //       });
+  //   }, [user])
+  // );
 
   const {
-    text: {
-      EditProfile,
-      Register,
-      common: { button },
-    },
-    setLanguage,
+    text: { EditProfile, Register, common: { button } },
   } = useContext(LanguageContext);
 
   const loginSchema = yup.object().shape({
@@ -52,13 +72,13 @@ export default function EditProfile({ }) {
   const methods = useForm({
     resolver: yupResolver(loginSchema),
     defaultValues: {
-      fullName: user?.fullName ?? "",
-      email: user?.email ?? "",
-      gender: user?.gender ?? "",
-      dateOfBirth: new Date(user?.dateOfBirth) ?? "",
-      phoneNumber: user?.phoneNumber ?? "",
-      cccd: user?.cccd ?? "",
-      address: user?.address ?? ""
+      fullName: userData?.fullName ?? "",
+      email: userData?.email ?? "",
+      gender: userData?.gender ?? "",
+      dateOfBirth: userData?.dateOfBirth ? new Date(userData?.dateOfBirth) : new Date(),
+      phoneNumber: userData?.phoneNumber ?? "",
+      cccd: userData?.cccd ?? "",
+      address: userData?.address ?? ""
     },
   });
 
@@ -67,19 +87,15 @@ export default function EditProfile({ }) {
   const handleUpdate = (data) => {
     setLoading(true);
     Keyboard.dismiss();
-
     const newData = {
       ...data,
       dateOfBirth: formattedDate(new Date(data?.dateOfBirth)),
       avatarUrl: imageUrl ? imageUrl : image,
     };
     delete newData.gender;
-    console.log("handleUpdate newData: ", newData)
     const handleUpdateData = (newData) => {
-
       putData("/users/profile", "", newData, {})
         .then((data) => {
-          // Chờ setToken hoàn thành trước khi navigate
           setLoading(false);
           getData("/users/profile")
             .then((userData) => {
@@ -93,12 +109,11 @@ export default function EditProfile({ }) {
           return new Promise((resolve) => {
             setTimeout(() => {
               ComToast({ text: 'Chỉnh sửa thông tin thành công' });
-              resolve(); // Báo hiệu Promise đã hoàn thành
-            }, 0); // Thời gian chờ 0ms để đảm bảo setToken đã được thực hiện
+              resolve();
+            }, 0);
           });
         })
         .catch((error) => {
-          console.error("Error register:", error);
           setLoading(false)
           ComToast({ text: 'Chỉnh sửa thông tin thất bại' });
         });
@@ -109,7 +124,6 @@ export default function EditProfile({ }) {
         setImageUrl(imageUrl);
         newData.avatarUrl = imageUrl;
         handleUpdateData(newData); // Sau khi upload xong ảnh, thực hiện cập nhật dữ liệu
-        console.log("Image uploaded successfully:", imageUrl);
       });
     } else {
       // Nếu không có hình ảnh mới, chỉ cập nhật dữ liệu người dùng
@@ -134,14 +148,32 @@ export default function EditProfile({ }) {
 
   const formattedDate = (dateValue) => {
     if (!dateValue || !(dateValue instanceof Date)) {
-      return ""; // Return empty string for invalid dates
+      return "";
     }
-
     const day = dateValue.getDate().toString().padStart(2, "0");
     const month = (dateValue.getMonth() + 1).toString().padStart(2, "0");
     const year = dateValue.getFullYear();
     return `${year}-${month}-${day}`;
   };
+
+  useEffect(() => {
+    if (route.params?.userData) {
+      setUserData(route.params.userData);
+      setValue("dateOfBirth", new Date(route.params.userData?.dateOfBirth));
+    } else {
+      setLoading(true);
+      getData(`/users/${user?.id}`, {})
+        .then((response) => {
+          setUserData(response?.data);
+          setValue("dateOfBirth", new Date(response?.data?.dateOfBirth));
+          setLoading(false);
+        })
+        .catch((error) => {
+          setLoading(false);
+          console.log("Error fetching user data:", error);
+        });
+    }
+  }, [route.params, user?.id]);
 
   return (
     <>
@@ -158,15 +190,15 @@ export default function EditProfile({ }) {
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
               >
-                <Avatar image={image} setImg={setImg} />
+                <Avatar key={image} image={image} setImg={setImg} />
                 <View style={{ gap: 10 }}>
                   <ComInput
                     label={EditProfile?.label?.fullName}
                     placeholder={EditProfile?.placeholder?.fullName}
                     name="fullName"
                     control={control}
-                    keyboardType="default" // Set keyboardType for First Name input
-                    errors={errors} // Pass errors object
+                    keyboardType="default"
+                    errors={errors}
                     required
                     edit={false}
                   />
@@ -180,12 +212,12 @@ export default function EditProfile({ }) {
                     <View style={{ flex: 1 }}>
                       <ComSelect
                         label={EditProfile?.label?.gender}
-                        name=""
+                        name="gender"
                         control={control}
                         errors={errors}
                         options={genderOptions}
                         enabled={false}
-                        defaultValue={user?.gender}
+                        defaultValue={userData?.gender}
                         required
                       />
                     </View>
@@ -195,7 +227,7 @@ export default function EditProfile({ }) {
                         placeholder={EditProfile?.placeholder?.dateOfBirth}
                         name="dateOfBirth"
                         control={control}
-                        errors={errors} // Pass errors object
+                        errors={errors}
                         enabled={false}
                         required
                       />
@@ -206,8 +238,8 @@ export default function EditProfile({ }) {
                     placeholder={EditProfile?.placeholder?.phoneNumber}
                     name="phoneNumber"
                     control={control}
-                    keyboardType="default" // Set keyboardType for First Name input
-                    errors={errors} // Pass errors object
+                    keyboardType="default"
+                    errors={errors}
                     edit={false}
                     required
                   />
@@ -216,8 +248,8 @@ export default function EditProfile({ }) {
                     placeholder={EditProfile?.placeholder?.email}
                     name="email"
                     control={control}
-                    keyboardType="default" // Set keyboardType for First Name input
-                    errors={errors} // Pass errors object
+                    keyboardType="default"
+                    errors={errors}
                     required
                   />
                   <ComInput
@@ -225,7 +257,7 @@ export default function EditProfile({ }) {
                     placeholder={EditProfile?.placeholder?.idNumber}
                     name="cccd"
                     control={control}
-                    errors={errors} // Pass errors object
+                    errors={errors}
                     edit={role?.name == "Customer" ? true : false}
                     required
                   />
@@ -234,11 +266,10 @@ export default function EditProfile({ }) {
                     placeholder={EditProfile?.placeholder?.address}
                     name="address"
                     control={control}
-                    errors={errors} // Pass errors object
+                    errors={errors}
                     required
                   />
                 </View>
-                {/* <View style={{ height: 100 }}></View> */}
               </ScrollView>
             </View>
             <View>

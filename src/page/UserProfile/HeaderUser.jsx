@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   name: {
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: "500",
   },
   phone: {

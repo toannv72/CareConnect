@@ -105,7 +105,7 @@ export default function ComHealthIndex({ data, healthMonitor, date, clickable, c
                 <Text
                   style={{
                     fontWeight: "bold", fontSize: 25,
-                    color: getStatusText(data?.healthReportDetailMeasures[0]?.status)?.color
+                    color: getStatusText(overallStatus)?.color
                   }}>
                   {data?.healthReportDetailMeasures.length == 1 ?
                     data?.healthReportDetailMeasures[0]?.value :

@@ -29,12 +29,12 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     await removeUser();
-    setUser(null);
-    removeAccessToken();
-    removeElders();
-    removeContracts();
-    removeRole();
-    removeExpoPushToken();
+    await setUser(null);
+    await removeAccessToken();
+    await removeElders();
+    await removeContracts();
+    await removeRole();
+    await removeExpoPushToken();
   };
 
   return (

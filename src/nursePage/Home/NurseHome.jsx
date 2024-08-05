@@ -74,7 +74,7 @@ export default function NurseHome({ navigation }) {
         updateNotifications(notifications?.data?.contends)
       })
       .catch((error) => {
-        console.error("Error fetching notifications:", error);
+        // console.error("Error fetching notifications:", error);
       });
   }, []);
 

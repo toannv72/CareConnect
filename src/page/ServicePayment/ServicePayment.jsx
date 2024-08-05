@@ -94,6 +94,7 @@ export default function ServicePayment() {
                 console.log("API Response: ", response.message);
                 const url = response.message;
                 const orderId = response.orderId;
+                console.log(" url", url)
                 // Open the URL in the default browser
                 setLoading(false)
                 Linking.openURL(url)
@@ -260,7 +261,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
     },
     header: {
-        paddingTop: 50,
+        // paddingTop: 50,
         backgroundColor: "#fff",
     },
     contentBold: {
@@ -271,7 +272,7 @@ const styles = StyleSheet.create({
     backIconContainer: {
         position: 'absolute',
         zIndex: 100,
-        marginTop: 60,
+        marginTop: 10,
         marginLeft: 10,
         padding: 3,
         borderRadius: 100,

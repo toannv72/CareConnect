@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useContext } from "react";
+import React, { useEffect, useState, useCallback, useContext, useRef } from "react";
 import { StyleSheet, View, Text, ScrollView, Alert, Platform } from "react-native";
 import Header from "./Header";
 import Catalogue from "./Catalogue/Catalogue";
@@ -9,7 +9,7 @@ import TopPlacesCarousel from "../../Components/ComImg/TopPlacesCarousel";
 import { TOP_PLACES } from "../../../db";
 import { useAuth } from "../../../auth/useAuth";
 import { postData, getData } from "../../api/api";
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
@@ -45,10 +45,12 @@ async function registerForPushNotificationsAsync() {
   }
 }
 
-export default function Home({ navigation }) {
+export default function Home() {
   const [expoPushToken, setExpoPushToken] = useState("");
   const { user, setUser, login } = useAuth();
   const { updateNotifications } = useContext(NotificationsContext);
+  const responseListener = useRef();
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchPushToken = async () => {
@@ -67,7 +69,7 @@ export default function Home({ navigation }) {
         updateNotifications(notifications?.data?.contends)
       })
       .catch((error) => {
-        console.error("Error fetching notifications:", error);
+        // console.error("Error fetching notifications:", error);
       });
   }, []);
 
@@ -90,6 +92,14 @@ export default function Home({ navigation }) {
         })
         .catch((error) => {
           console.error("Error fetching user profile:", error);
+        });
+
+      responseListener.current =
+        Notifications.addNotificationResponseReceivedListener((response) => {
+          if (user?.roles[0]?.name == "Customer")
+            navigation.navigate("Homes", { screen: "Notification" })
+          else
+            navigation.navigate("NurseHomes", { screen: "Notification" })
         });
     }, [expoPushToken])
   );
