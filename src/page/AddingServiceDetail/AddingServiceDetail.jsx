@@ -10,6 +10,7 @@ import { postData, getData } from "../../api/api";
 import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter";
 import Heart from "../../../assets/heart.png";
 import moment from "moment";
+import { useAuth } from "../../../auth/useAuth";
 
 export default function AddingServiceDetail() {
     const {
@@ -18,6 +19,7 @@ export default function AddingServiceDetail() {
     } = useContext(LanguageContext);
     const { favorites, toggleFavorite } = useContext(FavoriteContext);
     const route = useRoute();
+    const { elders } = useAuth();
     const { id } = route.params;
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState({});
@@ -149,10 +151,21 @@ export default function AddingServiceDetail() {
                     </ScrollView>
                 </View>
                 <View style={{ marginVertical: 10 }}>
-                    <ComSelectButton onPress={() => { navigation.navigate("AddingServiceRegister", { data: data }) }}
-                        disable={!isValidService(data)}>
-                        {addingPackages?.register?.registerTitle}
-                    </ComSelectButton>
+                    {
+                        elders?.length == 0 ? (
+                            <>
+                                <Text style={{ fontSize: 15, color: "#A3A3A3", textAlign: "center"}}>Bạn chưa có người cao tuổi nào. Vui lòng đăng ký gói dưỡng lão trước.</Text>
+                                <ComSelectButton onPress={() => { navigation.navigate("Service") }}>
+                                    Đăng ký gói dưỡng lão
+                                </ComSelectButton>
+                            </>
+                        ) : (
+                            <ComSelectButton onPress={() => { navigation.navigate("AddingServiceRegister", { data: data }) }}
+                                disable={!isValidService(data)}>
+                                {addingPackages?.register?.registerTitle}
+                            </ComSelectButton>
+                        )
+                    }
                 </View>
             </View >
         </>
