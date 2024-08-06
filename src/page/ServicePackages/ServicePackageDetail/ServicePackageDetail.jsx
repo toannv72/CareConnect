@@ -184,7 +184,7 @@ export default function ServicePackageDetail({ }) {
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    paddingTop: 20,
+    paddingTop: 5,
     backgroundColor: "#fff",
   },
   title: {
