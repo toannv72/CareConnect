@@ -18,6 +18,7 @@ import { useAuth } from "../../../auth/useAuth";
 import { postData, getData } from "../../api/api";
 import ComLoading from "../../Components/ComLoading/ComLoading";
 import ImageModal from 'react-native-image-modal'
+import { TouchableOpacity } from "react-native";
 
 export default ContractDetail = () => {
   const { user } = useAuth();
@@ -176,10 +177,10 @@ export default ContractDetail = () => {
                 gap: 10
               }}
             >
-              <ComButton check onPress={handleClosePopup} style={{flex: 1}}>
+              <ComButton check onPress={handleClosePopup} style={{ flex: 1 }}>
                 Hủy
               </ComButton>
-              <ComButton onPress={handleOpenPopupDate} disable={reason === ""} style={{flex: 1}}>
+              <ComButton onPress={handleOpenPopupDate} disable={reason === ""} style={{ flex: 1 }}>
                 {loading ? <ActivityIndicator /> : "Xác nhận"}
               </ComButton>
             </View>
@@ -267,11 +268,15 @@ export default ContractDetail = () => {
               </View>
               <View style={styles.bodySeparator}>
                 <Text style={styles.text}>Người cao tuổi</Text>
-                <Text style={styles.text2}>{data?.elder?.name}</Text>
+                <TouchableOpacity style={{ flex: 0.65 }} onPress={() => navigation.navigate("ElderDetailProfile", { data: data?.elder })}>
+                  <Text style={[styles.text2, { color: "#33B39C" }]}>{data?.elder?.name}</Text>
+                </TouchableOpacity>
               </View>
               <View style={styles.bodySeparator}>
                 <Text style={styles.text}>Gói dưỡng lão</Text>
-                <Text style={styles.text2}>{data?.nursingPackage?.name}</Text>
+                <TouchableOpacity style={{ flex: 0.65 }} onPress={() => navigation.navigate("ServicePackageDetail", { data: data?.nursingPackage })}>
+                  <Text style={[styles.text2, { color: "#33B39C" }]}>{data?.nursingPackage?.name}</Text>
+                </TouchableOpacity>
               </View>
               <View style={styles.bodySeparator}>
                 <Text style={styles.text}>Ngày ký</Text>

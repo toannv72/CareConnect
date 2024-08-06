@@ -33,12 +33,12 @@ export default function LoginScreen() {
   } = useContext(LanguageContext);
 
   const loginSchema = yup.object().shape({
-    // username: yup
-    //   .string()
-    //   .trim()
-    //   .required(Login?.message?.phoneRequired)
-    //   .matches(/^0[0-9]{9,10}$/, Login?.message?.phoneInvalid),
-    // password: yup.string().trim().required(Login?.message?.password),
+    username: yup
+      .string()
+      .trim()
+      .required(Login?.message?.phoneRequired)
+      .matches(/^0[0-9]{9,10}$/, Login?.message?.phoneInvalid),
+    password: yup.string().trim().required(Login?.message?.password),
   });
 
   const methods = useForm({

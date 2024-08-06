@@ -25,7 +25,8 @@ export default function Services() {
     if (selectedCategory) { url += `&PackageCategoryId=${selectedCategory}` }
     getData(url, {})
       .then((packageData) => {
-        setData(packageData?.data?.contends);
+        const filterData = packageData?.data?.contends?.filter(item => item.state === true);
+        setData(filterData);
         setLoading(loading);
       })
       .catch((error) => {
@@ -55,10 +56,10 @@ export default function Services() {
 
   const filteredData = data?.filter((service) => {
     const endRegistrationDate = moment(service?.endRegistrationDate);
-    const hasNotExpired = moment().isSameOrBefore(endRegistrationDate, "day");
-    const hasSlotsLeft = service?.registrationLimit !== 0 ? service?.totalOrder < service?.registrationLimit : service?.totalOrder >= service?.registrationLimit;
+    const hasNotExpired = service?.type == "OneDay" ? moment().isSameOrBefore(endRegistrationDate, "day") : true;
+    const hasSlotsLeft = service?.type == "OneDay" ? service?.registrationLimit !== 0 ? service?.totalOrder < service?.registrationLimit : service?.totalOrder >= service?.registrationLimit : true;
     return hasNotExpired && hasSlotsLeft;
-});
+  });
 
   return (
     <View style={styles?.body}>

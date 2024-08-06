@@ -50,8 +50,8 @@ export default function AddingServiceDetail() {
     const isValidService = (service) => {//check service hợp lệ thì mở đăng ký
         const validStatus = service?.state === "Active"; // Check trạng thái còn tồn tại hay không
         const endRegistrationDate = moment(service?.endRegistrationDate);
-        const hasNotExpired = moment().isSameOrBefore(endRegistrationDate, "day");
-        const hasSlotsLeft = service?.registrationLimit !== 0 ? service?.totalOrder < service?.registrationLimit : service?.totalOrder >= service?.registrationLimit;
+        const hasNotExpired = service?.type == "OneDay" ? moment().isSameOrBefore(endRegistrationDate, "day") : true;
+        const hasSlotsLeft = service?.type == "OneDay" ? service?.registrationLimit !== 0 ? service?.totalOrder < service?.registrationLimit : service?.totalOrder >= service?.registrationLimit : true;
         return validStatus && hasNotExpired && hasSlotsLeft;
     };
 

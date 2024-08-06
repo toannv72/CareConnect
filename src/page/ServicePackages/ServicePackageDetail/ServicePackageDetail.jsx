@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { View, StyleSheet, ScrollView, Image, Text, Keyboard } from 'react-native';
+import { View, StyleSheet, ScrollView, Image, Text, Keyboard, ActivityIndicator } from 'react-native';
 import { LanguageContext } from "../../../contexts/LanguageContext";
 import { useRoute } from "@react-navigation/native";
 import { FormProvider, useForm } from "react-hook-form";
@@ -62,6 +62,7 @@ export default function ServicePackageDetail({ }) {
   } = methods;
 
   const handleCreateAppointment = (data) => {
+    setLoading(true)
     Keyboard.dismiss();
     const formData = {
       ...data,
@@ -75,11 +76,13 @@ export default function ServicePackageDetail({ }) {
     };
     postData("/appointments", formData, {})
       .then((appointments) => {
+        setLoading(false)
         handleClosePopupDate()
         navigation.navigate("ServicePackageRegisterSuccess", { data: formData });
       })
       .catch((error) => {
         handleClosePopupDate()
+        setLoading(false)
         ComToast({ text: 'Đã có lỗi xảy ra, vui lòng thử lại' });
         console.log("Error appointments:", error);
       });
@@ -169,9 +172,9 @@ export default function ServicePackageDetail({ }) {
                 Hủy
               </ComButton>
               <ComButton
-                onPress={handleSubmit(handleCreateAppointment)}
+                onPress= {!loading ? handleSubmit(handleCreateAppointment) : null}
                 style={{ flex: 1 }}>
-                Xác nhận
+                {loading ? <ActivityIndicator /> : "Xác nhận"}
               </ComButton>
             </View>
           </View>
@@ -184,7 +187,7 @@ export default function ServicePackageDetail({ }) {
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    paddingTop: 20,
+    paddingTop: 5,
     backgroundColor: "#fff",
   },
   title: {

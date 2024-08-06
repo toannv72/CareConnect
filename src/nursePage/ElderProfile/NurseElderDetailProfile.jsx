@@ -176,10 +176,10 @@ export default function NurseElderDetailProfile() {
               </ScrollView>
             </View>
             <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 10, paddingBottom: 5 }}>
-              <ComButton onPress={medicalProfile} check={true} style={{ flex: 0.6, borderRadius: 50 }}>
+              <ComButton onPress={medicalProfile} check={true} style={{ flex: 0.57, borderRadius: 50 }}>
                 {ElderProfile?.detail?.medicalProfile}
               </ComButton>
-              <ComButton onPress={representative} style={{ flex: 0.4, borderRadius: 50 }}>
+              <ComButton onPress={representative} style={{ flex: 0.43, borderRadius: 50 }}>
                 {contractsPage?.representative}
               </ComButton>
             </View>
