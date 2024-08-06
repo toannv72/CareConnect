@@ -80,6 +80,7 @@ import RegisterServiceDetail from "./src/nursePage/RegisterService/RegisterServi
 import NotificationPage from "./src/page/Notification/Notification copy";
 // import NotificationApi from "./src/page/Notification/NotificationApi";
 import Notification2 from "./src/page/Notification/Notification2";
+import LoadingApp from "./src/page/LoadingApp/LoadingApp";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -87,9 +88,16 @@ const Routes = () => {
   const navigationRef = useRef(null);
 
   return (
-    <NavigationContainer ref={navigationRef}
-      onUnhandledAction={() => navigationRef.current?.navigate('NotFound')}>
-      <Stack.Navigator initialRouteName="Login">
+    <NavigationContainer
+      ref={navigationRef}
+      onUnhandledAction={() => navigationRef.current?.navigate("NotFound")}
+    >
+      <Stack.Navigator initialRouteName="LoadingApp">
+        <Stack.Screen
+          name="LoadingApp"
+          options={{ headerLeft: null, headerShown: false }}
+          component={LoadingApp}
+        />
         <Stack.Screen
           name="Homes"
           options={{ headerLeft: null, headerShown: false }}
@@ -342,7 +350,7 @@ const Routes = () => {
           name="ScheduledServicePayment"
           component={ScheduledServicePayment}
         />
-         <Stack.Screen
+        <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}
           name="UserNurseProfile"
           component={UserNurseProfile}
