@@ -57,12 +57,12 @@ export default function ComRoom({ data, onPress }) {
             >
                 <View style={{ flexDirection: "column", alignItems: "center", flex: 1 }}>
                     <Text
-                        style={[styles?.roomType, { backgroundColor: color }]}
+                        style={[styles?.roomType, { backgroundColor: '#ACDED3' }]}
                         numberOfLines={1}
                         ellipsizeMode="tail">
                         {data?.nursingPackage?.name}
                     </Text>
-                    <View style={[styles?.iconContain, { backgroundColor: color }]}>
+                    <View style={[styles?.iconContain, { backgroundColor: "#ACDED3" }]}>
                         <Image
                             source={roomIcon}
                             style={styles?.image}

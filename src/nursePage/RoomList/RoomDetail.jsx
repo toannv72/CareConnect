@@ -25,7 +25,8 @@ export default function RoomDetail({ data }) {
             setLoading(true);
             getData(`/elders?RoomId=${selectedRoom?.id}`, {})
                 .then((elders) => {
-                    setElderData(elders?.data?.contends);
+                    const validElder = elders?.data?.contends?.filter(elder => elder?.isContractActive == true)
+                    setElderData(validElder);
                     setLoading(false);
                 })
                 .catch((error) => {

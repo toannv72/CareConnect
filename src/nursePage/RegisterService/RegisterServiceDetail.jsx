@@ -10,6 +10,7 @@ import ComPopup from "../../Components/ComPopup/ComPopup";
 import { putData } from "../../api/api";
 import { postData, getData } from "../../api/api";
 import ComDateTimeConverter from "../../Components/ComDateConverter/ComDateTimeConverter"
+import moment from "moment";
 
 export default function RegisterServiceDetail({ }) {
     const {
@@ -135,8 +136,7 @@ export default function RegisterServiceDetail({ }) {
                         <Text>{serviceData?.description}</Text>
                     </View>
                 </ScrollView>
-
-                {isComplete == "InComplete" && (
+                {(isComplete == "InComplete" && moment(todayOrderDate?.date).isSame(moment(), 'day'))&& (
                     <View style={styles?.content}>
                         <ComButton onPress={() => { setPopup(true) }} style={{ justifyContent: "center", alignItems: "center" }}>
                             {loading ? <ActivityIndicator color="#fff" /> : NurseRegisterService?.markToComplete}

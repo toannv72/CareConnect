@@ -12,7 +12,7 @@ import UpIcon from "../../../assets/images/Nurse/RegisterService/UpIcon.png"
 import DownIcon from "../../../assets/images/Nurse/RegisterService/DownIcon.png"
 import moment from "moment";
 
-export default function ComElder({ data }) {
+export default function ComElder({ data , selectedDate}) {
   const {
     text: { healthMonitor }, setLanguage } = useContext(LanguageContext);
   const navigation = useNavigation();
@@ -39,8 +39,14 @@ export default function ComElder({ data }) {
 
   const renderItem = ({ item, index }) => {
     const todayOrderDate = item?.orderDates?.find(orderDate =>
-      moment(orderDate?.date).format("YYYY-MM-DD") === today || {}
-    )
+      moment(orderDate?.date).format("YYYY-MM-DD") === moment(selectedDate).format("YYYY-MM-DD") 
+      && orderDate?.status !== 'NotPerformed' //ẩn dịch vụ đăng ký để lưu ngày cho tháng sau
+    );
+
+    if (!todayOrderDate) {
+      return null; 
+    }
+
     return (
       <TouchableOpacity
         key={index}
@@ -97,12 +103,15 @@ export default function ComElder({ data }) {
           </View>
         </View>
       </TouchableOpacity>
-    )
-  }
+    );
+  };
+
+  const filteredOrderDetailsService = data?.orderDetailsService?.filter(item =>
+    item?.orderDates?.some(orderDate => orderDate?.status !== 'NotPerformed')
+  );
 
   return (
-    <View
-      style={styles?.cardItem}>
+    <View style={styles?.cardItem}>
       <TouchableOpacity
         style={styles?.body}
         onPress={toggleCollapse}
@@ -143,12 +152,11 @@ export default function ComElder({ data }) {
 
       {!isCollapsed && (
         <FlatList
-          data={data?.orderDetailsService}
+          data={filteredOrderDetailsService}
           renderItem={renderItem}
           keyExtractor={(item, index) => index.toString()}
         />
       )}
-
     </View>
   );
 }
@@ -177,8 +185,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flexWrap: "wrap",
   },
-  cardItem:
-  {
+  cardItem: {
     borderWidth: 1,
     borderColor: "#33B39C",
     marginVertical: 5,

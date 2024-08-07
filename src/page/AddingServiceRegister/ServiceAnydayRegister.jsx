@@ -24,7 +24,7 @@ export default function ServiceAnydayRegister() {
     const route = useRoute();
     const { elder, data } = route.params;
     const navigation = useNavigation();
-    const minDate = moment().add(3, 'day').format('YYYY-MM-DD');
+    const minDate = moment().add(1, 'day').format('YYYY-MM-DD');
     const maxDate = useMemo(() => {
         if (elder?.contractsInUse?.endDate) {//nếu cơ hợp đồng còn hạn
             const endDate = moment(elder?.contractsInUse?.endDate);
