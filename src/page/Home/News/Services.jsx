@@ -25,7 +25,7 @@ export default function Services() {
     if (selectedCategory) { url += `&PackageCategoryId=${selectedCategory}` }
     getData(url, {})
       .then((packageData) => {
-        const filterData = packageData?.data?.contends?.filter(item => item.state === true);
+        const filterData = packageData?.data?.contends?.filter(item => item.state ===  "Active");
         setData(filterData);
         setLoading(loading);
       })

@@ -66,7 +66,7 @@ export default function DetailProfile() {
     getData(`/block/${data?.room?.blockId}`, {})
       .then((block) => {
         const blockName = block?.data?.name
-        setValue("nurseHomeAddress", data?.room?.name + ", " + blockName ?? "");
+        setValue("nurseHomeAddress", "Phòng " + data?.room?.name + ", khu " + blockName ?? "");
       })
       .catch((error) => {
         console.error("Error getData fetching items:", error);

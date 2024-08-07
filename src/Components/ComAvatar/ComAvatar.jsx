@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   image: {
     width: 58,
     height: 58,
-    objectFit: "fill",
+    // objectFit: "fill",
     borderWidth: 0.5,
     borderColor: "#000",
     borderRadius: 50

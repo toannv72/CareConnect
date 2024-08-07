@@ -158,7 +158,7 @@ export default function ServiceHistoryDetail() {
                     </View>
                 </ScrollView>
                 <View style={{ marginBottom: 10, flexDirection: "row", gap: 10 }}>
-                    {(new Date().getDate() >= 25 && new Date().getDate() <= 30) && (//chỉ hiển thị ngày 25 - 30 hàng tháng
+                    {/* {(new Date().getDate() >= 25 && new Date().getDate() <= 30) && (//chỉ hiển thị ngày 25 - 30 hàng tháng */}
                         <View style={{ flex: 1 }}>
                             {feedbackData?.length > 0 ? (//nếu đã từng feedback => view fb
                                 <ComSelectButton onPress={() => { navigation.navigate("FeedbackDetail", { id: feedbackData[0]?.id }) }}>
@@ -170,7 +170,7 @@ export default function ServiceHistoryDetail() {
                                 </ComSelectButton>
                             )}
                         </View>
-                    )}
+                    {/* )} */}
                     <View style={{ flex: 1 }}>
                         <ComSelectButton onPress={() => { navigation.navigate("BillDetail", { id }) }}>
                             Chi tiết thanh toán
