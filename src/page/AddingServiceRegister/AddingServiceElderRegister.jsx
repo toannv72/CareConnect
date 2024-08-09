@@ -29,8 +29,8 @@ export default function AddingServiceElderRegister() {
         getData(`/elders?UserId=${user?.id}`, {})
             .then((elders) => {
                 const filteredElders = elders?.data?.contends.filter(elder => {
-                    // Kiểm tra nếu endDate cuar contract là ngày trong tương lai
-                    return moment(elder?.contractsInUse?.endDate).isSameOrAfter(moment(), 'day');
+                    //lọc ra elder chưa bị delete
+                    return elder?.state == "Active"
                 });
                 setElderData(filteredElders); // Cập nhật danh sách elder đã lọc
                 setLoading(false);

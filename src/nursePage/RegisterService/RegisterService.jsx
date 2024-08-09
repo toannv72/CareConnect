@@ -12,6 +12,7 @@ import visitSchedule from "../../../assets/icon/Group130.png";
 import { getData } from "../../api/api";
 import moment from "moment";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { useAuth } from "../../../auth/useAuth";
 
 export default function RegisterService() {
     const {
@@ -19,30 +20,58 @@ export default function RegisterService() {
         setLanguage,
     } = useContext(LanguageContext);
     const route = useRoute();
+    const { user } = useAuth();
     const roomData = route.params || {};
     const [data, setData] = useState([]);
+    const [careSchedule, setCareSchedule] = useState([]);
     const [loading, setLoading] = useState(false);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [showPicker, setShowPicker] = useState(false);
+
+    const getCareSchedule = async () => {
+        try {
+            const careSchedule = await getData(`/care-schedule?CareMonth=${moment().month() + 1}&CareYear=${moment().year()}&UserId=${user?.id}`, {});
+            const careServicesData = careSchedule?.data?.contends[0]?.rooms[0];
+            console.log("careServicesData", careServicesData);
+            setCareSchedule(careServicesData ? careServicesData : []);
+            return careServicesData;
+        } catch (error) {
+            console.error("Error fetching care-schedule items:", error);
+            return null; 
+        }
+    };
+
+    const getCareServices = async (roomId) => {
+        try {
+          const careServices = await getData(`/care-services?RoomId=${roomId}&Date=${moment(selectedDate).format("YYYY-MM-DD")}`, {});
+          const careServicesData = careServices?.data?.elders?.filter(elder => elder?.state === "Active");
+          setData(careServicesData ? careServicesData : []);
+        } catch (error) {
+          console.error("Error fetching care-services items:", error);
+        }
+      };
+
     useFocusEffect(
         useCallback(() => {
-            setLoading(true);
-            getData(`/care-services?RoomId=${roomData?.roomData?.id}&Date=${moment(selectedDate).format("YYYY-MM-DD")}`, {})
-                .then((careServices) => {
-                    const careServicesData = careServices?.data?.elders;
-                    setData(careServicesData ? careServicesData : []);
+            const fetchData = async () => {
+                setLoading(true);
+                try {
+                    const fetchedCareSchedule = await getCareSchedule();
+                    if (fetchedCareSchedule?.id) {
+                        await getCareServices(fetchedCareSchedule.id);
+                    }
+                } catch (error) {
+                    console.error("Error in fetching data:", error);
+                } finally {
                     setLoading(false);
-                })
-                .catch((error) => {
-                    setLoading(false);
-                    console.error("Error getData fetching items:", error);
-                });
+                }
+            };
+            fetchData();
         }, [selectedDate])
     );
 
     const handleDateChange = (event, selectedDate) => {
         setShowPicker(Platform.OS === 'ios'); // Keep picker open for iOS
-
         if (selectedDate) {
             setSelectedDate(selectedDate);
         }
@@ -53,7 +82,7 @@ export default function RegisterService() {
             <ComHeader
                 showBackIcon
                 showTitle
-                title={"Phòng " + roomData?.roomData?.name + " - Khu " + roomData?.roomData?.block?.name}
+                title={"Phòng " + careSchedule?.name + " - Khu " + careSchedule?.block?.name}
             />
             <View style={styles.body}>
                 <Image
@@ -72,7 +101,10 @@ export default function RegisterService() {
                             width: 50,
                             objectFit: "contain",
                             backgroundColor: "rgba(51, 179, 156, 0.26)",
-                            borderRadius: 10, flex: 1
+                            borderRadius: 10,
+                            flex: 1,
+                            borderWidth: 1,
+                            borderColor: "#33B39C"
                         }}
                     />
                     <TouchableOpacity onPress={() => setShowPicker(true)} style={styles.datePickerButton}>
@@ -133,5 +165,5 @@ const styles = StyleSheet.create({
         position: 'absolute',
         right: 15,
         top: 10,
-      },
+    },
 });

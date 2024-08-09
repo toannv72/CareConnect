@@ -105,21 +105,12 @@ export default function DetailProfile({ route }) {
                 showsHorizontalScrollIndicator={false}
               >
                 <View style={styles.avatarContainer}>
-                  {/* <Image
+                  <Image
                     source={{
                       uri: image ? image : "https://firebasestorage.googleapis.com/v0/b/careconnect-2d494.appspot.com/o/images%2F3be127ed-a90e-4364-8160-99338def0144.png?alt=media&token=3de8a6cb-0986-4347-9a22-eb369f7d02ff",
                     }}
                     style={styles.avatar}
-                  /> */}
-                  <View>
-                    <ImageModal
-                      resizeMode='contain'
-                      style={styles.avatar}
-                      source={{
-                        uri: image ? image : "https://firebasestorage.googleapis.com/v0/b/careconnect-2d494.appspot.com/o/images%2F3be127ed-a90e-4364-8160-99338def0144.png?alt=media&token=3de8a6cb-0986-4347-9a22-eb369f7d02ff",
-                      }}
-                    />
-                  </View>
+                  /> 
                 </View>
 
                 <View style={{ gap: 10 }}>
@@ -224,8 +215,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   avatar: {
-    width: 130,
-    height: 130,
+    width: 140,
+    height: 140,
     borderRadius: 1000,
     borderWidth: 1,
     borderColor: "gray",

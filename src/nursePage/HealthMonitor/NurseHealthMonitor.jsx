@@ -57,16 +57,18 @@ export default function NurseHealthMonitor({ data }) {
                                         <View key={value}>
                                             <Text style={{ fontSize: 16, fontWeight: "600", marginVertical: 10 }}>Phòng {value?.name} - Khu {value?.block?.name}</Text>
                                             {value?.elders.map((elder, elderIndex) => (
-                                                <View key={elderIndex}>
-                                                    <ComElder
-                                                        key={elderIndex}
-                                                        data={elder}
-                                                        onPress={() => {
-                                                            navigation.navigate("ListHealthMonitor", { id: elder?.id, elderData: elder, roomData: value });
-                                                        }}
-                                                        style={{ backgroundColor: "#d3f5ef", marginBottom: 10 }}
-                                                    />
-                                                </View>
+                                                elder?.state == "Active" && (
+                                                    <View key={elderIndex}>
+                                                        <ComElder
+                                                            key={elderIndex}
+                                                            data={elder}
+                                                            onPress={() => {
+                                                                navigation.navigate("ListHealthMonitor", { id: elder?.id, elderData: elder, roomData: value });
+                                                            }}
+                                                            style={{ backgroundColor: "#d3f5ef", marginBottom: 10 }}
+                                                        />
+                                                    </View>
+                                                )
                                             ))}
                                         </View>}
                                 </View>

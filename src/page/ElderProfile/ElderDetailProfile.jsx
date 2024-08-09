@@ -1,8 +1,8 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigation } from "@react-navigation/native";
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useCallback } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { Image, StyleSheet, View } from "react-native";
+import { Image, StyleSheet, View} from "react-native";
 import * as yup from "yup";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import ComInput from "../../Components/ComInput/ComInput";
@@ -11,15 +11,19 @@ import ComSelect from "../../Components/ComInput/ComSelect";
 import { ScrollView } from "react-native";
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import { useAuth } from "../../../auth/useAuth";
-import { useRoute } from "@react-navigation/native";
+import { useRoute, useFocusEffect } from "@react-navigation/native";
 import moment from 'moment';
-import { postData, getData } from "../../api/api";
+import { deleteData, getData } from "../../api/api";
+import ComFamilyMember from "./ComFamilyMember";
 
 export default function DetailProfile() {
   const navigation = useNavigation();
   const route = useRoute();
   const { role } = useAuth();
   const { data } = route.params;
+  const [familyMems, setFamilyMems] = useState([]);
+  const [refresh, setRefresh] = useState(false);
+
   const {
     text: {
       ElderProfile,
@@ -27,7 +31,6 @@ export default function DetailProfile() {
       contractsPage,
       common: { button },
     },
-    setLanguage,
   } = useContext(LanguageContext);
 
   const loginSchema = yup.object().shape({
@@ -42,7 +45,6 @@ export default function DetailProfile() {
   });
   const {
     control,
-    handleSubmit,
     setValue,
     formState: { errors },
   } = methods;
@@ -84,24 +86,40 @@ export default function DetailProfile() {
       })
   }
 
-  useEffect(() => {
-    data?.room?.blockId ? (
-      getBlock()
-    ) : (
-      getRoom()
-    )
+  const getFamilyMems = async () => {
+    getData(`/family-member?ElderId=${data?.id}&State=Active`, {})
+      .then((members) => {
+        const family = members?.data?.contends
+        setFamilyMems(family)
+      })
+      .catch((error) => {
+        console.error("Error getData fetching family-member:", error);
+      })
+  }
 
-    if (data) {
-      setValue("fullName", data?.name ?? "");
-      setValue("address", data?.address ?? "");
-      setValue("idNumber", data?.cccd ?? "");
-      setValue("dateOfBirth", moment(data?.dateOfBirth, "YYYY-MM-DD").format("DD/MM/YYYY") ?? "");
-      setValue("gender", data?.gender ?? "");
-    }
-  }, [data, setValue]);
+  useFocusEffect(
+    useCallback(() => {
+      data?.room?.blockId ? (
+        getBlock()
+      ) : (
+        getRoom()
+      )
+
+      if (data) {
+        setValue("fullName", data?.name ?? "");
+        setValue("address", data?.address ?? "");
+        setValue("idNumber", data?.cccd ?? "");
+        setValue("dateOfBirth", moment(data?.dateOfBirth, "YYYY-MM-DD").format("DD/MM/YYYY") ?? "");
+        setValue("gender", data?.gender ?? "");
+        getFamilyMems()
+      }
+    }, [data, setValue, refresh])
+  );
+
   const representative = () => {
     navigation.navigate("CustomerProfile", { userData: data?.user });
   };
+
   return (
     <>
       <ComHeader
@@ -147,7 +165,6 @@ export default function DetailProfile() {
                         label={EditProfile?.label?.gender}
                         name="gender"
                         control={control}
-                        // keyboardType="visible-password" // Set keyboardType for Last Name input
                         errors={errors} // Pass errors object
                         options={genderOptions}
                         enabled={false}
@@ -193,15 +210,16 @@ export default function DetailProfile() {
                     errors={errors} // Pass errors object
                   />
                 </View>
+                <ComFamilyMember familyMems={familyMems} setRefresh={setRefresh} data={data} canAdd={data?.state == "Active"}/>
               </ScrollView>
             </View>
             <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 10, paddingBottom: 5 }}>
-              <ComButton onPress={medicalProfile} check={true} style={{ flex: role?.name == "Nurse" ? 0.6 : 1, borderRadius: 50 }}>
+              <ComButton onPress={medicalProfile} check={true} style={{ flex: role?.name == "Nurse" ? 0.6 : 1 }}>
                 {ElderProfile?.detail?.medicalProfile}
               </ComButton>
               {
                 role?.name == "Nurse" &&
-                (<ComButton onPress={representative} style={{ flex: 0.4, borderRadius: 50 }}>
+                (<ComButton onPress={representative} style={{ flex: 0.4 }}>
                   {contractsPage?.representative}
                 </ComButton>)
               }
@@ -215,7 +233,7 @@ export default function DetailProfile() {
 const styles = StyleSheet.create({
   body: {
     flex: 1,
-    paddingTop: 20,
+    paddingTop: 10,
     backgroundColor: "#fff",
     paddingHorizontal: 15,
     gap: 10,
@@ -226,7 +244,7 @@ const styles = StyleSheet.create({
   avatarContainer: {
     position: "relative", // Quan trọng!
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 10,
   },
   avatar: {
     width: 130,
@@ -235,4 +253,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "gray",
   },
+  register: {
+    flexDirection: "row",
+    padding: 5,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#33B39C",
+    backgroundColor: "#caece6",
+    elevation: 4, // Bóng đổ cho Android
+    shadowColor: "#000", // Màu của bóng đổ cho iOS
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+  }
 });

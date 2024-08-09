@@ -263,7 +263,7 @@ export default ContractDetail = () => {
                 <Text style={styles.text2}>{data?.id}</Text>
               </View>
               <View style={styles.bodySeparator}>
-                <Text style={styles.text}>Người đại diện</Text>
+                <Text style={styles.text}>Người giám hộ</Text>
                 <Text style={styles.text2}>{data?.user?.fullName}</Text>
               </View>
               <View style={styles.bodySeparator}>

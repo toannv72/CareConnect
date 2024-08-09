@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigation } from "@react-navigation/native";
 import React, { useContext, useState, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View, Linking } from "react-native";
 import * as yup from "yup";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import ComInput from "../../Components/ComInput/ComInput";
@@ -14,12 +14,14 @@ import ComHeader from "../../Components/ComHeader/ComHeader";
 import { useRoute } from "@react-navigation/native";
 import { postData, getData } from "../../api/api";
 import moment from 'moment';
+import phoneIcon from '../../../assets/icon/phone.png';
 
 export default function NurseElderDetailProfile() {
   const [date, setDate] = useState(new Date());
   const [user, setUser] = useState({ role: "user" });
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([])
+  const [familyMems, setFamilyMems] = useState([]);
 
   const navigation = useNavigation();
   const route = useRoute();
@@ -55,6 +57,7 @@ export default function NurseElderDetailProfile() {
         setLoading(loading);
         console.error("Error fetching service-package:", error);
       });
+    getFamilyMems()
   }, [])
 
   const loginSchema = yup.object().shape({});
@@ -93,6 +96,21 @@ export default function NurseElderDetailProfile() {
       label: "Nữ",
     }
   ];
+
+  const getFamilyMems = async () => {
+    getData(`/family-member?ElderId=${id}&State=Active`, {})
+      .then((members) => {
+        const family = members?.data?.contends
+        setFamilyMems(family)
+      })
+      .catch((error) => {
+        console.error("Error getData fetching family-member:", error);
+      })
+  }
+
+  const callNumber = (phoneNumber) => {
+    Linking.openURL(`tel:${phoneNumber}`);
+  };
 
   return (
     <>
@@ -173,6 +191,49 @@ export default function NurseElderDetailProfile() {
                     errors={errors} // Pass errors object
                   />
                 </View>
+                <View>
+                  <View style={{ marginVertical: 10 }}>
+                    <Text style={{ fontWeight: "bold", marginRight: 4 }}>Danh sách người giám hộ</Text>
+                  </View>
+                  <View style={styles.contex}>
+                    {
+                      familyMems?.length === 0 ?
+                        (
+                          <Text style={{ marginHorizontal: 15, color: "#A3A3A3" }}>Chưa có người giám hộ. Vui lòng thêm người giám hộ để đề phòng trường hợp khẩn cấp</Text>
+                        ) : (
+                          <>
+                            <View style={[styles.bodySeparator, { borderTopWidth: 0 }]}>
+                              <Text style={[styles.text, { flex: 5 }]}>Họ và tên</Text>
+                              <Text style={[styles.text, { flex: 4, textAlign: "center" }]}>Số điện thoại</Text>
+                              <Text style={[styles.text, { flex: 2, textAlign: "right" }]}>Gọi</Text>
+                            </View>
+                            {
+                              familyMems?.map((family, index) => (
+                                <View key={index} style={styles.bodySeparator}>
+                                  <TouchableOpacity onPress={() => navigation.navigate("FamilyMemberProfile", { familyId: family?.id })} style={[{ flex: 5 }]}>
+                                    <Text style={{ color: "#33B39C" }}>{family?.name}</Text>
+                                  </TouchableOpacity>
+                                  <Text style={[styles.text2, { flex: 4, textAlign: "center" }]}>{family?.phoneNumber}</Text>
+                                  <View style={{ flex: 2, alignItems: "flex-end" }}>
+                                    <TouchableOpacity onPress={() => { callNumber(family?.phoneNumber) }} style={[{ flex: 5 }]}>
+                                      <Image
+                                        source={phoneIcon}
+                                        style={{
+                                          width: 20,
+                                          height: 20,
+                                          tintColor: "#33B39C"
+                                        }}
+                                      />
+                                    </TouchableOpacity>
+                                  </View>
+                                </View>
+                              ))
+                            }
+                          </>
+                        )
+                    }
+                  </View>
+                </View>
               </ScrollView>
             </View>
             <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 10, paddingBottom: 5 }}>
@@ -211,5 +272,45 @@ const styles = StyleSheet.create({
     borderRadius: 1000,
     borderWidth: 1,
     borderColor: "gray",
+  },
+  contex: {
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#33B39C",
+    paddingHorizontal: 5,
+    paddingVertical: 5
+  },
+  bodySeparator: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    flexWrap: "wrap",
+    paddingVertical: 10,
+    borderTopWidth: 0.5,
+    borderTopColor: "#33B39C",
+    alignItems: "center",
+    marginHorizontal: 15,
+    gap: 10
+  },
+  text: {
+    // flex: 0.35,
+    fontWeight: "600",
+  },
+  text2: {
+    flex: 0.65,
+    textAlign: "center",
+  },
+  register: {
+    flexDirection: "row",
+    padding: 5,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#33B39C",
+    backgroundColor: "#caece6",
+    elevation: 4, // Bóng đổ cho Android
+    shadowColor: "#000", // Màu của bóng đổ cho iOS
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+
   },
 });

@@ -81,6 +81,8 @@ export default function RegisterVisitation() {
       });
   };
 
+  const activeElders = elders?.filter((elder) => elder?.state === "Active");
+
   return (
     <>
       <ComHeader
@@ -120,9 +122,9 @@ export default function RegisterVisitation() {
               {visitationText?.registerElder}
             </Text>
             <View>
-              {elders?.length > 0 ? (
+              {activeElders?.length > 0 ? (
                 <View>
-                  {elders?.map((value, index) => (
+                  {activeElders?.map((value, index) => (
                     <ComElder
                       key={index}
                       data={value}

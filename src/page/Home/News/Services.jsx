@@ -97,7 +97,7 @@ export default function Services() {
 const styles = StyleSheet.create({
   body: {
     paddingHorizontal: 15,
-    marginTop: 10
+    marginTop: 5
   },
   comCatalogue: {
     flexDirection: "row",

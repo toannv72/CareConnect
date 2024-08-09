@@ -43,6 +43,9 @@ import BillDetail from "./src/page/Bills/BillDetail/BillDetail";
 import UserProfile from "./src/page/UserProfile/UserProfile";
 import ElderProfile from "./src/page/ElderProfile/ElderProfile";
 import ElderDetailProfile from "./src/page/ElderProfile/ElderDetailProfile";
+import FamilyMember from "./src/page/ElderProfile/FamilyMember/FamilyMember";
+import FamilyMemberProfile from "./src/page/ElderProfile/FamilyMember/FamilyMemberProfile";
+import EditFamilyMemberProfile from "./src/page/ElderProfile/FamilyMember/EditFamilyMemberProfile";
 import MedicalProfile from "./src/page/ElderProfile/MedicalProfile/MedicalProfile";
 import EditProfile from "./src/page/UserProfile/EditProfile/EditProfile";
 import DetailProfile from "./src/page/UserProfile/DetailProfile";
@@ -279,6 +282,21 @@ const Routes = () => {
           options={{ headerLeft: null, headerShown: false }}
           name="ElderProfile"
           component={ElderProfile}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="FamilyMember"
+          component={FamilyMember}
+        />
+        <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="FamilyMemberProfile"
+          component={FamilyMemberProfile}
+        />
+          <Stack.Screen
+          options={{ headerLeft: null, headerShown: false }}
+          name="EditFamilyMemberProfile"
+          component={EditFamilyMemberProfile}
         />
         <Stack.Screen
           options={{ headerLeft: null, headerShown: false }}

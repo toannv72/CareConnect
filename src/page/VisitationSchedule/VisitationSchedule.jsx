@@ -110,7 +110,8 @@ export default function VisitationSchedule() {
             style={{
               color: "#000",
               paddingHorizontal: 5,
-              fontSize: 20,
+              fontSize: 16,
+              fontWeight: "600"
             }}
           >
             {visitationText?.textHistory}
@@ -125,7 +126,8 @@ export default function VisitationSchedule() {
                 style={{
                   color: "#000",
                   paddingHorizontal: 5,
-                  fontSize: 18,
+                  fontSize: 16,
+                  fontWeight: "600"
                 }}
               >
                 Đăng ký thăm nuôi
