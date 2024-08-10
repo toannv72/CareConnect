@@ -426,7 +426,7 @@ export const vn = {
       nursingHomeAdd: "Nơi sinh hoạt",
       address: "Địa chỉ thường trú",
       medicalProfile: "Hồ sơ sức khỏe",
-      representative: "Thông tin người giám hộ",
+      representative: "Thông tin người đại diện",
       urgentContact: "Liên hệ khẩn cấp"
     },
   },

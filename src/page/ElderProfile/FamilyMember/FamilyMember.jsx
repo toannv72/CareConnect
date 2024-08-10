@@ -88,7 +88,10 @@ export default function FamilyMember({ }) {
       })
       .catch((error) => {
         setLoading(false)
-        ComToast({ text: 'Thêm người giám hộ thất bại' });
+        if (error.response.status === 600)
+          ComToast({ text: 'Số điện thoại của người giám hộ này đã tồn tại. Vui lòng thử lại.' });
+        else
+          ComToast({ text: 'Đã có lỗi xảy ra. Vui lòng thử lại.' });
       });
   }
 
@@ -109,17 +112,21 @@ export default function FamilyMember({ }) {
       label: "Ba/mẹ",
     },
     {
-      value: "Con",
-      label: "Con",
-    },
-    {
       value: "Anh/Em",
       label: "Anh/Em",
     },
     {
+      value: "Con",
+      label: "Con",
+    },
+    {
       value: "Cháu",
       label: "Cháu",
-    }
+    },
+    {
+      value: "Khác",
+      label: "Khác",
+    },
   ]
 
   const formattedDate = (dateValue) => {

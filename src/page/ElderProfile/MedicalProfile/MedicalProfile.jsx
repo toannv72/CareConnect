@@ -76,7 +76,7 @@ export default function MedicalProfile() {
             <ComMedical image={weight} title={"Cân nặng"} value={medicalData?.weight} unit={"Kg"} ></ComMedical>
             <ComMedical image={height} title={"Chiều cao"} value={medicalData?.height} unit={"Cm"} ></ComMedical>
             <ComMedical image={blood} title={"Nhóm máu"} value={medicalData?.bloodType} unit={""} ></ComMedical>
-            <ComMedical image={move} title={"Khả năng di chuyển"} value={medicalData?.move} unit={""} ></ComMedical>
+            {/* <ComMedical image={move} title={"Khả năng di chuyển"} value={medicalData?.move} unit={""} ></ComMedical> */}
           </View>
 
           <Text style={{ fontWeight: "600", fontSize: 16 }}>{MedicalProfile?.underlyingMedical}</Text>

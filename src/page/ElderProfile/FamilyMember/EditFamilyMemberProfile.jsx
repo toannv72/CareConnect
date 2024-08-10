@@ -19,7 +19,7 @@ export default function EditFamilyMemberProfile() {
     const [loading, setLoading] = useState(false);
     const navigation = useNavigation();
     const route = useRoute();
-    const { memberData, isBackToProfile } = route.params || {}
+    const { memberData, canEdit } = route.params || {}
 
     const {
         text: { EditProfile, Register, common: { button } },
@@ -78,15 +78,15 @@ export default function EditFamilyMemberProfile() {
                     setLoading(false);
                     return new Promise((resolve) => {
                         setTimeout(() => {
-                            ComToast({ text: 'Chỉnh sửa thông tin thành công' });
-                            navigation.navigate("FamilyMemberProfile", { familyId: memberData?.id });
+                            ComToast({ text: 'Cập nhật thông tin thành công' });
+                            navigation.navigate("FamilyMemberProfile", { familyId: memberData?.id, canEdit: canEdit });
                             resolve();
                         }, 0);
                     });
                 })
                 .catch((error) => {
                     setLoading(false)
-                    ComToast({ text: 'Chỉnh sửa thông tin thất bại' });
+                    ComToast({ text: 'Cập nhật thông tin thất bại' });
                 });
         };
 
@@ -110,17 +110,21 @@ export default function EditFamilyMemberProfile() {
             label: "Ba/mẹ",
         },
         {
-            value: "Con",
-            label: "Con",
-        },
-        {
             value: "Anh/Em",
             label: "Anh/Em",
         },
         {
+            value: "Con",
+            label: "Con",
+        },
+        {
             value: "Cháu",
             label: "Cháu",
-        }
+        },
+        {
+            value: "Khác",
+            label: "Khác",
+        },
     ]
 
     const formattedDate = (dateValue) => {

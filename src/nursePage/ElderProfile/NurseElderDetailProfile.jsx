@@ -199,7 +199,7 @@ export default function NurseElderDetailProfile() {
                     {
                       familyMems?.length === 0 ?
                         (
-                          <Text style={{ marginHorizontal: 15, color: "#A3A3A3" }}>Chưa có người giám hộ. Vui lòng thêm người giám hộ để đề phòng trường hợp khẩn cấp</Text>
+                          <Text style={{ marginHorizontal: 15, color: "#A3A3A3" }}>Chưa có người giám hộ.</Text>
                         ) : (
                           <>
                             <View style={[styles.bodySeparator, { borderTopWidth: 0 }]}>

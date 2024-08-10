@@ -103,7 +103,7 @@ export default function ComFamilyMember({ familyMems, setRefresh, data, canAdd }
                         <TouchableOpacity style={styles.modalButton} onPress={() => viewDetail() }>
                             <Text style={styles.modalButtonText}>Xem chi tiết</Text>
                         </TouchableOpacity>
-                        {
+                        {/* {
                             canAdd && (
                                 <TouchableOpacity style={styles.modalButton} onPress={() => update(
 
@@ -111,7 +111,7 @@ export default function ComFamilyMember({ familyMems, setRefresh, data, canAdd }
                                     <Text style={styles.modalButtonText}>Cập nhật</Text>
                                 </TouchableOpacity>
                             )
-                        }
+                        } */}
                         <TouchableOpacity style={styles.modalButton} onPress={() => { setPopup(true); setIsModalVisible(false) }}>
                             <Text style={[styles.modalButtonText, { color: "red" }]}>Xóa</Text>
                         </TouchableOpacity>

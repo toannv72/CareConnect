@@ -1,5 +1,5 @@
 import React, { useContext, useState, useCallback } from "react";
-import { ScrollView, StyleSheet, View, Linking } from "react-native";
+import { ScrollView, StyleSheet, View, Linking, Image, Text } from "react-native";
 import ComHeader from "../../../Components/ComHeader/ComHeader";
 import { LanguageContext } from "../../../contexts/LanguageContext";
 import { useNavigation, useRoute, useFocusEffect } from "@react-navigation/native";
@@ -13,6 +13,8 @@ import moment from 'moment';
 import ComButton from "../../../Components/ComButton/ComButton";
 import ComPopup from "../../../Components/ComPopup/ComPopup";
 import ComToast from "../../../Components/ComToast/ComToast";
+import Delete from "../../../../assets/Delete.png";
+import Edit from "../../../../assets/profile_icons/edit.png";
 import { useAuth } from "../../../../auth/useAuth";
 
 export default function FamilyMemberProfile() {
@@ -49,17 +51,21 @@ export default function FamilyMemberProfile() {
       label: "Ba/mẹ",
     },
     {
-      value: "Con",
-      label: "Con",
-    },
-    {
       value: "Anh/Em",
       label: "Anh/Em",
     },
     {
+      value: "Con",
+      label: "Con",
+    },
+    {
       value: "Cháu",
       label: "Cháu",
-    }
+    },
+    {
+      value: "Khác",
+      label: "Khác",
+    },
   ]
 
   useFocusEffect(
@@ -199,7 +205,6 @@ export default function FamilyMemberProfile() {
                     />
                   </View>
                 </View>
-
                 <ComInput
                   label="Email"
                   placeholder="Email"
@@ -222,12 +227,58 @@ export default function FamilyMemberProfile() {
               role?.name == "Customer" && (
                 <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 10, }}>
                   <ComButton onPress={() => setPopup(true)} check={true} warning={true} style={{ flex: 1 }}>
-                    Xóa
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        gap: 7
+                      }}>
+                      <Image
+                        source={Delete}
+                        style={{
+                          width: 20,
+                          height: 20,
+                          tintColor: "red"
+                        }}
+                      />
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          color: "red",
+                          fontWeight: "bold"
+                        }}
+                      >
+                        Xóa
+                      </Text>
+                    </View>
                   </ComButton>
                   {
                     canEdit && (
-                      <ComButton onPress={() => navigation.navigate("EditFamilyMemberProfile", { memberData: member })} check={true} style={{ flex: 1 }}>
-                        Chỉnh sửa
+                      <ComButton onPress={() => navigation.navigate("EditFamilyMemberProfile", { memberData: member, canEdit: canEdit })} check={true} style={{ flex: 1 }}>
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            gap: 5
+                          }}>
+                          <Image
+                            source={Edit}
+                            style={{
+                              width: 25,
+                              height: 25,
+                              tintColor: "#33B39C"
+                            }}
+                          />
+                          <Text
+                            style={{
+                              fontSize: 16,
+                              color: "#33B39C",
+                              fontWeight: "bold"
+                            }}
+                          >
+                            Cập nhật
+                          </Text>
+                        </View>
                       </ComButton>
                     )
                   }
