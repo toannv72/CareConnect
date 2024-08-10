@@ -32,7 +32,6 @@ export default function RegisterService() {
         try {
             const careSchedule = await getData(`/care-schedule?CareMonth=${moment().month() + 1}&CareYear=${moment().year()}&UserId=${user?.id}`, {});
             const careServicesData = careSchedule?.data?.contends[0]?.rooms[0];
-            console.log("careServicesData", careServicesData);
             setCareSchedule(careServicesData ? careServicesData : []);
             return careServicesData;
         } catch (error) {

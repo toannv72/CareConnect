@@ -1,17 +1,15 @@
 import React, { useContext, useState, useEffect } from "react";
 import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity } from 'react-native';
 import { LanguageContext } from "../../contexts/LanguageContext";
-import { useRoute } from "@react-navigation/native";
+import { useRoute, useNavigation } from "@react-navigation/native";
 import feedbackImg from "../../../assets/images/feedback/feedback.png";
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import ComSelect from "../../Components/ComInput/ComSelect";
 import { postData, getData } from "../../api/api";
 import { FormProvider, useForm } from "react-hook-form";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 export default function FeedbackDetail() {
-
     const {
         text: { feedback },
         setLanguage,
@@ -21,6 +19,8 @@ export default function FeedbackDetail() {
     const { id } = route.params;
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState({});
+    const navigation = useNavigation();
+
     useEffect(() => {
         setLoading(!loading);
         getData(`/feedback/${id}`, {})
@@ -42,7 +42,6 @@ export default function FeedbackDetail() {
     });
     const {
         control,
-        handleSubmit,
         formState: { errors },
     } = methods;
 
@@ -85,9 +84,13 @@ export default function FeedbackDetail() {
                             objectFit: "fill",
                             marginBottom: 30
                         }} />
-                    <Text style={{ fontSize: 16, fontWeight: 'bold', textAlign: "center", paddingBottom: 20 }}>
-                        {data?.orderDetail?.servicePackage?.name}
-                    </Text>
+
+                    <TouchableOpacity onPress={() => { navigation.navigate("AddingServiceDetail", { id: data?.orderDetail?.servicePackage?.id }) }}>
+                        <Text style={{ fontSize: 16, fontWeight: 'bold', textAlign: "center", paddingBottom: 20 }}>
+                            {data?.orderDetail?.servicePackage?.name}
+                        </Text>
+                    </TouchableOpacity>
+
                     <View style={{ marginBottom: 10 }}>
                         <Text style={styles.contentBold}>
                             {feedback?.history?.title}
@@ -105,19 +108,7 @@ export default function FeedbackDetail() {
                     </View>
                     <View style={{ marginBottom: 10 }}>
                         <Text style={styles.contentBold}>
-                            {feedback?.label?.service}
-                        </Text>
-                        <Text style={styles.textbox}>{data?.orderDetail?.servicePackage?.name}</Text>
-                    </View>
-                    <View style={{ marginBottom: 10 }}>
-                        <Text style={styles.contentBold}>
-                           Người lớn tuổi
-                        </Text>
-                        <Text style={styles.textbox}>{data?.orderDetail?.elder?.name}</Text>
-                    </View>
-                    <View style={{ marginBottom: 10 }}>
-                        <Text style={styles.contentBold}>
-                           Người lớn tuổi
+                            Người lớn tuổi
                         </Text>
                         <Text style={styles.textbox}>{data?.orderDetail?.elder?.name}</Text>
                     </View>

@@ -2,7 +2,6 @@ import React, { useContext, useState, useCallback } from "react";
 import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity } from 'react-native';
 import ComSelectButton from "../../../Components/ComButton/ComSelectButton";
 import ComTable from "./ComTable";
-import ComPopup from "../../../Components/ComPopup/ComPopup";
 import { LanguageContext } from "../../../contexts/LanguageContext";
 import { useRoute } from "@react-navigation/native";
 import backArrowWhite from "../../../../assets/icon/backArrowWhite.png";
@@ -45,11 +44,19 @@ export default function ServiceHistoryDetail() {
         ? orderDetailData?.orderDates?.filter((day) => new Date(day?.date) > new Date(data?.createdAt))
         : [];
 
+    const lastHistoryDate = historyDataSource?.length > 0
+        ? new Date(historyDataSource[historyDataSource?.length - 1].date)
+        : null;
+    const currentDate = new Date();
+
     const filteredOrderDates = orderDetailData?.orderDates?.filter(detail => {
         const orderDate = new Date(detail?.date);
         const createdDate = new Date(data?.createdAt);
         return orderDate > createdDate;
     });
+    
+    //Check trong vòng 5 ngày kể từ ngày cuối cùng của dịch vụ
+    const isWithinFiveDays = lastHistoryDate ? (currentDate - lastHistoryDate) / (1000 * 60 * 60 * 24) <= 5 : false;
     const currentPrice = orderDetailData?.price / filteredOrderDates?.length // giá lúc mua
     // tổng tiền mỗi dv    /   tổng số ngày > createAt 
 
@@ -159,19 +166,19 @@ export default function ServiceHistoryDetail() {
                     </View>
                 </ScrollView>
                 <View style={{ marginBottom: 10, flexDirection: "row", gap: 10 }}>
-                    {/* {(new Date().getDate() >= 25 && new Date().getDate() <= 30) && (//chỉ hiển thị ngày 25 - 30 hàng tháng */}
-                    <View style={{ flex: 1 }}>
-                        {feedbackData?.length > 0 ? (//nếu đã từng feedback => view fb
-                            <ComSelectButton onPress={() => { navigation.navigate("FeedbackDetail", { id: feedbackData[0]?.id }) }}>
-                                Xem đánh giá
-                            </ComSelectButton>
-                        ) : (
-                            <ComSelectButton onPress={() => { navigation.navigate("CreateFeedback", { data: data, serviceData, orderDetailId }) }}>
-                                {addingPackages?.history?.feedback}
-                            </ComSelectButton>
-                        )}
-                    </View>
-                    {/* )} */}
+                    {(isWithinFiveDays || feedbackData?.length > 0) && (//trong vòng 5 ngày sau ngày cuối hoặc đã có feedback
+                        <View style={{ flex: 1 }}>
+                            {feedbackData?.length > 0 ? (//nếu đã có feedback => xem
+                                <ComSelectButton onPress={() => { navigation.navigate("FeedbackDetail", { id: feedbackData[0]?.id }) }}>
+                                    Xem đánh giá
+                                </ComSelectButton>
+                            ) : (//nếu chưa có feedback => tạo
+                                <ComSelectButton onPress={() => { navigation.navigate("CreateFeedback", { data: data, serviceData, orderDetailId }) }}>
+                                    {addingPackages?.history?.feedback}
+                                </ComSelectButton>
+                            )}
+                        </View>
+                    )}
                     <View style={{ flex: 1 }}>
                         <ComSelectButton onPress={() => { navigation.navigate("BillDetail", { id }) }}>
                             Chi tiết thanh toán
