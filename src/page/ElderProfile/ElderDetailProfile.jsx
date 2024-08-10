@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigation } from "@react-navigation/native";
 import React, { useContext, useState, useEffect, useCallback } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { Image, StyleSheet, View} from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import * as yup from "yup";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import ComInput from "../../Components/ComInput/ComInput";
@@ -106,11 +106,13 @@ export default function DetailProfile() {
       )
 
       if (data) {
-        setValue("fullName", data?.name ?? "");
-        setValue("address", data?.address ?? "");
-        setValue("idNumber", data?.cccd ?? "");
-        setValue("dateOfBirth", moment(data?.dateOfBirth, "YYYY-MM-DD").format("DD/MM/YYYY") ?? "");
-        setValue("gender", data?.gender ?? "");
+        setValue("fullName", data?.name ?? "Không có");
+        setValue("address", data?.address ?? "Không có");
+        setValue("idNumber", data?.cccd ?? "Không có");
+        setValue("relationship", data?.relationship ?? "Không có");
+        setValue("habits", data?.habits ?? "Không có");
+        setValue("dateOfBirth", moment(data?.dateOfBirth, "YYYY-MM-DD").format("DD/MM/YYYY") ?? "Không có");
+        setValue("gender", data?.gender ?? "Không có");
         getFamilyMems()
       }
     }, [data, setValue, refresh])
@@ -149,8 +151,8 @@ export default function DetailProfile() {
                     placeholder={ElderProfile?.detail?.name}
                     name="fullName"
                     control={control}
-                    keyboardType="default" // Set keyboardType for First Name input
-                    errors={errors} // Pass errors object
+                    keyboardType="default"
+                    errors={errors}
                     edit={false}
                   />
                   <View
@@ -165,7 +167,7 @@ export default function DetailProfile() {
                         label={EditProfile?.label?.gender}
                         name="gender"
                         control={control}
-                        errors={errors} // Pass errors object
+                        errors={errors}
                         options={genderOptions}
                         enabled={false}
                       />
@@ -177,19 +179,52 @@ export default function DetailProfile() {
                         name="dateOfBirth"
                         edit={false}
                         control={control}
-                        errors={errors} // Pass errors object
+                        errors={errors}
                       />
                     </View>
                   </View>
                   {
                     role?.name == "Customer" && (
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          gap: 10,
+                        }}
+                      >
+                        <View style={{ flex: 1 }}>
+                          <ComInput
+                            label={EditProfile?.label?.idNumber}
+                            placeholder={EditProfile?.placeholder?.idNumber}
+                            name="idNumber"
+                            edit={false}
+                            control={control}
+                            errors={errors}
+                          />
+                        </View>
+                        <View style={{ flex: 1 }}>
+                          <ComInput
+                            label="Mối quan hệ"
+                            placeholder="Mối quan hệ"
+                            name="relationship"
+                            edit={false}
+                            control={control}
+                            errors={errors}
+                          />
+                        </View>
+                      </View>
+                    )
+                  }
+
+                  {
+                    role?.name == "Nurse" && (
                       <ComInput
-                        label={EditProfile?.label?.idNumber}
-                        placeholder={EditProfile?.placeholder?.idNumber}
-                        name="idNumber"
+                        label="Mối quan hệ"
+                        placeholder="Mối quan hệ"
+                        name="relationship"
                         edit={false}
                         control={control}
-                        errors={errors} // Pass errors object
+                        errors={errors}
                       />
                     )
                   }
@@ -199,7 +234,7 @@ export default function DetailProfile() {
                     name="nurseHomeAddress"
                     edit={false}
                     control={control}
-                    errors={errors} // Pass errors object
+                    errors={errors}
                   />
                   <ComInput
                     label={EditProfile?.label?.address}
@@ -207,10 +242,18 @@ export default function DetailProfile() {
                     name="address"
                     edit={false}
                     control={control}
-                    errors={errors} // Pass errors object
+                    errors={errors}
+                  />
+                  <ComInput
+                    label="Thói quen sinh hoạt"
+                    placeholder="Thói quen sinh hoạt"
+                    name="habits"
+                    edit={false}
+                    control={control}
+                    errors={errors}
                   />
                 </View>
-                <ComFamilyMember familyMems={familyMems} setRefresh={setRefresh} data={data} canAdd={data?.state == "Active"}/>
+                <ComFamilyMember familyMems={familyMems} setRefresh={setRefresh} data={data} canAdd={data?.state == "Active"} />
               </ScrollView>
             </View>
             <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 10, paddingBottom: 5 }}>

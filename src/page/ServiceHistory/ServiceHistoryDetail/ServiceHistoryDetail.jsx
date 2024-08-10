@@ -127,6 +127,16 @@ export default function ServiceHistoryDetail() {
                         <Text style={styles.contentBold}>{addingPackages?.history?.dates}</Text>
                         <Text style={{ fontSize: 16 }}>: {formattedDate(data?.createdAt)}</Text>
                     </Text>
+                    <TouchableOpacity style={{ flexDirection: "row", marginBottom: 10 }} onPress={() => navigation.navigate("ElderDetailProfile", { data: elderData })}>
+                        <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                            {addingPackages?.payment?.elderName}
+                        </Text>
+                        <Text style={{ fontSize: 16, color: "#33B39C" }}>: {elderData?.name}</Text>
+                    </TouchableOpacity>
+                    <Text style={{ flexDirection: "row", fontSize: 16, marginBottom: 10 }}>
+                        <Text style={{ fontWeight: "bold" }}>{addingPackages?.history?.status}</Text>
+                        <Text>:  {status ? "Đã kết thúc" : "Chưa kết thúc"}</Text>
+                    </Text>
                     <View style={{ marginBottom: 10 }}>
                         <Text style={styles.contentBold}>
                             {addingPackages?.history?.serviceDates}
@@ -140,16 +150,7 @@ export default function ServiceHistoryDetail() {
                                 ))
                         }
                     </View>
-                    <Text style={{ flexDirection: "row", fontSize: 16, marginBottom: 10 }}>
-                        <Text style={{ fontWeight: "bold" }}>
-                            {addingPackages?.payment?.elderName}
-                        </Text>
-                        <Text>: {elderData?.name}</Text>
-                    </Text>
-                    <Text style={{ flexDirection: "row", fontSize: 16, marginBottom: 10 }}>
-                        <Text style={{ fontWeight: "bold" }}>{addingPackages?.history?.status}</Text>
-                        <Text>:  {status ? "Đã kết thúc" : "Chưa kết thúc"}</Text>
-                    </Text>
+
                     <View style={{ marginBottom: 10 }}>
                         <Text style={{ marginVertical: 10, fontSize: 16, fontWeight: 'bold' }}>
                             {addingPackages?.history?.serviceHistory}
@@ -159,17 +160,17 @@ export default function ServiceHistoryDetail() {
                 </ScrollView>
                 <View style={{ marginBottom: 10, flexDirection: "row", gap: 10 }}>
                     {/* {(new Date().getDate() >= 25 && new Date().getDate() <= 30) && (//chỉ hiển thị ngày 25 - 30 hàng tháng */}
-                        <View style={{ flex: 1 }}>
-                            {feedbackData?.length > 0 ? (//nếu đã từng feedback => view fb
-                                <ComSelectButton onPress={() => { navigation.navigate("FeedbackDetail", { id: feedbackData[0]?.id }) }}>
-                                    Xem đánh giá
-                                </ComSelectButton>
-                            ) : (
-                                <ComSelectButton onPress={() => { navigation.navigate("CreateFeedback", { data: data, serviceData, orderDetailId }) }}>
-                                    {addingPackages?.history?.feedback}
-                                </ComSelectButton>
-                            )}
-                        </View>
+                    <View style={{ flex: 1 }}>
+                        {feedbackData?.length > 0 ? (//nếu đã từng feedback => view fb
+                            <ComSelectButton onPress={() => { navigation.navigate("FeedbackDetail", { id: feedbackData[0]?.id }) }}>
+                                Xem đánh giá
+                            </ComSelectButton>
+                        ) : (
+                            <ComSelectButton onPress={() => { navigation.navigate("CreateFeedback", { data: data, serviceData, orderDetailId }) }}>
+                                {addingPackages?.history?.feedback}
+                            </ComSelectButton>
+                        )}
+                    </View>
                     {/* )} */}
                     <View style={{ flex: 1 }}>
                         <ComSelectButton onPress={() => { navigation.navigate("BillDetail", { id }) }}>

@@ -23,7 +23,7 @@ export default function ComMedical({ image, title, value, unit, onPress, isSelec
                     </Text>
                 </View>
                 <View style={styles?.valueContain}>
-                    <Text style={{ fontSize: 25, fontWeight: "bold", color: "#66CAB8" }}>{value}</Text>
+                    <Text style={{ fontSize: 25, fontWeight: "bold", color: "#66CAB8" }}>{value || "Không có"}</Text>
                     <Text style={{ fontSize: 20, color: "#707776"}} numberOfLines={1} ellipsizeMode='tail' >{unit}</Text>
                 </View>
             </View>

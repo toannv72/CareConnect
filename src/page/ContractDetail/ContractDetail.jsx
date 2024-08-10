@@ -19,6 +19,7 @@ import { postData, getData } from "../../api/api";
 import ComLoading from "../../Components/ComLoading/ComLoading";
 import ImageModal from 'react-native-image-modal'
 import { TouchableOpacity } from "react-native";
+import ComToast from "../../Components/ComToast/ComToast";
 
 export default ContractDetail = () => {
   const { user } = useAuth();
@@ -143,7 +144,10 @@ export default ContractDetail = () => {
         setLoading(false)
         handleClosePopup()
         handleClosePopupDate()
-        console.log("Error registering:", error);
+        if (error.response.status === 624)
+          ComToast({ text: 'Bạn đã có lịch hẹn vào ngày này. Vui lòng chọn ngày khác.' });
+        else
+          ComToast({ text: 'Đã có lỗi xảy ra, vui lòng thử lại.' });
       });
   };
 

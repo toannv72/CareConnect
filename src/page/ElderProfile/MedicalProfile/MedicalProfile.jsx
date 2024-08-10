@@ -42,11 +42,6 @@ export default function MedicalProfile() {
 
   }, [elderData]);
 
-  const noteData = {
-    id: 1,
-    content: "Có biểu hiện ... nhẹ"
-  }
-
   const ComUnderlyingMedical = ({ data }) => {
     return (
       <View style={[styles?.underlyingMedical, stylesApp.shadow]}>
@@ -78,11 +73,23 @@ export default function MedicalProfile() {
             <ComMedical image={blood} title={"Nhóm máu"} value={medicalData?.bloodType} unit={""} ></ComMedical>
             {/* <ComMedical image={move} title={"Khả năng di chuyển"} value={medicalData?.move} unit={""} ></ComMedical> */}
           </View>
-
           <Text style={{ fontWeight: "600", fontSize: 16 }}>{MedicalProfile?.underlyingMedical}</Text>
-          <View>
-            <ComUnderlyingMedical data={medicalData?.underlyingDisease}></ComUnderlyingMedical>
-          </View>
+          {
+            medicalData?.diseaseCategories?.length == 0 ? (
+              <ComUnderlyingMedical data={"Không có"}></ComUnderlyingMedical>
+            ) : (
+              <>
+                {
+                  medicalData?.diseaseCategories?.map((disease, index) => (
+                    <View key={index}>
+                      <ComUnderlyingMedical key={index} data={disease?.name}></ComUnderlyingMedical>
+                    </View>
+                  ))
+                }
+
+              </>
+            )
+          }
 
           <Text style={{ fontWeight: "600", fontSize: 16, marginTop: 5 }}>{MedicalProfile?.note}</Text>
           <View style={[styles?.underlyingMedical, stylesApp.shadow, { marginBottom: 30 }]}>
@@ -90,11 +97,11 @@ export default function MedicalProfile() {
               source={underlyingMedical}
               style={{ width: 60, height: 60, objectFit: "fill" }}
             />
-            <Text>{medicalData?.note}</Text>
+            <Text>{medicalData?.note || "Không có"}</Text>
           </View>
         </ScrollView>
         <ComButton onPress={() => { navigation.navigate(role?.name == "Nurse" ? "ListHealthMonitor" : "HealthMonitorList", { id: elderData?.id }) }}
-          style={{ marginBottom: 30 , borderRadius: 50 }}>
+          style={{ marginBottom: 30, borderRadius: 50 }}>
           Theo dõi sức khỏe
         </ComButton>
       </View>

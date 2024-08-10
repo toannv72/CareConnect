@@ -142,7 +142,7 @@ export default function FamilyMember({ }) {
   return (
     <>
       <ComHeader
-        title="Tạo mới người giám hộ"
+        title="Thêm người giám hộ"
         showTitle
         showBackIcon
       />

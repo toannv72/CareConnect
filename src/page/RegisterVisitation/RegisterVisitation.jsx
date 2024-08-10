@@ -76,8 +76,10 @@ export default function RegisterVisitation() {
         navigation.navigate("RegisterVisitationSuccess", { formData: formData });
       })
       .catch((error) => {
-        console.log("Error registering:", error);
-        ComToast({ text: 'Đã có lỗi xảy ra, vui lòng thử lại' });
+        if (error.response.status === 624)
+          ComToast({ text: 'Bạn đã có lịch hẹn vào ngày này. Vui lòng chọn ngày khác.' });
+        else
+          ComToast({ text: 'Đã có lỗi xảy ra, vui lòng thử lại.' });
       });
   };
 

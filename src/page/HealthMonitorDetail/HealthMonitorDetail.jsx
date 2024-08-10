@@ -5,7 +5,7 @@ import { LanguageContext } from "../../contexts/LanguageContext";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ComPatient from "./ComPatient";
-import { useRoute } from "@react-navigation/native";
+import { useRoute, useNavigation } from "@react-navigation/native";
 import ComButtonDay from "../../Components/ComButton/ComButtonDay";
 import ComHealthIndex from "../../Components/ComHealthIndex/ComHealthIndex";
 import ComTextArea from "../../Components/ComInput/ComTextArea";
@@ -14,14 +14,16 @@ import ComHeader from "../../Components/ComHeader/ComHeader";
 import { postData, getData } from "../../api/api";
 import User_fill from "../../../assets/User_fill.png"
 import { stylesApp } from "../../styles/Styles";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function HealthMonitorDetail() {
   const route = useRoute();
+  const navigation = useNavigation();
   const { data, scrollToId } = route.params;
   const [loading, setLoading] = useState(false);
   const [healthMonitor, setHealthMonitor] = useState([]);
   const [elderData, setElderData] = useState({});
-  const scrollViewRef = useRef(null); 
+  const scrollViewRef = useRef(null);
 
   const {
     text: {
@@ -102,7 +104,7 @@ export default function HealthMonitorDetail() {
       <View style={styles.body}>
 
         <ScrollView
-          ref={scrollViewRef} 
+          ref={scrollViewRef}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
         >
@@ -119,16 +121,18 @@ export default function HealthMonitorDetail() {
               <ComTimeDivision time={`Lần đo thứ ${index + 1} - ${formattedTime(item?.createdAt)}`}></ComTimeDivision>
               <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                 <Text>Chỉ số sức khỏe</Text>
-                <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-                  <Image
-                    source={User_fill}
-                    style={{
-                      width: 30,
-                      height: 30,
-                      objectFit: "fill",
-                    }} />
-                  <Text>{item?.creatorInfo?.fullName}</Text>
-                </View>
+                <TouchableOpacity onPress={() => { navigation.navigate("UserNurseProfile", { id: item?.creatorInfo?.id }) }}>
+                  <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+                    <Image
+                      source={User_fill}
+                      style={{
+                        width: 27,
+                        height: 27,
+                        objectFit: "fill",
+                      }} />
+                    <Text>{item?.creatorInfo?.fullName}</Text>
+                  </View>
+                </TouchableOpacity>
               </View>
 
               {item?.healthReportDetails?.map((detail, detailIndex) => (

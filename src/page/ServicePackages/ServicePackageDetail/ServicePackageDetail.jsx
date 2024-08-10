@@ -83,8 +83,10 @@ export default function ServicePackageDetail({ }) {
       .catch((error) => {
         handleClosePopupDate()
         setLoading(false)
-        ComToast({ text: 'Đã có lỗi xảy ra, vui lòng thử lại' });
-        console.log("Error appointments:", error);
+        if (error.response.status === 624)
+          ComToast({ text: 'Bạn đã có lịch hẹn vào ngày này. Vui lòng chọn ngày khác.' });
+        else
+          ComToast({ text: 'Đã có lỗi xảy ra, vui lòng thử lại.' });
       });
   };
 
@@ -172,7 +174,7 @@ export default function ServicePackageDetail({ }) {
                 Hủy
               </ComButton>
               <ComButton
-                onPress= {!loading ? handleSubmit(handleCreateAppointment) : null}
+                onPress={!loading ? handleSubmit(handleCreateAppointment) : null}
                 style={{ flex: 1 }}>
                 {loading ? <ActivityIndicator /> : "Xác nhận"}
               </ComButton>
