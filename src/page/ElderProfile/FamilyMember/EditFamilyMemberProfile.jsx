@@ -86,7 +86,10 @@ export default function EditFamilyMemberProfile() {
                 })
                 .catch((error) => {
                     setLoading(false)
-                    ComToast({ text: 'Cập nhật thông tin thất bại' });
+                    if (error.response.status === 600)
+                        ComToast({ text: 'Số điện thoại của người giám hộ này đã tồn tại. Vui lòng thử lại.' });
+                    else
+                        ComToast({ text: 'Cập nhật thông tin thất bại' });
                 });
         };
 

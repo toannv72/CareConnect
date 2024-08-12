@@ -75,7 +75,7 @@ export default function UserNurseProfile() {
     return (
         <>
             <ComHeader
-                title= "Thông tin điều dưỡng"
+                title= "Thông tin y tá"
                 showTitle
                 showBackIcon
             />

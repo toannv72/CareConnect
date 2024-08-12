@@ -239,34 +239,6 @@ export default function ServiceAnydayRegister() {
         }).flat().filter(date => date !== null); // Flatten and filter out null values
     };
     
-    // // check trong tháng
-    // const checkContractEndNextMonth = () => {
-    //     if (elder?.contractsInUse?.endDate) {
-    //         const endDate = moment(elder?.contractsInUse?.endDate);
-    //         const diffMonths = endDate.diff(moment(), 'months');
-    //         return diffMonths <= 1;
-    //     }
-    //     return false;
-    // };
-    // const handlePayment = () => {
-    //     const allDatesInPastOrToday = selectedDates.every(date => moment(date).isSameOrBefore(moment(), 'day'));
-    //     // nếu ttas cả các date là ngày quá khứ hoặc hiện tại && hợp đồng kết thúc vào tháng sau
-    //     if (allDatesInPastOrToday && checkContractEndNextMonth()) {//báo lỗi và không cho đăng ký
-    //         ComToast({ text: 'Bạn không thể đăng ký dịch vụ vì người cao tuổi này sẽ hết hạn hợp đồng vào ngày thực hiện dịch vụ.' ,
-    //             duration: 2500
-    //         });
-    //     } else {
-    //         let orderDates = [];
-    //         const filteredSelectedDates = selectedDates.filter(date => !registeredDates.includes(date));
-    //         const filteredCalculatedDates = calculateSelectedDates().filter(date => !registeredDates.includes(date));
-    //         if (selectedId === '1' || selectedId === '3') {
-    //             orderDates = filteredSelectedDates;
-    //         } else if (selectedId === '2') {
-    //             orderDates = filteredCalculatedDates;
-    //         }
-    //         navigation.navigate("ServicePayment", { servicePackage: data, elder: elder, orderDates: orderDates, type: getType(selectedId) });
-    //     }
-    // };
     const handlePayment = () => {//check sát ngày
         const allDatesInPastOrToday = selectedDates.every(date => moment(date).isSameOrBefore(moment(), 'day'));
         const contractEndDate = moment(elder?.contractsInUse?.endDate);
