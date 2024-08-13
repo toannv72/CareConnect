@@ -218,7 +218,7 @@ export const vn = {
       totalMoney: "Tổng thanh toán",
       nurse: "Người thực hiện",
       time: "Thời gian",
-      feedback: "Đánh giá dịch vụ",
+      feedback: "Đánh giá",
       cancelRenewal: "Hủy gia hạn dịch vụ",
     },
     renew: {
