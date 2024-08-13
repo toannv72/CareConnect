@@ -288,7 +288,7 @@ export default function DetailProfile() {
               </ScrollView>
             </View>
             <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 10, paddingBottom: 5 }}>
-              <ComButton onPress={medicalProfile} check={true} >
+              <ComButton onPress={medicalProfile} check={true} style={{ flex: role?.name == "Nurse" ? 0 : 1 }}>
                 {ElderProfile?.detail?.medicalProfile}
               </ComButton>
               {
