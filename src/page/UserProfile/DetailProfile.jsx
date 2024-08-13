@@ -91,11 +91,7 @@ export default function DetailProfile({ route }) {
 
   return (
     <>
-      <ComHeader
-        title={UserProfile?.title}
-        showTitle
-        showBackIcon
-      />
+      <ComHeader title={UserProfile?.title} showTitle showBackIcon />
       <View style={styles.body}>
         <View style={styles.container}>
           <FormProvider {...methods}>
@@ -107,10 +103,12 @@ export default function DetailProfile({ route }) {
                 <View style={styles.avatarContainer}>
                   <Image
                     source={{
-                      uri: image ? image : "https://firebasestorage.googleapis.com/v0/b/careconnect-2d494.appspot.com/o/images%2F3be127ed-a90e-4364-8160-99338def0144.png?alt=media&token=3de8a6cb-0986-4347-9a22-eb369f7d02ff",
+                      uri: image
+                        ? image
+                        : "https://firebasestorage.googleapis.com/v0/b/careconnect-2d494.appspot.com/o/images%2F3be127ed-a90e-4364-8160-99338def0144.png?alt=media&token=3de8a6cb-0986-4347-9a22-eb369f7d02ff",
                     }}
                     style={styles.avatar}
-                  /> 
+                  />
                 </View>
 
                 <View style={{ gap: 10 }}>
@@ -184,6 +182,7 @@ export default function DetailProfile({ route }) {
                     errors={errors} // Pass errors object
                   />
                 </View>
+                <View style={{ height: 10 }}></View>
               </ScrollView>
               <View>
                 <ComButton onPress={Edit}>
@@ -195,7 +194,6 @@ export default function DetailProfile({ route }) {
         </View>
       </View>
     </>
-
   );
 }
 const styles = StyleSheet.create({
