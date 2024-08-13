@@ -54,12 +54,12 @@ export default function ServiceHistoryDetail() {
         const createdDate = new Date(data?.createdAt);
         return orderDate > createdDate;
     });
-    
+
     //Check trong vòng 5 ngày kể từ ngày cuối cùng của dịch vụ
-    const isWithinFiveDays = lastHistoryDate ? (currentDate - lastHistoryDate) / (1000 * 60 * 60 * 24) <= 5 : false;
+    const daysDifference = lastHistoryDate ? Math?.round((currentDate - lastHistoryDate) / (1000 * 60 * 60 * 24)) : 0;
+    const isWithinFiveDays = daysDifference > 0 && daysDifference <= 5;
     const currentPrice = orderDetailData?.price / filteredOrderDates?.length // giá lúc mua
     // tổng tiền mỗi dv    /   tổng số ngày > createAt 
-
     useFocusEffect(
         useCallback(() => {
             setLoading(true);

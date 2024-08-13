@@ -126,6 +126,14 @@ export default function ServicePackageDetail({ }) {
                 : {serviceData?.capacity} người
               </Text>
             </View>
+            <View style={{ flexDirection: "row" }}>
+              <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                {servicePackages?.package?.numOfNurse}
+              </Text>
+              <Text style={{ fontSize: 16 }}>
+                : {serviceData?.numberOfNurses} người
+              </Text>
+            </View>
             <View >
               <Text style={{ fontWeight: "bold", fontSize: 16 }}>
                 {servicePackages?.detail?.description}:

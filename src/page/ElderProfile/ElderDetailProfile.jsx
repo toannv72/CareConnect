@@ -2,13 +2,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigation } from "@react-navigation/native";
 import React, { useContext, useState, useEffect, useCallback } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { Image, StyleSheet, View } from "react-native";
+import { Image, StyleSheet, View, Text, ScrollView } from "react-native";
 import * as yup from "yup";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import ComInput from "../../Components/ComInput/ComInput";
 import ComButton from "../../Components/ComButton/ComButton";
 import ComSelect from "../../Components/ComInput/ComSelect";
-import { ScrollView } from "react-native";
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import { useAuth } from "../../../auth/useAuth";
 import { useRoute, useFocusEffect } from "@react-navigation/native";
@@ -22,6 +21,7 @@ export default function DetailProfile() {
   const { role } = useAuth();
   const { data } = route.params;
   const [familyMems, setFamilyMems] = useState([]);
+  const [elderData, setElderData] = useState({});
   const [refresh, setRefresh] = useState(false);
 
   const {
@@ -64,6 +64,22 @@ export default function DetailProfile() {
     },
   ];
 
+  const getElder = async () => {
+    getData(`/elders/${data?.id}`, {})
+      .then((elders) => {
+        setElderData(elders?.data)
+        setValue("fullName", data?.name ?? "Không có");
+        setValue("address", data?.address ?? "Không có");
+        setValue("idNumber", data?.cccd ?? "Không có");
+        setValue("relationship", data?.relationship ?? "Không có");
+        setValue("dateOfBirth", moment(data?.dateOfBirth, "YYYY-MM-DD").format("DD/MM/YYYY") ?? "Không có");
+        setValue("gender", data?.gender ?? "Không có");
+      })
+      .catch((error) => {
+        console.error("Error getData fetching /elders items:", error);
+      })
+  }
+
   const getBlock = async () => {
     getData(`/block/${data?.room?.blockId}`, {})
       .then((block) => {
@@ -99,6 +115,7 @@ export default function DetailProfile() {
 
   useFocusEffect(
     useCallback(() => {
+      
       data?.room?.blockId ? (
         getBlock()
       ) : (
@@ -106,13 +123,7 @@ export default function DetailProfile() {
       )
 
       if (data) {
-        setValue("fullName", data?.name ?? "Không có");
-        setValue("address", data?.address ?? "Không có");
-        setValue("idNumber", data?.cccd ?? "Không có");
-        setValue("relationship", data?.relationship ?? "Không có");
-        setValue("habits", data?.habits ?? "Không có");
-        setValue("dateOfBirth", moment(data?.dateOfBirth, "YYYY-MM-DD").format("DD/MM/YYYY") ?? "Không có");
-        setValue("gender", data?.gender ?? "Không có");
+        getElder()
         getFamilyMems()
       }
     }, [data, setValue, refresh])
@@ -244,14 +255,20 @@ export default function DetailProfile() {
                     control={control}
                     errors={errors}
                   />
-                  <ComInput
-                    label="Thói quen sinh hoạt"
-                    placeholder="Thói quen sinh hoạt"
-                    name="habits"
-                    edit={false}
-                    control={control}
-                    errors={errors}
-                  />
+                  <View >
+                    <View style={{marginBottom: 4}}>
+                      <Text style={{fontWeight: "bold"}}>Thói quen sinh hoạt</Text>
+                    </View>
+                    
+                    <View style={{ maxHeight: 120, padding: 10, borderRadius: 10, borderWidth: 1, borderColor: "#33B39C"}}>
+                      <ScrollView
+                        style={styles?.input}
+                        nestedScrollEnabled={true}
+                      >
+                        <Text>{elderData?.habits || "Không có"}</Text>
+                      </ScrollView>
+                    </View>
+                  </View>
                 </View>
                 <ComFamilyMember familyMems={familyMems} setRefresh={setRefresh} data={data} canAdd={data?.state == "Active"} />
               </ScrollView>
@@ -308,5 +325,10 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
-  }
+  },
+  input: {
+    backgroundColor: "#fff",
+    color: "#000",
+    maxHeight: 100
+  },
 });

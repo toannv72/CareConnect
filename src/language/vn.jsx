@@ -168,7 +168,7 @@ export const vn = {
       successRenewContractTitle: "Đăng ký gia hạn hợp đồng thành công",
     },
     package: {
-      living: "Sinh hoạt cùng",
+      living: "Số lượng người",
       numOfNurse: "Số nhân viên chăm sóc",
       people: "người",
       month: "tháng",

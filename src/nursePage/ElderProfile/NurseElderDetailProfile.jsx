@@ -190,6 +190,20 @@ export default function NurseElderDetailProfile() {
                     control={control}
                     errors={errors} // Pass errors object
                   />
+                  <View >
+                    <View style={{ marginBottom: 4 }}>
+                      <Text style={{ fontWeight: "bold" }}>Thói quen sinh hoạt</Text>
+                    </View>
+
+                    <View style={{ maxHeight: 120, padding: 10, borderRadius: 10, borderWidth: 1, borderColor: "#33B39C" }}>
+                      <ScrollView
+                        style={styles?.input}
+                        nestedScrollEnabled={true}
+                      >
+                        <Text>{data?.habits || "Không có"}</Text>
+                      </ScrollView>
+                    </View>
+                  </View>
                 </View>
                 <View>
                   <View style={{ marginVertical: 10 }}>
@@ -312,5 +326,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
 
+  },
+  input: {
+    backgroundColor: "#fff",
+    color: "#000",
+    maxHeight: 100
   },
 });

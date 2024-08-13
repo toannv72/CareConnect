@@ -40,7 +40,7 @@ export default function AddingServicePackages() {
     const { control, handleSubmit, reset, formState: { errors } } = methods;
 
     const onSubmit = (data) => {
-        setSearchQuery(data?.search.trim());
+        setSearchQuery(data?.search?.trim());
     };
 
     const fetchNextPage = async (search = searchQuery) => {
@@ -61,10 +61,12 @@ export default function AddingServicePackages() {
         getData('/service-package-categories', {})
             .then((categoryResponse) => {
                 const formattedCategoryData = [{ value: 0, label: "Tất cả" }].concat(
-                    categoryResponse?.data?.contends.map(category => ({
-                        value: category.id,
-                        label: category.name,
-                    }))
+                    categoryResponse?.data?.contends
+                        .filter(category => category?.state === "Active")
+                        .map(category => ({
+                            value: category?.id,
+                            label: category?.name,
+                        }))
                 );
                 setCategoryData(formattedCategoryData);
                 setLoading(false);
@@ -176,13 +178,13 @@ export default function AddingServicePackages() {
                         <ScrollView
                             showsVerticalScrollIndicator={false}
                             showsHorizontalScrollIndicator={false}>
-                            {filteredData.slice(0, displayedItems).map((item, index) => (
+                            {filteredData?.slice(0, displayedItems)?.map((item, index) => (
                                 <ComAddPackage key={index} data={item} />
                             ))}
                             {displayedItems < filteredData?.length &&
                                 <View style={{ justifyContent: "center", alignItems: "center" }}>
                                     <TouchableOpacity onPress={handleLoadMore}>
-                                        <Text style={{ fontSize: 16, textAlign: "center", color: "#33B39C"}}>Xem thêm</Text>
+                                        <Text style={{ fontSize: 16, textAlign: "center", color: "#33B39C" }}>Xem thêm</Text>
                                     </TouchableOpacity>
                                 </View>
                             }

@@ -35,7 +35,8 @@ export default function Services() {
       });
     getData('/service-package-categories', {})
       .then((categoryData) => {
-        setCategoryData(categoryData?.data?.contends);
+        const filterData = categoryData?.data?.contends?.filter(category => category?.state === "Active")
+        setCategoryData(filterData);
         setLoading(loading);
       })
       .catch((error) => {

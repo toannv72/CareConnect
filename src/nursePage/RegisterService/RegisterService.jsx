@@ -118,7 +118,7 @@ export default function RegisterService() {
                             is24Hour={true}
                             display="default"
                             onChange={handleDateChange}
-                            minimumDate={new Date()}
+                            // minimumDate={new Date()}
                         />
                     )}
                 </View>
