@@ -118,8 +118,8 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     fontWeight: "bold",
     justifyContent: "center",
-    elevation: 5, // Bóng đổ cho Android
-    shadowColor: "#000", // Màu của bóng đổ cho iOS
+    // elevation: 5, // Bóng đổ cho Android
+    // shadowColor: "#000", // Màu của bóng đổ cho iOS
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
