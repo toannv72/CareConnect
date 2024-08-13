@@ -1,8 +1,15 @@
 import React from "react";
 import { Text, TouchableOpacity, StyleSheet, View } from "react-native";
-import { colors } from '../../styles/Styles';
+import { colors } from "../../styles/Styles";
 
-export default function ComButton({ children, onPress, check, style, disable, warning }) {
+export default function ComButton({
+  children,
+  onPress,
+  check,
+  style,
+  disable,
+  warning,
+}) {
   // Đặt màu dựa trên giá trị của warning
   const buttonColor = warning ? "red" : colors.primary;
   const buttonTextColor = warning ? "#fff" : "#fff"; // Màu chữ có thể giữ như cũ hoặc thay đổi nếu cần
@@ -10,18 +17,45 @@ export default function ComButton({ children, onPress, check, style, disable, wa
   return (
     <>
       {check ? (
-        <TouchableOpacity style={[styles.button, { borderColor: buttonColor, backgroundColor: "#fff" }, style]} onPress={onPress}>
-          <Text style={[styles.buttonText, { color: buttonColor }]}>{children}</Text>
+        <TouchableOpacity
+          style={[
+            styles.button,
+            { borderColor: buttonColor, backgroundColor: "#fff" },
+            style,
+          ]}
+          onPress={onPress}
+        >
+          <Text style={[styles.buttonText, { color: buttonColor }]}>
+            {children}
+          </Text>
         </TouchableOpacity>
       ) : (
         <>
           {disable ? (
-            <TouchableOpacity style={[styles.buttonDisable, { borderColor: buttonColor, backgroundColor: buttonColor }]}>
-              <Text style={[styles.buttonTextCheck, { color: "#fff" }]}>{children}</Text>
+            <TouchableOpacity
+              style={[
+                styles.buttonDisable,
+                { borderColor: buttonColor, backgroundColor: buttonColor },
+              ]}
+            >
+              <Text style={[styles.buttonTextCheck, { color: "#fff" }]}>
+                {children}
+              </Text>
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity style={[styles.buttonCheck, { backgroundColor: buttonColor, borderColor: buttonColor }, style]} onPress={onPress}>
-              <Text style={[styles.buttonTextCheck, { color: buttonTextColor }]}>{children}</Text>
+            <TouchableOpacity
+              style={[
+                styles.buttonCheck,
+                { backgroundColor: buttonColor, borderColor: buttonColor },
+                style,
+              ]}
+              onPress={onPress}
+            >
+              <Text
+                style={[styles.buttonTextCheck, { color: buttonTextColor }]}
+              >
+                {children}
+              </Text>
             </TouchableOpacity>
           )}
         </>
@@ -43,6 +77,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
+    marginHorizontal: 5,
   },
   buttonText: {
     fontWeight: "bold",
@@ -61,6 +96,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
+    marginHorizontal: 5,
   },
   buttonTextCheck: {
     fontWeight: "bold",

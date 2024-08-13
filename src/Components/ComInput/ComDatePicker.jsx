@@ -42,7 +42,7 @@ const ComDatePicker = ({
   };
 
   return (
-    <View style={styles.inputContainer}>
+    <View>
       {/* Hiển thị label nếu có */}
       {label && (
         <View style={styles.labelContainer}>
@@ -57,7 +57,10 @@ const ComDatePicker = ({
         rules={rules}
         render={({ field: { onChange, onBlur, value } }) => (
           <View>
-            <TouchableOpacity onPress={enabled ? handleOpen : null} activeOpacity={1}>
+            <TouchableOpacity
+              onPress={enabled ? handleOpen : null}
+              activeOpacity={1}
+            >
               <View
                 style={[
                   styles.input,
@@ -93,13 +96,11 @@ const ComDatePicker = ({
 
 export default ComDatePicker;
 const styles = StyleSheet.create({
-  inputContainer: {
-    // marginBottom: 20,
-  },
   labelContainer: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 4,
+    marginHorizontal: 9,
   },
   label: {
     fontWeight: "bold",
@@ -118,6 +119,8 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     fontWeight: "bold",
     justifyContent: "center",
+    marginHorizontal: 5,
+    marginBottom: 2,
     elevation: 5, // Bóng đổ cho Android
     shadowColor: "#000", // Màu của bóng đổ cho iOS
     shadowOffset: { width: 0, height: 2 },

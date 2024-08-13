@@ -1,8 +1,15 @@
 import React, { useState } from "react";
 import { Controller } from "react-hook-form";
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, Image } from "react-native";
-import Eye from "../../../assets/Eye.png"
-import EyeInvisible from "../../../assets/EyeInvisible.png"
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+} from "react-native";
+import Eye from "../../../assets/Eye.png";
+import EyeInvisible from "../../../assets/EyeInvisible.png";
 
 const ComInput = (
   {
@@ -112,6 +119,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 4,
+    marginHorizontal: 9,
   },
   label: {
     fontWeight: "bold",
@@ -132,6 +140,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#33B39C",
     color: "#000",
+    marginHorizontal: 5,
+    marginBottom: 2,
     elevation: 5, // Bóng đổ cho Android
     shadowColor: "#000", // Màu của bóng đổ cho iOS
     shadowOffset: { width: 0, height: 5 },
@@ -141,7 +151,7 @@ const styles = StyleSheet.create({
   iconContainer: {
     position: "absolute",
     right: 5,
-    padding: 15
+    padding: 15,
   },
   icon: {
     width: 20,

@@ -177,12 +177,11 @@ export default function EditProfile({ }) {
 
   return (
     <>
-      <ComHeader
-        title={EditProfile?.title}
-        showTitle
-        showBackIcon
-      />
-      <KeyboardAvoidingView style={styles.body} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <ComHeader title={EditProfile?.title} showTitle showBackIcon />
+      <KeyboardAvoidingView
+        style={styles.body}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
         <View style={styles.container}>
           <FormProvider {...methods}>
             <View style={{ width: "100%", gap: 10, flex: 1 }}>
@@ -269,13 +268,17 @@ export default function EditProfile({ }) {
                     errors={errors}
                     required
                   />
+                  <View style={{ height: 10 }}></View>
                 </View>
               </ScrollView>
             </View>
             <View>
-              <ComButton
-                onPress={handleSubmit(handleUpdate)}>
-                {loading ? <ActivityIndicator color="#fff" /> : EditProfile?.button?.SaveProfile}
+              <ComButton onPress={handleSubmit(handleUpdate)}>
+                {loading ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  EditProfile?.button?.SaveProfile
+                )}
               </ComButton>
             </View>
           </FormProvider>
