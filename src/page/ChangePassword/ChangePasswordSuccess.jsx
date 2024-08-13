@@ -6,8 +6,11 @@ import Vector from "../../../assets/Vector.png";
 import ComTitle from "../../Components/ComTitle/ComTitle";
 import ComButton from "../../Components/ComButton/ComButton";
 import { useNavigation } from "@react-navigation/native";
+import { useAuth } from "../../../auth/useAuth";
+
 export default function ChangePasswordSuccess() {
   const navigation = useNavigation();
+  const { role } = useAuth();
   const {
     text: {
       ChangePassword,
@@ -16,7 +19,10 @@ export default function ChangePasswordSuccess() {
     setLanguage,
   } = useContext(LanguageContext);
   const toLogin = () => {
-    navigation.navigate("Homes");
+    if (role?.name == "Customer")
+      navigation.navigate("Homes");
+    else
+      navigation.navigate("NurseHomes");
   };
   return (
     <View style={styles?.body}>
