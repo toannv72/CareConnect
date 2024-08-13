@@ -54,7 +54,7 @@ export default function ComFamilyMember({ familyMems, setRefresh, data, canAdd }
 
     return (
         <>
-            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginVertical: 10 }}>
+            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginVertical: 10,marginHorizontal: 5 }}>
                 <Text style={{ fontWeight: "bold", marginRight: 4 }}>Danh sách người giám hộ</Text>
                 {
                     (canAdd && role?.name == "Customer") && (
@@ -77,9 +77,9 @@ export default function ComFamilyMember({ familyMems, setRefresh, data, canAdd }
                     familyMems?.length === 0 ?
                         (
                             role?.name == "Customer" ? (
-                                <Text style={{ marginHorizontal: 15, color: "#A3A3A3" }}>Chưa có người giám hộ. Vui lòng thêm người giám hộ để đề phòng trường hợp khẩn cấp</Text>
+                                <Text style={{ marginHorizontal: 10, color: "#A3A3A3", paddingVertical: 5 }}>Chưa có người giám hộ. Vui lòng thêm người giám hộ để đề phòng trường hợp khẩn cấp</Text>
                             ) : (
-                                <Text style={{ marginHorizontal: 15, color: "#A3A3A3" }}>Chưa có người giám hộ.</Text>
+                                <Text style={{ marginHorizontal: 10, color: "#A3A3A3", paddingVertical: 5 }}>Chưa có người giám hộ.</Text>
                             )
                         ) : (
                             role?.name == "Customer" ? (<>
@@ -237,6 +237,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "#33B39C",
         paddingHorizontal: 5,
-        paddingVertical: 5
+        paddingVertical: 5,
+        marginHorizontal: 5
     },
 });

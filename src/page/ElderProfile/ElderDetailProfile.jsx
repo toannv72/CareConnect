@@ -115,7 +115,7 @@ export default function DetailProfile() {
 
   useFocusEffect(
     useCallback(() => {
-      
+
       data?.room?.blockId ? (
         getBlock()
       ) : (
@@ -255,17 +255,31 @@ export default function DetailProfile() {
                     control={control}
                     errors={errors}
                   />
-                  <View >
-                    <View style={{marginBottom: 4}}>
-                      <Text style={{fontWeight: "bold"}}>Thói quen sinh hoạt</Text>
+                  <View style={{ marginHorizontal: 5}}>
+                    <View style={{ marginBottom: 4 }}>
+                      <Text style={{ fontWeight: "bold" }}>Thói quen sinh hoạt</Text>
                     </View>
-                    
-                    <View style={{ maxHeight: 120, padding: 10, borderRadius: 10, borderWidth: 1, borderColor: "#33B39C"}}>
+
+                    <View style={{ maxHeight: 120, padding: 10, borderRadius: 10, borderWidth: 1, borderColor: "#33B39C" }}>
                       <ScrollView
                         style={styles?.input}
                         nestedScrollEnabled={true}
                       >
                         <Text>{elderData?.habits || "Không có"}</Text>
+                      </ScrollView>
+                    </View>
+                  </View>
+                  <View style={{ marginHorizontal: 5}}>
+                    <View style={{ marginBottom: 4 }}>
+                      <Text style={{ fontWeight: "bold" }}>Ghi chú</Text>
+                    </View>
+
+                    <View style={{ maxHeight: 120, padding: 10, borderRadius: 10, borderWidth: 1, borderColor: "#33B39C" }}>
+                      <ScrollView
+                        style={styles?.input}
+                        nestedScrollEnabled={true}
+                      >
+                        <Text>{elderData?.notes || "Không có"}</Text>
                       </ScrollView>
                     </View>
                   </View>
@@ -329,6 +343,8 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: "#fff",
     color: "#000",
-    maxHeight: 100
+    maxHeight: 100,
+    padding: 5,
+    
   },
 });

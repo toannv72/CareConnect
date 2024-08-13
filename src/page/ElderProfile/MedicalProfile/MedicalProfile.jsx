@@ -92,7 +92,7 @@ export default function MedicalProfile() {
           }
 
           <Text style={{ fontWeight: "600", fontSize: 16, marginTop: 5 }}>{MedicalProfile?.note}</Text>
-          <View style={[styles?.underlyingMedical, stylesApp.shadow, { marginBottom: 30 }]}>
+          <View style={[styles?.underlyingMedical, stylesApp.shadow, { marginBottom: 30, paddingVertical: 5 }]}>
             <Image
               source={underlyingMedical}
               style={{ width: 60, height: 60, objectFit: "fill" }}

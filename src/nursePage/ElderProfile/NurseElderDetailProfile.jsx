@@ -190,7 +190,7 @@ export default function NurseElderDetailProfile() {
                     control={control}
                     errors={errors} // Pass errors object
                   />
-                  <View >
+                  <View style={{ marginHorizontal: 5 }}>
                     <View style={{ marginBottom: 4 }}>
                       <Text style={{ fontWeight: "bold" }}>Thói quen sinh hoạt</Text>
                     </View>
@@ -204,8 +204,22 @@ export default function NurseElderDetailProfile() {
                       </ScrollView>
                     </View>
                   </View>
+                  <View style={{ marginHorizontal: 5 }}>
+                    <View style={{ marginBottom: 4 }}>
+                      <Text style={{ fontWeight: "bold" }}>Ghi chú</Text>
+                    </View>
+
+                    <View style={{ maxHeight: 120, padding: 10, borderRadius: 10, borderWidth: 1, borderColor: "#33B39C" }}>
+                      <ScrollView
+                        style={styles?.input}
+                        nestedScrollEnabled={true}
+                      >
+                        <Text>{data?.notes || "Không có"}</Text>
+                      </ScrollView>
+                    </View>
+                  </View>
                 </View>
-                <View>
+                <View style={{ marginHorizontal: 5 }}>
                   <View style={{ marginVertical: 10 }}>
                     <Text style={{ fontWeight: "bold", marginRight: 4 }}>Danh sách người giám hộ</Text>
                   </View>
@@ -213,7 +227,7 @@ export default function NurseElderDetailProfile() {
                     {
                       familyMems?.length === 0 ?
                         (
-                          <Text style={{ marginHorizontal: 15, color: "#A3A3A3" }}>Chưa có người giám hộ.</Text>
+                          <Text style={{ marginHorizontal: 10, paddingVertical: 5, color: "#A3A3A3" }}>Chưa có người giám hộ.</Text>
                         ) : (
                           <>
                             <View style={[styles.bodySeparator, { borderTopWidth: 0 }]}>
