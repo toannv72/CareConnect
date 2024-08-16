@@ -26,7 +26,7 @@ export default function ServiceHistory() {
     const [loadMoreLoading, setLoadMoreLoading] = useState(false);
 
     const fetchNextPage = async () => {
-        setLoadMoreLoading(true);
+        setLoading(true);
         getData(`/orders?UserId=${user?.id}&Status=Paid&SortColumn=createdAt&SortDir=Desc`, {})
             .then((orders) => {//lọc những order ko có service
                 const filteredOrders = orders?.data?.contends.filter(order => order.orderDetails[0]?.servicePackage !== null);
@@ -85,7 +85,7 @@ export default function ServiceHistory() {
                                     <View style={{ justifyContent: "center", alignItems: "center" }}>
                                         <View style={{ width: "35%" }}>
                                             {loadMoreLoading ? (<ActivityIndicator />) :
-                                                (<ComSelectButton onPress={handleLoadMore} >Xem thêm</ComSelectButton>)}
+                                                (<ComSelectButton onPress={handleLoadMore}>Xem thêm</ComSelectButton>)}
                                             <View style={{ height: 20 }} />
                                         </View>
                                     </View>

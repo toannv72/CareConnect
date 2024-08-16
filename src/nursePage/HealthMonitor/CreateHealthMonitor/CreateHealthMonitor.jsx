@@ -32,6 +32,13 @@ export default function CreateHealthMonitor() {
                     .required('Vui lòng nhập kết quả')
                     .matches(healthRegex, 'Kết quả phải là số dương, chỉ chứa số và dấu .')
                     .test('is-positive', 'Kết quả phải là số dương', value => parseFloat(value) > 0 || value === "")
+                    .test('max-decimals', 'Kết quả không được có quá 2 chữ số thập phân', value => {
+                        if (value && value?.includes('.')) {
+                            const decimals = value?.split('.')[1];
+                            return decimals?.length <= 2;
+                        }
+                        return true;
+                    });
             });
             return acc;
         }, {})
@@ -222,10 +229,10 @@ export default function CreateHealthMonitor() {
                                 gap: 20,
                             }}
                         >
-                            <ComButton check onPress={handleClosePopup} style={{flex: 1}}>
+                            <ComButton check onPress={handleClosePopup} style={{ flex: 1 }}>
                                 Hủy
                             </ComButton>
-                            <ComButton onPress={handleSubmit(onSubmit)} style={{flex: 1}}>
+                            <ComButton onPress={handleSubmit(onSubmit)} style={{ flex: 1 }}>
                                 {loading ? <ActivityIndicator /> : "Xác nhận"}
                             </ComButton>
                         </View>

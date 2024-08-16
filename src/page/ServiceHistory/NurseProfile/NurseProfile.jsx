@@ -75,7 +75,7 @@ export default function UserNurseProfile() {
     return (
         <>
             <ComHeader
-                title= "Thông tin y tá"
+                title="Thông tin y tá"
                 showTitle
                 showBackIcon
             />
@@ -125,23 +125,16 @@ export default function UserNurseProfile() {
                                         </View>
                                         <View style={{ flex: 1 }}>
                                             <ComInput
-                                                label={EditProfile?.label?.dateOfBirth}
-                                                placeholder={EditProfile?.label?.dateOfBirth}
-                                                name="dateOfBirth"
+                                                label={EditProfile?.label?.phoneNumber}
+                                                placeholder={EditProfile?.placeholder?.phoneNumber}
+                                                name="phoneNumber"
                                                 control={control}
                                                 errors={errors} // Pass errors object
                                                 edit={false}
                                             />
                                         </View>
                                     </View>
-                                    <ComInput
-                                        label={EditProfile?.label?.phoneNumber}
-                                        placeholder={EditProfile?.placeholder?.phoneNumber}
-                                        name="phoneNumber"
-                                        control={control}
-                                        errors={errors} // Pass errors object
-                                        edit={false}
-                                    />
+
                                     <ComInput
                                         label={EditProfile?.label?.email}
                                         placeholder={EditProfile?.placeholder?.email}
@@ -181,5 +174,6 @@ const styles = StyleSheet.create({
         borderRadius: 1000,
         borderWidth: 1,
         borderColor: "gray",
+        objectFit: "fill",
     },
 });

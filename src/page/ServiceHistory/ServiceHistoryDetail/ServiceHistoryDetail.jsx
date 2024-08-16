@@ -136,9 +136,9 @@ export default function ServiceHistoryDetail() {
                     </Text>
                     <TouchableOpacity style={{ flexDirection: "row", marginBottom: 10 }} onPress={() => navigation.navigate("ElderDetailProfile", { data: elderData })}>
                         <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-                            {addingPackages?.payment?.elderName}
+                            {addingPackages?.payment?.elderName}: 
                         </Text>
-                        <Text style={{ fontSize: 16, color: "#33B39C" }}>: {elderData?.name}</Text>
+                        <Text style={{ fontSize: 16, color: "#33B39C" }}> {elderData?.name}</Text>
                     </TouchableOpacity>
                     <Text style={{ flexDirection: "row", fontSize: 16, marginBottom: 10 }}>
                         <Text style={{ fontWeight: "bold" }}>{addingPackages?.history?.status}</Text>

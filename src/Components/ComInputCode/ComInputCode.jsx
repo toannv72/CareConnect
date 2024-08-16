@@ -8,14 +8,18 @@ export default function ComInputCode({ getCode }) {
   const [code2, setCode2] = useState("");
   const [code3, setCode3] = useState("");
   const [code4, setCode4] = useState("");
+  const [code5, setCode5] = useState("");
+  const [code6, setCode6] = useState("");
   const input1Ref = useRef(null);
   const input2Ref = useRef(null);
   const input3Ref = useRef(null);
   const input4Ref = useRef(null);
+  const input5Ref = useRef(null);
+  const input6Ref = useRef(null);
 
   useEffect(() => {
-    getCode(code1 + code2 + code3 + code4);
-  }, [code1, code2, code3, code4]);
+    getCode(code1 + code2 + code3 + code4 + code5 + code6);
+  }, [code1, code2, code3, code4, code5, code6]);
   const handleTextInputChange = (
     text,
     ref,
@@ -108,13 +112,45 @@ export default function ComInputCode({ getCode }) {
           keyboardType="numeric"
           style={styles.codeInput}
           onChangeText={(text) =>
-            handleTextInputChange(text, input4Ref, setCode4, null, input3Ref)
+            handleTextInputChange(text, input4Ref, setCode4, input5Ref, input3Ref)
           }
           value={code4}
           maxLength={1}
           onKeyPress={({ nativeEvent }) => {
             if (nativeEvent.key === "Backspace") {
               handleBackspacePress(input4Ref, input3Ref, setCode3);
+            }
+          }}
+        />
+         <TextInput
+          ref={input5Ref}
+          underlineColorAndroid="transparent"
+          keyboardType="numeric"
+          style={styles.codeInput}
+          onChangeText={(text) =>
+            handleTextInputChange(text, input5Ref, setCode5, input6Ref, input4Ref)
+          }
+          value={code5}
+          maxLength={1}
+          onKeyPress={({ nativeEvent }) => {
+            if (nativeEvent.key === "Backspace") {
+              handleBackspacePress(input5Ref, input4Ref, setCode4);
+            }
+          }}
+        />
+        <TextInput
+          ref={input6Ref}
+          underlineColorAndroid="transparent"
+          keyboardType="numeric"
+          style={styles.codeInput}
+          onChangeText={(text) =>
+            handleTextInputChange(text, input6Ref, setCode6, null, input5Ref)
+          }
+          value={code6}
+          maxLength={1}
+          onKeyPress={({ nativeEvent }) => {
+            if (nativeEvent.key === "Backspace") {
+              handleBackspacePress(input6Ref, input5Ref, setCode5);
             }
           }}
         />
@@ -130,14 +166,14 @@ const styles = StyleSheet.create({
   },
   codeContainer: {
     flexDirection: "row",
-    gap: 10,
+    gap: 5,
     justifyContent: "space-between",
   },
   codeInput: {
     borderTopEndRadius: 8,
     borderTopStartRadius: 8,
-    height: 54,
-    width: 54,
+    height: 45,
+    width: 45,
     borderColor: "gray",
     borderWidth: 1,
     paddingHorizontal: 10,

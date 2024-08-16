@@ -209,9 +209,9 @@ export default ContractDetail = () => {
               minDate={moment().add(1, 'day').toString()}
               maxDate={
                 reason !== "" // người dùng hủy hợp đồng
-                  ? moment().add(14, 'days').toString() // Nếu đúng, thiết lập `maxDate` là 14 ngày từ hôm nay
+                  ? moment().add(13, 'days').toString() // Nếu đúng, thiết lập `maxDate` là 14 ngày từ hôm nay
                   : moment(data?.endDate).diff(moment(), 'days') > 14 //người dùng gia hạn && enddate cách hientai > 14 ngay
-                    ? moment().add(14, 'days').toString() // maxdate là 14 ngày sau
+                    ? moment().add(13, 'days').toString() // maxdate là 14 ngày sau
                     : moment(data?.endDate).toString() // enddate cách hientai < 14 ngay, `maxDate` là enddate
               }
             />

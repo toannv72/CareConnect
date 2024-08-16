@@ -12,6 +12,7 @@ import ComTitleLink from "../../Components/ComTitleLink/ComTitleLink";
 import ComTitle from "../../Components/ComTitle/ComTitle";
 import { useNavigation } from "@react-navigation/native";
 import { postData } from "../../api/api";
+import ComToast from "../../Components/ComToast/ComToast";
 
 export default function ForgetPassword() {
   const [datas, setData] = useStorage("toan", {});
@@ -27,7 +28,7 @@ export default function ForgetPassword() {
   } = useContext(LanguageContext);
 
   const loginSchema = yup.object().shape({
-    phone: yup
+    phoneNumber: yup
       .string()
       .trim()
       .required(ForgetPassword?.message?.phoneRequired)
@@ -39,7 +40,7 @@ export default function ForgetPassword() {
   const methods = useForm({
     resolver: yupResolver(loginSchema),
     defaultValues: {
-      phone: "0123456789",
+      phoneNumber: "",
     },
   });
 
@@ -51,31 +52,21 @@ export default function ForgetPassword() {
   } = methods;
 
   const handleLogin = (data) => {
-    // Xử lý đăng nhập với dữ liệu từ data
     setData(data);
     Keyboard.dismiss();
-    console.log(data);
-    navigation.navigate("OtpForgetPassword", { phone: data });
-    // postData("/auth/ForgetPassword", data, {})
-    //   .then((data) => {
-    //     setToken(data?.accessToken);
-    //     // Chờ setToken hoàn thành trước khi navigate
-    //     return new Promise((resolve) => {
-    //       setTimeout(() => {
-    //         navigation.navigate("Homes", { screen: "Home" });
-    //         resolve(); // Báo hiệu Promise đã hoàn thành
-    //       }, 0); // Thời gian chờ 0ms để đảm bảo setToken đã được thực hiện
-    //     });
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error fetching items:", error);
-    //     if (error?.response?.status === 401) {
-    //       setErrorMessage(ForgetPassword.message.invalidCredential);
-    //     } else {
-    //       setLoginError(true);
-    //       setErrorMessage(ForgetPassword.message.loginError);
-    //     }
-    //   });
+    postData("/auth/send-otp", data, {})
+      .then((responseData) => {
+        navigation.navigate("OtpForgetPassword", { phone: data?.phoneNumber });
+        console.log(" data", responseData)
+      })
+      .catch((error) => {
+        if (error?.response?.status === 404) {
+          ComToast({ text: 'Số điện thoại chưa được đăng ký!', position: 190 });
+        } else {
+          ComToast({ text: 'Đã có lỗi xảy ra. Vui lòng thử lại.', position: 190 });
+          console.log(error?.response)
+        }
+      });
   };
 
   return (
@@ -90,7 +81,7 @@ export default function ForgetPassword() {
             <ComInput
               label={ForgetPassword?.label?.phone}
               placeholder={ForgetPassword?.placeholder?.phone}
-              name="phone"
+              name="phoneNumber"
               control={control}
               keyboardType="phone-pad"
               errors={errors} // Pass errors object

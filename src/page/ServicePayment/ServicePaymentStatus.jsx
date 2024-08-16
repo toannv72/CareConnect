@@ -163,7 +163,7 @@ export default function ServicePaymentStatus() {
                     Về trang chủ
                 </ComButton>
                 {(data?.status === "Paid" || data?.status === "UnPaid") && (
-                    <ComButton onPress={toBillDetail} style={{ flex: 1 }}>
+                    <ComButton onPress={toBillDetail} >
                         Chi tiết thanh toán
                     </ComButton>
                 )}

@@ -116,7 +116,7 @@ export default function RegisterVisitation() {
                   errors={errors}
                   enabled={true}
                   minDate={moment().add(1, 'day').toString()}
-                  maxDate={moment().add(14, 'days').toString()}
+                  maxDate={moment().add(13, 'days').toString()}
                 />
               </View>
             </View>

@@ -8,42 +8,41 @@ import { useStorage } from "../../hooks/useLocalStorage";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import ComTitlePage from "../../Components/ComTitlePage/ComTitlePage";
 import ComButton from "../../Components/ComButton/ComButton";
-import ComTitleLink from "../../Components/ComTitleLink/ComTitleLink";
 import ComTitle from "../../Components/ComTitle/ComTitle";
 import { useNavigation } from "@react-navigation/native";
 import { postData } from "../../api/api";
+import ComToast from "../../Components/ComToast/ComToast";
+import { passwordRegex } from "../../Components/ComRegexPatterns/regexPatterns";
 
 export default function ResetPassword() {
-  const [datas, setData] = useStorage("toan", {});
-  const [accessToken, setToken] = useStorage("Token", {});
   const navigation = useNavigation();
 
   const {
     text: {
-      ForgetPassword,
+      ForgetPassword, Register,
       common: { button },
     },
     setLanguage,
   } = useContext(LanguageContext);
 
   const loginSchema = yup.object().shape({
-    password: yup
+    newPassword: yup
       .string()
       .trim()
-      .required(ForgetPassword?.message?.password)
-      .min(5, ForgetPassword?.message?.minPassword),
+      .required(Register?.message?.password)
+      .matches(passwordRegex, Register?.message?.passwordInvalid),
     confirmPassword: yup
       .string()
       .trim()
-      .required(ForgetPassword?.message?.password)
-      .min(5, ForgetPassword?.message?.minConfirmPassword),
+      .required(Register?.message?.confirmPassword)
+      .oneOf([yup.ref('newPassword'), null], Register?.message?.passwordNotMatch),
   });
 
   const methods = useForm({
     resolver: yupResolver(loginSchema),
     defaultValues: {
-      password: "111111",
-      confirmPassword: "111111",
+      newPassword: "",
+      confirmPassword: "",
     },
   });
 
@@ -55,31 +54,24 @@ export default function ResetPassword() {
   } = methods;
 
   const handleLogin = (data) => {
-    // Xử lý đăng nhập với dữ liệu từ data
-    setData(data);
     Keyboard.dismiss();
-    console.log(data);
-    navigation.navigate("ResetPasswordSuccess", { phone: data });
-    // postData("/auth/ForgetPassword", data, {})
-    //   .then((data) => {
-    //     setToken(data?.accessToken);
-    //     // Chờ setToken hoàn thành trước khi navigate
-    //     return new Promise((resolve) => {
-    //       setTimeout(() => {
-    //         navigation.navigate("Homes", { screen: "Home" });
-    //         resolve(); // Báo hiệu Promise đã hoàn thành
-    //       }, 0); // Thời gian chờ 0ms để đảm bảo setToken đã được thực hiện
-    //     });
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error fetching items:", error);
-    //     if (error?.response?.status === 401) {
-    //       setErrorMessage(ForgetPassword.message.invalidCredential);
-    //     } else {
-    //       setLoginError(true);
-    //       setErrorMessage(ForgetPassword.message.loginError);
-    //     }
-    //   });
+    const { newPassword } = data;
+    const newPasswordData = { newPassword };
+
+    postData("/users/reset-password", newPasswordData, {})
+      .then((data) => {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            ComToast({ text: 'Đặt lại mật khẩu thành công.', position: 190 });
+            navigation.navigate("Login");
+            resolve(); // Báo hiệu Promise đã hoàn thành
+          }, 0); // Thời gian chờ 0ms để đảm bảo setToken đã được thực hiện
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching items:", error);
+        ComToast({ text: 'Đã có lỗi xảy ra. Vui lòng thử lại.', position: 190 });
+      });
   };
 
   return (
@@ -95,7 +87,7 @@ export default function ResetPassword() {
             <ComInput
               label={ForgetPassword?.label?.password}
               placeholder={ForgetPassword?.placeholder?.password}
-              name="password"
+              name="newPassword"
               control={control}
               errors={errors} // Pass errors object
               password
