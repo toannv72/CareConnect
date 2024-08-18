@@ -111,7 +111,7 @@ export default function HealthMonitorIndexList() {
                                 control={control}
                                 keyboardType="default" // Set keyboardType for First Name input
                                 errors={errors}
-                                defaultValue={detail?.healthReportDetailMeasures[0]?.note}
+                                defaultValue={detail?.healthReportDetailMeasures[0]?.note || "Không có"}
                             />
                         </View>
                     ))}

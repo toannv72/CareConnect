@@ -154,7 +154,7 @@ export default function HealthMonitorDetail() {
                   control={control}
                   keyboardType="default" // Set keyboardType for First Name input
                   errors={errors}
-                  defaultValue={item?.notes}
+                  defaultValue={item?.notes || "Không có"}
                 />
               </View>
             </View>

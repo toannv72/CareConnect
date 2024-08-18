@@ -47,9 +47,9 @@ const BillDetail = () => {
                 .then((order) => {
                     setData(order?.data || {});
                     if (order?.data?.dueDate) {
-                        const dueDate = moment(order?.data.dueDate, "YYYY-MM-DD").startOf('day');
+                        const dueDate = moment(order?.data?.dueDate, "YYYY-MM-DD").startOf('day');
                         const now = moment().startOf('day');
-                        setIsOverDue(now.isAfter(dueDate));
+                        setIsOverDue(now?.isAfter(dueDate));
                     }
                     setLoading(false);
                 })
@@ -70,6 +70,7 @@ const BillDetail = () => {
         postData("/orders/service-package-payment", formattedData)
             .then((response) => {
                 const url = response.message;
+                console.log(" service-package-payment", url)
                 Linking.openURL(url)
                     .then(() => {
                         navigation.navigate("ServicePaymentStatus", { orderId: id })
@@ -87,7 +88,11 @@ const BillDetail = () => {
                         ComToast({ text: 'Thanh toán thất bại. Đơn hàng đã được thanh toán xong.' });
                     else
                         ComToast({ text: 'Thanh toán thất bại. Đơn hàng đã quá hạn thanh toán.' });
-                } else {
+                } else if (error.response.status == 614) {
+                    ComToast({ text: 'Thanh toán thất bại. Dịch vụ đã hết lượt đăng ký.' });
+                    setIsOverDue(true);
+                }
+                else {
                     ComToast({ text: 'Đã có lỗi xảy ra. Vui lòng thử lại.' });
                 }
             });
@@ -148,7 +153,7 @@ const BillDetail = () => {
                                 <ComBillDetail title={bill?.total} content={formatCurrency(data?.amount)} />
                             </View>
 
-                            {(data?.status === "UnPaid" || data?.status === "Failed") && (
+                            {((data?.status === "UnPaid" || data?.status === "Failed") && !isOverDue) && (
                                 <>
                                     <Text style={styles.contentBold}>{bill?.detail?.paymentMethod}</Text>
                                     <View style={styles.tableContainer}>
@@ -165,11 +170,15 @@ const BillDetail = () => {
                                             onPress={() => handleMethodPress('VnPay')}
                                         />
                                     </View>
-                                    <ComButton
-                                        onPress={() => { payment() }}
-                                        disable={isOverDue}>
-                                        {data?.status === "Failed" ? "Thanh toán lại" : bill?.detail?.pay}
-                                    </ComButton>
+                                    {
+                                        !isOverDue && (
+                                            <ComButton
+                                            onPress={() => { payment() }}
+                                            >
+                                            {data?.status === "Failed" ? "Thanh toán lại" : bill?.detail?.pay}
+                                        </ComButton>
+                                        )
+                                    }
                                 </>
                             )}
                         </>

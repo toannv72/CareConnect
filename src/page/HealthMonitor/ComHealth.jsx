@@ -57,7 +57,7 @@ export default function ComHealth({ data }) {
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
               {healthMonitor?.sex}
             </Text>
-            <Text>: {data?.gender}</Text>
+            <Text>: { data?.gender === 'Male' ? 'Nam' : data?.gender === 'Female' ? 'Nữ' : ''}</Text>
           </Text>
         </View>
         <View style={styles?.container}>

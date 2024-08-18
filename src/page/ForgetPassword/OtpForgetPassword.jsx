@@ -18,6 +18,26 @@ export default function OtpForgetPassword() {
   const [accessToken, setToken] = useStorage("accessToken", {});
   const [otpCode, setOtpCode] = useState("");
 
+  const resendCode = (phone) => {
+    const sendData = {phoneNumber : phone}
+    Keyboard.dismiss();
+    console.log(" sendData", sendData)
+
+    postData("/auth/send-otp", sendData, {})
+      .then((responseData) => {
+        ComToast({ text: 'Đã gửi lại mã mới. Bạn vui lòng kiểm tra tin nhắn.', position: 190, duration: 2000 });
+        console.log(" data", responseData)
+      })
+      .catch((error) => {
+        if (error?.response?.status === 404) {
+          ComToast({ text: 'Số điện thoại chưa được đăng ký!', position: 190 });
+        } else {
+          ComToast({ text: 'Đã có lỗi xảy ra. Vui lòng thử lại.', position: 190 });
+          console.log(error?.response)
+        }
+      });
+  };
+
   const {
     text: { Otp },
     setLanguage,
@@ -81,7 +101,7 @@ export default function OtpForgetPassword() {
           >
             {Otp?.link?.content}
           </ComTitle>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => resendCode(phone)}>
             <ComTitle> {Otp?.link?.resendCode}</ComTitle>
           </TouchableOpacity>
         </View>

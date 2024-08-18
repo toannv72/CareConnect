@@ -152,7 +152,7 @@ export default function ComHealthIndex({ data, healthMonitor, date, clickable, c
               </View>
               <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
                 <Text style={{ fontSize: 16, fontWeight: "600" }}>Ghi chú: </Text>
-                <Text style={styles.expandedText}>{detail?.note}</Text>
+                <Text style={styles.expandedText}>{detail?.note || "Không có"}</Text>
               </View>
             </View>
           ))}

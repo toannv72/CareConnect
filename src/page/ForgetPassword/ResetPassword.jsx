@@ -78,10 +78,10 @@ export default function ResetPassword() {
     <View style={styles.container}>
       <View style={styles.body}>
         <FormProvider {...methods}>
-          <ComTitlePage>{ForgetPassword?.pageTitle}</ComTitlePage>
+        <ComTitlePage>Đặt lại mật khẩu</ComTitlePage>
           <View style={{ width: "90%", gap: 15 }}>
             <ComTitle style={{ textAlign: "center", opacity: 0.5 }}>
-              {ForgetPassword?.pageSubTitle}
+              Nhập mật khẩu mởi bạn muốn đặt
             </ComTitle>
 
             <ComInput

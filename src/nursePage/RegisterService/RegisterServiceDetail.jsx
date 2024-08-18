@@ -24,6 +24,7 @@ export default function RegisterServiceDetail({ }) {
     const [popup, setPopup] = useState(false);
     const [orderdate, setOrderdate] = useState({});
     const { serviceData, todayOrderDate, elderData } = route.params || {};
+    console.log(" elderData", elderData)
     const [isComplete, setIsComplete] = useState(todayOrderDate?.status);
 
     useFocusEffect(
@@ -103,9 +104,11 @@ export default function RegisterServiceDetail({ }) {
                             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
                                 Người cao tuổi
                             </Text>
-                            <Text>
-                                : {elderData?.name}
-                            </Text>
+                            <TouchableOpacity onPress={() => navigation.navigate("ElderDetailProfile", { data: elderData })}>
+                                <Text>
+                                    : {elderData?.name}
+                                </Text>
+                            </TouchableOpacity>
                         </View>
                         <View style={{ flexDirection: "row" }}>
                             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
@@ -136,7 +139,7 @@ export default function RegisterServiceDetail({ }) {
                         <Text>{serviceData?.description}</Text>
                     </View>
                 </ScrollView>
-                {(isComplete == "InComplete" && moment(todayOrderDate?.date).isSame(moment(), 'day'))&& (
+                {(isComplete == "InComplete" && moment(todayOrderDate?.date).isSame(moment(), 'day')) && (
                     <View style={styles?.content}>
                         <ComButton onPress={() => { setPopup(true) }} style={{ justifyContent: "center", alignItems: "center" }}>
                             {loading ? <ActivityIndicator color="#fff" /> : NurseRegisterService?.markToComplete}
@@ -163,7 +166,7 @@ export default function RegisterServiceDetail({ }) {
 const styles = StyleSheet.create({
     body: {
         flex: 1,
-        paddingTop: 20,
+        paddingTop: 10,
         backgroundColor: "#fff",
     },
     title: {
@@ -176,7 +179,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     content: {
-        marginVertical: 20,
+        marginVertical: 10,
         gap: 5,
         paddingHorizontal: 20,
     }

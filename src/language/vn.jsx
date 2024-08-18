@@ -139,7 +139,7 @@ export const vn = {
   Otp: {
     button: "Xác nhận",
     pageTitle: "Mã xác nhận",
-    content: "Mã xác nhận gồm 4 chữ số được gửi đến số điện thoại",
+    content: "Mã xác nhận gồm 6 chữ số được gửi đến số điện thoại",
     link: {
       content: "Không nhận được mã? ",
       resendCode: "Gửi lại mã",

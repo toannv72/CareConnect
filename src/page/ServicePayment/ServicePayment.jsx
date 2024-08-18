@@ -1,18 +1,18 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useCallback } from "react";
 import { View, StyleSheet, ScrollView, Image, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import ComSelectButton from "../../Components/ComButton/ComSelectButton";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { useRoute } from "@react-navigation/native";
 import backArrowWhite from "../../../assets/icon/backArrowWhite.png";
 import servicePayment from "../../../assets/images/service/payment.png";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter"
 import ComToast from "../../Components/ComToast/ComToast";
 import ComPaymentMethod from "../Bills/BillDetail/ComPaymentMethod";
 import momo from "../../../assets/momo.png";
 import vnpay from "../../../assets/vnpay.png";
 import moment from "moment";
-import { postData } from "../../api/api"; // Import your API function
+import { postData, getData } from "../../api/api"; // Import your API function
 import { Linking } from 'react-native';
 
 export default function ServicePayment() {
@@ -27,6 +27,7 @@ export default function ServicePayment() {
     const [selectedMethod, setSelectedMethod] = useState('momo');
     const [loading, setLoading] = useState(false);
     const [adjustedOrderDates, setAdjustedOrderDates] = useState(orderDates);
+    const [serviceDetail, setServiceDetail] = useState({});//cho calendar một giá trị mặc định là ngày hiện tại
     const handleBackPress = () => { navigation.goBack() };
     //hiển toàn bộ thị list ngay đã chọn (quakhu + tuong lai)
     const registerDates = servicePackage?.type == "MultipleDays" || (servicePackage?.type == "AnyDay" && type == 'RecurringDay') ?
@@ -62,11 +63,11 @@ export default function ServicePayment() {
 
     const totalMoney = () => {
         if (servicePackage?.type === "OneDay") {
-            return servicePackage?.price;
+            return serviceDetail?.price;
         } else {
             const today = moment();
             const futureDates = adjustedOrderDates?.filter(date => moment(date)?.isAfter(today));
-            return servicePackage?.price * futureDates?.length;
+            return serviceDetail?.price * futureDates?.length;
         }
     }
 
@@ -132,6 +133,21 @@ export default function ServicePayment() {
             });
     }
 
+    useFocusEffect(
+        useCallback(() => {
+            getData(`/service-package/${servicePackage?.id}`, {})
+                .then((service) => {
+                    setServiceDetail(service?.data)
+                    console.log(" service-package", service?.data)
+                    setLoading(false);
+                })
+                .catch((error) => {
+                    setLoading(false);
+                    console.error("Error getData fetching items:", error);
+                });
+        }, [])
+    );
+
     return (
         <>
             <View style={styles.header}>
@@ -164,7 +180,7 @@ export default function ServicePayment() {
                         Giá dịch vụ
                     </Text>
                     <Text style={{ fontSize: 16 }}>
-                        : {formatCurrency(servicePackage?.price)}
+                        : {formatCurrency(serviceDetail?.price)}
                     </Text>
                 </Text>
 
@@ -236,11 +252,11 @@ export default function ServicePayment() {
                     <Text style={{ fontSize: 16, fontWeight: "bold", color: "#33B39C" }}>
                         {servicePackage?.type === "OneDay" ? (
                             <>
-                                : {formatCurrency(servicePackage?.price)} x 1 = {formatCurrency(totalMoney())}
+                                : {formatCurrency(serviceDetail?.price)} x 1 = {formatCurrency(totalMoney())}
                             </>
                         ) : (
                             <>
-                                : {formatCurrency(servicePackage?.price)} x {adjustedOrderDates?.filter(date => moment(date)?.isAfter(moment()))?.length} = {formatCurrency(totalMoney())}
+                                : {formatCurrency(serviceDetail?.price)} x {adjustedOrderDates?.filter(date => moment(date)?.isAfter(moment()))?.length} = {formatCurrency(totalMoney())}
                             </>
                         )}
                     </Text>
