@@ -21,7 +21,6 @@ export default function ServicePackageDetail({ }) {
   const navigation = useNavigation();
   const route = useRoute();
   const serviceData = route.params?.data || {};
-  const [serviceDetail, setServiceDetail] = useState({});//cho calendar một giá trị mặc định là ngày hiện tại
 
   const [selectedDate, setSelectedDate] = useState({});//cho calendar một giá trị mặc định là ngày hiện tại
   const [popupDate, setPopupDate] = useState(false);
@@ -91,21 +90,6 @@ export default function ServicePackageDetail({ }) {
           ComToast({ text: 'Đã có lỗi xảy ra, vui lòng thử lại.' });
       });
   };
-
-  useFocusEffect(
-    useCallback(() => {
-      getData(`/service-package/${serviceData?.id}`, {})
-        .then((service) => {
-          setServiceDetail(service?.data)
-          console.log(" service-package", service?.data)
-          setLoading(false);
-        })
-        .catch((error) => {
-          setLoading(false);
-          console.error("Error getData fetching items:", error);
-        });
-    }, [])
-  );
 
   return (
     <>
