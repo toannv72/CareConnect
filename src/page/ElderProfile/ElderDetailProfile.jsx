@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigation } from "@react-navigation/native";
 import React, { useContext, useState, useEffect, useCallback } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { Image, StyleSheet, View, Text, ScrollView } from "react-native";
+import { Image, StyleSheet, View, Text, ScrollView, TouchableOpacity } from "react-native";
 import * as yup from "yup";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import ComInput from "../../Components/ComInput/ComInput";
@@ -22,6 +22,7 @@ export default function DetailProfile() {
   const { data } = route.params;
   const [familyMems, setFamilyMems] = useState([]);
   const [elderData, setElderData] = useState({});
+  const [servicePackageDetail, setServicePackageDetail] = useState({});
   const [refresh, setRefresh] = useState(false);
 
   const {
@@ -68,9 +69,12 @@ export default function DetailProfile() {
     getData(`/elders/${data?.id}`, {})
       .then((elders) => {
         setElderData(elders?.data)
+        setServicePackageDetail(elders?.data?.contractsInUse?.nursingPackage)
+        setValue("nursingpackage", elders?.data?.contractsInUse?.nursingPackage?.name ?? "Không có");
         setValue("fullName", data?.name ?? "Không có");
         setValue("address", data?.address ?? "Không có");
         setValue("idNumber", data?.cccd ?? "Không có");
+        setValue("nurseHomeAddress", "Không có");
         setValue("relationship", data?.relationship ?? "Không có");
         setValue("dateOfBirth", moment(data?.dateOfBirth, "YYYY-MM-DD").format("DD/MM/YYYY") ?? "Không có");
         setValue("gender", data?.gender ?? "Không có");
@@ -81,25 +85,27 @@ export default function DetailProfile() {
   }
 
   const getBlock = async () => {
-    getData(`/block/${data?.room?.blockId}`, {})
-      .then((block) => {
-        const blockName = block?.data?.name
-        setValue("nurseHomeAddress", "Phòng " + data?.room?.name + ", khu " + blockName ?? "");
-      })
-      .catch((error) => {
-        console.error("Error getData fetching items:", error);
-      })
+    if (data?.room?.blockId)
+      getData(`/block/${data?.room?.blockId}`, {})
+        .then((block) => {
+          const blockName = block?.data?.name
+          setValue("nurseHomeAddress", "Phòng " + data?.room?.name + ", khu " + blockName ?? "Không có");
+        })
+        .catch((error) => {
+          console.error("Error getData fetching items:", error);
+        })
   }
 
   const getRoom = async () => {
-    getData(`/room/${data?.roomId}`, {})
-      .then((room) => {
-        const blockName = room?.data?.block?.name
-        setValue("nurseHomeAddress", room?.data?.name + ", " + blockName ?? "");
-      })
-      .catch((error) => {
-        console.error("Error getData fetching items:", error);
-      })
+    if (data?.roomId)
+      getData(`/room/${data?.roomId}`, {})
+        .then((room) => {
+          const blockName = room?.data?.block?.name
+          setValue("nurseHomeAddress", room?.data?.name + ", " + blockName ?? "Không có");
+        })
+        .catch((error) => {
+          console.error("Error getData fetching items:", error);
+        })
   }
 
   const getFamilyMems = async () => {
@@ -196,34 +202,49 @@ export default function DetailProfile() {
                   </View>
                   {
                     role?.name == "Customer" && (
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                          gap: 10,
-                        }}
-                      >
-                        <View style={{ flex: 1 }}>
+                      <>
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            gap: 10,
+                          }}
+                        >
+                          <View style={{ flex: 1 }}>
+                            <ComInput
+                              label={EditProfile?.label?.idNumber}
+                              placeholder={EditProfile?.placeholder?.idNumber}
+                              name="idNumber"
+                              edit={false}
+                              control={control}
+                              errors={errors}
+                            />
+                          </View>
+                          <View style={{ flex: 1 }}>
+                            <ComInput
+                              label="Mối quan hệ"
+                              placeholder="Mối quan hệ"
+                              name="relationship"
+                              edit={false}
+                              control={control}
+                              errors={errors}
+                            />
+                          </View>
+                        </View>
+                        <TouchableOpacity style={{ flex: 1 }}
+                          onPress={() => {
+                            navigation.navigate("ServicePackageDetail", { data: servicePackageDetail });
+                          }}>
                           <ComInput
-                            label={EditProfile?.label?.idNumber}
-                            placeholder={EditProfile?.placeholder?.idNumber}
-                            name="idNumber"
+                            label="Gói dưỡng lão"
+                            placeholder="Gói dưỡng lão"
+                            name="nursingpackage"
                             edit={false}
                             control={control}
                             errors={errors}
                           />
-                        </View>
-                        <View style={{ flex: 1 }}>
-                          <ComInput
-                            label="Mối quan hệ"
-                            placeholder="Mối quan hệ"
-                            name="relationship"
-                            edit={false}
-                            control={control}
-                            errors={errors}
-                          />
-                        </View>
-                      </View>
+                        </TouchableOpacity>
+                      </>
                     )
                   }
 
@@ -255,7 +276,7 @@ export default function DetailProfile() {
                     control={control}
                     errors={errors}
                   />
-                  <View style={{ marginHorizontal: 5}}>
+                  <View style={{ marginHorizontal: 5 }}>
                     <View style={{ marginBottom: 4 }}>
                       <Text style={{ fontWeight: "bold" }}>Thói quen sinh hoạt</Text>
                     </View>
@@ -269,7 +290,7 @@ export default function DetailProfile() {
                       </ScrollView>
                     </View>
                   </View>
-                  <View style={{ marginHorizontal: 5}}>
+                  <View style={{ marginHorizontal: 5 }}>
                     <View style={{ marginBottom: 4 }}>
                       <Text style={{ fontWeight: "bold" }}>Ghi chú</Text>
                     </View>
@@ -345,6 +366,6 @@ const styles = StyleSheet.create({
     color: "#000",
     maxHeight: 100,
     padding: 5,
-    
+
   },
 });

@@ -1,13 +1,19 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useCallback } from "react";
 import { ScrollView, StyleSheet, View, Text, Image } from "react-native";
 import ComHealth from "./ComHealth";
 import ComHeader from "../../Components/ComHeader/ComHeader";
 import ComNoData from "../../Components/ComNoData/ComNoData";
 import { useStorage } from "../../hooks/useLocalStorage";
 import { LanguageContext } from "../../contexts/LanguageContext";
+import { getData } from "../../api/api";
+import { useAuth } from "../../../auth/useAuth"; 
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function ElderProfile() {
-  const [elders, setElders] = useStorage("elders", []);
+  const { user } = useAuth();
+  const [elders, setElders] = useState([]);
+  const [loading, setLoading] = useState(false);
+
   const {
     text: {
       ElderProfile,
@@ -15,6 +21,20 @@ export default function ElderProfile() {
     },
     setLanguage,
   } = useContext(LanguageContext);
+
+  useFocusEffect(
+    useCallback(() => {
+      getData(`elders?UserId=${user?.id}`, {})
+      .then((elders) => {
+        setElders(elders?.data?.contends);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
+        console.error("Error fetching order items:", error);
+      });
+    }, [])
+  );
 
   return (
     <>

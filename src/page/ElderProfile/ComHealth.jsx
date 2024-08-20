@@ -1,16 +1,38 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useCallback } from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { Image, View } from "react-native";
 import { LanguageContext } from "../../contexts/LanguageContext";
 import { useNavigation } from "@react-navigation/native";
 import ComDateConverter from "../../Components/ComDateConverter/ComDateConverter"
+import { getData } from "../../api/api";
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function ComHealth({ data }) {
+  const [loading, setLoading] = useState(false);
+  const [block, setBlock] = useState({});
+
   const {
     text: { healthMonitor },
     setLanguage,
   } = useContext(LanguageContext);
   const navigation = useNavigation();
+
+  useFocusEffect(
+    useCallback(() => {
+      if (data?.room?.blockId)
+        getData(`block/${data?.room?.blockId}`, {})
+          .then((block) => {
+            setBlock(block?.data);
+            setLoading(false);
+          })
+          .catch((error) => {
+            setLoading(false);
+            console.error("Error fetching order items:", error);
+          });
+    }, [])
+  );
+
+  const roomBlock = (data?.room?.name && block?.name) ? "Khu " + block?.name + ", phòng " + data?.room?.name : "Không có"
 
   return (
     <TouchableOpacity
@@ -62,7 +84,7 @@ export default function ComHealth({ data }) {
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
               {healthMonitor?.room}
             </Text>
-            <Text>: {data?.room?.name}</Text>
+            <Text>: {roomBlock}</Text>
           </Text>
         </View>
       </View>

@@ -224,7 +224,7 @@ export default function FamilyMemberProfile() {
               </View>
             </ScrollView>
             {
-              role?.name == "Customer" && (
+              (role?.name == "Customer" && canEdit) && (
                 <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 10, }}>
                   <ComButton onPress={() => setPopup(true)} check={true} warning={true} style={{ flex: 1 }}>
                     <View

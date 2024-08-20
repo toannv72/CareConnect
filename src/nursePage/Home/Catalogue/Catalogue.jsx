@@ -53,7 +53,7 @@ export default function Catalogue() {
                     }
                     color={"#1D2779"}
                     backgroundColor={"#A4A4F8"}
-                    title={"Các phòng phụ trách"}
+                    title={"Phòng phụ trách"}
                     content={"Xem chi tiết"}
                 > </ComCatalogue>
 

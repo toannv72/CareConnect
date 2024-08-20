@@ -133,7 +133,7 @@ const BillDetail = () => {
                                 {data?.status === "Paid" && (
                                     <>
                                         <ComBillDetail title={bill?.detail?.paymentDate} content={ComDateTimeConverter(data?.paymentDate)} />
-                                        <ComBillDetail title={bill?.detail?.paymentMethod} content={data?.method} />
+                                        <ComBillDetail title={bill?.detail?.paymentMethod} content={data?.method == "Cash" ? "Tiền mặt" : data?.method} />
                                     </>
                                 )}
                                 <View style={{ flexDirection: "row", paddingVertical: 10, justifyContent: "space-between", borderTopWidth: 1, borderColor: '#ddd' }}>

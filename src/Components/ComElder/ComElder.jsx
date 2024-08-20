@@ -80,7 +80,7 @@ export default function ComElder({ data, onPress, isSelected, style }) {
             <Text style={{ fontWeight: "bold", fontSize: 14 }}>
               {healthMonitor?.room}
             </Text>
-            <Text>: {data?.room?.name}</Text>
+            <Text>: {data?.room?.name || "Không có"}</Text>
           </Text>
         </View>
 
