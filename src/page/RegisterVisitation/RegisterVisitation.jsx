@@ -108,7 +108,10 @@ export default function RegisterVisitation() {
               }}
             >
               <View style={{ width: "90%" }}>
-                <Text style={{ color: "#A3A3A3", textAlign: "center", marginVertical: 10 }}>{servicePackages?.popup?.limitDays}</Text>
+                <View style={{ gap: 5 }}>
+                  <Text style={{ color: "#A3A3A3", textAlign: "center", marginVertical: 10 }}>{servicePackages?.popup?.limitDays}</Text>
+                  <Text style={{ textAlign: "center" }}>Thời gian làm việc: từ 07:00 đến 17:00</Text>
+                </View>
                 <ComSelectedOneDate
                   date={changeSelectedDate}
                   name="date"

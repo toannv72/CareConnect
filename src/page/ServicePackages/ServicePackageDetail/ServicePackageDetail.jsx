@@ -157,8 +157,11 @@ export default function ServicePackageDetail({ }) {
       <ComPopup
         visible={popupDate}
         title="Chọn ngày hẹn">
-        <Text style={{ color: "#A3A3A3", textAlign: "center" }}> {servicePackages?.popup?.signContractSubTitle}</Text>
-        <Text style={{ color: "#A3A3A3", textAlign: "center" }}>{servicePackages?.popup?.limitDays}</Text>
+        <View style={{gap: 5}}>
+          <Text style={{ color: "#A3A3A3", textAlign: "center" }}> {servicePackages?.popup?.signContractSubTitle}</Text>
+          <Text style={{ color: "#A3A3A3", textAlign: "center" }}>{servicePackages?.popup?.limitDays}</Text>
+          <Text style={{ textAlign: "center" }}>Thời gian làm việc: từ 07:00 đến 17:00</Text>
+        </View>
         <FormProvider {...methods}>
           <View style={{ width: "100%", gap: 10 }}>
             <ComSelectedOneDate

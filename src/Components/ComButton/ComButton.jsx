@@ -36,6 +36,7 @@ export default function ComButton({
               style={[
                 styles.buttonDisable,
                 { borderColor: buttonColor, backgroundColor: buttonColor },
+                style
               ]}
             >
               <Text style={[styles.buttonTextCheck, { color: "#fff" }]}>
