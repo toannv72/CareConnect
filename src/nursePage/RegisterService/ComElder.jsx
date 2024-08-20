@@ -110,7 +110,7 @@ export default function ComElder({ data, selectedDate }) {
 
   const filteredOrderDetailsService = data?.orderDetailsService?.filter(item =>
     item?.orderDates?.some(orderDate => orderDate?.status !== 'NotPerformed')
-  );
+  )?.filter( item => item?.isPain == true);
 
   return (
     <View style={styles?.cardItem}>
