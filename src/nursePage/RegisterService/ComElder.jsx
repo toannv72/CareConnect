@@ -12,7 +12,7 @@ import UpIcon from "../../../assets/images/Nurse/RegisterService/UpIcon.png"
 import DownIcon from "../../../assets/images/Nurse/RegisterService/DownIcon.png"
 import moment from "moment";
 
-export default function ComElder({ data , selectedDate}) {
+export default function ComElder({ data, selectedDate }) {
   const {
     text: { healthMonitor }, setLanguage } = useContext(LanguageContext);
   const navigation = useNavigation();
@@ -31,6 +31,8 @@ export default function ComElder({ data , selectedDate}) {
       case 'Complete':
         return { text: 'Đã thực hiện', color: '#000' };
       case 'NotPerformed':
+        return { text: 'Không có', color: 'red' };
+      case 'Missed':
         return { text: 'Hết hạn thực hiện', color: 'red' };
       default:
         return status;
@@ -39,12 +41,12 @@ export default function ComElder({ data , selectedDate}) {
 
   const renderItem = ({ item, index }) => {
     const todayOrderDate = item?.orderDates?.find(orderDate =>
-      moment(orderDate?.date).format("YYYY-MM-DD") === moment(selectedDate).format("YYYY-MM-DD") 
+      moment(orderDate?.date).format("YYYY-MM-DD") === moment(selectedDate).format("YYYY-MM-DD")
       && orderDate?.status !== 'NotPerformed' //ẩn dịch vụ đăng ký để lưu ngày cho tháng sau
     );
 
     if (!todayOrderDate) {
-      return null; 
+      return null;
     }
 
     return (

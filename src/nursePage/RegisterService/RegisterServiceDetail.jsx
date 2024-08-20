@@ -49,6 +49,8 @@ export default function RegisterServiceDetail({ }) {
             case 'Complete':
                 return { text: 'Đã thực hiện', color: 'red' };
             case 'NotPerformed':
+                return { text: 'Không có', color: 'red' };
+            case 'Missed':
                 return { text: 'Hết hạn thực hiện', color: 'red' };
             default:
                 return status;
