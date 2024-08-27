@@ -47,11 +47,13 @@ export default function RegisterServiceDetail({ }) {
             case 'InComplete':
                 return { text: 'Chưa thực hiện', color: 'green' };
             case 'Complete':
-                return { text: 'Đã thực hiện', color: 'red' };
+                return { text: 'Đã thực hiện', color: '#000' };
             case 'NotPerformed':
                 return { text: 'Không có', color: 'red' };
             case 'Missed':
-                return { text: 'Hết hạn thực hiện', color: 'red' };
+                return { text: 'Đã quá hạn', color: 'red' };
+            case 'Processed':
+                return { text: 'Đã giải quyết', color: '#000' };
             default:
                 return status;
         }

@@ -232,7 +232,7 @@ export default function CreateHealthMonitor() {
                             <ComButton check onPress={handleClosePopup} style={{ flex: 1 }}>
                                 Hủy
                             </ComButton>
-                            <ComButton onPress={handleSubmit(onSubmit)} style={{ flex: 1 }}>
+                            <ComButton onPress={handleSubmit(onSubmit)} style={{ flex: 1 }} disable={loading}>
                                 {loading ? <ActivityIndicator /> : "Xác nhận"}
                             </ComButton>
                         </View>

@@ -33,7 +33,9 @@ export default function ComElder({ data, selectedDate }) {
       case 'NotPerformed':
         return { text: 'Không có', color: 'red' };
       case 'Missed':
-        return { text: 'Hết hạn thực hiện', color: 'red' };
+        return { text: 'Đã quá hạn', color: 'red' };
+      case 'Processed':
+        return { text: 'Đã giải quyết', color: '#000' };
       default:
         return status;
     }
@@ -110,7 +112,7 @@ export default function ComElder({ data, selectedDate }) {
 
   const filteredOrderDetailsService = data?.orderDetailsService?.filter(item =>
     item?.orderDates?.some(orderDate => orderDate?.status !== 'NotPerformed')
-  )?.filter( item => item?.isPain == true);
+  )?.filter(item => item?.isPain == true);
 
   return (
     <View style={styles?.cardItem}>
